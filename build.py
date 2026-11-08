@@ -23,6 +23,6 @@ head = f"""<!doctype html>
 </head>
 <body>
 """
-html = head + (S / "body.html").read_text() + "\n<script>\n" + sim + "\n" + (S / "ui.js").read_text() + "</script>\n</body>\n</html>\n"
+html = head + (S / "body.html").read_text().replace("<!--RATGEBER-->", (S / "ratgeber-teaser.html").read_text()) + "\n<script>\n" + sim + "\n" + (S / "ui.js").read_text() + "</script>\n</body>\n</html>\n"
 (S.parent / "index.html").write_text(html)
 print("index.html:", len(html), "Zeichen")

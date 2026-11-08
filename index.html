@@ -145,6 +145,10 @@ section.pro{padding-block:36px 44px}
 footer{border-top:1px solid var(--line);color:var(--muted);font-size:13.5px}
 footer .wrap{padding-block:22px 34px;display:grid;gap:6px}
 @media (prefers-reduced-motion:reduce){.track i{transition:none}}
+.rlist{list-style:none;padding:0;margin:0 0 12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.rlist a{display:grid;gap:6px;height:100%;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;color:var(--ink);text-decoration:none}
+.rlist b{font-family:var(--f-display);font-stretch:105%;font-size:19px;line-height:1.2}
+.rlist span{font-size:15px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -154,7 +158,7 @@ footer .wrap{padding-block:22px 34px;display:grid;gap:6px}
       <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="5" y="4" width="16" height="20" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><rect x="10" y="1.5" width="6" height="3" rx="1" fill="currentColor"/><rect x="8" y="14" width="10" height="7" rx="1" fill="var(--sun)"/></svg>
       Speicherklar
     </div>
-    <nav aria-label="Seitenbereiche"><a href="#rechner">Rechner</a><a href="#annahmen">Annahmen</a><a href="#pro">Pro</a></nav>
+    <nav aria-label="Seitenbereiche"><a href="#rechner">Rechner</a><a href="ratgeber/">Ratgeber</a><a href="#annahmen">Annahmen</a><a href="#pro">Pro</a></nav>
   </div>
 </header>
 
@@ -291,6 +295,15 @@ footer .wrap{padding-block:22px 34px;display:grid;gap:6px}
           </tbody>
         </table>
       </div>
+    </div>
+  </section>
+
+  <section class="how" id="ratgeber">
+    <div class="wrap">
+      <h2 class="sec">Ratgeber</h2>
+      <p class="intro">Häufige Fragen zu PV-Anlage und Speicher, beantwortet mit Zahlen aus dem Rechner.</p>
+      <ul class="rlist"><li><a href="ratgeber/stromspeicher-lohnt-sich-2027.html"><b>Lohnt sich ein Stromspeicher 2027?</b><span>Mit Zahlen statt Prospekt: Wann sich ein Stromspeicher für eine neue PV-Anlage rechnet, was die EEG-Reform ändert und welche Größe am meisten bringt.</span></a></li><li><a href="ratgeber/speichergroesse-4500-kwh.html"><b>Welche Speichergröße bei 4.500 kWh Verbrauch?</b><span>Bei 4.500 kWh Jahresverbrauch rechnet sich meist ein Speicher mit 5 bis 7 kWh. Die Zahlen für 6, 9 und 12 kWp und warum größer nicht besser ist.</span></a></li><li><a href="ratgeber/ost-west-dach-speicher.html"><b>Ost-West-Dach: Braucht es einen Speicher?</b><span>Eine Ost-West-Anlage liefert morgens und abends Strom. Deshalb reicht meist ein kleinerer Speicher als bei Süd. Die Zahlen im Vergleich.</span></a></li></ul>
+      <p><a href="ratgeber/">Alle Artikel</a></p>
     </div>
   </section>
 
