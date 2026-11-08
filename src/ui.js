@@ -53,11 +53,22 @@
       :"Gilt 20 Jahre ab Inbetriebnahme, für Anlagen ab August 2026 bis 10 kWp.";
   }
 
+  // Zählerrollen: einmal aufbauen, danach nur die Ziffernstreifen verschieben
+  var WHEELS=5,strips=[];
+  (function buildWheels(){
+    var el=$("wheels"),html="";
+    for(var i=0;i<WHEELS;i++){
+      html+='<span class="wheel'+(i===WHEELS-1?' red':'')+'" aria-hidden="true"><span class="strip">';
+      for(var d=0;d<10;d++)html+="<span>"+d+"</span>";
+      html+="</span></span>";
+    }
+    el.innerHTML=html+'<span class="unit">kWh / Jahr</span>';
+    strips=el.querySelectorAll(".strip");
+  })();
   function wheels(n){
-    var s=String(Math.max(0,Math.round(n))).padStart(5,"0").slice(-6),html="";
-    for(var i=0;i<s.length;i++)html+='<span class="wheel'+(i===s.length-1?' red':'')+'">'+s[i]+'</span>';
-    html+='<span class="unit">kWh / Jahr</span>';
-    var el=$("wheels");el.innerHTML=html;el.setAttribute("aria-label",nf0.format(n)+" Kilowattstunden pro Jahr");
+    var s=String(Math.min(99999,Math.max(0,Math.round(n)))).padStart(WHEELS,"0");
+    for(var i=0;i<WHEELS;i++)strips[i].style.transform="translateY("+(-(+s[i])*10)+"%)";
+    $("wheels").setAttribute("aria-label",nf0.format(n)+" Kilowattstunden pro Jahr");
   }
 
   function euro(v){return (v<0?"−":"")+nf0.format(Math.abs(v))+" €";}
@@ -105,8 +116,8 @@
     $("k-netd").textContent="nach "+p.life+" Jahren";
     $("b-aut").textContent=Math.round(b.autarky*100)+" % → "+Math.round(c.r.autarky*100)+" %";
     $("b-ev").textContent=Math.round(b.selfRate*100)+" % → "+Math.round(c.r.selfRate*100)+" %";
-    $("t-aut0").style.width=(b.autarky*100)+"%";$("t-aut1").style.width=(c.r.autarky*100)+"%";
-    $("t-ev0").style.width=(b.selfRate*100)+"%";$("t-ev1").style.width=(c.r.selfRate*100)+"%";
+    $("t-aut0").style.transform="scaleX("+b.autarky+")";$("t-aut1").style.transform="scaleX("+c.r.autarky+")";
+    $("t-ev0").style.transform="scaleX("+b.selfRate+")";$("t-ev1").style.transform="scaleX("+c.r.selfRate+")";
     var v;
     if(c.net>=0)v='Mit '+p.bat+' kWh <span class="ok">rechnet sich der Speicher nach etwa '+nf1.format(c.payback)+' Jahren.</span>';
     else v='Mit '+p.bat+' kWh <span class="no">holt der Speicher seine Kosten in '+p.life+' Jahren nicht rein.</span>';
@@ -127,4 +138,13 @@
   $("inputs").addEventListener("input",function(){if(pending)cancelAnimationFrame(pending);pending=requestAnimationFrame(render);});
   $("inputs").addEventListener("submit",function(e){e.preventDefault();});
   render();
+
+  // Bereiche weiter unten einmal einblenden
+  try{
+    if("IntersectionObserver" in window){
+      document.documentElement.classList.add("js");
+      var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});},{rootMargin:"0px 0px -80px 0px"});
+      Array.prototype.forEach.call(document.querySelectorAll(".reveal"),function(el){io.observe(el);});
+    }
+  }catch(e){}
 })();
