@@ -259,6 +259,16 @@
     state.unlocked = true; state.licEmail = email || ""; $("buy").hidden = true; $("keybox").hidden = true; $("teaser").classList.add("unlocked");
     showKey(key);
     if (state.result) renderReport();
+    else { var m = $("kaufmsg"); m.hidden = false; m.className = "wait-msg ok"; m.textContent = "Pro ist auf diesem Gerät freigeschaltet. Trag dein Angebot ein und klick auf „Angebot prüfen“, dann erscheint der vollständige Bericht."; }
+  }
+  // Link aus der Schlüssel-Mail: speicherklar.de/pro/#lizenz=SK… (Hash, geht nicht an einen Server)
+  function keyFromLink() {
+    var m = /[#&]lizenz=([^&]+)/.exec(location.hash); if (!m) return false;
+    history.replaceState(null, "", location.pathname + location.search);
+    if (load(KEY_LIC)) return false;
+    $("keybox").open = true; $("f-key").value = decodeURIComponent(m[1]);
+    setTimeout(function () { $("keyform").requestSubmit ? $("keyform").requestSubmit() : $("keybtn").click(); }, 50);
+    return true;
   }
   $("keyform").addEventListener("submit", function (e) {
     e.preventDefault();
@@ -267,7 +277,7 @@
     btn.disabled = true; btn.textContent = "Prüfe…";
     LICENSE.verify(key).then(function (res) {
       btn.disabled = false; btn.textContent = "Freischalten";
-      if (res.ok) { store(KEY_LIC, { key: key, email: res.email, at: Date.now() }); msg.textContent = ""; track("pro-freigeschaltet"); unlock(key, res.email); $("report-wrap").scrollIntoView({ behavior: "smooth" }); }
+      if (res.ok) { store(KEY_LIC, { key: key, email: res.email, at: Date.now() }); msg.textContent = ""; track("pro-freigeschaltet"); unlock(key, res.email); if (state.result) $("report-wrap").scrollIntoView({ behavior: "smooth" }); }
       else { msg.textContent = res.msg; msg.className = "wait-msg err"; }
     });
   });
@@ -503,6 +513,6 @@
   var start = fromHash() || load(KEY_IN) || { roofs: [{ kwp: 9, aspect: 0, tilt: 35 }], cons: 4500, price: 33, feed: 7.7, life: 15 };
   fill(start);
   setupBuy();
-  if (!afterPurchase()) restoreLicense();
+  if (!afterPurchase() && !keyFromLink()) restoreLicense();
   if (start.cap) runCheck(false);
 })();
