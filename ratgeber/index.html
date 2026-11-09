@@ -308,6 +308,13 @@ main.page{padding-block:36px 40px}
 .doc td.num{font-family:var(--f-mono);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .doc tr.hl td{background:var(--sun-soft)}
 .doc details{border-bottom:1px solid var(--line);padding:12px 0} .doc summary{font-weight:600;cursor:pointer}
+.ask{border:1px dashed var(--line);border-radius:10px;padding:20px 22px;margin:32px 0 8px;display:grid;gap:8px;max-width:760px}
+.ask b{font-family:var(--f-display);font-stretch:105%;font-size:19px}
+.ask span{font-size:16px;color:var(--muted);line-height:1.5}
+.ask .btn.ghost{display:inline-block;justify-self:start;opacity:1;cursor:pointer;text-decoration:none;background:transparent;color:var(--ink);border:1.5px solid var(--ink);padding:10px 16px;transition:transform 160ms var(--ease-out),background-color 150ms ease,color 150ms ease}
+@media (hover:hover) and (pointer:fine){.ask .btn.ghost:hover{background:var(--ink);color:var(--surface)}}
+.ask .btn.ghost:active{transform:scale(0.97)}
+@media (prefers-reduced-motion:reduce){.ask .btn.ghost:active{transform:none}}
 .cta{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px;margin:32px 0;display:grid;gap:10px;max-width:760px}
 .cta b{font-family:var(--f-display);font-stretch:105%;font-size:21px}
 .cta .btn{display:inline-block;justify-self:start;opacity:1;cursor:pointer;text-decoration:none}

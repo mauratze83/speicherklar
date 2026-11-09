@@ -4,6 +4,7 @@ ROOT = pathlib.Path(__file__).parent
 sys.path.insert(0, str(ROOT / "src"))
 from articles import ARTICLES, STAND, BEISPIEL, CHART_BASE
 import subprocess
+from urllib.parse import quote
 
 from chrome import header, footer, analytics
 
@@ -34,6 +35,13 @@ main.page{padding-block:36px 40px}
 .doc td.num{font-family:var(--f-mono);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .doc tr.hl td{background:var(--sun-soft)}
 .doc details{border-bottom:1px solid var(--line);padding:12px 0} .doc summary{font-weight:600;cursor:pointer}
+.ask{border:1px dashed var(--line);border-radius:10px;padding:20px 22px;margin:32px 0 8px;display:grid;gap:8px;max-width:760px}
+.ask b{font-family:var(--f-display);font-stretch:105%;font-size:19px}
+.ask span{font-size:16px;color:var(--muted);line-height:1.5}
+.ask .btn.ghost{display:inline-block;justify-self:start;opacity:1;cursor:pointer;text-decoration:none;background:transparent;color:var(--ink);border:1.5px solid var(--ink);padding:10px 16px;transition:transform 160ms var(--ease-out),background-color 150ms ease,color 150ms ease}
+@media (hover:hover) and (pointer:fine){.ask .btn.ghost:hover{background:var(--ink);color:var(--surface)}}
+.ask .btn.ghost:active{transform:scale(0.97)}
+@media (prefers-reduced-motion:reduce){.ask .btn.ghost:active{transform:none}}
 .cta{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px;margin:32px 0;display:grid;gap:10px;max-width:760px}
 .cta b{font-family:var(--f-display);font-stretch:105%;font-size:21px}
 .cta .btn{display:inline-block;justify-self:start;opacity:1;cursor:pointer;text-decoration:none}
@@ -95,6 +103,13 @@ def page(title, desc, canonical, main, extra_head="", prefix="../", active="ratg
 </body></html>
 """
 
+def ask(a):
+    """Kasten „Frage offen?“: öffnet das Mailprogramm mit vorausgefülltem Betreff, kein Fremddienst."""
+    subj = quote(f"Frage zu: {a['title']}")
+    body = quote(f"Hallo Manuel,\n\nmeine Frage zum Artikel https://speicherklar.de/ratgeber/{a['slug']}.html:\n\n")
+    return (f'<div class="ask"><b>Noch eine Frage offen?</b><span>Schreib sie mir. Gute Fragen beantworte ich hier im Artikel, ohne deinen Namen.</span>'
+            f'<a class="btn ghost" href="mailto:kontakt@speicherklar.de?subject={subj}&amp;body={body}" data-umami-event="frage-mail">Frage per Mail stellen</a></div>')
+
 CTA = """<div class="cta"><b>Rechne dein eigenes Haus durch</b><span>Postleitzahl, Dachausrichtung und Verbrauch eingeben. Der kostenlose Rechner zeigt dir die wirtschaftlichste Speichergröße, auch für das Szenario EEG-Reform 2027.</span><a class="btn" href="../#rechner">Zum Rechner</a></div>"""
 
 out = ROOT / "ratgeber"; out.mkdir(exist_ok=True)
@@ -106,7 +121,7 @@ for a in ARTICLES:
           {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": x}} for q, x in a["faq"]]}]
     head = "".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in ld)
     main = f"""<article class="doc"><div class="eyebrow">Ratgeber</div><h1>{a['h1']}</h1><p class="lead">{a['lead']}</p><p class="meta">Stand: {STAND}</p>
-{_with_figure(a)}{CTA}<h2>Häufige Fragen</h2>{faq_html}<p class="note" style="margin-top:28px">{BEISPIEL}</p></article>"""
+{_with_figure(a)}{CTA}<h2>Häufige Fragen</h2>{faq_html}{ask(a)}<p class="note" style="margin-top:28px">{BEISPIEL}</p></article>"""
     (out / f"{a['slug']}.html").write_text(page(f"{a['title']} | Speicherklar", a["desc"], url, main, head))
     urls.append((url, a["date"]))
 
@@ -134,7 +149,7 @@ urls.append((ABOUT_URL, "2026-11-09"))
 from chrome import UMAMI_ID
 UMAMI_TEXT = """<h2 id="reichweite">7. Reichweitenmessung mit Umami</h2>
 <p>Um zu sehen, wie viele Menschen Speicherklar nutzen und welche Seiten gelesen werden, setze ich Umami Cloud ein, einen Dienst der Umami Software, Inc. (USA). Ich habe als Speicherort die EU gewählt. Weil Umami ein US-Unternehmen ist, können Daten trotzdem in die USA übermittelt werden, etwa für Support oder Sicherheit; dafür gelten die EU-Standardvertragsklauseln, die Teil des Vertrags zur Auftragsverarbeitung sind. Umami setzt keine Cookies und speichert nichts auf deinem Gerät.</p>
-<p>Erfasst werden die aufgerufene Seite, die Seite, von der du kommst, Browser, Betriebssystem, Gerätetyp, Bildschirmgröße, Land und Sprache sowie zwei Ereignisse: dass der Rechner benutzt wurde und dass sich jemand in die Warteliste eingetragen hat. Was du in den Rechner eingibst, wird nicht übertragen. Deine IP-Adresse wird nur kurz für die Übertragung verarbeitet und nicht in den Statistiken gespeichert. Ich sehe nur zusammengefasste Zahlen und kann daraus keine einzelne Person erkennen.</p>
+<p>Erfasst werden die aufgerufene Seite, die Seite, von der du kommst, Browser, Betriebssystem, Gerätetyp, Bildschirmgröße, Land und Sprache sowie drei Ereignisse: dass der Rechner benutzt wurde, dass sich jemand in die Warteliste eingetragen hat und dass der Mail-Link für Fragen angeklickt wurde. Den Inhalt einer Mail sieht Umami nicht. Was du in den Rechner eingibst, wird nicht übertragen. Deine IP-Adresse wird nur kurz für die Übertragung verarbeitet und nicht in den Statistiken gespeichert. Ich sehe nur zusammengefasste Zahlen und kann daraus keine einzelne Person erkennen.</p>
 <p>Rechtsgrundlage ist mein berechtigtes Interesse an einer datensparsamen Auswertung der Nutzung (Art. 6 Abs. 1 lit. f DSGVO, § 25 Abs. 2 Nr. 2 TDDDG). Umami verarbeitet die Daten in meinem Auftrag; es besteht ein Vertrag zur Auftragsverarbeitung nach Art. 28 DSGVO (<a href="https://umami.is/dpa">umami.is/dpa</a>). Die Daten werden nach 6 Monaten gelöscht. Du kannst widersprechen, indem du in deinem Browser Skripte von cloud.umami.is blockierst, oder per Mail an kontakt@speicherklar.de. Mehr in der <a href="https://umami.is/privacy">Datenschutzerklärung von Umami</a>.</p>
 """
 
