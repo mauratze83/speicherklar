@@ -5,7 +5,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from articles import ARTICLES, STAND, BEISPIEL, CHART_BASE
 import subprocess
 
-from chrome import header, footer
+from chrome import header, footer, analytics
 
 FAV = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Crect x='5' y='4' width='16' height='20' rx='2.5' fill='none' stroke='%2315212B' stroke-width='2'/%3E%3Crect x='10' y='1.5' width='6' height='3' rx='1' fill='%2315212B'/%3E%3Crect x='8' y='14' width='10' height='7' rx='1' fill='%23E39A0B'/%3E%3C/svg%3E")
 # Gleiche Grundstyles wie die Startseite (Farben, Schriften, Kopf, Fuß, Breite), dazu Textseiten-Typografie unter .doc
@@ -86,7 +86,7 @@ def page(title, desc, canonical, main, extra_head="", prefix="../", active="ratg
 <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{html.escape(title)}</title><meta name="description" content="{html.escape(desc)}">
 {meta}
-<link rel="icon" href="{FAV}"><style>{base}{DOC}</style>{extra_head}</head>
+<link rel="icon" href="{FAV}">{analytics()}<style>{base}{DOC}</style>{extra_head}</head>
 <body>
 {header(prefix, active)}
 <main class="wrap page">{main}</main>
@@ -128,11 +128,21 @@ urls.append((ABOUT_URL, "2026-11-09"))
 (ROOT / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
     "".join(f"  <url><loc>{u}</loc><lastmod>{d}</lastmod></url>\n" for u, d in urls) + "</urlset>\n")
 
+from chrome import UMAMI_ID
+UMAMI_TEXT = """<h2 id="reichweite">7. Reichweitenmessung mit Umami</h2>
+<p>Um zu sehen, wie viele Menschen Speicherklar nutzen und welche Seiten gelesen werden, setze ich Umami Cloud ein, einen Dienst der Umami Software, Inc. (USA). Die Daten werden in der EU gespeichert. Umami setzt keine Cookies und speichert nichts auf deinem Gerät.</p>
+<p>Erfasst werden die aufgerufene Seite, die Seite, von der du kommst, Browser, Betriebssystem, Gerätetyp, Bildschirmgröße, Land und Sprache sowie zwei Ereignisse: dass der Rechner benutzt wurde und dass sich jemand in die Warteliste eingetragen hat. Was du in den Rechner eingibst, wird nicht übertragen. Deine IP-Adresse wird nur kurz für die Übertragung verarbeitet und nicht in den Statistiken gespeichert. Ich sehe nur zusammengefasste Zahlen und kann daraus keine einzelne Person erkennen.</p>
+<p>Rechtsgrundlage ist mein berechtigtes Interesse an einer datensparsamen Auswertung der Nutzung (Art. 6 Abs. 1 lit. f DSGVO, § 25 Abs. 2 Nr. 2 TDDDG). Umami verarbeitet die Daten in meinem Auftrag; es besteht ein Vertrag zur Auftragsverarbeitung nach Art. 28 DSGVO. Die Daten werden nach 6 Monaten gelöscht. Du kannst widersprechen, indem du in deinem Browser Skripte von cloud.umami.is blockierst, oder per Mail an kontakt@speicherklar.de. Mehr in der <a href="https://umami.is/privacy">Datenschutzerklärung von Umami</a>.</p>
+"""
+
 # Impressum und Datenschutz mit derselben Kopf- und Fußzeile
 for f in ("impressum", "datenschutz"):
     raw = (ROOT / f"src/legal/{f}.html").read_text()
     title = raw.split("<!--TITLE:", 1)[1].split("-->", 1)[0]
     body = raw.split("-->", 1)[1]
+    if f == "datenschutz":
+        body = body.replace("<!--ANALYTICS-->", UMAMI_TEXT if UMAMI_ID else "")
+        if not UMAMI_ID: body = body.replace("<h2>8. Deine Rechte</h2>", "<h2>7. Deine Rechte</h2>")
     (ROOT / f"{f}.html").write_text(page(f"{title} – Speicherklar", title, "", f'<div class="doc">{body}</div>', prefix="./", active=None, robots=True))
 
 # Ratgeber-Liste für die Startseite

@@ -193,6 +193,12 @@
     else $("feed").value=state.prevFeed&&+state.prevFeed>0?state.prevFeed:7.7;
   });
 
+  // Zählung ohne Cookies (Umami), nur wenn das Skript geladen ist; keine Eingabewerte
+  function track(n){try{if(window.umami)window.umami.track(n);}catch(e){}}
+  var used=false;function markUsed(){if(!used){used=true;track("rechner-genutzt");}}
+  $("inputs").addEventListener("change",markUsed);
+  Array.prototype.forEach.call(document.querySelectorAll("#inputs .seg button"),function(b){b.addEventListener("click",markUsed);});
+
   var pending=null;
   $("inputs").addEventListener("input",function(){if(pending)cancelAnimationFrame(pending);pending=requestAnimationFrame(render);});
   $("inputs").addEventListener("submit",function(e){e.preventDefault();});
@@ -250,7 +256,7 @@
       btn.disabled=true;btn.classList.add("busy");btn.textContent="Sende…";
       var done=function(){
         show("Fast geschafft: Bitte bestätige deine Adresse über den Link in der Mail, die wir dir gerade geschickt haben (Absender Speicherklar, Betreff auf Englisch: \u201eConfirmation email\u201c). Schau auch im Spam-Ordner.","ok");
-        f.reset();btn.classList.remove("busy");btn.textContent="Eingetragen";
+        f.reset();btn.classList.remove("busy");btn.textContent="Eingetragen";track("warteliste-eingetragen");
       };
       var fail=function(){show("Das hat leider nicht geklappt. Versuch es bitte später noch einmal oder schreib an kontakt@speicherklar.de.","err");btn.classList.remove("busy");btn.disabled=false;btn.textContent="Eintragen";};
       fetch(ML,{method:"POST",body:fd}).then(function(r){return r.json().catch(function(){return {};});})

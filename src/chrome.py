@@ -6,6 +6,13 @@ active: "rechner" | "ratgeber" | None – markiert den aktuellen Menüpunkt.
 
 IG = "https://www.instagram.com/speicherklar/"
 
+# Reichweitenmessung mit Umami Cloud (ohne Cookies). Leer = kein Skript und kein Abschnitt in der Datenschutzerklärung.
+UMAMI_ID = ""
+UMAMI_SRC = "https://cloud.umami.is/script.js"
+
+def analytics():
+    return f'<script defer src="{UMAMI_SRC}" data-website-id="{UMAMI_ID}" data-domains="speicherklar.de"></script>' if UMAMI_ID else ""
+
 LOGO = ('<svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">'
         '<rect x="5" y="4" width="16" height="20" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/>'
         '<rect x="10" y="1.5" width="6" height="3" rx="1" fill="currentColor"/>'
