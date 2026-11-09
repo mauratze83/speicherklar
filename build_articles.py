@@ -150,9 +150,9 @@ urls.append(("https://speicherklar.de/pro/", "2026-11-09"))
     "".join(f"  <url><loc>{u}</loc><lastmod>{d}</lastmod></url>\n" for u, d in urls) + "</urlset>\n")
 
 from chrome import UMAMI_ID
-UMAMI_TEXT = """<h2 id="reichweite">8. Reichweitenmessung mit Umami</h2>
+UMAMI_TEXT = """<h2 id="reichweite">7. Reichweitenmessung mit Umami</h2>
 <p>Um zu sehen, wie viele Menschen Speicherklar nutzen und welche Seiten gelesen werden, setze ich Umami Cloud ein, einen Dienst der Umami Software, Inc. (USA). Ich habe als Speicherort die EU gewählt. Weil Umami ein US-Unternehmen ist, können Daten trotzdem in die USA übermittelt werden, etwa für Support oder Sicherheit; dafür gelten die EU-Standardvertragsklauseln, die Teil des Vertrags zur Auftragsverarbeitung sind. Umami setzt keine Cookies und speichert nichts auf deinem Gerät.</p>
-<p>Erfasst werden die aufgerufene Seite, die Seite, von der du kommst, Browser, Betriebssystem, Gerätetyp, Bildschirmgröße, Land und Sprache sowie einige Ereignisse ohne Inhalt: dass der Rechner benutzt wurde, dass sich jemand in die Warteliste eingetragen hat, dass der Mail-Link für Fragen angeklickt wurde, dass ein Angebot geprüft, der Kauf-Knopf geklickt, Pro freigeschaltet oder ein Bericht gespeichert wurde. Den Inhalt einer Mail sieht Umami nicht. Was du in den Rechner oder den Angebots-Check eingibst, wird nicht übertragen. Deine IP-Adresse wird nur kurz für die Übertragung verarbeitet und nicht in den Statistiken gespeichert. Ich sehe nur zusammengefasste Zahlen und kann daraus keine einzelne Person erkennen.</p>
+<p>Erfasst werden die aufgerufene Seite, die Seite, von der du kommst, Browser, Betriebssystem, Gerätetyp, Bildschirmgröße, Land und Sprache sowie einige Ereignisse ohne Inhalt: dass der Rechner benutzt wurde, dass der Mail-Link für Fragen angeklickt wurde, dass ein Angebot geprüft, der Kauf-Knopf geklickt, Pro freigeschaltet oder ein Bericht gespeichert wurde. Den Inhalt einer Mail sieht Umami nicht. Was du in den Rechner oder den Angebots-Check eingibst, wird nicht übertragen. Deine IP-Adresse wird nur kurz für die Übertragung verarbeitet und nicht in den Statistiken gespeichert. Ich sehe nur zusammengefasste Zahlen und kann daraus keine einzelne Person erkennen.</p>
 <p>Rechtsgrundlage ist mein berechtigtes Interesse an einer datensparsamen Auswertung der Nutzung (Art. 6 Abs. 1 lit. f DSGVO, § 25 Abs. 2 Nr. 2 TDDDG). Umami verarbeitet die Daten in meinem Auftrag; es besteht ein Vertrag zur Auftragsverarbeitung nach Art. 28 DSGVO (<a href="https://umami.is/dpa">umami.is/dpa</a>). Die Daten werden nach 6 Monaten gelöscht. Du kannst widersprechen, indem du in deinem Browser Skripte von cloud.umami.is blockierst, oder per Mail an kontakt@speicherklar.de. Mehr in der <a href="https://umami.is/privacy">Datenschutzerklärung von Umami</a>.</p>
 """
 
@@ -163,7 +163,7 @@ for f in ("impressum", "datenschutz"):
     body = raw.split("-->", 1)[1]
     if f == "datenschutz":
         body = body.replace("<!--ANALYTICS-->", UMAMI_TEXT if UMAMI_ID else "")
-        if not UMAMI_ID: body = body.replace("<h2>9. Deine Rechte</h2>", "<h2>8. Deine Rechte</h2>")
+        if not UMAMI_ID: body = body.replace("<h2>8. Deine Rechte</h2>", "<h2>7. Deine Rechte</h2>")
     (ROOT / f"{f}.html").write_text(page(f"{title} – Speicherklar", title, "", f'<div class="doc">{body}</div>', prefix="./", active=None, robots=True))
 
 # Ratgeber-Liste für die Startseite

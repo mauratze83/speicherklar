@@ -21,4 +21,4 @@ Kostenloser Speicher-Rechner für geplante PV-Anlagen – https://speicherklar.d
 - `src/markt.js` – Marktspannen für den Preis-Check, ein- bis zweimal im Jahr aktualisieren
 - `node test/pro.test.js` – Beispielrechnungen und Abgleich mit dem kostenlosen Rechner
 - Lokal testen: `python3 -m http.server`, dann `localhost:8000/pro/`; der Schlüssel `DEV-SPEICHERKLAR` schaltet nur auf localhost frei
-- Vorab-Zugang für die Warteliste: Link `https://speicherklar.de/pro/?vorab=1` in der Start-Mail
+- Kauf vor dem Starttermin (`publicFrom`) nur intern zum Testen: `https://speicherklar.de/pro/?vorab=1`

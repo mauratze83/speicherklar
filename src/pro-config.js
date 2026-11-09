@@ -6,5 +6,5 @@ var PRO_CONFIG = {
   price: 49,                  // Einführungspreis in € (nur Anzeige, muss zur Stripe-Preis-ID PRICE_INTRO passen)
   regularPrice: 89,           // Normalpreis in € (Anzeige, passend zu PRICE_REGULAR)
   introUntil: "2027-01-31",             // letzter Tag des Einführungspreises, z. B. "2027-02-28" (gleich wie INTRO_UNTIL im Worker)
-  publicFrom: "2026-12-01"              // ab diesem Tag kann jeder kaufen; vorher nur mit Vorab-Link (?vorab=1) aus der Warteliste-Mail
+  publicFrom: "2026-12-01"              // ab diesem Tag kann jeder kaufen; vorher nur mit ?vorab=1 (intern zum Testen)
 };

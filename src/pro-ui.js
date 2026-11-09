@@ -194,6 +194,7 @@
       .then(function (r) { return r.json().then(function (j) { j.status = r.status; return j; }, function () { return { status: r.status }; }); });
   }
   function setupBuy() {
+    // ?vorab=1 schaltet den Kauf vor dem Starttermin frei (nur intern zum Testen, nirgends verlinkt)
     var vorab = /[?&]vorab=1/.test(location.search) || load("sk-pro-vorab");
     if (/[?&]vorab=1/.test(location.search)) store("sk-pro-vorab", true);
     var open = C.api && (!C.publicFrom || today() >= C.publicFrom || vorab);
@@ -217,11 +218,10 @@
         });
       });
       note.push("Bezahlung über Stripe. Nach dem Kauf ist der Bericht sofort freigeschaltet, die Rechnung kommt per Mail.");
-      if (C.publicFrom && today() < C.publicFrom) note.push("Vorab-Zugang für die Warteliste.");
     } else {
       btn.removeAttribute("href"); btn.classList.remove("btn-on"); btn.setAttribute("aria-disabled", "true");
       btn.textContent = C.publicFrom ? "Kauf ab " + dateDe(C.publicFrom) : "Kauf startet bald";
-      note.push('Trag dich auf der <a href="../#pro">Warteliste</a> ein, dann bekommst du den Vorab-Zugang.');
+      note.push('Die Einordnung oben ist schon jetzt kostenlos. Den Start kündige ich auf Instagram an: <a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">@speicherklar</a>.');
     }
     $("b-note").innerHTML = note.join(" ");
   }

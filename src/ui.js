@@ -233,30 +233,6 @@
     setTimeout(function(){if(!touched)show("nov",true);},1600);
   })();
 
-  // Warteliste: sendet direkt an MailerLite (Double-Opt-in), nur beim Absenden
-  (function(){
-    var ML="https://assets.mailerlite.com/jsonp/2780735/forms/203650153478882887/subscribe";
-    var f=$("wait");if(!f)return;
-    var msg=$("wait-msg"),btn=$("wait-btn"),inp=$("wait-email");
-    function show(t,cls){msg.textContent=t;msg.className="wait-msg "+cls;}
-    inp.addEventListener("input",function(){if(btn.disabled&&!btn.classList.contains("busy")){btn.disabled=false;btn.textContent="Eintragen";}});
-    f.addEventListener("submit",function(e){
-      e.preventDefault();
-      var v=inp.value.trim();
-      if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)){show("Bitte gib eine gültige E-Mail-Adresse ein.","err");inp.focus();return;}
-      var fd=new FormData();fd.append("fields[email]",v);fd.append("ml-submit","1");fd.append("anticsrf","true");
-      btn.disabled=true;btn.classList.add("busy");btn.textContent="Sende…";
-      var done=function(){
-        show("Fast geschafft: Bitte bestätige deine Adresse über den Link in der Mail, die wir dir gerade geschickt haben (Absender Speicherklar, Betreff auf Englisch: \u201eConfirmation email\u201c). Schau auch im Spam-Ordner.","ok");
-        f.reset();btn.classList.remove("busy");btn.textContent="Eingetragen";track("warteliste-eingetragen");
-      };
-      var fail=function(){show("Das hat leider nicht geklappt. Versuch es bitte später noch einmal oder schreib an kontakt@speicherklar.de.","err");btn.classList.remove("busy");btn.disabled=false;btn.textContent="Eintragen";};
-      fetch(ML,{method:"POST",body:fd}).then(function(r){return r.json().catch(function(){return {};});})
-        .then(function(j){if(j&&j.success===false)fail();else done();})
-        .catch(fail);
-    });
-  })();
-
   // Bereiche weiter unten einmal einblenden
   try{
     if("IntersectionObserver" in window){
@@ -272,5 +248,5 @@
   var b=document.getElementById("pricebox");if(!b)return;
   var today=new Date().toISOString().slice(0,10),pub=b.getAttribute("data-public"),intro=b.getAttribute("data-intro");
   if(intro&&today>intro){document.getElementById("pro-price").innerHTML=b.getAttribute("data-regular")+" € <small>einmalig</small>";document.getElementById("pro-intro").hidden=true;}
-  if(pub&&today>=pub){document.getElementById("pro-buy").hidden=false;document.getElementById("wait").hidden=true;document.getElementById("pro-tag").textContent="Speicherklar Pro";}
+  if(pub&&today>=pub){document.getElementById("pro-buy").hidden=false;document.getElementById("pro-tag").textContent="Speicherklar Pro";}
 })();
