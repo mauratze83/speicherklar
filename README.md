@@ -8,3 +8,4 @@ Dieser Branch wird von GitHub Pages nicht veröffentlicht. Er enthält den Bildg
 - Format: 1080×1350 (4:5). Mehr erlaubt die Meta Business Suite nicht. Rand 130 px seitlich (das Profilraster schneidet 3:4 aus), 120 px oben, 100 px unten. Diagramme nie breiter als der Inhalt.
 - `themen.md`: Themenliste, erledigte Themen mit Datum markieren.
 - `captions-*.md`: Captions, Alt-Texte und Hinweise je Woche.
+- `wochen/JJJJ-MM-TT/`: fertige PNGs und captions.md der Woche. Die Aufgabe „Speicherklar Instagram-Ablage“ kopiert neue Wochenordner auf Manuels Mac (Insta/speicherklar/JJJJ-MM-TT).
