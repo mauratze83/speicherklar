@@ -378,7 +378,6 @@ html.js .reveal.in{opacity:1;transform:none}
               <input type="email" id="wait-email" name="email" autocomplete="email" inputmode="email" placeholder="deine@email.de" required>
               <button class="btn btn-on" type="submit" id="wait-btn">Eintragen</button>
             </div>
-            <input type="text" id="wait-hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp">
             <p class="wait-note">Zum Start gibt es einen Einführungspreis für alle auf der Liste. Nur eine Mail zum Start, kein Spam, Abmeldung jederzeit. <a href="datenschutz.html#warteliste">Datenschutz</a></p>
             <p class="wait-msg" id="wait-msg" role="status" aria-live="polite"></p>
           </form>
@@ -672,7 +671,6 @@ function evaluate(p){
       e.preventDefault();
       var v=inp.value.trim();
       if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)){show("Bitte gib eine gültige E-Mail-Adresse ein.","err");inp.focus();return;}
-      if($("wait-hp").value){show("Danke!","ok");return;}
       var fd=new FormData();fd.append("fields[email]",v);fd.append("ml-submit","1");fd.append("anticsrf","true");
       btn.disabled=true;btn.textContent="Sende…";
       var done=function(){
@@ -682,7 +680,7 @@ function evaluate(p){
       var fail=function(){show("Das hat leider nicht geklappt. Versuch es bitte später noch einmal oder schreib an kontakt@speicherklar.de.","err");btn.disabled=false;btn.textContent="Eintragen";};
       fetch(ML,{method:"POST",body:fd}).then(function(r){return r.json().catch(function(){return {};});})
         .then(function(j){if(j&&j.success===false)fail();else done();})
-        .catch(function(){fetch(ML,{method:"POST",body:fd,mode:"no-cors"}).then(done).catch(fail);});
+        .catch(fail);
     });
   })();
 

@@ -149,7 +149,6 @@
       e.preventDefault();
       var v=inp.value.trim();
       if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)){show("Bitte gib eine gültige E-Mail-Adresse ein.","err");inp.focus();return;}
-      if($("wait-hp").value){show("Danke!","ok");return;}
       var fd=new FormData();fd.append("fields[email]",v);fd.append("ml-submit","1");fd.append("anticsrf","true");
       btn.disabled=true;btn.textContent="Sende…";
       var done=function(){
@@ -159,7 +158,7 @@
       var fail=function(){show("Das hat leider nicht geklappt. Versuch es bitte später noch einmal oder schreib an kontakt@speicherklar.de.","err");btn.disabled=false;btn.textContent="Eintragen";};
       fetch(ML,{method:"POST",body:fd}).then(function(r){return r.json().catch(function(){return {};});})
         .then(function(j){if(j&&j.success===false)fail();else done();})
-        .catch(function(){fetch(ML,{method:"POST",body:fd,mode:"no-cors"}).then(done).catch(fail);});
+        .catch(fail);
     });
   })();
 
