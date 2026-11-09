@@ -7,7 +7,7 @@ compatibility_date = "2026-10-01"
 [vars]
 SITE = "https://speicherklar.de"
 ALLOWED_ORIGINS = "https://speicherklar.de,http://localhost:8765"
-PRICE_INTRO = ""      # Stripe-Preis-ID 49 € (price_…)
-PRICE_REGULAR = ""    # Stripe-Preis-ID 89 € (price_…)
+PRICE_INTRO = "price_1UZwBGJZ79g2fqSOZMl6bGTf"     # Stripe-Preis-ID 49 €
+PRICE_REGULAR = "price_1UZyJwJZ79g2fqSOzRXwODYX"   # Stripe-Preis-ID 89 €
 INTRO_UNTIL = ""      # letzter Tag des Einführungspreises, z. B. "2027-02-28"
 STRIPE_VERSION = ""   # nur setzen, falls Managed Payments eine bestimmte API-Version verlangt
