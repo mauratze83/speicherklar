@@ -49,9 +49,9 @@ def page(title, desc, canonical, main, extra_head=""):
 <title>{html.escape(title)}</title><meta name="description" content="{html.escape(desc)}">
 <link rel="canonical" href="{canonical}"><meta property="og:title" content="{html.escape(title)}"><meta property="og:description" content="{html.escape(desc)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="article"><meta property="og:locale" content="de_DE">
 <link rel="icon" href="{FAV}"><style>{CSS}</style>{extra_head}</head>
-<body><header><div class="wrap"><a class="brand" href="../">{LOGO}Speicherklar</a><nav><a href="../#rechner">Rechner</a><a href="./">Ratgeber</a></nav></div></header>
+<body><header><div class="wrap"><a class="brand" href="../">{LOGO}Speicherklar</a><nav><a href="../#rechner">Rechner</a><a href="./">Ratgeber</a><a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">Instagram</a></nav></div></header>
 <main class="wrap">{main}</main>
-<footer><div class="wrap">Speicherklar ist eine Schätzung, keine Anlagen- oder Finanzberatung. · <a href="../impressum.html">Impressum</a> · <a href="../datenschutz.html">Datenschutz</a></div></footer>
+<footer><div class="wrap">Speicherklar ist eine Schätzung, keine Anlagen- oder Finanzberatung. · <a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">Instagram @speicherklar</a> · <a href="../impressum.html">Impressum</a> · <a href="../datenschutz.html">Datenschutz</a></div></footer>
 </body></html>
 """
 
