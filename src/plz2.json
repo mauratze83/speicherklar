@@ -110,7 +110,7 @@
    ]
   },
   "04": {
-   "n": "Leipzig, DAVASO GmbH",
+   "n": "Leipzig",
    "lat": 51.307,
    "lon": 12.561,
    "codes": 139,
@@ -1164,7 +1164,7 @@
    ]
   },
   "36": {
-   "n": "Fulda, AMAZON Logistik GmbH",
+   "n": "Fulda",
    "lat": 50.687,
    "lon": 9.701,
    "codes": 91,
@@ -1708,7 +1708,7 @@
    ]
   },
   "53": {
-   "n": "Bonn, Zurich Service GmbH",
+   "n": "Bonn, Troisdorf",
    "lat": 50.651,
    "lon": 7.12,
    "codes": 131,
@@ -1946,7 +1946,7 @@
    ]
   },
   "60": {
-   "n": "Frankfurt am Main, Commerzbank AG",
+   "n": "Frankfurt am Main",
    "lat": 50.141,
    "lon": 8.671,
    "codes": 138,
@@ -2592,7 +2592,7 @@
    ]
   },
   "80": {
-   "n": "München, Deutsche Postbank AG Niederlassung München",
+   "n": "München",
    "lat": 48.149,
    "lon": 11.562,
    "codes": 129,
@@ -2660,7 +2660,7 @@
    ]
   },
   "82": {
-   "n": "Finanzamt",
+   "n": "Unterhaching",
    "lat": 47.919,
    "lon": 11.26,
    "codes": 119,
@@ -3000,7 +3000,7 @@
    ]
   },
   "92": {
-   "n": "Deutsche Post AG NL Philatelie Versandzentrum, Conrad Electronic SE",
+   "n": "Beilngries",
    "lat": 49.48,
    "lon": 12.017,
    "codes": 127,
