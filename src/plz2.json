@@ -42,7 +42,7 @@
    ]
   },
   "02": {
-   "n": "Görlitz, Bautzen",
+   "n": "Görlitz",
    "lat": 51.16,
    "lon": 14.602,
    "codes": 51,
@@ -76,7 +76,7 @@
    ]
   },
   "03": {
-   "n": "Cottbus, Frauendorf",
+   "n": "Cottbus",
    "lat": 51.783,
    "lon": 14.042,
    "codes": 35,
@@ -314,7 +314,7 @@
    ]
   },
   "11": {
-   "n": "Berlin, Bundespräsidialamt",
+   "n": "Berlin",
    "lat": 52.346,
    "lon": 13.226,
    "codes": 24,
@@ -348,7 +348,7 @@
    ]
   },
   "12": {
-   "n": "Berlin, Schönefeld",
+   "n": "Berlin",
    "lat": 52.432,
    "lon": 13.407,
    "codes": 87,
@@ -382,7 +382,7 @@
    ]
   },
   "13": {
-   "n": "Berlin, Deutsche Post AG NL Rentenservice Berlin",
+   "n": "Berlin",
    "lat": 52.566,
    "lon": 13.334,
    "codes": 71,
@@ -450,7 +450,7 @@
    ]
   },
   "15": {
-   "n": "Frankfurt (Oder), Müncheberg",
+   "n": "Frankfurt (Oder)",
    "lat": 52.303,
    "lon": 13.982,
    "codes": 68,
@@ -484,7 +484,7 @@
    ]
   },
   "16": {
-   "n": "Eberswalde, Breydin",
+   "n": "Eberswalde",
    "lat": 52.88,
    "lon": 13.252,
    "codes": 54,
@@ -586,7 +586,7 @@
    ]
   },
   "19": {
-   "n": "Schwerin, Mellen",
+   "n": "Schwerin",
    "lat": 53.472,
    "lon": 11.501,
    "codes": 56,
@@ -722,7 +722,7 @@
    ]
   },
   "23": {
-   "n": "Lübeck, Scharbeutz",
+   "n": "Lübeck",
    "lat": 53.927,
    "lon": 10.723,
    "codes": 106,
@@ -790,7 +790,7 @@
    ]
   },
   "25": {
-   "n": "Pinneberg, Holm",
+   "n": "Pinneberg",
    "lat": 54.136,
    "lon": 9.285,
    "codes": 157,
@@ -892,7 +892,7 @@
    ]
   },
   "28": {
-   "n": "Bremen, Radio Bremen",
+   "n": "Bremen",
    "lat": 53.087,
    "lon": 8.82,
    "codes": 79,
@@ -926,7 +926,7 @@
    ]
   },
   "29": {
-   "n": "Celle, Wittingen",
+   "n": "Celle",
    "lat": 52.863,
    "lon": 10.512,
    "codes": 116,
@@ -1096,7 +1096,7 @@
    ]
   },
   "34": {
-   "n": "Kassel, Agentur für Arbeit Korbach",
+   "n": "Kassel",
    "lat": 51.258,
    "lon": 9.354,
    "codes": 104,
@@ -1266,7 +1266,7 @@
    ]
   },
   "39": {
-   "n": "Magdeburg, Schönebeck (Elbe)",
+   "n": "Magdeburg",
    "lat": 52.201,
    "lon": 11.627,
    "codes": 89,
@@ -1742,7 +1742,7 @@
    ]
   },
   "54": {
-   "n": "Trier, Orenhofen",
+   "n": "Trier",
    "lat": 49.918,
    "lon": 6.677,
    "codes": 115,
@@ -1776,7 +1776,7 @@
    ]
   },
   "55": {
-   "n": "Mainz, Bad Kreuznach",
+   "n": "Mainz",
    "lat": 49.886,
    "lon": 7.873,
    "codes": 113,
@@ -1844,7 +1844,7 @@
    ]
   },
   "57": {
-   "n": "Siegen, Universität",
+   "n": "Siegen",
    "lat": 50.822,
    "lon": 7.89,
    "codes": 66,
@@ -1980,7 +1980,7 @@
    ]
   },
   "61": {
-   "n": "Bad Homburg vor der Höhe, Amtsgericht",
+   "n": "Bad Homburg vor der Höhe",
    "lat": 50.255,
    "lon": 8.657,
    "codes": 46,
@@ -2048,7 +2048,7 @@
    ]
   },
   "64": {
-   "n": "Darmstadt, Agentur für Arbeit Darmstadt",
+   "n": "Darmstadt",
    "lat": 49.813,
    "lon": 8.714,
    "codes": 87,
@@ -2184,7 +2184,7 @@
    ]
   },
   "68": {
-   "n": "Mannheim, EOS KSI Inkasso Deutschland GmbH",
+   "n": "Mannheim",
    "lat": 49.474,
    "lon": 8.502,
    "codes": 73,
@@ -2218,7 +2218,7 @@
    ]
   },
   "69": {
-   "n": "Heidelberg, Agentur für Arbeit Heidelberg",
+   "n": "Heidelberg",
    "lat": 49.419,
    "lon": 8.752,
    "codes": 53,
@@ -2388,7 +2388,7 @@
    ]
   },
   "74": {
-   "n": "Heilbronn, eleven teamsports GmbH",
+   "n": "Heilbronn",
    "lat": 49.213,
    "lon": 9.351,
    "codes": 174,
@@ -2422,7 +2422,7 @@
    ]
   },
   "75": {
-   "n": "Pforzheim, Stadtverwaltung",
+   "n": "Pforzheim",
    "lat": 48.889,
    "lon": 8.717,
    "codes": 68,
@@ -2490,7 +2490,7 @@
    ]
   },
   "77": {
-   "n": "Offenburg, Friesenheim",
+   "n": "Offenburg",
    "lat": 48.448,
    "lon": 8.004,
    "codes": 69,
@@ -2626,7 +2626,7 @@
    ]
   },
   "81": {
-   "n": "München, CASHCONTROL Consulting GmbH",
+   "n": "München",
    "lat": 48.129,
    "lon": 11.566,
    "codes": 93,
@@ -2660,7 +2660,7 @@
    ]
   },
   "82": {
-   "n": "Finanzamt, Unterhaching",
+   "n": "Finanzamt",
    "lat": 47.919,
    "lon": 11.26,
    "codes": 119,
@@ -2694,7 +2694,7 @@
    ]
   },
   "83": {
-   "n": "Rosenheim, Agentur für Arbeit Traunstein",
+   "n": "Rosenheim",
    "lat": 47.871,
    "lon": 12.287,
    "codes": 152,
@@ -2728,7 +2728,7 @@
    ]
   },
   "84": {
-   "n": "Landshut, Au in der Hallertau",
+   "n": "Landshut",
    "lat": 48.427,
    "lon": 12.41,
    "codes": 133,
@@ -2762,7 +2762,7 @@
    ]
   },
   "85": {
-   "n": "Ingolstadt, Freising",
+   "n": "Ingolstadt",
    "lat": 48.412,
    "lon": 11.623,
    "codes": 164,
@@ -2796,7 +2796,7 @@
    ]
   },
   "86": {
-   "n": "Augsburg, BÖWE Textile Cleaning GmbH",
+   "n": "Augsburg",
    "lat": 48.381,
    "lon": 10.831,
    "codes": 249,
@@ -2830,7 +2830,7 @@
    ]
   },
   "87": {
-   "n": "Kempten, Agentur für Arbeit Kempten",
+   "n": "Kempten",
    "lat": 47.843,
    "lon": 10.391,
    "codes": 109,
@@ -2966,7 +2966,7 @@
    ]
   },
   "91": {
-   "n": "Erlangen, Röttenbach",
+   "n": "Erlangen",
    "lat": 49.41,
    "lon": 10.849,
    "codes": 214,
@@ -3034,7 +3034,7 @@
    ]
   },
   "93": {
-   "n": "Regensburg, Altmannstein",
+   "n": "Regensburg",
    "lat": 49.065,
    "lon": 12.28,
    "codes": 120,
@@ -3068,7 +3068,7 @@
    ]
   },
   "94": {
-   "n": "Passau, Sankt Oswald-Riedlhütte",
+   "n": "Passau",
    "lat": 48.783,
    "lon": 13.089,
    "codes": 161,
@@ -3204,7 +3204,7 @@
    ]
   },
   "98": {
-   "n": "Suhl, Agentur für Arbeit Thüringen Südwest",
+   "n": "Suhl",
    "lat": 50.589,
    "lon": 10.72,
    "codes": 46,
