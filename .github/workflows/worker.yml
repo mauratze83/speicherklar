@@ -5,6 +5,7 @@ name: Worker
 on:
   workflow_dispatch:
   push:
+    branches: [main]    # nur von main veröffentlichen, sonst laufen zwei Deploys gleichzeitig
     paths: ["worker/**", ".github/workflows/worker.yml"]
 jobs:
   deploy:
