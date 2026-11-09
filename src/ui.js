@@ -139,6 +139,30 @@
   $("inputs").addEventListener("submit",function(e){e.preventDefault();});
   render();
 
+  // Warteliste: sendet direkt an MailerLite (Double-Opt-in), nur beim Absenden
+  (function(){
+    var ML="https://assets.mailerlite.com/jsonp/2780735/forms/203650153478882887/subscribe";
+    var f=$("wait");if(!f)return;
+    var msg=$("wait-msg"),btn=$("wait-btn"),inp=$("wait-email");
+    function show(t,cls){msg.textContent=t;msg.className="wait-msg "+cls;}
+    f.addEventListener("submit",function(e){
+      e.preventDefault();
+      var v=inp.value.trim();
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)){show("Bitte gib eine gültige E-Mail-Adresse ein.","err");inp.focus();return;}
+      if($("wait-hp").value){show("Danke!","ok");return;}
+      var fd=new FormData();fd.append("fields[email]",v);fd.append("ml-submit","1");fd.append("anticsrf","true");
+      btn.disabled=true;btn.textContent="Sende…";
+      var done=function(){
+        show("Fast geschafft: Bitte bestätige deine Adresse über den Link in der Mail, die wir dir gerade geschickt haben (Absender Speicherklar, Betreff auf Englisch: \u201eConfirmation email\u201c). Schau auch im Spam-Ordner.","ok");
+        f.reset();btn.textContent="Eingetragen";
+      };
+      var fail=function(){show("Das hat leider nicht geklappt. Versuch es bitte später noch einmal oder schreib an kontakt@speicherklar.de.","err");btn.disabled=false;btn.textContent="Eintragen";};
+      fetch(ML,{method:"POST",body:fd}).then(function(r){return r.json().catch(function(){return {};});})
+        .then(function(j){if(j&&j.success===false)fail();else done();})
+        .catch(function(){fetch(ML,{method:"POST",body:fd,mode:"no-cors"}).then(done).catch(fail);});
+    });
+  })();
+
   // Bereiche weiter unten einmal einblenden
   try{
     if("IntersectionObserver" in window){
