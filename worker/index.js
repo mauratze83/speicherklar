@@ -86,14 +86,18 @@ export default {
       if (path === "/verify") {
         const id = String(body.session || "");
         if (!/^cs_[A-Za-z0-9_]+$/.test(id)) return json(req, env, { error: "Ungültige Kauf-ID" }, 400);
-        const p = await paidSession(env, id);
+        let p;
+        try { p = await paidSession(env, id); }
+        catch (e) { if (e.status === 404) return json(req, env, { error: "Diesen Kauf finden wir nicht." }, 404); throw e; }
         if (!p.ok) return json(req, env, { error: p.reason === "refunded" ? "Dieser Kauf wurde erstattet." : "Die Zahlung ist noch nicht abgeschlossen." }, 402);
         return json(req, env, { key: await makeKey(env, id) });
       }
       if (path === "/validate") {
         const id = await parseKey(env, body.key);
         if (!id) return json(req, env, { ok: false, error: "unknown" }, 404);
-        const p = await paidSession(env, id);
+        let p;
+        try { p = await paidSession(env, id); }
+        catch (e) { if (e.status === 404) return json(req, env, { ok: false, error: "unknown" }, 404); throw e; }
         return json(req, env, p.ok ? { ok: true } : { ok: false, error: p.reason }, p.ok ? 200 : 410);
       }
       return json(req, env, { error: "Unbekannter Pfad" }, 404);
