@@ -4,12 +4,14 @@ Holt die Postleitzahlen von GeoNames (CC BY 4.0), bildet je PLZ-Gebiet (erste zw
 und fragt dafür bei PVGIS die Monatsmittel 2014–2023 (SARAH3) ab: Globalstrahlung horizontal H(h)_m und Diffusanteil Kd.
 Gegenprobe: derselbe Abruf für den Mittelpunkt der bisherigen Region 4 muss die Werte aus src/sim.js ergeben.
 
-Aufruf: python3 scripts/pvgis_plz2.py   (läuft per GitHub Actions, siehe .github/workflows/sonnendaten.yml)
+Aufruf: python3 scripts/pvgis_plz2.py [--neu = alles neu bei PVGIS abfragen]   (läuft per GitHub Actions, siehe .github/workflows/sonnendaten.yml)
 Ergebnis: src/plz2.json
 """
 import io, json, time, urllib.request, zipfile, datetime, collections, pathlib, re, sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
+# Großkunden-Postleitzahlen (Behörden, Firmen) taugen nicht als Gebietsname
+NO_PLACE = re.compile(r"GmbH|\bAG\b|\bSE\b|\bKG\b|[Aa]mt\b|Bank|Post|Versand|Logistik|Service|Agentur|Niederlassung|Verwaltung|Versicherung|Inkasso|Bundes|Elektronik|Electronic")
 GEONAMES = "https://download.geonames.org/export/zip/DE.zip"
 PVGIS = ("https://re.jrc.ec.europa.eu/api/v5_3/MRcalc?lat={lat:.3f}&lon={lon:.3f}&raddatabase=PVGIS-SARAH3"
          "&startyear=2014&endyear=2023&horirrad=1&d2g=1&outputformat=json")
@@ -45,7 +47,7 @@ def areas_from_geonames(raw):
     for k, rows in sorted(groups.items()):
         # Name: die zwei Orte mit den meisten Postleitzahlen im Gebiet. Ein zweiter Name zählt nur mit mindestens
         # 3 Postleitzahlen, sonst wäre es oft eine Großkunden-PLZ (Behörde, Firma) statt eines Orts.
-        common = collections.Counter(r[0] for r in rows).most_common(2)
+        common = [(n, c) for n, c in collections.Counter(r[0] for r in rows).most_common() if not NO_PLACE.search(n)][:2]
         names = [common[0][0]] + [n for n, c in common[1:] if c >= 3]
         out[k] = {"n": ", ".join(names), "lat": round(sum(r[1] for r in rows) / len(rows), 3),
                   "lon": round(sum(r[2] for r in rows) / len(rows), 3), "codes": len(rows)}
@@ -76,7 +78,14 @@ def main():
     if dev > 0.02:
         sys.exit("Gegenprobe weicht mehr als 2 % ab – Abruf passt nicht zu den bisherigen Daten, nichts geschrieben.")
 
+    # Vorhandene Werte wiederverwenden, wenn der Mittelpunkt gleich geblieben ist
+    old_file = ROOT / "src/plz2.json"
+    old = json.loads(old_file.read_text())["gebiete"] if old_file.exists() else {}
     for i, (k, a) in enumerate(areas.items()):
+        o = old.get(k)
+        if o and o["lat"] == a["lat"] and o["lon"] == a["lon"] and "--neu" not in sys.argv:
+            a["H"], a["Kd"] = o["H"], o["Kd"]
+            continue
         a["H"], a["Kd"] = monthly(a["lat"], a["lon"])
         print(f"{k} {a['n']:<40} {sum(a['H']):7.1f} kWh/m²")
         time.sleep(0.3)
