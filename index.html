@@ -269,14 +269,19 @@ svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
 .field .row.ico-row,.field .row:has(.rv){align-items:center}
 .rv{flex:none;display:inline-flex;align-items:center;gap:10px}
 .ico{display:block;flex:none;overflow:visible}
-.ico-compass{width:48px;height:48px;margin:-10px 0 -8px}
+.ico-compass{width:56px;height:52px;margin:-14px 0 -2px}
 .ico-roof{width:52px;height:38px;margin:-10px 0 -6px}
 .ico-bat{width:46px;height:24px}
-.ic-ring,.ic-body{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
-.ico-compass text{font-family:var(--f-mono);font-size:7.4px;font-weight:600;fill:var(--muted);text-anchor:middle}
-.ic-needle{fill:var(--sun);transform-origin:24px 24px;transition:transform 520ms var(--ease-out),opacity 200ms ease}
-.ic-n2{opacity:0}
-.ic-hub{fill:var(--ink)}
+.ic-body{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.ico-compass text{font-family:var(--f-mono);font-size:6.8px;font-weight:600;fill:var(--muted);text-anchor:middle}
+.ic-sunpath{fill:none;stroke:var(--sun);stroke-width:1.3;stroke-dasharray:2.2 2.6;opacity:.8}
+.ic-sun circle{fill:var(--sun)}
+.ic-house{transform-origin:28px 26px;transition:transform 560ms var(--ease-out)}
+.ic-rooff{fill:var(--surface);stroke:var(--ink);stroke-width:1.5}
+.ic-ridge{stroke:var(--ink);stroke-width:1.5}
+.ic-pv rect{fill:var(--sun)}
+.ic-pv line{stroke:var(--surface);stroke-width:.9}
+.ic-pv-n{opacity:0;transition:opacity 260ms ease}
 .ic-ground{stroke:var(--line);stroke-width:1.5;stroke-linecap:round}
 .ic-wall{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
 .ic-roof{transform-origin:6px 24px;transition:transform 180ms var(--ease-out)}
@@ -285,7 +290,7 @@ svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
 .ic-arc{fill:none;stroke:var(--sun-ink);stroke-width:1.2;stroke-dasharray:2 2}
 .ic-cap{fill:var(--line)}
 .ic-fill{fill:var(--sun);transform-origin:4.5px 12px;transition:transform 220ms var(--ease-out)}
-@media (prefers-reduced-motion:reduce){.ic-needle,.ic-roof,.ic-fill{transition:none}}
+@media (prefers-reduced-motion:reduce){.ic-house,.ic-pv-n,.ic-roof,.ic-fill{transition:none}}
 </style>
 </head>
 <body>
@@ -372,7 +377,7 @@ svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
         <div class="field"><div class="row"><label for="plz">Postleitzahl</label><output for="plz" id="o-plz"></output></div>
           <input type="text" id="plz" inputmode="numeric" maxlength="5" value="44135" class="txt" aria-describedby="o-plz">
         </div>
-        <div class="field"><div class="row ico-row"><span class="flabel" id="l-aspect">Ausrichtung</span><svg class="ico ico-compass" viewBox="0 0 48 48" aria-hidden="true"><circle class="ic-ring" cx="24" cy="24" r="22"/><text x="24" y="10.4">N</text><text x="39.6" y="26.6">O</text><text x="24" y="42.8">S</text><text x="8.4" y="26.6">W</text><g class="ic-needle" id="ic-n1"><path d="M24 12.5 27.2 24h-6.4z"/></g><g class="ic-needle ic-n2" id="ic-n2"><path d="M24 12.5 27.2 24h-6.4z"/></g><circle class="ic-hub" cx="24" cy="24" r="2.6"/></svg></div>
+        <div class="field"><div class="row ico-row"><span class="flabel" id="l-aspect">Ausrichtung</span><svg class="ico ico-compass" viewBox="0 0 56 52" aria-hidden="true"><path class="ic-sunpath" d="M5 26A23 23 0 0 0 51 26"/><g class="ic-sun"><circle cx="28" cy="47" r="3.2"/></g><text x="28" y="5.6">N</text><g class="ic-house" id="ic-n1"><rect class="ic-rooff" x="15" y="13" width="26" height="26" rx="1.5"/><g class="ic-pv ic-pv-n" id="ic-n2"><rect x="17" y="15" width="22" height="9" rx="1"/><line x1="22" y1="15" x2="22" y2="24"/><line x1="28" y1="15" x2="28" y2="24"/><line x1="34" y1="15" x2="34" y2="24"/></g><g class="ic-pv"><rect x="17" y="28" width="22" height="9" rx="1"/><line x1="22" y1="28" x2="22" y2="37"/><line x1="28" y1="28" x2="28" y2="37"/><line x1="34" y1="28" x2="34" y2="37"/></g><line class="ic-ridge" x1="15" y1="26" x2="41" y2="26"/></g></svg></div>
           <div class="seg" role="group" aria-labelledby="l-aspect" id="aspect">
             <button type="button" data-v="0" aria-pressed="true">Süd</button>
             <button type="button" data-v="-45" aria-pressed="false">Südost</button>
@@ -891,12 +896,10 @@ var DRAW = (function () {
   }
 
   // Kleine Grafiken an den Eingaben: Kompass, Dachneigung, Akku
-  var ASP_ROT={"0":180,"-45":135,"45":225,"-90":90,"90":270};
   function icons(p){
-    var n1=$("ic-n1"),n2=$("ic-n2"),ow=state.aspect==="ow";
-    n1.style.transform="rotate("+(ow?90:ASP_ROT[state.aspect])+"deg)";
-    n2.style.transform="rotate("+(ow?270:ASP_ROT[state.aspect])+"deg)";
-    n2.style.opacity=ow?1:0;
+    var ow=state.aspect==="ow";
+    $("ic-n1").style.transform="rotate("+(ow?90:+state.aspect)+"deg)";
+    $("ic-n2").style.opacity=ow?1:0;
     var t=+$("tilt").value,r=t*Math.PI/180;
     $("ic-roof").style.transform="rotate("+(-t)+"deg)";
     $("ic-arc").setAttribute("d",t?"M17,24A11,11 0 0 0 "+(6+11*Math.cos(r)).toFixed(2)+","+(24-11*Math.sin(r)).toFixed(2):"");
