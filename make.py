@@ -47,7 +47,6 @@ p{{font-size:44px;line-height:1.35;max-width:900px}}
 .card .d{{font-size:28px;color:var(--muted)}}
 .wheels{{display:flex;gap:10px}}
 .wheel{{font-family:"JetBrains Mono";font-weight:700;font-size:120px;width:96px;text-align:center;background:linear-gradient(#000 0,#2a2f35 12%,#15191d 50%,#2a2f35 88%,#000 100%);color:#F3F1EA;border-radius:8px;line-height:1.25}}
-.wheel.red{{background:linear-gradient(#5a0f0d 0,var(--red) 14%,#9c2421 50%,var(--red) 86%,#5a0f0d 100%);color:#fff}}
 .main svg{{max-width:100%;height:auto}}
 .src{{font-size:24px;color:var(--muted);line-height:1.35}}
 .dark .src{{color:#97A7B3}}
@@ -110,7 +109,7 @@ def legend(items):
 
 def wheels(n):
     s = str(n)
-    return '<div class="wheels">' + "".join(f'<span class="wheel{" red" if i==len(s)-1 else ""}">{d}</span>' for i, d in enumerate(s)) + "</div>"
+    return '<div class="wheels">' + "".join(f'<span class="wheel">{d}</span>' for d in s) + "</div>"
 
 D = json.loads((pathlib.Path(__file__).parent / "numbers.json").read_text())
 fmt = lambda v: f"{v:,}".replace(",", ".")
