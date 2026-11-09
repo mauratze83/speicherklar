@@ -32,6 +32,10 @@ print("index.html:", len(html), "Zeichen")
 
 # Speicherklar Pro: pro/index.html (Angebots-Check)
 def js(name): return (S / name).read_text().split('if(typeof module!=="undefined")')[0].split("if (typeof module")[0]
+import json
+_plz2 = S / "plz2.json"
+_areas = json.loads(_plz2.read_text())["gebiete"] if _plz2.exists() else {}
+plz2_js = "var PLZ2=" + json.dumps({k: {"n": a["n"], "lat": a["lat"], "lon": a["lon"], "H": a["H"], "Kd": a["Kd"]} for k, a in _areas.items()}, ensure_ascii=False, separators=(",", ":")) + ";"
 pro_css = ((S / "fonts.css").read_text() + (S / "style.css").read_text()).replace("url(fonts/", "url(../fonts/") + (S / "pro.css").read_text()
 pro_head = f"""<!doctype html>
 <html lang="de">
@@ -55,7 +59,7 @@ pro_head = f"""<!doctype html>
 <body>
 """
 pro_html = pro_head + (S / "pro-body.html").read_text().replace("<!--HEADER-->", header("../", "pro")).replace("<!--FOOTER-->", footer("../")) + \
-    "\n<script>\n" + "\n".join([js("sim.js"), js("draw.js"), js("markt.js"), (S / "pro-config.js").read_text(), js("pro.js"), (S / "pro-ui.js").read_text()]) + "</script>\n</body>\n</html>\n"
+    "\n<script>\n" + "\n".join([js("sim.js"), plz2_js, js("draw.js"), js("markt.js"), (S / "pro-config.js").read_text(), js("pro.js"), (S / "pro-ui.js").read_text()]) + "</script>\n</body>\n</html>\n"
 (S.parent / "pro").mkdir(exist_ok=True)
 (S.parent / "pro" / "index.html").write_text(pro_html)
-print("pro/index.html:", len(pro_html), "Zeichen")
+print("pro/index.html:", len(pro_html), "Zeichen,", len(_areas), "PLZ-Gebiete")

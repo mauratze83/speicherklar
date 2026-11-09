@@ -30,7 +30,8 @@ var DAYLOAD=(function(){var r=rng(1337),a=[];for(var d=0;d<365;d++)a.push(0.75+0
 
 /* Erzeugung: kWh je Stunde für eine Dachfläche. aspect: 0 = Süd, -90 = Ost, 90 = West */
 function pvProfile(region,kwp,tilt,aspect){
-  var R=REGIONS[region],phi=R.lat*D2R,out=new Float64Array(8760);
+  // region: Schlüssel aus REGIONS oder ein Objekt mit lat, lon, H, Kd (PLZ-Gebiet in Pro)
+  var R=typeof region==="object"?region:REGIONS[region],phi=R.lat*D2R,out=new Float64Array(8760);
   var b=tilt*D2R,g=aspect*D2R;
   var nE=-Math.sin(b)*Math.sin(g),nN=-Math.sin(b)*Math.cos(g),nU=Math.cos(b);
   var skyF=(1+Math.cos(b))/2,gndF=ALBEDO*(1-Math.cos(b))/2;

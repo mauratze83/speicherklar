@@ -13,6 +13,7 @@ Kostenloser Speicher-Rechner für geplante PV-Anlagen – https://speicherklar.d
 
 - `pro/index.html` wird von `python3 build.py` mitgebaut. Quellen: `src/pro-body.html`, `src/pro-ui.js` (Seite, Freischaltung, Bericht), `src/pro.js` (Rechnung, in Node testbar), `src/pro.css`
 - `src/pro-config.js` – Polar-Daten (Organization ID, Benefit ID, Checkout-Link), Preise, Einführungsende, Starttermin. Leere Polar-Daten = kein Verkauf.
+- `src/plz2.json` – Sonnendaten je zweistelligem PLZ-Gebiet für Pro (PVGIS-SARAH3 2014–2023, Ortsmittelpunkte aus GeoNames, CC BY 4.0). Erzeugt von `scripts/pvgis_plz2.py` per GitHub Actions (Workflow „Sonnendaten“, von Hand startbar), mit Gegenprobe gegen Region 4.
 - `src/markt.js` – Marktspannen für den Preis-Check, ein- bis zweimal im Jahr aktualisieren
 - `node test/pro.test.js` – Beispielrechnungen und Abgleich mit dem kostenlosen Rechner
 - Lokal testen: `python3 -m http.server`, dann `localhost:8000/pro/`; der Schlüssel `DEV-SPEICHERKLAR` schaltet nur auf localhost frei

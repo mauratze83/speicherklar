@@ -75,11 +75,17 @@
     if (s > 0) $("f-cons").value = Math.round(s);
   });
 
-  function regionOf(plz) { plz = String(plz || "").replace(/\D/g, ""); return plz.length === 5 && REGIONS[plz[0]] ? plz[0] : null; }
+  // Sonnendaten: zweistelliges PLZ-Gebiet (PLZ2, aus PVGIS), sonst die Großregion aus dem kostenlosen Rechner
+  function regionOf(plz) {
+    plz = String(plz || "").replace(/\D/g, ""); if (plz.length !== 5) return null;
+    var a = typeof PLZ2 !== "undefined" && PLZ2[plz.slice(0, 2)];
+    if (a) return { lat: a.lat, lon: a.lon, H: a.H, Kd: a.Kd, n: a.n, area: "PLZ-Gebiet " + plz.slice(0, 2) };
+    var R = REGIONS[plz[0]]; return R ? { lat: R.lat, lon: R.lon, H: R.H, Kd: R.Kd, n: R.n, area: "PLZ-Region " + plz[0] } : null;
+  }
   $("f-plz").addEventListener("input", function () {
     var r = regionOf(this.value);
     var empty = !this.value.trim();
-    $("o-plz").textContent = r ? REGIONS[r].n : empty ? "für die Sonnendaten" : "5-stellige PLZ";
+    $("o-plz").textContent = r ? r.area + ": " + r.n : empty ? "für die Sonnendaten" : "5-stellige PLZ";
     $("o-plz").className = r || empty ? "" : "warn";
   });
 
@@ -283,7 +289,7 @@
 
     h += '<header class="rhead"><div class="eyebrow">Speicherklar Pro · Angebots-Check · ' + stand + "</div>" +
       "<h1>" + (o.model ? esc(o.model) + ", " : "") + kwh(r.cap) + " Speicher</h1>" +
-      '<p class="rmeta">' + roofsTxt + " · " + REGIONS[o.region].n.split(",")[0] + " · " + nf0.format(o.cons) + " kWh Haushalt" +
+      '<p class="rmeta">' + roofsTxt + " · " + o.region.area + " (" + o.region.n + ") · " + nf0.format(o.cons) + " kWh Haushalt" +
       (o.ev ? " · " + nf0.format(o.ev) + " kWh E-Auto" : "") + (o.hp ? " · " + nf0.format(o.hp) + " kWh Wärmepumpe" : "") + "</p></header>";
 
     // 1 Ergebnis
@@ -359,7 +365,8 @@
       "<tr><td>Deine Eingaben</td><td>" + kwh(o.cap) + " " + (o.capKind === "brutto" ? "brutto, gerechnet mit " + Math.round(PRO.BRUTTO * 100) + " % nutzbar" : o.capKind === "unklar" ? "(Art nicht angegeben, gerechnet als nutzbar)" : "nutzbar") +
       (o.pow ? ", " + nf1.format(o.pow) + " kW Leistung" : ", Leistung nicht angegeben (gerechnet: halbe Kapazität pro Stunde, höchstens 5 kW)") +
       "; Strompreis " + nf2.format(o.price) + " ct/kWh; " + (o.eeg === "reform" ? "EEG-Reform 2027 (keine Vergütung, Einspeisung höchstens 50 %)" : "Einspeisevergütung " + nf2.format(o.feed) + " ct/kWh") + "; Lebensdauer " + life + " Jahre" + (o.monthly ? "; Verbrauch nach Monaten" : "") + "</td></tr>" +
-      "<tr><td>Rechnung</td><td>Jahressimulation in 5-Minuten-Schritten mit Sonnendaten PVGIS-SARAH3 für deine PLZ-Region, Standardlastprofil H0" + (o.hp ? ", Wärmepumpe nach Heizmonaten verteilt" : "") + ". Speicher mit 88 % Wirkungsgrad je Zyklus und 25 W Standby. Erzeugung im Jahr: " + nf0.format(Math.round(r.gen / 10) * 10) + " kWh, Verbrauch: " + nf0.format(Math.round(r.load / 10) * 10) + " kWh.</td></tr>" +
+      "<tr><td>Rechnung</td><td>Jahressimulation in 5-Minuten-Schritten mit Sonnendaten PVGIS-SARAH3 2014–2023 für " + o.region.area + " (Mittelpunkt " + nf2.format(o.region.lat) + "° N, " + nf2.format(o.region.lon) + "° O), Standardlastprofil H0" + (o.hp ? ", Wärmepumpe nach Heizmonaten verteilt" : "") + ". Speicher mit 88 % Wirkungsgrad je Zyklus und 25 W Standby. Erzeugung im Jahr: " + nf0.format(Math.round(r.gen / 10) * 10) + " kWh, Verbrauch: " + nf0.format(Math.round(r.load / 10) * 10) + " kWh.</td></tr>" +
+      "<tr><td>Ort</td><td>Mittelpunkt des PLZ-Gebiets aus den Postleitzahlen von GeoNames (geonames.org, CC BY 4.0). Innerhalb eines Gebiets ändert sich die Sonneneinstrahlung im Monatsmittel nur wenig.</td></tr>" +
       "<tr><td>Andere Größen</td><td>" + Math.round(PRO.FIX * 100) + " % des Speicherpreises als fester Anteil. Ladeleistung wie im Angebot, bei kleineren Größen höchstens halbe Kapazität pro Stunde, mindestens 2,5 kW.</td></tr>" +
       "<tr><td>Nicht drin</td><td>Verschattung, Alterung des Akkus, steigende Strompreise, Zinsen, dynamische Tarife, Notstrom. Strompreis und Lebensdauer prüft Abschnitt 5.</td></tr>" +
       '</tbody></table></div><p class="fine">Dieser Bericht ist eine Rechnung mit deinen Angaben und keine Anlagen-, Rechts- oder Finanzberatung. Er ersetzt nicht die Planung durch einen Fachbetrieb. Erstellt mit Speicherklar Pro, speicherklar.de.</p></section>';
