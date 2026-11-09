@@ -280,6 +280,11 @@ svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
 .ic-fill{fill:var(--sun);transform-origin:4.5px 12px;transition:transform 220ms var(--ease-out)}
 @media (prefers-reduced-motion:reduce){.ic-house,.ic-pv-n,.ic-roof,.ic-fill{transition:none}}
 
+/* Kernzahl auf Ratgeber-Karten */
+.rlist .kz{font-style:normal;display:grid;gap:2px;padding-bottom:10px;margin-bottom:4px;border-bottom:1px solid var(--line)}
+.rlist .kz em{font-style:normal;font-family:var(--f-display);font-weight:800;font-stretch:80%;font-size:clamp(34px,4.2vw,44px);line-height:1;color:var(--sun-ink);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.rlist .kz small{font-size:14px;line-height:1.35;color:var(--muted)}
+
 .about{display:grid;grid-template-columns:minmax(0,1fr) 340px;column-gap:56px;align-items:start}
 .about-text{grid-column:1;grid-row:1}.about-body{grid-column:1;grid-row:2}
 .about-photo{grid-column:2;grid-row:1/span 2;margin:8px 0 0;position:sticky;top:24px}
@@ -318,7 +323,7 @@ main.page{padding-block:36px 40px}
 .cpanels{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px}
 .cpanel svg{display:block;width:100%;height:auto}
 .ctitle{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.rlist .spark{margin-bottom:4px}
+
 html.js .chart .sline{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1100ms var(--ease-in-out)}
 html.js .chart .sdot,html.js .chart .slabel{opacity:0;transition:opacity 300ms var(--ease-out) 900ms}
 html.js .chart .cpanel svg{clip-path:inset(0 100% 0 0);transition:clip-path 1000ms var(--ease-in-out)}

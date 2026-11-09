@@ -269,3 +269,8 @@ svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
 .ic-cap{fill:var(--line)}
 .ic-fill{fill:var(--sun);transform-origin:4.5px 12px;transition:transform 220ms var(--ease-out)}
 @media (prefers-reduced-motion:reduce){.ic-house,.ic-pv-n,.ic-roof,.ic-fill{transition:none}}
+
+/* Kernzahl auf Ratgeber-Karten */
+.rlist .kz{font-style:normal;display:grid;gap:2px;padding-bottom:10px;margin-bottom:4px;border-bottom:1px solid var(--line)}
+.rlist .kz em{font-style:normal;font-family:var(--f-display);font-weight:800;font-stretch:80%;font-size:clamp(34px,4.2vw,44px);line-height:1;color:var(--sun-ink);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.rlist .kz small{font-size:14px;line-height:1.35;color:var(--muted)}
