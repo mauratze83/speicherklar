@@ -107,7 +107,7 @@ def ask(a):
     """Kasten „Frage offen?“: öffnet das Mailprogramm mit vorausgefülltem Betreff, kein Fremddienst."""
     subj = quote(f"Frage zu: {a['title']}")
     body = quote(f"Hallo Manuel,\n\nmeine Frage zum Artikel https://speicherklar.de/ratgeber/{a['slug']}.html:\n\n")
-    return (f'<div class="ask"><b>Noch eine Frage offen?</b><span>Schreib sie mir. Gute Fragen beantworte ich hier im Artikel, ohne deinen Namen.</span>'
+    return (f'<div class="ask"><b>Noch eine Frage offen?</b><span>Schreib sie mir. Ich antworte dir per Mail, und was öfter gefragt wird, ergänze ich hier im Artikel, ohne deinen Namen.</span>'
             f'<a class="btn ghost" href="mailto:kontakt@speicherklar.de?subject={subj}&amp;body={body}" data-umami-event="frage-mail">Frage per Mail stellen</a></div>')
 
 CTA = """<div class="cta"><b>Rechne dein eigenes Haus durch</b><span>Postleitzahl, Dachausrichtung und Verbrauch eingeben. Der kostenlose Rechner zeigt dir die wirtschaftlichste Speichergröße, auch für das Szenario EEG-Reform 2027.</span><a class="btn" href="../#rechner">Zum Rechner</a></div>"""
