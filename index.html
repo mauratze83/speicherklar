@@ -266,33 +266,6 @@ svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
 .scene figcaption{font-size:12.5px;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){.scene{animation:none}.scene .sun,.scene .cloud,.scene .flow{transition:opacity 200ms ease}}
 
-/* Kleine Grafiken an den Eingaben */
-.field .row.ico-row,.field .row:has(.rv){align-items:center}
-.rv{flex:none;display:inline-flex;align-items:center;gap:10px}
-.ico{display:block;flex:none;overflow:visible}
-.ico-compass{width:56px;height:52px;margin:-14px 0 -2px}
-.ico-roof{width:52px;height:38px;margin:-10px 0 -6px}
-.ico-bat{width:46px;height:24px}
-.ic-body{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
-.ico-compass text{font-family:var(--f-mono);font-size:6.8px;font-weight:600;fill:var(--muted);text-anchor:middle}
-.ic-sunpath{fill:none;stroke:var(--sun);stroke-width:1.3;stroke-dasharray:2.2 2.6;opacity:.8}
-.ic-sun circle{fill:var(--sun)}
-.ic-house{transform-origin:28px 26px;transition:transform 560ms var(--ease-out)}
-.ic-rooff{fill:var(--surface);stroke:var(--ink);stroke-width:1.5}
-.ic-ridge{stroke:var(--ink);stroke-width:1.5}
-.ic-pv rect{fill:var(--sun)}
-.ic-pv line{stroke:var(--surface);stroke-width:.9}
-.ic-pv-n{opacity:0;transition:opacity 260ms ease}
-.ic-ground{stroke:var(--line);stroke-width:1.5;stroke-linecap:round}
-.ic-wall{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
-.ic-roof{transform-origin:6px 24px;transition:transform 180ms var(--ease-out)}
-.ic-roof line{stroke:var(--ink);stroke-width:2.4;stroke-linecap:round}
-.ic-roof rect{fill:var(--sun)}
-.ic-arc{fill:none;stroke:var(--sun-ink);stroke-width:1.2;stroke-dasharray:2 2}
-.ic-cap{fill:var(--line)}
-.ic-fill{fill:var(--sun);transform-origin:4.5px 12px;transition:transform 220ms var(--ease-out)}
-@media (prefers-reduced-motion:reduce){.ic-house,.ic-pv-n,.ic-roof,.ic-fill{transition:none}}
-
 /* Kernzahl auf Ratgeber-Karten */
 .rlist .kz{font-style:normal;display:grid;gap:2px;padding-bottom:8px;margin-bottom:2px;border-bottom:1px solid var(--line)}
 .rlist .kz em{font-style:normal;font-family:var(--f-display);font-weight:800;font-stretch:105%;font-size:19px;line-height:1.2;color:var(--sun-ink);font-variant-numeric:tabular-nums}
@@ -383,7 +356,7 @@ svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
         <div class="field"><div class="row"><label for="plz">Postleitzahl</label><output for="plz" id="o-plz"></output></div>
           <input type="text" id="plz" inputmode="numeric" maxlength="5" value="44135" class="txt" aria-describedby="o-plz">
         </div>
-        <div class="field"><div class="row ico-row"><span class="flabel" id="l-aspect">Ausrichtung</span><svg class="ico ico-compass" viewBox="0 0 56 52" aria-hidden="true"><path class="ic-sunpath" d="M5 26A23 23 0 0 0 51 26"/><g class="ic-sun"><circle cx="28" cy="47" r="3.2"/></g><text x="28" y="5.6">N</text><g class="ic-house" id="ic-n1"><rect class="ic-rooff" x="15" y="13" width="26" height="26" rx="1.5"/><g class="ic-pv ic-pv-n" id="ic-n2"><rect x="17" y="15" width="22" height="9" rx="1"/><line x1="22" y1="15" x2="22" y2="24"/><line x1="28" y1="15" x2="28" y2="24"/><line x1="34" y1="15" x2="34" y2="24"/></g><g class="ic-pv"><rect x="17" y="28" width="22" height="9" rx="1"/><line x1="22" y1="28" x2="22" y2="37"/><line x1="28" y1="28" x2="28" y2="37"/><line x1="34" y1="28" x2="34" y2="37"/></g><line class="ic-ridge" x1="15" y1="26" x2="41" y2="26"/></g></svg></div>
+        <div class="field"><span class="flabel" id="l-aspect">Ausrichtung</span>
           <div class="seg" role="group" aria-labelledby="l-aspect" id="aspect">
             <button type="button" data-v="0" aria-pressed="true">Süd</button>
             <button type="button" data-v="-45" aria-pressed="false">Südost</button>
@@ -393,7 +366,7 @@ svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
             <button type="button" data-v="90" aria-pressed="false">West</button>
           </div>
           <span class="hint" id="h-aspect">Ost-West heißt: halbe Leistung auf jeder Dachseite.</span></div>
-        <div class="field"><div class="row"><label for="tilt">Dachneigung</label><span class="rv"><svg class="ico ico-roof" viewBox="0 0 44 32" aria-hidden="true"><line class="ic-ground" x1="2" y1="30.5" x2="42" y2="30.5"/><rect class="ic-wall" x="6" y="24" width="30" height="6.5"/><path class="ic-arc" id="ic-arc" d=""/><g class="ic-roof" id="ic-roof"><line x1="6" y1="24" x2="34" y2="24"/><rect x="9" y="20.6" width="22" height="3.4" rx=".8"/></g></svg><output for="tilt" id="o-tilt"></output></span></div>
+        <div class="field"><div class="row"><label for="tilt">Dachneigung</label><output for="tilt" id="o-tilt"></output></div>
           <input type="range" id="tilt" min="0" max="60" step="5" value="35">
           <span class="hint">Flachdach mit Aufständerung: etwa 10–15°.</span></div>
         <div class="field"><div class="row"><label for="pv">PV-Leistung</label><output for="pv" id="o-pv"></output></div>
@@ -416,7 +389,7 @@ svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
 
       <fieldset>
         <legend>Speicher</legend>
-        <div class="field big"><div class="row"><label for="bat">Speichergröße (nutzbar)</label><span class="rv"><svg class="ico ico-bat" viewBox="0 0 46 24" aria-hidden="true"><rect class="ic-body" x="1.5" y="3" width="37" height="18" rx="3.5"/><rect class="ic-cap" x="39.5" y="8.5" width="4" height="7" rx="1.2"/><rect class="ic-fill" id="ic-fill" x="4.5" y="6" width="31" height="12" rx="1.6"/></svg><output for="bat" id="o-bat"></output></span></div>
+        <div class="field big"><div class="row"><label for="bat">Speichergröße (nutzbar)</label><output for="bat" id="o-bat"></output></div>
           <input type="range" id="bat" min="1" max="15" step="1" value="8"></div>
         <div class="field"><div class="row"><label for="bprice">Preis inkl. Einbau</label><output for="bprice" id="o-bprice"></output></div>
           <input type="range" id="bprice" min="250" max="1000" step="25" value="500">
@@ -902,22 +875,10 @@ var DRAW = (function () {
       feed:+$("feed").value,feedLimit:state.eeg==="reform"?0.5:0};
   }
 
-  // Kleine Grafiken an den Eingaben: Kompass, Dachneigung, Akku
-  function icons(p){
-    var ow=state.aspect==="ow";
-    $("ic-n1").style.transform="rotate("+(ow?90:+state.aspect)+"deg)";
-    $("ic-n2").style.opacity=ow?1:0;
-    var t=+$("tilt").value,r=t*Math.PI/180;
-    $("ic-roof").style.transform="rotate("+(-t)+"deg)";
-    $("ic-arc").setAttribute("d",t?"M17,24A11,11 0 0 0 "+(6+11*Math.cos(r)).toFixed(2)+","+(24-11*Math.sin(r)).toFixed(2):"");
-    $("ic-fill").style.transform="scaleX("+(p.bat/+$("bat").max)+")";
-  }
-
   function outputs(p,plzOk){
     $("o-plz").textContent=plzOk?REGIONS[p.region].n:"5-stellige PLZ eingeben";
     $("o-plz").className=plzOk?"":"warn";
     $("o-tilt").textContent=$("tilt").value+"°";
-    icons(p);
     $("o-pv").textContent=nf1.format(+$("pv").value)+" kWp";
     $("o-cons").textContent=nf0.format(p.cons)+" kWh";
     $("o-ev").textContent=p.ev?nf0.format(p.ev)+" kWh":"kein E-Auto";
