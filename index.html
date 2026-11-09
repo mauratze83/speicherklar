@@ -402,9 +402,9 @@ svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
 
       <fieldset>
         <legend>Verbrauch</legend>
-        <div class="field"><div class="row"><label for="cons">Haushaltsstrom pro Jahr</label><output for="cons" id="o-cons"></output></div>
-          <input type="range" id="cons" min="1500" max="12000" step="100" value="4500">
-          <span class="hint">Ohne E-Auto. Steht auf deiner Jahresabrechnung.</span></div>
+        <div class="field"><div class="row"><label for="cons">Stromverbrauch pro Jahr</label><output for="cons" id="o-cons"></output></div>
+          <input type="range" id="cons" min="1500" max="25000" step="100" value="4500">
+          <span class="hint">Alles außer E-Auto, also auch Wärmepumpe, Klimaanlage oder Pool. Steht auf deiner Jahresabrechnung.</span></div>
         <div class="field"><div class="row"><label for="ev">E-Auto pro Jahr</label><output for="ev" id="o-ev"></output></div>
           <input type="range" id="ev" min="0" max="5000" step="100" value="0">
           <span class="hint">Faustwert: 15.000 km im Jahr sind rund 2.500 kWh.</span>
@@ -498,7 +498,7 @@ svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
             <tr><td>Sonneneinstrahlung</td><td class="num">Monatsmittel 2014–2023</td><td>PVGIS-SARAH3 der EU-Kommission, je PLZ-Region. Daraus berechnet der Rechner Stunde für Stunde die Einstrahlung auf dein Dach, nach Sonnenstand, Ausrichtung und Neigung. <small>Abweichung zu PVGIS-Jahreserträgen: unter 4 %</small></td></tr>
             <tr><td>Wetter</td><td class="num">365 einzelne Tage</td><td>Sonnige und trübe Tage wechseln sich ab, oft mehrere trübe Tage am Stück. Der Speicher muss also auch Durststrecken überstehen.</td></tr>
             <tr><td>Anlagenverluste</td><td class="num">ca. 21 %</td><td>Wechselrichter, Kabel, Wärme, Verschmutzung, Reflexion bei flachem Lichteinfall</td></tr>
-            <tr><td>Verbrauchsprofil</td><td class="num">Standardlastprofil H0</td><td>Morgen- und Abendspitze, im Winter mehr als im Sommer, kurze Lastspitzen in 5-Minuten-Schritten.</td></tr>
+            <tr><td>Verbrauchsprofil</td><td class="num">Standardlastprofil H0</td><td>Morgen- und Abendspitze, im Winter mehr als im Sommer, kurze Lastspitzen in 5-Minuten-Schritten. Eine Wärmepumpe braucht im Winter deutlich mehr; mit Wärmepumpe ist das Ergebnis für den Speicher daher eher zu gut.</td></tr>
             <tr><td>Speicher</td><td class="num">88 % je Zyklus, 25 W Standby</td><td>Ladeleistung: halbe Kapazität pro Stunde, höchstens 5 kW.</td></tr>
             <tr><td>EEG heute</td><td class="num">7,70 ct/kWh</td><td>Neue Anlagen bis 10 kWp, Teileinspeisung, Inbetriebnahme 01.08.2026–31.01.2027 <small>(Bundesnetzagentur)</small></td></tr>
             <tr><td>EEG-Reform 2027</td><td class="num">0 ct, max. 50 %</td><td>Kabinettsentwurf vom 29.07.2026: feste Vergütung entfällt nach Übergangszahlungen, Einspeisung höchstens 50 % der Anlagenleistung. Noch nicht beschlossen <small>(Stand 09.11.2026)</small>.</td></tr>
