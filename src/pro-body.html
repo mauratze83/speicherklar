@@ -3,9 +3,9 @@
   <section class="hero pro-hero">
     <div class="wrap">
       <div class="eyebrow">Speicherklar Pro · Angebots-Check</div>
-      <h1>Passt der Speicher in <em>deinem Angebot?</em></h1>
-      <p class="lede">Trag das Angebot deines Installateurs ein. Du siehst sofort, ob die Speichergröße zu deinem Haushalt passt. Der vollständige Bericht zeigt, was eine passende Größe spart, wie stabil das Ergebnis ist und was du den Installateur fragen solltest.</p>
-      <div class="facts"><span>Eingabe <b>kostenlos</b></span><span>Sonnendaten <b>für dein PLZ-Gebiet</b></span><span>Rechnung <b>in deinem Browser</b></span><span>Bericht als <b>PDF</b></span></div>
+      <h1>Passen Speicher und Anlage in <em>deinem Angebot?</em></h1>
+      <p class="lede">Trag das Angebot deines Installateurs ein. Du siehst sofort, ob Speicher und PV-Anlage zu deinem Haushalt passen. Der vollständige Bericht zeigt die beste Kombination aus PV-Größe und Speicher, was sie spart, wie stabil das Ergebnis ist und was du den Installateur fragen solltest.</p>
+      <div class="facts"><span>Eingabe <b>kostenlos</b></span><span>PV-Größe <b>und</b> Speicher</span><span>Sonnendaten <b>für dein PLZ-Gebiet</b></span><span>Rechnung <b>in deinem Browser</b></span><span>Bericht als <b>PDF</b></span></div>
     </div>
   </section>
 
@@ -45,6 +45,7 @@
         <div class="field"><div class="row"><label for="f-plz">Postleitzahl</label><output id="o-plz"></output></div>
           <input class="in txt" type="text" id="f-plz" inputmode="numeric" maxlength="5" autocomplete="postal-code"></div>
         <div id="roofs" class="roofs"></div>
+        <span class="hint">„Höchstens“: so viel kWp passen maximal auf die Dachfläche. Damit prüft der Bericht auch, ob sich eine größere Anlage lohnt.</span>
         <button type="button" class="linkbtn" id="add-roof">+ Dachfläche hinzufügen</button>
       </fieldset>
 
@@ -87,7 +88,7 @@
     <div class="panel result" id="teaser" aria-live="polite">
       <div class="empty" id="t-empty">
         <h2>So sieht dein Ergebnis aus</h2>
-        <p class="sub">Nach dem Prüfen steht hier die Einordnung deines Angebots: Speichergröße, Speicherpreis und Preis der PV-Anlage. Das ist kostenlos.</p>
+        <p class="sub">Nach dem Prüfen steht hier die Einordnung deines Angebots: Größe von Speicher und PV-Anlage, Speicherpreis und Preis der PV-Anlage. Das ist kostenlos.</p>
       </div>
       <div id="t-res" hidden>
         <p class="verdict" id="t-verdict"></p>
@@ -102,10 +103,11 @@
         <div class="buy" id="buy">
           <h3>Im vollständigen Bericht</h3>
           <ul class="checks">
-            <li>Welche Größe passt und was sie in der Anschaffung spart, in Euro</li>
+            <li>Beste Kombination aus PV-Größe und Speicher für dein Dach, in Euro</li>
+            <li>Welche Speichergröße passt und was sie in der Anschaffung spart</li>
             <li>Ersparnis, Amortisation und Bilanz für Angebot und passende Größe</li>
             <li>November gegen Juli: wann dein Speicher voll wird und wann nicht</li>
-            <li>Was sich ändert mit EEG-Reform, Strompreis, E-Auto oder Wärmepumpe</li>
+            <li>Wie sich die richtige Größe mit der EEG-Reform 2027 verschiebt, dazu Strompreis, E-Auto und Wärmepumpe</li>
             <li>Fragen an deinen Installateur, passend zu deinem Angebot</li>
           </ul>
           <div class="buyrow">

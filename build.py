@@ -42,11 +42,11 @@ pro_head = f"""<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Angebots-Check für PV-Speicher – Speicherklar Pro</title>
-<meta name="description" content="Passt der Speicher in deinem PV-Angebot? Angebot eintragen, kostenlos die Einordnung sehen, Bericht mit passender Größe, Preis-Check und Fragen an den Installateur.">
+<title>Angebots-Check für PV-Anlage und Speicher – Speicherklar Pro</title>
+<meta name="description" content="Passen Speicher und PV-Anlage in deinem Angebot? Angebot eintragen, kostenlos die Einordnung sehen, Bericht mit bester Kombination aus PV-Größe und Speicher, Preis-Check und Fragen an den Installateur.">
 <link rel="canonical" href="https://speicherklar.de/pro/">
-<meta property="og:title" content="Speicherklar Pro – Angebots-Check für deinen Stromspeicher">
-<meta property="og:description" content="Ist der Speicher in deinem Angebot zu groß? Rechne es nach, bevor du unterschreibst.">
+<meta property="og:title" content="Speicherklar Pro – Angebots-Check für PV-Anlage und Speicher">
+<meta property="og:description" content="Ist der Speicher zu groß, die Anlage zu klein? Rechne dein Angebot nach, bevor du unterschreibst.">
 <meta property="og:url" content="https://speicherklar.de/pro/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="de_DE">

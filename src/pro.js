@@ -4,7 +4,8 @@
    o = { region, roofs:[{kwp,tilt,aspect}], cons, monthly (optional, 12 Werte), ev, evTime, hp,
          price (ct/kWh), feed (ct/kWh), feedLimit (0 oder 0.5), eeg ("now"|"reform"), life (Jahre),
          cap (kWh laut Angebot), capKind ("nutzbar"|"brutto"|"unklar"), pow (kW, 0 = unbekannt),
-         total (€ Gesamtpreis, 0 = unbekannt), store (€ Aufpreis Speicher, 0 = unbekannt), model (Text) } */
+         total (€ Gesamtpreis, 0 = unbekannt), store (€ Aufpreis Speicher, 0 = unbekannt), model (Text) }
+   roofs[i].max (optional): so viel kWp passen höchstens auf diese Dachfläche – Grundlage für die Empfehlung der PV-Größe. */
 var PRO = (function () {
   var S = typeof require !== "undefined" ? require("./sim.js") : { profiles: profiles, runBattery: runBattery, daySeries: daySeries, REGIONS: REGIONS };
   var M = typeof require !== "undefined" ? require("./markt.js") : MARKT;
@@ -12,6 +13,22 @@ var PRO = (function () {
   var FIX = 0.3;        // Anteil des Speicherpreises, der nicht mit der Größe sinkt (Wechselrichter, Montage, Anschluss)
   var BRUTTO = 0.9;     // nutzbarer Anteil, wenn das Angebot brutto angibt
   var MAXCAP = 20;
+  var FIX_PV = 0.25;    // Anteil des PV-Preises, der nicht mit der Größe sinkt (Gerüst, Zählerschrank, Anmeldung, Planung)
+  var PVLIFE = 20;      // Rechenzeitraum der PV-Anlage in Jahren (EEG-Zeitraum)
+  var GRIDCAPS = [];    // Speichergrößen für die gemeinsame Optimierung
+  for (var gc = 0; gc <= 15; gc++) GRIDCAPS.push(gc);
+  // EEG-Vergütung Teileinspeisung, Inbetriebnahme 01.08.2026–31.01.2027 (ct/kWh), anteilig nach Leistung
+  var TARIF = [[10, 7.70], [40, 6.66], [100, 5.44]];
+
+  // Mittlere Vergütung einer Anlage mit K kWp. o.feed ist der Satz bis 10 kWp; die höheren Stufen sinken im selben Verhältnis.
+  function tariff(o, K) {
+    if (!(o.feed > 0) || !(K > 0)) return 0;
+    var sum = 0, lo = 0;
+    TARIF.forEach(function (t) { var part = Math.max(0, Math.min(K, t[0]) - lo); sum += part * t[1]; lo = t[0]; });
+    if (K > 100) sum += (K - 100) * TARIF[2][1];
+    return o.feed / TARIF[0][1] * sum / K;
+  }
+  function kwpOf(roofs) { return roofs.reduce(function (s, r) { return s + r.kwp; }, 0); }
 
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
 
@@ -46,9 +63,9 @@ var PRO = (function () {
 
   // Wirtschaftlichkeit für gegebene Preise auf Basis einer Energiebilanz
   function econ(en, o, cap, sp) {
-    var base = en.runs[0].r, life = o.life;
+    var base = en.runs[0].r, life = o.life, feed = tariff(o, kwpOf(o.roofs));
     var rows = en.runs.map(function (x) {
-      var save = (base.grid - x.r.grid) * o.price / 100 - (base.feed - x.r.feed) * o.feed / 100;
+      var save = (base.grid - x.r.grid) * o.price / 100 - (base.feed - x.r.feed) * feed / 100;
       var cost = costFor(x.cap, cap, sp);
       return { cap: x.cap, r: x.r, save: save, cost: cost, net: save * life - cost, payback: save > 0 && x.cap > 0 ? cost / save : Infinity, extra: base.grid - x.r.grid };
     });
@@ -68,6 +85,52 @@ var PRO = (function () {
   function pvBand(kwp) { for (var i = 0; i < M.PV.length; i++) if (kwp <= M.PV[i][0]) return { lo: M.PV[i][1], hi: M.PV[i][2] }; }
   function rate(v, lo, hi) { return v < lo ? "guenstig" : v <= hi ? "ueblich" : v <= hi * 1.15 ? "hoch" : "teuer"; }
 
+  // ---------- PV-Größe und Speicher gemeinsam ----------
+  // Leistung K bis zum Angebot: alle Dachflächen des Angebots gleichmäßig verkleinert.
+  // Über das Angebot hinaus: die freie Fläche (max − Angebot) je Dachfläche gleichmäßig gefüllt.
+  function withRoofs(o, roofs) { var c = clone(o); c.roofs = roofs; return c; }
+  function pvGrid(o, cap, sp, P) {
+    var offerRoofs = o.roofs.map(function (r) { return { kwp: r.kwp, tilt: r.tilt, aspect: r.aspect }; });
+    var maxRoofs = o.roofs.map(function (r) { return { kwp: Math.max(r.kwp, r.max || 0), tilt: r.tilt, aspect: r.aspect }; });
+    var Ko = kwpOf(offerRoofs), Kmax = kwpOf(maxRoofs);
+    var prO = S.profiles(withRoofs(o, offerRoofs)), genO = prO.gen, load = prO.load, genX = null;
+    if (Kmax > Ko + 1e-9) { var gm = S.profiles(withRoofs(o, maxRoofs)).gen; genX = new Float64Array(8760); for (var i = 0; i < 8760; i++) genX[i] = gm[i] - genO[i]; }
+    function genFor(K) {
+      var g = new Float64Array(8760), j;
+      if (K <= Ko + 1e-9) { var f = K / Ko; for (j = 0; j < 8760; j++) g[j] = genO[j] * f; }
+      else { var f2 = (K - Ko) / (Kmax - Ko); for (j = 0; j < 8760; j++) g[j] = genO[j] + genX[j] * f2; }
+      return g;
+    }
+    var lo = Math.max(1, Math.round(Math.min(Ko, Kmax * 0.3) * 2) / 2), step = Math.max(0.5, Math.ceil((Kmax - lo) / 11 * 2) / 2), Ks = [];
+    for (var k = lo; k < Kmax - 1e-9; k += step) Ks.push(Math.round(k * 100) / 100);
+    Ks.push(Kmax);
+    if (Ks.every(function (x) { return Math.abs(x - Ko) > 1e-9; })) Ks.push(Ko);
+    Ks.sort(function (a, b) { return a - b; });
+    var rows = Ks.map(function (K) {
+      var g = genFor(K), fc = o.feedLimit ? K * o.feedLimit : Infinity, t = tariff(o, K);
+      var base = S.runBattery(g, load, 0, fc);
+      var pvVal = (base.load - base.grid) * o.price / 100 + base.feed * t / 100;
+      var pvCost = P * (FIX_PV + (1 - FIX_PV) * K / Ko), pvNet = pvVal * PVLIFE - pvCost;
+      var cells = GRIDCAPS.map(function (c) {
+        if (!c) return { cap: 0, net: 0 };
+        var r = S.runBattery(g, load, c, fc, power(o, c, cap));
+        var save = (base.grid - r.grid) * o.price / 100 - (base.feed - r.feed) * t / 100;
+        return { cap: c, net: save * o.life - costFor(c, cap, sp), autarky: r.autarky };
+      });
+      var bc = cells.reduce(function (a, b) { return b.net > a.net + 1e-6 ? b : a; });
+      return { K: K, gen: base.gen, pvVal: pvVal, pvCost: pvCost, pvNet: pvNet, cells: cells, bestCap: bc.cap, storeNet: bc.net, total: pvNet + bc.net, isOffer: Math.abs(K - Ko) < 1e-9 };
+    });
+    var best = rows.reduce(function (a, b) { return b.total > a.total + 1e-6 ? b : a; });
+    var offer = rows.filter(function (r) { return r.isOffer; })[0];
+    var tol = Math.max(500, 0.04 * P);
+    var rec = rows.filter(function (r) { return r.total >= best.total - tol; })[0];
+    var maxGiven = Kmax > Ko + 1e-9, prev = rows.filter(function (r) { return r.K < Ko - 1e-9; }).pop();
+    var verdict;
+    if (offer.total >= best.total - tol) verdict = !maxGiven && prev && offer.total > prev.total + 1 ? "offen" : "passt";
+    else verdict = Ko < best.K ? "mehr" : "weniger";
+    return { rows: rows, best: best, offer: offer, rec: rec, tol: tol, verdict: verdict, Ko: Ko, Kmax: Kmax, maxGiven: maxGiven };
+  }
+
   function scenarios(o, cap, sp, baseEn, baseEc) {
     var list = [{ name: "Deine Eingaben", o: o, en: baseEn }];
     var alt = clone(o);
@@ -86,7 +149,12 @@ var PRO = (function () {
   }
 
   function questions(o, r) {
-    var q = [], nf = function (v) { return Math.round(v).toLocaleString("de-DE"); };
+    var q = [], nf = function (v) { return Math.round(v).toLocaleString("de-DE"); }, kw = function (v) { return (Math.round(v * 10) / 10).toLocaleString("de-DE") + " kWp"; };
+    var pv = r.pvSize;
+    if (pv.verdict === "mehr") q.push(["Passen " + kw(pv.rec.K) + " aufs Dach, und was kostet jedes zusätzliche kWp?", "Nach dieser Rechnung lohnt sich eine größere Anlage als die angebotenen " + kw(pv.Ko) + ". Zusätzliche Module kosten meist weniger als der Durchschnittspreis, weil Gerüst und Anmeldung schon bezahlt sind."]);
+    if (pv.verdict === "weniger") q.push(["Was kostet die Anlage mit " + kw(pv.rec.K) + " statt " + kw(pv.Ko) + "?", "Nach dieser Rechnung bringt die kleinere Anlage fast denselben Nutzen. Frag nach dem genauen Preisunterschied."]);
+    if (pv.verdict === "offen") q.push(["Passen mehr Module aufs Dach, und was kostet jedes zusätzliche kWp?", "Jedes weitere kWp bringt nach dieser Rechnung mehr, als es kostet. Wie viel Platz das Dach hat, stand nicht in deinen Angaben."]);
+    if (r.pvAlt && Math.abs(r.pvAlt.best.K - pv.best.K) >= 2) q.push(["Wann geht die Anlage ans Netz, und welche Einspeiseregeln gelten dann?", "Mit " + (o.eeg === "reform" ? "der geplanten EEG-Reform" : "der heutigen Vergütung") + " passt " + kw(pv.best.K) + ", mit " + (o.eeg === "reform" ? "der heutigen Vergütung" : "der geplanten EEG-Reform") + " " + kw(r.pvAlt.best.K) + ". Der Termin der Inbetriebnahme entscheidet mit über die richtige Größe."]);
     if (r.storeEst) q.push(["Was kostet dieselbe Anlage ohne Speicher?", "Erst damit lässt sich der Speicher allein bewerten. Viele Angebote nennen nur den Gesamtpreis."]);
     if (o.capKind !== "nutzbar") q.push(["Wie viel Kapazität ist nutzbar, nicht nur brutto?", "Der Bericht rechnet mit " + r.capText + ". Nutzbar ist meist 90–100 % der Bruttoangabe."]);
     if (r.verdict === "gross") q.push(["Gibt es dasselbe System mit " + r.rec.cap + " kWh, und was kostet es dann?", "Nach dieser Rechnung bringt " + r.rec.cap + " kWh fast denselben Nutzen. Frag nach dem genauen Preisunterschied."]);
@@ -118,6 +186,13 @@ var PRO = (function () {
     // Grenznutzen: was jede weitere kWh im Jahr noch bringt
     res.marginal = ec.ints.slice(1).map(function (r, i) { return { cap: r.cap, add: r.save - ec.ints[i].save }; });
     res.days = S.daySeries(en.pr.gen, en.pr.load, cap, en.pr.fc, power(o, cap, cap));
+    // PV-Größe: Preis aus dem Angebot, sonst Mitte der Marktspanne
+    var P = pv > 0 ? pv : Math.round(kwp * (pb.lo + pb.hi) / 2 / 50) * 50;
+    res.pvPrice = P; res.pvPriceEst = !(pv > 0) || sp.est;
+    res.pvSize = pvGrid(o, cap, sp.v, P);
+    var alt = clone(o);
+    if (o.eeg === "reform") { alt.eeg = "now"; alt.feed = 7.7; alt.feedLimit = 0; } else { alt.eeg = "reform"; alt.feed = 0; alt.feedLimit = 0.5; }
+    res.pvAlt = pvGrid(alt, cap, sp.v, P);
     res.scen = scenarios(o, cap, sp.v, en, ec);
     res.robust = res.scen.every(function (s) { return s.verdict === res.verdict; });
     res.questions = questions(o, res);
@@ -125,8 +200,8 @@ var PRO = (function () {
   }
 
   // Kostenlose Vorschau: nur die Einordnung, keine Zahlen
-  function teaser(r) { return { verdict: r.verdict, storeRate: r.storeRate, pvRate: r.pvRate, storeEst: r.storeEst }; }
+  function teaser(r) { return { verdict: r.verdict, pvSize: r.pvSize.verdict, storeRate: r.storeRate, pvRate: r.pvRate, storeEst: r.storeEst }; }
 
-  return { check: check, teaser: teaser, usable: usable, FIX: FIX, BRUTTO: BRUTTO, MAXCAP: MAXCAP };
+  return { check: check, teaser: teaser, usable: usable, tariff: tariff, FIX: FIX, FIX_PV: FIX_PV, PVLIFE: PVLIFE, BRUTTO: BRUTTO, MAXCAP: MAXCAP };
 })();
 if (typeof module !== "undefined") module.exports = PRO;

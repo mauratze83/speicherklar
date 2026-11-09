@@ -23,3 +23,14 @@ var r8=P.check(Object.assign({},base,{cap:8,pow:4,store:4000}));
 var row=r8.rows.filter(function(x){return x.cap===8;})[0];
 assert(Math.abs(row.save-e.chosen.save)<1e-6,"Abweichung zum kostenlosen Rechner "+row.save+" vs "+e.chosen.save);
 console.log("OK");
+// PV-Größe
+var A=require("../src/plz2.json").gebiete["47"];
+function pvrun(name,over){var o=Object.assign({},base,{region:A},over||{});var t=Date.now(),r=P.check(o),v=r.pvSize;
+  console.log(name.padEnd(30),"PV",v.verdict.padEnd(7),"Angebot",v.Ko,"kWp",Math.round(v.offer.total),"| beste",v.best.K,"kWp +",v.best.bestCap,"kWh",Math.round(v.best.total),"| Empf.",v.rec.K,"| alt beste",r.pvAlt.best.K,"+",r.pvAlt.best.bestCap,"|",Date.now()-t,"ms");return r;}
+pvrun("Dach max 15, EEG heute",{roofs:[{kwp:9,tilt:35,aspect:0,max:15}]});
+pvrun("Dach max 15, Reform",{roofs:[{kwp:9,tilt:35,aspect:0,max:15}],eeg:"reform",feed:0,feedLimit:0.5});
+pvrun("ohne Max, EEG heute");
+pvrun("Ost-West max 8+8",{roofs:[{kwp:5,tilt:30,aspect:-90,max:8},{kwp:5,tilt:30,aspect:90,max:8}],total:21000});
+assert(Math.abs(P.tariff({feed:7.7},12)-7.527)<0.01,"Mischsatz 12 kWp");
+var rr=P.check(Object.assign({},base,{region:A}));assert(rr.pvSize.offer.bestCap===rr.best.cap||rr.best.cap>15,"Speicher im Raster = Speicher-Optimum");
+console.log("PV OK");

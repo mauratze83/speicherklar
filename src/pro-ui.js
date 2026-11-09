@@ -6,6 +6,7 @@
   var nf2 = new Intl.NumberFormat("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   var euro = function (v) { return (v < -0.5 ? "−" : "") + nf0.format(Math.abs(Math.round(v))) + " €"; };
   var signed = function (v) { return (v >= 0.5 ? "+" : "") + euro(v); };
+  var kwp = function (v) { return nf1.format(v).replace(",0", "") + " kWp"; };
   var kwh = function (v) { return (Math.abs(v - Math.round(v)) < 0.05 ? nf0.format(Math.round(v)) : nf1.format(v)) + " kWh"; };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
   var MONTHS = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"];
@@ -41,6 +42,7 @@
         '<label>Leistung<span class="unitin"><input class="in" type="number" min="0.5" max="50" step="0.01" inputmode="decimal" data-k="kwp" value="' + r.kwp + '"><span>kWp</span></span></label>' +
         "<label>Ausrichtung<select class=\"in\" data-k=\"aspect\">" + opts + "</select></label>" +
         '<label>Neigung<span class="unitin"><input class="in" type="number" min="0" max="90" step="1" inputmode="numeric" data-k="tilt" value="' + r.tilt + '"><span>°</span></span></label>' +
+        '<label>Höchstens<span class="unitin"><input class="in" type="number" min="0" max="60" step="0.01" inputmode="decimal" data-k="max" placeholder="optional" value="' + (r.max > 0 ? r.max : "") + '"><span>kWp</span></span></label>' +
         "</div></div>";
     }).join("");
     $("roofs").innerHTML = html;
@@ -102,7 +104,7 @@
     return {
       model: $("f-model").value.trim().slice(0, 60), cap: num("f-cap"), capKind: state.capKind, pow: num("f-pow"),
       total: num("f-total"), store: num("f-store"), plz: $("f-plz").value.trim(), region: regionOf($("f-plz").value),
-      roofs: state.roofs.map(function (r) { return { kwp: +r.kwp || 0, aspect: +r.aspect, tilt: +r.tilt || 0 }; }),
+      roofs: state.roofs.map(function (r) { return { kwp: +r.kwp || 0, aspect: +r.aspect, tilt: +r.tilt || 0, max: +r.max > +r.kwp ? +r.max : 0 }; }),
       cons: num("f-cons"), monthly: monthly, ev: num("f-ev"), evTime: state.evTime, hp: num("f-hp"),
       price: num("f-price"), eeg: state.eeg, feed: num("f-feed"), feedLimit: state.eeg === "reform" ? 0.5 : 0, life: num("f-life") || 15
     };
@@ -122,7 +124,7 @@
     $("f-cons").value = o.cons || ""; $("f-ev").value = o.ev || ""; $("f-hp").value = o.hp || "";
     $("f-price").value = o.price || ""; $("f-feed").value = o.feed != null ? o.feed : 7.7; $("f-life").value = o.life || 15;
     setSeg("capkind", "capKind", o.capKind || "nutzbar"); setSeg("evtime", "evTime", o.evTime || "eve"); setSeg("eeg", "eeg", o.eeg || "now");
-    state.roofs = (o.roofs && o.roofs.length ? o.roofs : [{ kwp: 9, aspect: 0, tilt: 35 }]).map(function (r) { return { kwp: r.kwp, aspect: r.aspect, tilt: r.tilt }; });
+    state.roofs = (o.roofs && o.roofs.length ? o.roofs : [{ kwp: 9, aspect: 0, tilt: 35 }]).map(function (r) { return { kwp: r.kwp, aspect: r.aspect, tilt: r.tilt, max: r.max || "" }; });
     drawRoofs();
     if (o.monthly) { state.monthly = o.monthly.slice(); $("months").hidden = false; $("tog-month").setAttribute("aria-expanded", "true"); $("tog-month").textContent = "Nur Jahreswert verwenden"; drawMonths(); }
     $("f-plz").dispatchEvent(new Event("input"));
@@ -145,11 +147,18 @@
     klein: ["warn", "Eher zu klein", "Ein etwas größerer Speicher würde sich für deinen Haushalt besser rechnen."],
     nolohn: ["bad", "Rechnet sich nicht", "Bei diesem Preis holt kein Speicher seine Kosten herein."]
   };
+  var PVSIZE = {
+    passt: ["ok", "Größe passt", "Die Größe der PV-Anlage passt."],
+    offen: ["ok", "Passt, mehr könnte sich lohnen", "Mehr Leistung würde sich lohnen, falls dein Dach Platz hat.", "Trag ein, wie viel kWp maximal aufs Dach passen."],
+    mehr: ["warn", "Größer lohnt sich", "Eine größere PV-Anlage würde sich lohnen."],
+    weniger: ["warn", "Kleiner reicht", "Eine kleinere PV-Anlage würde fast genauso viel bringen."]
+  };
   var RATE = { guenstig: ["ok", "günstig"], ueblich: ["ok", "üblich"], hoch: ["warn", "eher hoch"], teuer: ["bad", "teuer"] };
   function amp(cls, k, v, d) { return '<div class="amp ' + cls + '"><span class="dot" aria-hidden="true"></span><div><div class="k">' + k + '</div><div class="v">' + v + "</div>" + (d ? '<div class="d">' + d + "</div>" : "") + "</div></div>"; }
   function amps(t, o) {
     var v = VERDICT[t.verdict], s = "";
     s += amp(v[0], "Speichergröße", v[1]);
+    var pz = PVSIZE[t.pvSize]; s += amp(pz[0], "Größe der PV-Anlage", pz[1], pz[3]);
     s += t.storeRate ? amp(RATE[t.storeRate][0], "Speicherpreis je kWh", RATE[t.storeRate][1]) : amp("na", "Speicherpreis je kWh", "nicht prüfbar", "Dafür fehlt der Preis des Speichers allein.");
     s += t.pvRate ? amp(RATE[t.pvRate][0], "Preis der PV-Anlage je kWp", RATE[t.pvRate][1]) : amp("na", "Preis der PV-Anlage je kWp", "nicht prüfbar", o.total > 0 ? "Dafür fehlt der Preis des Speichers allein." : "Dafür fehlt der Gesamtpreis.");
     return s;
@@ -157,7 +166,7 @@
   function showTeaser() {
     var r = state.result, t = PRO.teaser(r);
     $("t-empty").hidden = true; $("t-res").hidden = false;
-    $("t-verdict").innerHTML = VERDICT[t.verdict][2];
+    $("t-verdict").innerHTML = VERDICT[t.verdict][2] + " " + PVSIZE[t.pvSize][2];
     $("t-amps").innerHTML = amps(t, state.input);
   }
 
@@ -273,6 +282,32 @@
       '<div class="clegend"><span><i class="sw sl s0"></i>Bilanz nach ' + state.input.life + ' Jahren</span><span><i class="sw tolsw"></i>fast so gut wie die beste Größe</span><span><i class="sw dotoff"></i>Angebot</span>' + (same ? "" : '<span><i class="sw dotrec"></i>Empfehlung</span>') + "</div>";
   }
 
+  function pvChart(r, curName, altName) {
+    var A = r.pvSize.rows, B = r.pvAlt.rows, W = 640, H = 270, box = { l: 74, t: 24, w: W - 74 - 14, h: H - 24 - 50 };
+    var all = A.concat(B).map(function (x) { return x.total; }), max = Math.max(0, Math.max.apply(null, all)), min = Math.min(0, Math.min.apply(null, all));
+    var step = DRAW.niceStep(max - min || 1, 5), top = Math.ceil(max / step) * step, bot = Math.floor(min / step) * step; if (top === bot) top = bot + step;
+    var k0 = A[0].K, k1 = A[A.length - 1].K, X = function (k) { return box.l + box.w * (k - k0) / ((k1 - k0) || 1); }, Y = function (v) { return box.t + box.h * (top - v) / (top - bot); };
+    var s = "";
+    for (var v = bot; v <= top + 1e-9; v += step) {
+      s += '<line class="grid' + (Math.abs(v) < 1e-9 ? " zero" : "") + '" x1="' + box.l + '" x2="' + (box.l + box.w) + '" y1="' + Y(v).toFixed(1) + '" y2="' + Y(v).toFixed(1) + '"/>';
+      s += '<text class="ax" x="' + (box.l - 8) + '" y="' + (Y(v) + 4).toFixed(1) + '" text-anchor="end">' + (v < 0 ? "−" : v > 0 ? "+" : "") + nf0.format(Math.abs(v)) + " €</text>";
+    }
+    var tstep = DRAW.niceStep(k1 - k0 || 1, 6);
+    for (var k = Math.ceil(k0 / tstep) * tstep; k <= k1 + 1e-9; k += tstep) s += '<text class="ax" x="' + X(k).toFixed(1) + '" y="' + (box.t + box.h + 18) + '" text-anchor="middle">' + nf1.format(k).replace(",0", "") + "</text>";
+    s += '<text class="ax" x="' + (box.l + box.w) + '" y="' + (H - 4) + '" text-anchor="end">PV-Leistung in kWp, jeweils mit passendem Speicher</text>';
+    var line = function (rows, cls) { return '<path class="sline ' + cls + '" d="' + rows.map(function (x, i) { return (i ? "L" : "M") + X(x.K).toFixed(1) + "," + Y(x.total).toFixed(1); }).join("") + '"/>'; };
+    s += line(B, "s2 alt") + line(A, "s0");
+    var mk = function (x, cls, label, below) {
+      var px = X(x.K), py = Y(x.total), anchor = px < box.l + 50 ? "start" : px > box.l + box.w - 50 ? "end" : "middle";
+      return '<circle class="mk ' + cls + '" cx="' + px.toFixed(1) + '" cy="' + py.toFixed(1) + '" r="6"/><text class="mklabel ' + cls + '" x="' + px.toFixed(1) + '" y="' + (below ? py + 20 : py - 10).toFixed(1) + '" text-anchor="' + anchor + '">' + label + "</text>";
+    };
+    var bo = r.pvSize.best, of = r.pvSize.offer;
+    if (bo !== of) s += mk(bo, "rec", "beste " + kwp(bo.K), false);
+    s += mk(of, "off", "Angebot " + kwp(of.K), bo !== of && Math.abs(X(bo.K) - X(of.K)) < 120);
+    return '<svg class="rchart" viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Bilanz je PV-Größe mit passendem Speicher">' + s + "</svg>" +
+      '<div class="clegend"><span><i class="sw sl s0"></i>' + curName + ' (deine Annahme)</span><span><i class="sw sl s2"></i>' + altName + '</span><span><i class="sw dotoff"></i>Angebot</span>' + (bo !== of ? '<span><i class="sw dotrec"></i>beste Größe</span>' : "") + "</div>";
+  }
+
   function dayText(m, name) {
     var socMax = Math.max.apply(null, m.soc), full = -1, imp = 0;
     for (var h = 0; h < 24; h++) { imp += m.imp[h]; if (full < 0 && m.soc[h] >= 0.95) full = h; }
@@ -288,7 +323,7 @@
     var h = "";
 
     h += '<header class="rhead"><div class="eyebrow">Speicherklar Pro · Angebots-Check · ' + stand + "</div>" +
-      "<h1>" + (o.model ? esc(o.model) + ", " : "") + kwh(r.cap) + " Speicher</h1>" +
+      "<h1>" + (o.model ? esc(o.model) + ", " : "") + kwp(r.kwp) + " und " + kwh(r.cap) + " Speicher</h1>" +
       '<p class="rmeta">' + roofsTxt + " · " + o.region.area + " (" + o.region.n + ") · " + nf0.format(o.cons) + " kWh Haushalt" +
       (o.ev ? " · " + nf0.format(o.ev) + " kWh E-Auto" : "") + (o.hp ? " · " + nf0.format(o.hp) + " kWh Wärmepumpe" : "") + "</p></header>";
 
@@ -299,6 +334,11 @@
     else if (r.verdict === "klein") lead += "Mit " + kwh(rec.cap) + " statt " + kwh(r.cap) + " hättest du nach " + life + " Jahren rund " + euro(rec.net - off.net) + " mehr übrig, bei geschätzt " + euro(rec.cost - off.cost) + " höherem Preis.";
     else if (r.verdict === "passt") lead += off.net >= 0 ? "Der Speicher holt seine Kosten nach etwa " + nf1.format(off.payback) + " Jahren herein." : "";
     else lead += "Nach " + life + " Jahren fehlen beim Angebot rund " + euro(-off.net) + ". Ohne Speicher stehst du wirtschaftlich besser da.";
+    var pv = r.pvSize, pvo = pv.offer, pvr = pv.rec;
+    if (pv.verdict === "mehr") lead += " Bei der PV-Anlage lohnt sich mehr Leistung: Mit " + kwp(pvr.K) + " statt " + kwp(pv.Ko) + " blieben nach " + PRO.PVLIFE + " Jahren rund " + euro(pvr.total - pvo.total) + " mehr übrig, dann am besten mit " + kwh(pvr.bestCap) + " Speicher.";
+    else if (pv.verdict === "weniger") lead += " Bei der PV-Anlage reichen " + kwp(pvr.K) + " statt " + kwp(pv.Ko) + ": fast dasselbe Ergebnis bei geschätzt " + euro(pvo.pvCost - pvr.pvCost) + " weniger Anschaffung.";
+    else if (pv.verdict === "offen") lead += " Die PV-Anlage passt. Jedes weitere kWp würde sich lohnen, wenn dein Dach Platz hat.";
+    else lead += " Die Größe der PV-Anlage passt.";
     h += '<p class="rlead">' + lead + "</p>";
     h += '<div class="amps">' + amps(t, o) + "</div>";
     var cols = same || r.verdict === "nolohn" ? [["Angebot · " + kwh(r.cap), off]] : [["Angebot · " + kwh(r.cap), off], ["Empfehlung · " + kwh(rec.cap), rec]];
@@ -317,7 +357,7 @@
     // 2 Größe
     var mc = r.store * (1 - PRO.FIX) / r.cap, lastWorth = 0;
     r.marginal.forEach(function (m) { if (m.add * life >= mc) lastWorth = m.cap; });
-    h += '<section class="rsec"><h2><span>2</span>Welche Größe passt</h2>';
+    h += '<section class="rsec"><h2><span>2</span>Welche Speichergröße passt</h2>';
     h += "<p>Die Linie zeigt für jede Speichergröße, was nach " + life + " Jahren übrig bleibt: Ersparnis minus Anschaffung. Im grauen Band liegen Größen, die höchstens " + euro(r.tol) + " schlechter abschneiden als die beste. Die Empfehlung ist die kleinste Größe in diesem Band, weil ein kleinerer Speicher weniger Geld bindet.</p>";
     h += '<div class="chartwrap">' + sizeChart(r) + "</div>";
     h += "<p>Jede zusätzliche kWh kostet bei diesem Angebot etwa <b>" + euro(mc) + "</b>. Damit sie sich in " + life + " Jahren bezahlt macht, muss sie <b>" + euro(mc / life) + " im Jahr</b> sparen. " +
@@ -331,14 +371,31 @@
     });
     h += "</tbody></table></div></section>";
 
-    // 3 Jahreszeiten
-    h += '<section class="rsec"><h2><span>3</span>November gegen Juli</h2>';
+    // 3 PV-Größe und beste Kombination
+    var curName = o.eeg === "reform" ? "EEG-Reform 2027" : "EEG heute", altName = o.eeg === "reform" ? "EEG heute" : "EEG-Reform 2027", pa = r.pvAlt;
+    h += '<section class="rsec"><h2><span>3</span>Passt die Größe der PV-Anlage?</h2>';
+    h += "<p>Hier rechnet der Bericht PV-Anlage und Speicher zusammen: für jede Anlagengröße mit dem jeweils passenden Speicher. Die PV-Anlage zählt über " + PRO.PVLIFE + " Jahre, so lange läuft die EEG-Vergütung, der Speicher über " + life + " Jahre. " +
+      (pv.maxGiven ? "Größer als " + kwp(pv.Kmax) + " geht nicht, so viel passt laut deinen Angaben aufs Dach." : "Wie viel aufs Dach passt, hast du nicht angegeben. Deshalb prüft der Bericht nur kleinere Anlagen als im Angebot.") + "</p>";
+    h += '<div class="chartwrap">' + pvChart(r, curName, altName) + "</div>";
+    h += "<p>Beste Kombination mit deinen Annahmen (" + curName + "): <b>" + kwp(pv.best.K) + " und " + kwh(pv.best.bestCap) + " Speicher</b>, Bilanz <b>" + signed(pv.best.total) + "</b>. Das Angebot mit " + kwp(pv.Ko) + " kommt mit passendem Speicher auf " + signed(pvo.total) + ". " +
+      "Mit " + altName + " wäre es " + kwp(pa.best.K) + " und " + kwh(pa.best.bestCap) + " Speicher" + (Math.abs(pa.best.K - pv.best.K) >= 2 ? ". Die Einspeiseregeln ändern also die richtige Größe deutlich, und welche gilt, hängt vom Tag der Inbetriebnahme ab." : ". Die richtige Größe hängt hier kaum von den Einspeiseregeln ab.") + "</p>";
+    var pick = pv.rows.filter(function (x, i, a) { return x === pv.best || x === pv.rec || x.isOffer || i === 0 || i === a.length - 1 || i % Math.max(1, Math.ceil(a.length / 6)) === 0; });
+    h += '<div class="tablewrap"><table class="rtab"><thead><tr><th>PV-Leistung</th><th>Erzeugung/Jahr</th><th>PV allein, ' + PRO.PVLIFE + ' J.</th><th>passender Speicher</th><th>zusammen</th></tr></thead><tbody>';
+    pick.forEach(function (x) {
+      var tag = x.isOffer ? " <small>Angebot</small>" : x === pv.best ? " <small>beste</small>" : x === pv.rec && pv.verdict !== "passt" && pv.verdict !== "offen" ? " <small>Empfehlung</small>" : "";
+      h += "<tr" + (x.isOffer ? ' class="hl-off"' : x === pv.best ? ' class="hl-rec"' : "") + "><td>" + kwp(x.K) + tag + '</td><td class="num">' + nf0.format(Math.round(x.gen / 10) * 10) + ' kWh</td><td class="num ' + (x.pvNet >= 0 ? "pos" : "neg") + '">' + signed(x.pvNet) + '</td><td class="num">' + (x.bestCap ? x.bestCap + " kWh" : "keiner") + '</td><td class="num"><b class="' + (x.total >= 0 ? "pos" : "neg") + '">' + signed(x.total) + "</b></td></tr>";
+    });
+    h += "</tbody></table></div>";
+    h += '<p class="fine">' + (r.pvPriceEst ? "PV-Preis geschätzt, weil das Angebot den Speicher nicht einzeln nennt oder der Gesamtpreis fehlt. " : "") + "Preis für andere Größen: " + Math.round(PRO.FIX_PV * 100) + " % des PV-Preises fest (Gerüst, Zählerschrank, Anmeldung), der Rest je kWp. Vergütung nach EEG für Inbetriebnahme bis 31.01.2027: 7,70 ct bis 10 kWp, 6,66 ct für den Teil bis 40 kWp, anteilig gemittelt.</p></section>";
+
+    // 4 Jahreszeiten
+    h += '<section class="rsec"><h2><span>4</span>November gegen Juli</h2>';
     h += "<p>Ein durchschnittlicher Tag mit deinem Speicher (" + kwh(r.cap) + "). Im Sommer reicht der Überschuss meist, um ihn zu füllen, im Winter fehlt er. Ein größerer Speicher hilft im Winter deshalb kaum.</p>";
     h += DRAW.dayChart([r.days[6], r.days[10]], ["Juli", "November"]);
     h += "<p>" + dayText(r.days[6], "Juli") + " " + dayText(r.days[10], "November") + "</p></section>";
 
     // 4 Preise
-    h += '<section class="rsec"><h2><span>4</span>Preis-Check</h2>';
+    h += '<section class="rsec"><h2><span>5</span>Preis-Check</h2>';
     if (r.storeEst) h += "<p>Das Angebot nennt den Speicher nicht einzeln. Der Bericht rechnet mit geschätzten <b>" + euro(r.store) + "</b> (" + euro(r.store / r.cap) + " je kWh, Mitte der Marktspanne). Frag nach dem Preis ohne Speicher, dann wird der Check genau.</p>";
     else h += "<p>Speicher: <b>" + euro(r.storePerKwh) + " je kWh</b> nutzbar. Üblich sind " + nf0.format(r.storeBand.lo) + "–" + nf0.format(r.storeBand.hi) + " € je kWh inklusive Einbau" + (r.cap < MARKT.SPEICHER.kleinBis ? ", bei kleinen Speichern etwas mehr" : "") + ". Einordnung: <b>" + RATE[r.storeRate][1] + "</b>.</p>";
     if (r.pvRate) h += "<p>PV-Anlage ohne Speicher: <b>" + euro(r.pv) + "</b>, also <b>" + euro(r.pvPerKwp) + " je kWp</b>. Für " + nf1.format(r.kwp) + " kWp sind " + nf0.format(r.pvBand.lo) + "–" + nf0.format(r.pvBand.hi) + " € je kWp üblich. Einordnung: <b>" + RATE[r.pvRate][1] + "</b>." + (r.storeEst ? " Weil der Speicherpreis geschätzt ist, ist auch dieser Wert nur ein Anhaltspunkt." : "") + "</p>";
@@ -347,7 +404,7 @@
 
     // 5 Szenarien
     var same5 = r.scen.filter(function (s) { return s.verdict === r.verdict; }).length;
-    h += '<section class="rsec"><h2><span>5</span>Wie stabil ist das Ergebnis?</h2>';
+    h += '<section class="rsec"><h2><span>6</span>Wie stabil ist das Ergebnis?</h2>';
     h += "<p>Niemand weiß, wie sich Strompreis und Regeln entwickeln. Deshalb rechnet der Bericht dein Angebot mit veränderten Annahmen nach. In <b>" + same5 + " von " + r.scen.length + "</b> Fällen bleibt die Einordnung gleich" + (same5 === r.scen.length ? ". Das Ergebnis ist robust." : ". Wo sie sich ändert, lohnt ein zweiter Blick.") + "</p>";
     h += '<div class="tablewrap"><table class="rtab"><thead><tr><th>Annahme</th><th>beste Größe</th><th>Bilanz Angebot</th><th>Einordnung</th></tr></thead><tbody>';
     r.scen.forEach(function (s, i) {
@@ -356,19 +413,20 @@
     h += "</tbody></table></div></section>";
 
     // 6 Fragen
-    h += '<section class="rsec"><h2><span>6</span>Fragen an deinen Installateur</h2><p>Zum Ausdrucken und Mitnehmen. Die ersten Fragen ergeben sich direkt aus deinem Angebot.</p><ol class="qs">';
+    h += '<section class="rsec"><h2><span>7</span>Fragen an deinen Installateur</h2><p>Zum Ausdrucken und Mitnehmen. Die ersten Fragen ergeben sich direkt aus deinem Angebot.</p><ol class="qs">';
     r.questions.forEach(function (q) { h += "<li><b>" + q[0] + "</b><span>" + q[1] + "</span></li>"; });
     h += "</ol></section>";
 
     // 7 Annahmen
-    h += '<section class="rsec"><h2><span>7</span>Annahmen und Grenzen</h2><div class="tablewrap"><table class="rtab"><tbody>' +
+    h += '<section class="rsec"><h2><span>8</span>Annahmen und Grenzen</h2><div class="tablewrap"><table class="rtab"><tbody>' +
       "<tr><td>Deine Eingaben</td><td>" + kwh(o.cap) + " " + (o.capKind === "brutto" ? "brutto, gerechnet mit " + Math.round(PRO.BRUTTO * 100) + " % nutzbar" : o.capKind === "unklar" ? "(Art nicht angegeben, gerechnet als nutzbar)" : "nutzbar") +
       (o.pow ? ", " + nf1.format(o.pow) + " kW Leistung" : ", Leistung nicht angegeben (gerechnet: halbe Kapazität pro Stunde, höchstens 5 kW)") +
       "; Strompreis " + nf2.format(o.price) + " ct/kWh; " + (o.eeg === "reform" ? "EEG-Reform 2027 (keine Vergütung, Einspeisung höchstens 50 %)" : "Einspeisevergütung " + nf2.format(o.feed) + " ct/kWh") + "; Lebensdauer " + life + " Jahre" + (o.monthly ? "; Verbrauch nach Monaten" : "") + "</td></tr>" +
       "<tr><td>Rechnung</td><td>Jahressimulation in 5-Minuten-Schritten mit Sonnendaten PVGIS-SARAH3 2014–2023 für " + o.region.area + " (Mittelpunkt " + nf2.format(o.region.lat) + "° N, " + nf2.format(o.region.lon) + "° O), Standardlastprofil H0" + (o.hp ? ", Wärmepumpe nach Heizmonaten verteilt" : "") + ". Speicher mit 88 % Wirkungsgrad je Zyklus und 25 W Standby. Erzeugung im Jahr: " + nf0.format(Math.round(r.gen / 10) * 10) + " kWh, Verbrauch: " + nf0.format(Math.round(r.load / 10) * 10) + " kWh.</td></tr>" +
       "<tr><td>Ort</td><td>Mittelpunkt des PLZ-Gebiets aus den Postleitzahlen von GeoNames (geonames.org, CC BY 4.0). Innerhalb eines Gebiets ändert sich die Sonneneinstrahlung im Monatsmittel nur wenig.</td></tr>" +
+      "<tr><td>PV-Anlage</td><td>Rechenzeitraum " + PRO.PVLIFE + " Jahre. Wert = selbst genutzter Solarstrom zum Strompreis plus Einspeisung zur Vergütung. Größere Anlagen nutzen die zusätzliche Dachfläche, kleinere verkleinern alle Dachflächen gleichmäßig.</td></tr>" +
       "<tr><td>Andere Größen</td><td>" + Math.round(PRO.FIX * 100) + " % des Speicherpreises als fester Anteil. Ladeleistung wie im Angebot, bei kleineren Größen höchstens halbe Kapazität pro Stunde, mindestens 2,5 kW.</td></tr>" +
-      "<tr><td>Nicht drin</td><td>Verschattung, Alterung des Akkus, steigende Strompreise, Zinsen, dynamische Tarife, Notstrom. Strompreis und Lebensdauer prüft Abschnitt 5.</td></tr>" +
+      "<tr><td>Nicht drin</td><td>Verschattung, Alterung des Akkus, steigende Strompreise, Zinsen, dynamische Tarife, Notstrom. Strompreis und Lebensdauer prüft Abschnitt 6.</td></tr>" +
       '</tbody></table></div><p class="fine">Dieser Bericht ist eine Rechnung mit deinen Angaben und keine Anlagen-, Rechts- oder Finanzberatung. Er ersetzt nicht die Planung durch einen Fachbetrieb. Erstellt mit Speicherklar Pro, speicherklar.de.</p></section>';
 
     $("report").innerHTML = h;
