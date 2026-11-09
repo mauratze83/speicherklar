@@ -58,7 +58,7 @@
   (function buildWheels(){
     var el=$("wheels"),html="";
     for(var i=0;i<WHEELS;i++){
-      html+='<span class="wheel'+(i===WHEELS-1?' red':'')+'" aria-hidden="true"><span class="strip">';
+      html+='<span class="wheel" aria-hidden="true"><span class="strip">';
       for(var d=0;d<10;d++)html+="<span>"+d+"</span>";
       html+="</span></span>";
     }
