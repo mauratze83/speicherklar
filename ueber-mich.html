@@ -284,6 +284,8 @@ svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
 .procta{display:flex;align-items:center;justify-content:space-between;gap:12px 18px;flex-wrap:wrap;border:1px solid var(--sun);background:var(--sun-soft);border-radius:8px;padding:14px 16px}
 .procta p{margin:0;font-size:15px;flex:1 1 260px}
 a.btn{text-decoration:none;display:inline-block}
+.hero-pro{margin:12px 0 0;max-width:60ch;font-size:16px;color:var(--ink)}
+.hero-pro a{font-weight:600}
 
 .about{display:grid;grid-template-columns:minmax(0,1fr) 340px;column-gap:56px;align-items:start}
 .about-text{grid-column:1;grid-row:1}.about-body{grid-column:1;grid-row:2}
@@ -311,6 +313,7 @@ main.page{padding-block:36px 40px}
 .cta{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px;margin:32px 0;display:grid;gap:10px;max-width:760px}
 .cta b{font-family:var(--f-display);font-stretch:105%;font-size:21px}
 .cta .btn{display:inline-block;justify-self:start;opacity:1;cursor:pointer;text-decoration:none}
+.cta .cta-pro{border-top:1px solid var(--line);padding-top:12px;margin-top:4px;font-size:15px}
 .page .rlist{margin:8px 0 0}
 .chart{margin:28px 0;max-width:760px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 18px 14px}
 .chart figcaption{display:grid;gap:2px;margin-bottom:10px}
@@ -345,7 +348,7 @@ html.js .chart.in .cpanel svg{clip-path:inset(0 0 0 0)}
   <div class="about-text doc">
     <div class="eyebrow">Über mich</div>
     <h1>Hallo, ich bin Manuel.</h1>
-    <p class="lead">Ich habe Speicherklar gebaut, weil ich selbst vor der Frage stand: Wie groß muss der Speicher sein, und rechnet sich das überhaupt?</p>
+    <p class="lead">Ich habe Speicherklar gebaut, weil ich selbst vor der Frage stand: Wie groß sollen PV-Anlage und Speicher sein, und rechnet sich das überhaupt?</p>
   </div>
   <figure class="about-photo">
     <picture>
@@ -359,7 +362,7 @@ html.js .chart.in .cpanel svg{clip-path:inset(0 0 0 0)}
     <h2>Warum Speicherklar anders rechnet</h2>
     <p>Beruflich arbeite ich mit Software und Auswertungen. Deshalb nutzt Speicherklar keine Faustregel wie „1 kWh Speicher pro 1.000 kWh Verbrauch“. Der Rechner spielt ein ganzes Jahr in 5-Minuten-Schritten durch, mit Sonnendaten der EU (PVGIS) für deine Region. Alle Annahmen stehen offen auf der <a href="./#annahmen">Startseite</a>.</p>
     <h2>Was Speicherklar nicht ist</h2>
-    <p>Ich verkaufe keine Anlagen und keine Speicher. Ich bekomme kein Geld von Herstellern oder Installateuren. Der Rechner bleibt kostenlos. Finanzieren soll sich die Seite später über <a href="./#pro">Speicherklar Pro</a>.</p>
+    <p>Ich verkaufe keine Anlagen und keine Speicher. Ich bekomme kein Geld von Herstellern oder Installateuren. Der Rechner bleibt kostenlos. Finanzieren soll sich die Seite über <a href="pro/">Speicherklar Pro</a>, den Angebots-Check für PV-Anlage und Speicher.</p>
     <p>Ich bin kein Elektriker und kein Energieberater. Speicherklar ersetzt kein Angebot vom Fachbetrieb. Aber es hilft dir, ein Angebot zu prüfen, bevor du unterschreibst.</p>
     <h2>Kontakt</h2>
     <p>Fragen, Fehler gefunden, Idee für einen Artikel? Schreib mir an <a href="mailto:kontakt@speicherklar.de">kontakt@speicherklar.de</a> oder auf <a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">Instagram @speicherklar</a>.</p>

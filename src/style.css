@@ -274,3 +274,5 @@ svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
 .procta{display:flex;align-items:center;justify-content:space-between;gap:12px 18px;flex-wrap:wrap;border:1px solid var(--sun);background:var(--sun-soft);border-radius:8px;padding:14px 16px}
 .procta p{margin:0;font-size:15px;flex:1 1 260px}
 a.btn{text-decoration:none;display:inline-block}
+.hero-pro{margin:12px 0 0;max-width:60ch;font-size:16px;color:var(--ink)}
+.hero-pro a{font-weight:600}

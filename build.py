@@ -10,11 +10,11 @@ head = f"""<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Speicherklar – Lohnt sich ein Stromspeicher für deine PV-Anlage?</title>
-<meta name="description" content="Kostenloser Speicher-Rechner für geplante PV-Anlagen: Jahressimulation mit Sonnendaten für deine Region, Ausrichtung, Dachneigung und EEG-Reform 2027. Ohne Anmeldung.">
+<title>Speicherklar – Stromspeicher-Rechner und Angebots-Check für deine PV-Anlage</title>
+<meta name="description" content="Kostenloser Speicher-Rechner für geplante PV-Anlagen: Jahressimulation mit Sonnendaten für deine Region und EEG-Reform 2027. Mit Speicherklar Pro prüfst du dein Angebot und findest die beste Kombination aus PV-Größe und Speicher.">
 <link rel="canonical" href="https://speicherklar.de/">
-<meta property="og:title" content="Speicherklar – Lohnt sich dein Stromspeicher?">
-<meta property="og:description" content="Verkäufer rechnen mit Juli. Wir rechnen mit November. Kostenloser Speicher-Rechner für PV-Anlagen.">
+<meta property="og:title" content="Speicherklar – Passen Speicher und PV-Anlage zu deinem Haus?">
+<meta property="og:description" content="Verkäufer rechnen mit Juli. Wir rechnen mit November. Kostenloser Speicher-Rechner und Angebots-Check für PV-Anlage und Speicher.">
 <meta property="og:url" content="https://speicherklar.de/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="de_DE">

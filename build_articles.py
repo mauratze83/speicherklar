@@ -37,6 +37,7 @@ main.page{padding-block:36px 40px}
 .cta{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px;margin:32px 0;display:grid;gap:10px;max-width:760px}
 .cta b{font-family:var(--f-display);font-stretch:105%;font-size:21px}
 .cta .btn{display:inline-block;justify-self:start;opacity:1;cursor:pointer;text-decoration:none}
+.cta .cta-pro{border-top:1px solid var(--line);padding-top:12px;margin-top:4px;font-size:15px}
 .page .rlist{margin:8px 0 0}
 .chart{margin:28px 0;max-width:760px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 18px 14px}
 .chart figcaption{display:grid;gap:2px;margin-bottom:10px}
@@ -95,7 +96,7 @@ def page(title, desc, canonical, main, extra_head="", prefix="../", active="ratg
 </body></html>
 """
 
-CTA = """<div class="cta"><b>Rechne dein eigenes Haus durch</b><span>Postleitzahl, Dachausrichtung und Verbrauch eingeben. Der kostenlose Rechner zeigt dir die wirtschaftlichste Speichergröße, auch für das Szenario EEG-Reform 2027.</span><a class="btn" href="../#rechner">Zum Rechner</a></div>"""
+CTA = """<div class="cta"><b>Rechne dein eigenes Haus durch</b><span>Postleitzahl, Dachausrichtung und Verbrauch eingeben. Der kostenlose Rechner zeigt dir die wirtschaftlichste Speichergröße, auch für das Szenario EEG-Reform 2027.</span><a class="btn" href="../#rechner">Zum Rechner</a><span class="cta-pro">Du hast schon ein Angebot? <a href="../pro/">Speicherklar Pro</a> prüft Speicher und PV-Anlage zusammen und zeigt die beste Kombination für dein Dach. Die Einordnung ist kostenlos.</span></div>"""
 
 out = ROOT / "ratgeber"; out.mkdir(exist_ok=True)
 urls = [("https://speicherklar.de/", "2026-11-08"), ("https://speicherklar.de/ratgeber/", max(a["date"] for a in ARTICLES))]
@@ -112,7 +113,7 @@ for a in ARTICLES:
 
 sp = lambda a: CHARTS.get(a["slug"], {}).get("spark", "")
 items = "".join(f'<li><a href="{a["slug"]}.html">{sp(a)}<b>{a["title"]}</b><span>{a["desc"]}</span></a></li>' for a in ARTICLES)
-(out / "index.html").write_text(page("Ratgeber Stromspeicher | Speicherklar", "Artikel rund um Stromspeicher und PV-Anlagen, mit Zahlen aus der Jahressimulation statt aus dem Prospekt.", "https://speicherklar.de/ratgeber/",
+(out / "index.html").write_text(page("Ratgeber Stromspeicher | Speicherklar", "Artikel rund um Stromspeicher und PV-Anlagen, mit Zahlen aus der Jahressimulation statt aus dem Prospekt. Mit Angebots-Check für PV-Anlage und Speicher.", "https://speicherklar.de/ratgeber/",
     f'<div class="doc"><div class="eyebrow">Ratgeber</div><h1>Stromspeicher, ehrlich gerechnet</h1><p class="lead">Fragen rund um PV-Anlage und Speicher, beantwortet mit Zahlen aus unserer Jahressimulation.</p></div><ul class="rlist">{items}</ul>{CTA}'))
 
 # Über mich
