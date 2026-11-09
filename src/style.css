@@ -28,7 +28,7 @@ a{color:var(--sun-ink)}
 
 header.top{border-bottom:1px solid var(--line)}
 header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px;flex-wrap:wrap}
-.brand{font-family:var(--f-display);font-weight:800;font-stretch:118%;font-size:21px;letter-spacing:.01em;display:flex;align-items:center;gap:10px}
+.brand{color:var(--ink);text-decoration:none;font-family:var(--f-display);font-weight:800;font-stretch:118%;font-size:21px;letter-spacing:.01em;display:flex;align-items:center;gap:10px}
 .brand svg{flex:none}
 nav{display:flex;gap:18px;font-size:15px}
 nav a{color:var(--muted);text-decoration:none}
