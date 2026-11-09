@@ -49,3 +49,21 @@ def footer(prefix="./"):
     <span><a href="{IG}" target="_blank" rel="noopener">Instagram @speicherklar</a> · <a href="{prefix}ueber-mich.html">Über mich</a> · <a href="{prefix}impressum.html">Impressum</a> · <a href="{prefix}datenschutz.html">Datenschutz</a></span>
   </div>
 </footer>"""
+
+
+SITE = "https://speicherklar.de"
+
+def head_meta(og_image=None, og_alt=""):
+    """Icons für Browser und Homescreen, Web-App-Manifest und Vorschaubild für geteilte Links."""
+    s = ('<link rel="icon" href="/img/favicon-32.png" sizes="32x32" type="image/png">'
+         '<link rel="apple-touch-icon" href="/apple-touch-icon.png">'
+         '<link rel="manifest" href="/site.webmanifest">'
+         '<meta name="apple-mobile-web-app-title" content="Speicherklar">'
+         '<meta property="og:site_name" content="Speicherklar">')
+    if og_image:
+        url = og_image if og_image.startswith("http") else SITE + "/" + og_image.lstrip("/")
+        w, h = ("1200", "630")
+        s += (f'<meta property="og:image" content="{url}"><meta property="og:image:width" content="{w}">'
+              f'<meta property="og:image:height" content="{h}"><meta property="og:image:alt" content="{og_alt}">'
+              '<meta name="twitter:card" content="summary_large_image">')
+    return s

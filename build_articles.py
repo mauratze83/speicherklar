@@ -3,10 +3,12 @@ import pathlib, json, html, sys
 ROOT = pathlib.Path(__file__).parent
 sys.path.insert(0, str(ROOT / "src"))
 from articles import ARTICLES, STAND, BEISPIEL, CHART_BASE
+import images
+print("Vorschaubilder/Icons neu:", images.build(ARTICLES))
 import subprocess
 from urllib.parse import quote
 
-from chrome import header, footer, analytics
+from chrome import header, footer, analytics, head_meta
 
 FAV = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Crect x='5' y='4' width='16' height='20' rx='2.5' fill='none' stroke='%2315212B' stroke-width='2'/%3E%3Crect x='10' y='1.5' width='6' height='3' rx='1' fill='%2315212B'/%3E%3Crect x='8' y='14' width='10' height='7' rx='1' fill='%23E39A0B'/%3E%3C/svg%3E")
 # Gleiche Grundstyles wie die Startseite (Farben, Schriften, Kopf, Fuß, Breite), dazu Textseiten-Typografie unter .doc
@@ -87,14 +89,14 @@ def _with_figure(a):
     return body[:i + 4] + fig + body[i + 4:] if i >= 0 else fig + body
 
 
-def page(title, desc, canonical, main, extra_head="", prefix="../", active="ratgeber", robots=False):
+def page(title, desc, canonical, main, extra_head="", prefix="../", active="ratgeber", robots=False, og_image=None):
     base = BASE.replace("url(fonts/", f"url({prefix}fonts/")
     meta = '<meta name="robots" content="noindex">' if robots else (f'<link rel="canonical" href="{canonical}"><meta property="og:title" content="{html.escape(title)}"><meta property="og:description" content="{html.escape(desc)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="article"><meta property="og:locale" content="de_DE">')
     return f"""<!doctype html>
 <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{html.escape(title)}</title><meta name="description" content="{html.escape(desc)}">
 {meta}
-<link rel="icon" href="{FAV}">{analytics()}<style>{base}{DOC}</style>{extra_head}</head>
+<link rel="icon" href="{FAV}">{head_meta(None if robots else og_image, html.escape(title))}{analytics()}<style>{base}{DOC}</style>{extra_head}</head>
 <body>
 {header(prefix, active)}
 <main class="wrap page">{main}</main>
@@ -122,7 +124,7 @@ for a in ARTICLES:
     head = "".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in ld)
     main = f"""<article class="doc"><div class="eyebrow">Ratgeber</div><h1>{a['h1']}</h1><p class="lead">{a['lead']}</p><p class="meta">Stand: {STAND}</p>
 {_with_figure(a)}{CTA}<h2>Häufige Fragen</h2>{faq_html}{ask(a)}<p class="note" style="margin-top:28px">{BEISPIEL}</p></article>"""
-    (out / f"{a['slug']}.html").write_text(page(f"{a['title']} | Speicherklar", a["desc"], url, main, head))
+    (out / f"{a['slug']}.html").write_text(page(f"{a['title']} | Speicherklar", a["desc"], url, main, head, og_image=f"img/og/{a['slug']}.png"))
     urls.append((url, a["date"]))
 
 # Kernzahl auf den Ratgeber-Karten (Feld "kennzahl": {"v": Wert, "t": kurzer Zusatz}); Zahlen müssen im Artikel stehen
@@ -131,16 +133,15 @@ def sp(a):
     return f'<i class="kz"><em>{k["v"]}</em><small>{k["t"]}</small></i>' if k else ""
 items = "".join(f'<li><a href="{a["slug"]}.html">{sp(a)}<b>{a["title"]}</b><span>{a["desc"]}</span></a></li>' for a in ARTICLES)
 (out / "index.html").write_text(page("Ratgeber Stromspeicher | Speicherklar", "Artikel rund um Stromspeicher und PV-Anlagen, mit Zahlen aus der Jahressimulation statt aus dem Prospekt.", "https://speicherklar.de/ratgeber/",
-    f'<div class="doc"><div class="eyebrow">Ratgeber</div><h1>Stromspeicher, ehrlich gerechnet</h1><p class="lead">Fragen rund um PV-Anlage und Speicher, beantwortet mit Zahlen aus unserer Jahressimulation.</p></div><ul class="rlist">{items}</ul>{CTA}'))
+    f'<div class="doc"><div class="eyebrow">Ratgeber</div><h1>Stromspeicher, ehrlich gerechnet</h1><p class="lead">Fragen rund um PV-Anlage und Speicher, beantwortet mit Zahlen aus unserer Jahressimulation.</p></div><ul class="rlist">{items}</ul>{CTA}', og_image="img/og/ratgeber.png"))
 
 # Über mich
 ABOUT_URL = "https://speicherklar.de/ueber-mich.html"
-ABOUT_HEAD = ('<meta property="og:image" content="https://speicherklar.de/img/manuel-og.jpg">'
-  '<script type="application/ld+json">{"@context":"https://schema.org","@type":"AboutPage","url":"' + ABOUT_URL + '",'
+ABOUT_HEAD = ('<script type="application/ld+json">{"@context":"https://schema.org","@type":"AboutPage","url":"' + ABOUT_URL + '",'
   '"mainEntity":{"@type":"Person","name":"Manuel Maurer","url":"' + ABOUT_URL + '","image":"https://speicherklar.de/img/manuel-960.jpg",'
   '"homeLocation":{"@type":"Place","name":"Krefeld"},"sameAs":["https://www.instagram.com/speicherklar/"]}}</script>')
 (ROOT / "ueber-mich.html").write_text(page("Über mich | Speicherklar", "Wer hinter Speicherklar steckt, warum der Rechner ein ganzes Jahr simuliert und womit sich die Seite finanziert.",
-    ABOUT_URL, (ROOT / "src/ueber-mich.html").read_text(), ABOUT_HEAD, prefix="./", active=None))
+    ABOUT_URL, (ROOT / "src/ueber-mich.html").read_text(), ABOUT_HEAD, prefix="./", active=None, og_image="img/manuel-og.jpg"))
 urls.append((ABOUT_URL, "2026-11-09"))
 
 (ROOT / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
