@@ -145,17 +145,18 @@
     var f=$("wait");if(!f)return;
     var msg=$("wait-msg"),btn=$("wait-btn"),inp=$("wait-email");
     function show(t,cls){msg.textContent=t;msg.className="wait-msg "+cls;}
+    inp.addEventListener("input",function(){if(btn.disabled&&!btn.classList.contains("busy")){btn.disabled=false;btn.textContent="Eintragen";}});
     f.addEventListener("submit",function(e){
       e.preventDefault();
       var v=inp.value.trim();
       if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)){show("Bitte gib eine gültige E-Mail-Adresse ein.","err");inp.focus();return;}
       var fd=new FormData();fd.append("fields[email]",v);fd.append("ml-submit","1");fd.append("anticsrf","true");
-      btn.disabled=true;btn.textContent="Sende…";
+      btn.disabled=true;btn.classList.add("busy");btn.textContent="Sende…";
       var done=function(){
         show("Fast geschafft: Bitte bestätige deine Adresse über den Link in der Mail, die wir dir gerade geschickt haben (Absender Speicherklar, Betreff auf Englisch: \u201eConfirmation email\u201c). Schau auch im Spam-Ordner.","ok");
-        f.reset();btn.textContent="Eingetragen";
+        f.reset();btn.classList.remove("busy");btn.textContent="Eingetragen";
       };
-      var fail=function(){show("Das hat leider nicht geklappt. Versuch es bitte später noch einmal oder schreib an kontakt@speicherklar.de.","err");btn.disabled=false;btn.textContent="Eintragen";};
+      var fail=function(){show("Das hat leider nicht geklappt. Versuch es bitte später noch einmal oder schreib an kontakt@speicherklar.de.","err");btn.classList.remove("busy");btn.disabled=false;btn.textContent="Eintragen";};
       fetch(ML,{method:"POST",body:fd}).then(function(r){return r.json().catch(function(){return {};});})
         .then(function(j){if(j&&j.success===false)fail();else done();})
         .catch(fail);
