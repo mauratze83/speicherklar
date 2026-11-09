@@ -12,6 +12,7 @@ CHART_BASE = {"region": "4", "roofs": [{"kwp": 9, "tilt": 35, "aspect": 0}], "co
 ARTICLES = [
 {
 "slug": "stromspeicher-lohnt-sich-2027",
+"kennzahl": {"v": "+2.758 €", "t": "Gewinn nach 15 Jahren mit 6 kWh, heute gerechnet"},
 "chart": {"kind": "sweep", "title": "Gewinn nach 15 Jahren je Speichergröße", "caption": "9 kWp Süd, 4.500 kWh Verbrauch, Speicher 500 €/kWh, Strom 33 ct/kWh. Der Punkt markiert die wirtschaftlichste Größe.",
   "series": [{"label": "EEG heute (7,7 ct Einspeisung)", "p": {}}, {"label": "EEG-Reform (keine Vergütung, max. 50 % Einspeisung)", "p": {"feed": 0, "feedLimit": 0.5}}]},
 "title": "Lohnt sich ein Stromspeicher 2027?",
@@ -73,6 +74,7 @@ ARTICLES = [
 },
 {
 "slug": "speichergroesse-4500-kwh",
+"kennzahl": {"v": "5–7 kWh", "t": "rechnen sich bei Süddach am besten"},
 "chart": {"kind": "day", "title": "Ein Durchschnittstag mit 6 kWh Speicher", "caption": "9 kWp Süd, 4.500 kWh Verbrauch. Alles unter der schwarzen Linie versorgt das Haus, darüber geht der Überschuss in den Speicher oder ins Netz.",
   "p": {}, "cap": 6, "months": [5, 11]},
 "title": "Welche Speichergröße bei 4.500 kWh Verbrauch?",
@@ -121,6 +123,7 @@ ARTICLES = [
 },
 {
 "slug": "ost-west-dach-speicher",
+"kennzahl": {"v": "4 kWh", "t": "reichen bei Ost-West, bei Süd sind es 6"},
 "chart": {"kind": "sweep", "title": "Gewinn nach 15 Jahren: Süd gegen Ost-West", "caption": "Je 9 kWp, 35° Neigung, 4.500 kWh Verbrauch, Speicher 500 €/kWh, Strom 33 ct/kWh, Einspeisung 7,7 ct.",
   "series": [{"label": "Süd", "p": {}}, {"label": "Ost-West", "p": {"roofs": [{"kwp": 4.5, "tilt": 35, "aspect": -90}, {"kwp": 4.5, "tilt": 35, "aspect": 90}]}}]},
 "title": "Ost-West-Dach: Braucht es einen Speicher?",
@@ -160,6 +163,7 @@ ARTICLES = [
 },
 {
 "slug": "stromspeicher-nachruesten",
+"kennzahl": {"v": "unter 8 ct", "t": "Einspeisevergütung: Dann lohnt sich Nachrüsten meist"},
 "chart": {"kind": "sweep", "title": "Nachrüsten: Gewinn nach 15 Jahren je Einspeisevergütung", "caption": "7 kWp Süd, 4.500 kWh Verbrauch, Speicher 700 €/kWh (Nachrüsten), Strom 33 ct/kWh.",
   "series": [{"label": "0 ct", "p": {"roofs": [{"kwp": 7, "tilt": 35, "aspect": 0}], "bprice": 700, "feed": 0}}, {"label": "7,7 ct", "p": {"roofs": [{"kwp": 7, "tilt": 35, "aspect": 0}], "bprice": 700, "feed": 7.7}}, {"label": "12 ct", "p": {"roofs": [{"kwp": 7, "tilt": 35, "aspect": 0}], "bprice": 700, "feed": 12}}, {"label": "20 ct", "p": {"roofs": [{"kwp": 7, "tilt": 35, "aspect": 0}], "bprice": 700, "feed": 20}}]},
 "title": "Stromspeicher nachrüsten: Lohnt sich das?",

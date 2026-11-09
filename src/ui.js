@@ -36,22 +36,10 @@
       feed:+$("feed").value,feedLimit:state.eeg==="reform"?0.5:0};
   }
 
-  // Kleine Grafiken an den Eingaben: Kompass, Dachneigung, Akku
-  function icons(p){
-    var ow=state.aspect==="ow";
-    $("ic-n1").style.transform="rotate("+(ow?90:+state.aspect)+"deg)";
-    $("ic-n2").style.opacity=ow?1:0;
-    var t=+$("tilt").value,r=t*Math.PI/180;
-    $("ic-roof").style.transform="rotate("+(-t)+"deg)";
-    $("ic-arc").setAttribute("d",t?"M17,24A11,11 0 0 0 "+(6+11*Math.cos(r)).toFixed(2)+","+(24-11*Math.sin(r)).toFixed(2):"");
-    $("ic-fill").style.transform="scaleX("+(p.bat/+$("bat").max)+")";
-  }
-
   function outputs(p,plzOk){
     $("o-plz").textContent=plzOk?REGIONS[p.region].n:"5-stellige PLZ eingeben";
     $("o-plz").className=plzOk?"":"warn";
     $("o-tilt").textContent=$("tilt").value+"°";
-    icons(p);
     $("o-pv").textContent=nf1.format(+$("pv").value)+" kWp";
     $("o-cons").textContent=nf0.format(p.cons)+" kWh";
     $("o-ev").textContent=p.ev?nf0.format(p.ev)+" kWh":"kein E-Auto";
@@ -70,7 +58,7 @@
   (function buildWheels(){
     var el=$("wheels"),html="";
     for(var i=0;i<WHEELS;i++){
-      html+='<span class="wheel'+(i===WHEELS-1?' red':'')+'" aria-hidden="true"><span class="strip">';
+      html+='<span class="wheel" aria-hidden="true"><span class="strip">';
       for(var d=0;d<10;d++)html+="<span>"+d+"</span>";
       html+="</span></span>";
     }

@@ -13,6 +13,7 @@
 <meta property="og:locale" content="de_DE">
 <meta name="theme-color" content="#EDF0F2">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Crect x='5' y='4' width='16' height='20' rx='2.5' fill='none' stroke='%2315212B' stroke-width='2'/%3E%3Crect x='10' y='1.5' width='6' height='3' rx='1' fill='%2315212B'/%3E%3Crect x='8' y='14' width='10' height='7' rx='1' fill='%23E39A0B'/%3E%3C/svg%3E">
+<link rel="icon" href="/img/favicon-32.png" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><meta name="apple-mobile-web-app-title" content="Speicherklar"><meta property="og:site_name" content="Speicherklar"><meta property="og:image" content="https://speicherklar.de/img/og/start.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Speicherklar: Lohnt sich dein Stromspeicher? Verkäufer rechnen mit Juli, wir rechnen mit November."><meta name="twitter:card" content="summary_large_image">
 <script defer src="https://cloud.umami.is/script.js" data-website-id="f4570047-b7d7-42e7-944e-a06941b94082" data-domains="speicherklar.de"></script>
 <style>
 @font-face{font-family:"Archivo";src:url(fonts/archivo-var.woff2) format("woff2");font-weight:100 900;font-stretch:62% 125%;font-display:swap}
@@ -100,7 +101,6 @@ input[type=range]{width:100%;accent-color:var(--sun);height:26px;margin:0}
 .meterbox .cap{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.7}
 .wheels{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
 .wheel{font-family:var(--f-mono);font-weight:700;font-size:clamp(26px,4vw,36px);width:1.05em;height:calc(1.25em + 4px);overflow:hidden;text-align:center;background:linear-gradient(#000 0,#2a2f35 12%,#15191d 50%,#2a2f35 88%,#000 100%);border-radius:3px;padding:2px 0;line-height:1.25;color:var(--meter-digit)}
-.wheel.red{background:linear-gradient(#5a0f0d 0,var(--meter-red) 14%,#9c2421 50%,var(--meter-red) 86%,#5a0f0d 100%);color:#fff}
 .wheel .strip{display:block;transition:transform 260ms var(--ease-out);will-change:transform}
 .wheel .strip span{display:block;height:1.25em;line-height:1.25;padding-top:2px}
 .wheels .unit{font-family:var(--f-mono);font-size:15px;margin-left:8px;opacity:.85}
@@ -266,32 +266,10 @@ svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
 .scene figcaption{font-size:12.5px;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){.scene{animation:none}.scene .sun,.scene .cloud,.scene .flow{transition:opacity 200ms ease}}
 
-/* Kleine Grafiken an den Eingaben */
-.field .row.ico-row,.field .row:has(.rv){align-items:center}
-.rv{flex:none;display:inline-flex;align-items:center;gap:10px}
-.ico{display:block;flex:none;overflow:visible}
-.ico-compass{width:56px;height:52px;margin:-14px 0 -2px}
-.ico-roof{width:52px;height:38px;margin:-10px 0 -6px}
-.ico-bat{width:46px;height:24px}
-.ic-body{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
-.ico-compass text{font-family:var(--f-mono);font-size:6.8px;font-weight:600;fill:var(--muted);text-anchor:middle}
-.ic-sunpath{fill:none;stroke:var(--sun);stroke-width:1.3;stroke-dasharray:2.2 2.6;opacity:.8}
-.ic-sun circle{fill:var(--sun)}
-.ic-house{transform-origin:28px 26px;transition:transform 560ms var(--ease-out)}
-.ic-rooff{fill:var(--surface);stroke:var(--ink);stroke-width:1.5}
-.ic-ridge{stroke:var(--ink);stroke-width:1.5}
-.ic-pv rect{fill:var(--sun)}
-.ic-pv line{stroke:var(--surface);stroke-width:.9}
-.ic-pv-n{opacity:0;transition:opacity 260ms ease}
-.ic-ground{stroke:var(--line);stroke-width:1.5;stroke-linecap:round}
-.ic-wall{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
-.ic-roof{transform-origin:6px 24px;transition:transform 180ms var(--ease-out)}
-.ic-roof line{stroke:var(--ink);stroke-width:2.4;stroke-linecap:round}
-.ic-roof rect{fill:var(--sun)}
-.ic-arc{fill:none;stroke:var(--sun-ink);stroke-width:1.2;stroke-dasharray:2 2}
-.ic-cap{fill:var(--line)}
-.ic-fill{fill:var(--sun);transform-origin:4.5px 12px;transition:transform 220ms var(--ease-out)}
-@media (prefers-reduced-motion:reduce){.ic-house,.ic-pv-n,.ic-roof,.ic-fill{transition:none}}
+/* Kernzahl auf Ratgeber-Karten */
+.rlist .kz{font-style:normal;display:grid;gap:2px;padding-bottom:8px;margin-bottom:2px;border-bottom:1px solid var(--line)}
+.rlist .kz em{font-style:normal;font-family:var(--f-display);font-weight:800;font-stretch:105%;font-size:19px;line-height:1.2;color:var(--sun-ink);font-variant-numeric:tabular-nums}
+.rlist .kz small{font-size:14px;line-height:1.35;color:var(--muted)}
 
 /* Übergang zum Angebots-Check */
 .procta{display:flex;align-items:center;justify-content:space-between;gap:12px 18px;flex-wrap:wrap;border:1px solid var(--sun);background:var(--sun-soft);border-radius:8px;padding:14px 16px}
@@ -388,7 +366,7 @@ a.btn{text-decoration:none;display:inline-block}
         <div class="field"><div class="row"><label for="plz">Postleitzahl</label><output for="plz" id="o-plz"></output></div>
           <input type="text" id="plz" inputmode="numeric" maxlength="5" value="44135" class="txt" aria-describedby="o-plz">
         </div>
-        <div class="field"><div class="row ico-row"><span class="flabel" id="l-aspect">Ausrichtung</span><svg class="ico ico-compass" viewBox="0 0 56 52" aria-hidden="true"><path class="ic-sunpath" d="M5 26A23 23 0 0 0 51 26"/><g class="ic-sun"><circle cx="28" cy="47" r="3.2"/></g><text x="28" y="5.6">N</text><g class="ic-house" id="ic-n1"><rect class="ic-rooff" x="15" y="13" width="26" height="26" rx="1.5"/><g class="ic-pv ic-pv-n" id="ic-n2"><rect x="17" y="15" width="22" height="9" rx="1"/><line x1="22" y1="15" x2="22" y2="24"/><line x1="28" y1="15" x2="28" y2="24"/><line x1="34" y1="15" x2="34" y2="24"/></g><g class="ic-pv"><rect x="17" y="28" width="22" height="9" rx="1"/><line x1="22" y1="28" x2="22" y2="37"/><line x1="28" y1="28" x2="28" y2="37"/><line x1="34" y1="28" x2="34" y2="37"/></g><line class="ic-ridge" x1="15" y1="26" x2="41" y2="26"/></g></svg></div>
+        <div class="field"><span class="flabel" id="l-aspect">Ausrichtung</span>
           <div class="seg" role="group" aria-labelledby="l-aspect" id="aspect">
             <button type="button" data-v="0" aria-pressed="true">Süd</button>
             <button type="button" data-v="-45" aria-pressed="false">Südost</button>
@@ -398,7 +376,7 @@ a.btn{text-decoration:none;display:inline-block}
             <button type="button" data-v="90" aria-pressed="false">West</button>
           </div>
           <span class="hint" id="h-aspect">Ost-West heißt: halbe Leistung auf jeder Dachseite.</span></div>
-        <div class="field"><div class="row"><label for="tilt">Dachneigung</label><span class="rv"><svg class="ico ico-roof" viewBox="0 0 44 32" aria-hidden="true"><line class="ic-ground" x1="2" y1="30.5" x2="42" y2="30.5"/><rect class="ic-wall" x="6" y="24" width="30" height="6.5"/><path class="ic-arc" id="ic-arc" d=""/><g class="ic-roof" id="ic-roof"><line x1="6" y1="24" x2="34" y2="24"/><rect x="9" y="20.6" width="22" height="3.4" rx=".8"/></g></svg><output for="tilt" id="o-tilt"></output></span></div>
+        <div class="field"><div class="row"><label for="tilt">Dachneigung</label><output for="tilt" id="o-tilt"></output></div>
           <input type="range" id="tilt" min="0" max="60" step="5" value="35">
           <span class="hint">Flachdach mit Aufständerung: etwa 10–15°.</span></div>
         <div class="field"><div class="row"><label for="pv">PV-Leistung</label><output for="pv" id="o-pv"></output></div>
@@ -407,9 +385,9 @@ a.btn{text-decoration:none;display:inline-block}
 
       <fieldset>
         <legend>Verbrauch</legend>
-        <div class="field"><div class="row"><label for="cons">Haushaltsstrom pro Jahr</label><output for="cons" id="o-cons"></output></div>
-          <input type="range" id="cons" min="1500" max="12000" step="100" value="4500">
-          <span class="hint">Ohne E-Auto. Steht auf deiner Jahresabrechnung.</span></div>
+        <div class="field"><div class="row"><label for="cons">Stromverbrauch pro Jahr</label><output for="cons" id="o-cons"></output></div>
+          <input type="range" id="cons" min="1500" max="25000" step="100" value="4500">
+          <span class="hint">Alles außer E-Auto, also auch Wärmepumpe, Klimaanlage oder Pool. Steht auf deiner Jahresabrechnung.</span></div>
         <div class="field"><div class="row"><label for="ev">E-Auto pro Jahr</label><output for="ev" id="o-ev"></output></div>
           <input type="range" id="ev" min="0" max="5000" step="100" value="0">
           <span class="hint">Faustwert: 15.000 km im Jahr sind rund 2.500 kWh.</span>
@@ -421,7 +399,7 @@ a.btn{text-decoration:none;display:inline-block}
 
       <fieldset>
         <legend>Speicher</legend>
-        <div class="field big"><div class="row"><label for="bat">Speichergröße (nutzbar)</label><span class="rv"><svg class="ico ico-bat" viewBox="0 0 46 24" aria-hidden="true"><rect class="ic-body" x="1.5" y="3" width="37" height="18" rx="3.5"/><rect class="ic-cap" x="39.5" y="8.5" width="4" height="7" rx="1.2"/><rect class="ic-fill" id="ic-fill" x="4.5" y="6" width="31" height="12" rx="1.6"/></svg><output for="bat" id="o-bat"></output></span></div>
+        <div class="field big"><div class="row"><label for="bat">Speichergröße (nutzbar)</label><output for="bat" id="o-bat"></output></div>
           <input type="range" id="bat" min="1" max="15" step="1" value="8"></div>
         <div class="field"><div class="row"><label for="bprice">Preis inkl. Einbau</label><output for="bprice" id="o-bprice"></output></div>
           <input type="range" id="bprice" min="250" max="1000" step="25" value="500">
@@ -508,7 +486,7 @@ a.btn{text-decoration:none;display:inline-block}
             <tr><td>Sonneneinstrahlung</td><td class="num">Monatsmittel 2014–2023</td><td>PVGIS-SARAH3 der EU-Kommission, je PLZ-Region. Daraus berechnet der Rechner Stunde für Stunde die Einstrahlung auf dein Dach, nach Sonnenstand, Ausrichtung und Neigung. <small>Abweichung zu PVGIS-Jahreserträgen: unter 4 %</small></td></tr>
             <tr><td>Wetter</td><td class="num">365 einzelne Tage</td><td>Sonnige und trübe Tage wechseln sich ab, oft mehrere trübe Tage am Stück. Der Speicher muss also auch Durststrecken überstehen.</td></tr>
             <tr><td>Anlagenverluste</td><td class="num">ca. 21 %</td><td>Wechselrichter, Kabel, Wärme, Verschmutzung, Reflexion bei flachem Lichteinfall</td></tr>
-            <tr><td>Verbrauchsprofil</td><td class="num">Standardlastprofil H0</td><td>Morgen- und Abendspitze, im Winter mehr als im Sommer, kurze Lastspitzen in 5-Minuten-Schritten.</td></tr>
+            <tr><td>Verbrauchsprofil</td><td class="num">Standardlastprofil H0</td><td>Morgen- und Abendspitze, im Winter mehr als im Sommer, kurze Lastspitzen in 5-Minuten-Schritten. Eine Wärmepumpe braucht im Winter deutlich mehr; mit Wärmepumpe ist das Ergebnis für den Speicher daher eher zu gut.</td></tr>
             <tr><td>Speicher</td><td class="num">88 % je Zyklus, 25 W Standby</td><td>Ladeleistung: halbe Kapazität pro Stunde, höchstens 5 kW.</td></tr>
             <tr><td>EEG heute</td><td class="num">7,70 ct/kWh</td><td>Neue Anlagen bis 10 kWp, Teileinspeisung, Inbetriebnahme 01.08.2026–31.01.2027 <small>(Bundesnetzagentur)</small></td></tr>
             <tr><td>EEG-Reform 2027</td><td class="num">0 ct, max. 50 %</td><td>Kabinettsentwurf vom 29.07.2026: feste Vergütung entfällt nach Übergangszahlungen, Einspeisung höchstens 50 % der Anlagenleistung. Noch nicht beschlossen <small>(Stand 09.11.2026)</small>.</td></tr>
@@ -524,7 +502,7 @@ a.btn{text-decoration:none;display:inline-block}
     <div class="wrap reveal">
       <h2 class="sec">Ratgeber</h2>
       <p class="intro">Häufige Fragen zu PV-Anlage und Speicher, beantwortet mit Zahlen aus dem Rechner.</p>
-      <ul class="rlist"><li><a href="ratgeber/stromspeicher-lohnt-sich-2027.html"><svg class="spark" viewBox="0 0 120 36" aria-hidden="true"><rect class="sp-pos" x="1.0" y="30.0" width="8.0" height="6.0" rx="1.5"/><rect class="sp-pos" x="11.0" y="19.4" width="8.0" height="16.6" rx="1.5"/><rect class="sp-pos" x="21.0" y="11.2" width="8.0" height="24.8" rx="1.5"/><rect class="sp-pos" x="31.0" y="5.6" width="8.0" height="30.4" rx="1.5"/><rect class="sp-pos" x="41.0" y="2.6" width="8.0" height="33.4" rx="1.5"/><rect class="sp-pos" x="51.0" y="1.8" width="8.0" height="34.2" rx="1.5"/><rect class="sp-pos" x="61.0" y="2.5" width="8.0" height="33.5" rx="1.5"/><rect class="sp-pos" x="71.0" y="4.5" width="8.0" height="31.5" rx="1.5"/><rect class="sp-pos" x="81.0" y="7.4" width="8.0" height="28.6" rx="1.5"/><rect class="sp-pos" x="91.0" y="11.2" width="8.0" height="24.8" rx="1.5"/><rect class="sp-pos" x="101.0" y="15.8" width="8.0" height="20.2" rx="1.5"/><rect class="sp-pos" x="111.0" y="20.5" width="8.0" height="15.5" rx="1.5"/></svg><b>Lohnt sich ein Stromspeicher 2027?</b><span>Mit Zahlen statt Prospekt: Wann sich ein Stromspeicher für eine neue PV-Anlage rechnet, was die EEG-Reform ändert und welche Größe am meisten bringt.</span></a></li><li><a href="ratgeber/speichergroesse-4500-kwh.html"><svg class="spark" viewBox="0 0 120 36" aria-hidden="true"><rect class="sp-pos" x="1.0" y="30.0" width="8.0" height="6.0" rx="1.5"/><rect class="sp-pos" x="11.0" y="19.4" width="8.0" height="16.6" rx="1.5"/><rect class="sp-pos" x="21.0" y="11.2" width="8.0" height="24.8" rx="1.5"/><rect class="sp-pos" x="31.0" y="5.6" width="8.0" height="30.4" rx="1.5"/><rect class="sp-pos" x="41.0" y="2.6" width="8.0" height="33.4" rx="1.5"/><rect class="sp-pos" x="51.0" y="1.8" width="8.0" height="34.2" rx="1.5"/><rect class="sp-pos" x="61.0" y="2.5" width="8.0" height="33.5" rx="1.5"/><rect class="sp-pos" x="71.0" y="4.5" width="8.0" height="31.5" rx="1.5"/><rect class="sp-pos" x="81.0" y="7.4" width="8.0" height="28.6" rx="1.5"/><rect class="sp-pos" x="91.0" y="11.2" width="8.0" height="24.8" rx="1.5"/><rect class="sp-pos" x="101.0" y="15.8" width="8.0" height="20.2" rx="1.5"/><rect class="sp-pos" x="111.0" y="20.5" width="8.0" height="15.5" rx="1.5"/></svg><b>Welche Speichergröße bei 4.500 kWh Verbrauch?</b><span>Bei 4.500 kWh Jahresverbrauch rechnet sich meist ein Speicher mit 5 bis 7 kWh. Die Zahlen für 6, 9 und 12 kWp und warum größer nicht besser ist.</span></a></li><li><a href="ratgeber/ost-west-dach-speicher.html"><svg class="spark" viewBox="0 0 120 36" aria-hidden="true"><rect class="sp-pos" x="1.0" y="30.0" width="8.0" height="6.0" rx="1.5"/><rect class="sp-pos" x="11.0" y="19.4" width="8.0" height="16.6" rx="1.5"/><rect class="sp-pos" x="21.0" y="11.2" width="8.0" height="24.8" rx="1.5"/><rect class="sp-pos" x="31.0" y="5.6" width="8.0" height="30.4" rx="1.5"/><rect class="sp-pos" x="41.0" y="2.6" width="8.0" height="33.4" rx="1.5"/><rect class="sp-pos" x="51.0" y="1.8" width="8.0" height="34.2" rx="1.5"/><rect class="sp-pos" x="61.0" y="2.5" width="8.0" height="33.5" rx="1.5"/><rect class="sp-pos" x="71.0" y="4.5" width="8.0" height="31.5" rx="1.5"/><rect class="sp-pos" x="81.0" y="7.4" width="8.0" height="28.6" rx="1.5"/><rect class="sp-pos" x="91.0" y="11.2" width="8.0" height="24.8" rx="1.5"/><rect class="sp-pos" x="101.0" y="15.8" width="8.0" height="20.2" rx="1.5"/><rect class="sp-pos" x="111.0" y="20.5" width="8.0" height="15.5" rx="1.5"/></svg><b>Ost-West-Dach: Braucht es einen Speicher?</b><span>Eine Ost-West-Anlage liefert morgens und abends Strom. Deshalb reicht meist ein kleinerer Speicher als bei Süd. Die Zahlen im Vergleich.</span></a></li><li><a href="ratgeber/stromspeicher-nachruesten.html"><svg class="spark" viewBox="0 0 120 36" aria-hidden="true"><rect class="sp-pos" x="1.0" y="26.3" width="8.0" height="9.7" rx="1.5"/><rect class="sp-pos" x="11.0" y="15.9" width="8.0" height="20.1" rx="1.5"/><rect class="sp-pos" x="21.0" y="8.5" width="8.0" height="27.5" rx="1.5"/><rect class="sp-pos" x="31.0" y="3.8" width="8.0" height="32.2" rx="1.5"/><rect class="sp-pos" x="41.0" y="1.8" width="8.0" height="34.2" rx="1.5"/><rect class="sp-pos" x="51.0" y="1.9" width="8.0" height="34.1" rx="1.5"/><rect class="sp-pos" x="61.0" y="3.7" width="8.0" height="32.3" rx="1.5"/><rect class="sp-pos" x="71.0" y="6.8" width="8.0" height="29.2" rx="1.5"/><rect class="sp-pos" x="81.0" y="10.9" width="8.0" height="25.1" rx="1.5"/><rect class="sp-pos" x="91.0" y="15.8" width="8.0" height="20.2" rx="1.5"/><rect class="sp-pos" x="101.0" y="21.2" width="8.0" height="14.8" rx="1.5"/><rect class="sp-pos" x="111.0" y="26.8" width="8.0" height="9.2" rx="1.5"/></svg><b>Stromspeicher nachrüsten: Lohnt sich das?</b><span>Ob sich ein Speicher für deine bestehende PV-Anlage lohnt, entscheidet vor allem deine Einspeisevergütung. Ab etwa 12 ct wird es knapp, bei 20 ct nie.</span></a></li></ul>
+      <ul class="rlist"><li><a href="ratgeber/stromspeicher-lohnt-sich-2027.html"><i class="kz"><em>+2.758 €</em><small>Gewinn nach 15 Jahren mit 6 kWh, heute gerechnet</small></i><b>Lohnt sich ein Stromspeicher 2027?</b><span>Mit Zahlen statt Prospekt: Wann sich ein Stromspeicher für eine neue PV-Anlage rechnet, was die EEG-Reform ändert und welche Größe am meisten bringt.</span></a></li><li><a href="ratgeber/speichergroesse-4500-kwh.html"><i class="kz"><em>5–7 kWh</em><small>rechnen sich bei Süddach am besten</small></i><b>Welche Speichergröße bei 4.500 kWh Verbrauch?</b><span>Bei 4.500 kWh Jahresverbrauch rechnet sich meist ein Speicher mit 5 bis 7 kWh. Die Zahlen für 6, 9 und 12 kWp und warum größer nicht besser ist.</span></a></li><li><a href="ratgeber/ost-west-dach-speicher.html"><i class="kz"><em>4 kWh</em><small>reichen bei Ost-West, bei Süd sind es 6</small></i><b>Ost-West-Dach: Braucht es einen Speicher?</b><span>Eine Ost-West-Anlage liefert morgens und abends Strom. Deshalb reicht meist ein kleinerer Speicher als bei Süd. Die Zahlen im Vergleich.</span></a></li><li><a href="ratgeber/stromspeicher-nachruesten.html"><i class="kz"><em>unter 8 ct</em><small>Einspeisevergütung: Dann lohnt sich Nachrüsten meist</small></i><b>Stromspeicher nachrüsten: Lohnt sich das?</b><span>Ob sich ein Speicher für deine bestehende PV-Anlage lohnt, entscheidet vor allem deine Einspeisevergütung. Ab etwa 12 ct wird es knapp, bei 20 ct nie.</span></a></li></ul>
       <p><a href="ratgeber/">Alle Artikel</a></p>
     </div>
   </section>
@@ -920,22 +898,10 @@ var DRAW = (function () {
       feed:+$("feed").value,feedLimit:state.eeg==="reform"?0.5:0};
   }
 
-  // Kleine Grafiken an den Eingaben: Kompass, Dachneigung, Akku
-  function icons(p){
-    var ow=state.aspect==="ow";
-    $("ic-n1").style.transform="rotate("+(ow?90:+state.aspect)+"deg)";
-    $("ic-n2").style.opacity=ow?1:0;
-    var t=+$("tilt").value,r=t*Math.PI/180;
-    $("ic-roof").style.transform="rotate("+(-t)+"deg)";
-    $("ic-arc").setAttribute("d",t?"M17,24A11,11 0 0 0 "+(6+11*Math.cos(r)).toFixed(2)+","+(24-11*Math.sin(r)).toFixed(2):"");
-    $("ic-fill").style.transform="scaleX("+(p.bat/+$("bat").max)+")";
-  }
-
   function outputs(p,plzOk){
     $("o-plz").textContent=plzOk?REGIONS[p.region].n:"5-stellige PLZ eingeben";
     $("o-plz").className=plzOk?"":"warn";
     $("o-tilt").textContent=$("tilt").value+"°";
-    icons(p);
     $("o-pv").textContent=nf1.format(+$("pv").value)+" kWp";
     $("o-cons").textContent=nf0.format(p.cons)+" kWh";
     $("o-ev").textContent=p.ev?nf0.format(p.ev)+" kWh":"kein E-Auto";
@@ -954,7 +920,7 @@ var DRAW = (function () {
   (function buildWheels(){
     var el=$("wheels"),html="";
     for(var i=0;i<WHEELS;i++){
-      html+='<span class="wheel'+(i===WHEELS-1?' red':'')+'" aria-hidden="true"><span class="strip">';
+      html+='<span class="wheel" aria-hidden="true"><span class="strip">';
       for(var d=0;d<10;d++)html+="<span>"+d+"</span>";
       html+="</span></span>";
     }

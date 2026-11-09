@@ -3,9 +3,12 @@ import pathlib, json, html, sys
 ROOT = pathlib.Path(__file__).parent
 sys.path.insert(0, str(ROOT / "src"))
 from articles import ARTICLES, STAND, BEISPIEL, CHART_BASE
+import images
+print("Vorschaubilder/Icons neu:", images.build(ARTICLES))
 import subprocess
+from urllib.parse import quote
 
-from chrome import header, footer, analytics
+from chrome import header, footer, analytics, head_meta
 
 FAV = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Crect x='5' y='4' width='16' height='20' rx='2.5' fill='none' stroke='%2315212B' stroke-width='2'/%3E%3Crect x='10' y='1.5' width='6' height='3' rx='1' fill='%2315212B'/%3E%3Crect x='8' y='14' width='10' height='7' rx='1' fill='%23E39A0B'/%3E%3C/svg%3E")
 # Gleiche Grundstyles wie die Startseite (Farben, Schriften, Kopf, Fuß, Breite), dazu Textseiten-Typografie unter .doc
@@ -34,6 +37,13 @@ main.page{padding-block:36px 40px}
 .doc td.num{font-family:var(--f-mono);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .doc tr.hl td{background:var(--sun-soft)}
 .doc details{border-bottom:1px solid var(--line);padding:12px 0} .doc summary{font-weight:600;cursor:pointer}
+.ask{border:1px dashed var(--line);border-radius:10px;padding:20px 22px;margin:32px 0 8px;display:grid;gap:8px;max-width:760px}
+.ask b{font-family:var(--f-display);font-stretch:105%;font-size:19px}
+.ask span{font-size:16px;color:var(--muted);line-height:1.5}
+.ask .btn.ghost{display:inline-block;justify-self:start;opacity:1;cursor:pointer;text-decoration:none;background:transparent;color:var(--ink);border:1.5px solid var(--ink);padding:10px 16px;transition:transform 160ms var(--ease-out),background-color 150ms ease,color 150ms ease}
+@media (hover:hover) and (pointer:fine){.ask .btn.ghost:hover{background:var(--ink);color:var(--surface)}}
+.ask .btn.ghost:active{transform:scale(0.97)}
+@media (prefers-reduced-motion:reduce){.ask .btn.ghost:active{transform:none}}
 .cta{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px;margin:32px 0;display:grid;gap:10px;max-width:760px}
 .cta b{font-family:var(--f-display);font-stretch:105%;font-size:21px}
 .cta .btn{display:inline-block;justify-self:start;opacity:1;cursor:pointer;text-decoration:none}
@@ -50,7 +60,7 @@ main.page{padding-block:36px 40px}
 .cpanels{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px}
 .cpanel svg{display:block;width:100%;height:auto}
 .ctitle{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.rlist .spark{margin-bottom:4px}
+
 html.js .chart .sline{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1100ms var(--ease-in-out)}
 html.js .chart .sdot,html.js .chart .slabel{opacity:0;transition:opacity 300ms var(--ease-out) 900ms}
 html.js .chart .cpanel svg{clip-path:inset(0 100% 0 0);transition:clip-path 1000ms var(--ease-in-out)}
@@ -80,14 +90,14 @@ def _with_figure(a):
     return body[:i + 4] + fig + body[i + 4:] if i >= 0 else fig + body
 
 
-def page(title, desc, canonical, main, extra_head="", prefix="../", active="ratgeber", robots=False):
+def page(title, desc, canonical, main, extra_head="", prefix="../", active="ratgeber", robots=False, og_image=None):
     base = BASE.replace("url(fonts/", f"url({prefix}fonts/")
     meta = '<meta name="robots" content="noindex">' if robots else (f'<link rel="canonical" href="{canonical}"><meta property="og:title" content="{html.escape(title)}"><meta property="og:description" content="{html.escape(desc)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="article"><meta property="og:locale" content="de_DE">')
     return f"""<!doctype html>
 <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{html.escape(title)}</title><meta name="description" content="{html.escape(desc)}">
 {meta}
-<link rel="icon" href="{FAV}">{analytics()}<style>{base}{DOC}</style>{extra_head}</head>
+<link rel="icon" href="{FAV}">{head_meta(None if robots else og_image, html.escape(title))}{analytics()}<style>{base}{DOC}</style>{extra_head}</head>
 <body>
 {header(prefix, active)}
 <main class="wrap page">{main}</main>
@@ -95,6 +105,13 @@ def page(title, desc, canonical, main, extra_head="", prefix="../", active="ratg
 {REVEAL}
 </body></html>
 """
+
+def ask(a):
+    """Kasten „Frage offen?“: öffnet das Mailprogramm mit vorausgefülltem Betreff, kein Fremddienst."""
+    subj = quote(f"Frage zu: {a['title']}")
+    body = quote(f"Hallo Manuel,\n\nmeine Frage zum Artikel https://speicherklar.de/ratgeber/{a['slug']}.html:\n\n")
+    return (f'<div class="ask"><b>Noch eine Frage offen?</b><span>Schreib sie mir. Ich antworte dir per Mail, und was öfter gefragt wird, ergänze ich hier im Artikel, ohne deinen Namen.</span>'
+            f'<a class="btn ghost" href="mailto:kontakt@speicherklar.de?subject={subj}&amp;body={body}" data-umami-event="frage-mail">Frage per Mail stellen</a></div>')
 
 CTA = """<div class="cta"><b>Rechne dein eigenes Haus durch</b><span>Postleitzahl, Dachausrichtung und Verbrauch eingeben. Der kostenlose Rechner zeigt dir die wirtschaftlichste Speichergröße, auch für das Szenario EEG-Reform 2027.</span><a class="btn" href="../#rechner">Zum Rechner</a><span class="cta-pro">Du hast schon ein Angebot? <a href="../pro/">Speicherklar Pro</a> prüft Speicher und PV-Anlage zusammen und zeigt die beste Kombination für dein Dach. Die Einordnung ist kostenlos.</span></div>"""
 
@@ -107,23 +124,25 @@ for a in ARTICLES:
           {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": x}} for q, x in a["faq"]]}]
     head = "".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in ld)
     main = f"""<article class="doc"><div class="eyebrow">Ratgeber</div><h1>{a['h1']}</h1><p class="lead">{a['lead']}</p><p class="meta">Stand: {STAND}</p>
-{_with_figure(a)}{CTA}<h2>Häufige Fragen</h2>{faq_html}<p class="note" style="margin-top:28px">{BEISPIEL}</p></article>"""
-    (out / f"{a['slug']}.html").write_text(page(f"{a['title']} | Speicherklar", a["desc"], url, main, head))
+{_with_figure(a)}{CTA}<h2>Häufige Fragen</h2>{faq_html}{ask(a)}<p class="note" style="margin-top:28px">{BEISPIEL}</p></article>"""
+    (out / f"{a['slug']}.html").write_text(page(f"{a['title']} | Speicherklar", a["desc"], url, main, head, og_image=f"img/og/{a['slug']}.png"))
     urls.append((url, a["date"]))
 
-sp = lambda a: CHARTS.get(a["slug"], {}).get("spark", "")
+# Kernzahl auf den Ratgeber-Karten (Feld "kennzahl": {"v": Wert, "t": kurzer Zusatz}); Zahlen müssen im Artikel stehen
+def sp(a):
+    k = a.get("kennzahl")
+    return f'<i class="kz"><em>{k["v"]}</em><small>{k["t"]}</small></i>' if k else ""
 items = "".join(f'<li><a href="{a["slug"]}.html">{sp(a)}<b>{a["title"]}</b><span>{a["desc"]}</span></a></li>' for a in ARTICLES)
 (out / "index.html").write_text(page("Ratgeber Stromspeicher | Speicherklar", "Artikel rund um Stromspeicher und PV-Anlagen, mit Zahlen aus der Jahressimulation statt aus dem Prospekt. Mit Angebots-Check für PV-Anlage und Speicher.", "https://speicherklar.de/ratgeber/",
-    f'<div class="doc"><div class="eyebrow">Ratgeber</div><h1>Stromspeicher, ehrlich gerechnet</h1><p class="lead">Fragen rund um PV-Anlage und Speicher, beantwortet mit Zahlen aus unserer Jahressimulation.</p></div><ul class="rlist">{items}</ul>{CTA}'))
+    f'<div class="doc"><div class="eyebrow">Ratgeber</div><h1>Stromspeicher, ehrlich gerechnet</h1><p class="lead">Fragen rund um PV-Anlage und Speicher, beantwortet mit Zahlen aus unserer Jahressimulation.</p></div><ul class="rlist">{items}</ul>{CTA}', og_image="img/og/ratgeber.png"))
 
 # Über mich
 ABOUT_URL = "https://speicherklar.de/ueber-mich.html"
-ABOUT_HEAD = ('<meta property="og:image" content="https://speicherklar.de/img/manuel-og.jpg">'
-  '<script type="application/ld+json">{"@context":"https://schema.org","@type":"AboutPage","url":"' + ABOUT_URL + '",'
+ABOUT_HEAD = ('<script type="application/ld+json">{"@context":"https://schema.org","@type":"AboutPage","url":"' + ABOUT_URL + '",'
   '"mainEntity":{"@type":"Person","name":"Manuel Maurer","url":"' + ABOUT_URL + '","image":"https://speicherklar.de/img/manuel-960.jpg",'
   '"homeLocation":{"@type":"Place","name":"Krefeld"},"sameAs":["https://www.instagram.com/speicherklar/"]}}</script>')
 (ROOT / "ueber-mich.html").write_text(page("Über mich | Speicherklar", "Wer hinter Speicherklar steckt, warum der Rechner ein ganzes Jahr simuliert und womit sich die Seite finanziert.",
-    ABOUT_URL, (ROOT / "src/ueber-mich.html").read_text(), ABOUT_HEAD, prefix="./", active=None))
+    ABOUT_URL, (ROOT / "src/ueber-mich.html").read_text(), ABOUT_HEAD, prefix="./", active=None, og_image="img/manuel-og.jpg"))
 urls.append((ABOUT_URL, "2026-11-09"))
 urls.append(("https://speicherklar.de/pro/", "2026-11-09"))
 
@@ -133,7 +152,7 @@ urls.append(("https://speicherklar.de/pro/", "2026-11-09"))
 from chrome import UMAMI_ID
 UMAMI_TEXT = """<h2 id="reichweite">8. Reichweitenmessung mit Umami</h2>
 <p>Um zu sehen, wie viele Menschen Speicherklar nutzen und welche Seiten gelesen werden, setze ich Umami Cloud ein, einen Dienst der Umami Software, Inc. (USA). Ich habe als Speicherort die EU gewählt. Weil Umami ein US-Unternehmen ist, können Daten trotzdem in die USA übermittelt werden, etwa für Support oder Sicherheit; dafür gelten die EU-Standardvertragsklauseln, die Teil des Vertrags zur Auftragsverarbeitung sind. Umami setzt keine Cookies und speichert nichts auf deinem Gerät.</p>
-<p>Erfasst werden die aufgerufene Seite, die Seite, von der du kommst, Browser, Betriebssystem, Gerätetyp, Bildschirmgröße, Land und Sprache sowie einige Ereignisse ohne Inhalt: dass der Rechner benutzt wurde, dass sich jemand in die Warteliste eingetragen hat, dass ein Angebot geprüft, der Kauf-Knopf geklickt, Pro freigeschaltet oder ein Bericht gespeichert wurde. Was du in den Rechner oder den Angebots-Check eingibst, wird nicht übertragen. Deine IP-Adresse wird nur kurz für die Übertragung verarbeitet und nicht in den Statistiken gespeichert. Ich sehe nur zusammengefasste Zahlen und kann daraus keine einzelne Person erkennen.</p>
+<p>Erfasst werden die aufgerufene Seite, die Seite, von der du kommst, Browser, Betriebssystem, Gerätetyp, Bildschirmgröße, Land und Sprache sowie einige Ereignisse ohne Inhalt: dass der Rechner benutzt wurde, dass sich jemand in die Warteliste eingetragen hat, dass der Mail-Link für Fragen angeklickt wurde, dass ein Angebot geprüft, der Kauf-Knopf geklickt, Pro freigeschaltet oder ein Bericht gespeichert wurde. Den Inhalt einer Mail sieht Umami nicht. Was du in den Rechner oder den Angebots-Check eingibst, wird nicht übertragen. Deine IP-Adresse wird nur kurz für die Übertragung verarbeitet und nicht in den Statistiken gespeichert. Ich sehe nur zusammengefasste Zahlen und kann daraus keine einzelne Person erkennen.</p>
 <p>Rechtsgrundlage ist mein berechtigtes Interesse an einer datensparsamen Auswertung der Nutzung (Art. 6 Abs. 1 lit. f DSGVO, § 25 Abs. 2 Nr. 2 TDDDG). Umami verarbeitet die Daten in meinem Auftrag; es besteht ein Vertrag zur Auftragsverarbeitung nach Art. 28 DSGVO (<a href="https://umami.is/dpa">umami.is/dpa</a>). Die Daten werden nach 6 Monaten gelöscht. Du kannst widersprechen, indem du in deinem Browser Skripte von cloud.umami.is blockierst, oder per Mail an kontakt@speicherklar.de. Mehr in der <a href="https://umami.is/privacy">Datenschutzerklärung von Umami</a>.</p>
 """
 
