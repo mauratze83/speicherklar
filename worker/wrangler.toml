@@ -11,3 +11,11 @@ PRICE_INTRO = "price_1UZwBGJZ79g2fqSOZMl6bGTf"     # Stripe-Preis-ID 49 €
 PRICE_REGULAR = "price_1UZyJwJZ79g2fqSOzRXwODYX"   # Stripe-Preis-ID 89 €
 INTRO_UNTIL = "2027-01-31"   # letzter Tag des Einführungspreises (wie introUntil in src/pro-config.js)
 STRIPE_VERSION = ""   # nur setzen, falls Managed Payments eine bestimmte API-Version verlangt
+MAX_DEVICES = "3"     # so viele Browser/Geräte darf ein Schlüssel freischalten
+ML_GROUP_BUYERS = ""  # MailerLite-Gruppen-ID "Käufer Pro" (Mail mit Schlüssel nach dem Kauf)
+ML_GROUP_RESEND = ""  # MailerLite-Gruppen-ID "Pro Schlüssel erneut" (Mail bei "Schlüssel vergessen?")
+
+# Speicher für Geräte je Schlüssel und Sperren. Die ID trägt der Workflow beim Veröffentlichen ein.
+[[kv_namespaces]]
+binding = "LICENSES"
+id = "KV_ID_PLATZHALTER"

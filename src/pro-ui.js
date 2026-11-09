@@ -226,14 +226,21 @@
     $("b-note").innerHTML = note.join(" ");
   }
 
+  // Zufällige Geräte-ID für das Gerätelimit (keine Gerätedaten, nur eine Zahl in diesem Browser)
+  function deviceId() {
+    var d = load("sk-pro-geraet");
+    if (!d) { d = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + "-" + Math.random().toString(36).slice(2, 12); store("sk-pro-geraet", d); }
+    return d;
+  }
   var LICENSE = {
     verify: function (key) {
-      if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && key === "DEV-SPEICHERKLAR") return Promise.resolve({ ok: true });
+      if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && key === "DEV-SPEICHERKLAR") return Promise.resolve({ ok: true, email: "" });
       if (!C.api) return Promise.resolve({ ok: false, msg: "Der Verkauf ist noch nicht gestartet." });
-      return api("/validate", { key: key }).then(function (j) {
-        if (j.ok) return { ok: true };
-        if (j.status === 404) return { ok: false, msg: "Diesen Schlüssel kennen wir nicht. Bitte kopier ihn genau so, wie er nach dem Kauf angezeigt wurde." };
-        if (j.status === 410) return { ok: false, msg: j.error === "refunded" ? "Dieser Kauf wurde erstattet, der Schlüssel gilt nicht mehr." : "Zu diesem Schlüssel gibt es keine abgeschlossene Zahlung." };
+      return api("/validate", { key: key, device: deviceId() }).then(function (j) {
+        if (j.ok) return { ok: true, email: j.email || "" };
+        if (j.status === 404) return { ok: false, msg: "Diesen Schlüssel kennen wir nicht. Bitte kopier ihn genau so, wie er in der Mail oder nach dem Kauf angezeigt wurde." };
+        if (j.status === 409) return { ok: false, msg: "Dieser Schlüssel ist schon auf " + (j.max || 3) + " Geräten aktiv. Wenn du ein Gerät gewechselt hast, schreib an kontakt@speicherklar.de, dann gebe ich ihn wieder frei." };
+        if (j.status === 410) return { ok: false, msg: j.error === "refunded" ? "Dieser Kauf wurde erstattet, der Schlüssel gilt nicht mehr." : j.error === "blocked" ? "Dieser Schlüssel ist gesperrt. Bei Fragen: kontakt@speicherklar.de." : "Zu diesem Schlüssel gibt es keine abgeschlossene Zahlung." };
         return { ok: false, net: true, msg: "Die Prüfung hat gerade nicht geklappt. Bitte versuch es gleich noch einmal." };
       }, function () { return { ok: false, net: true, msg: "Keine Verbindung zur Prüfung. Bitte versuch es gleich noch einmal." }; });
     }
@@ -248,8 +255,8 @@
     try { navigator.clipboard.writeText(k).then(done, function () { selectKey(); }); } catch (e) { selectKey(); }
   });
   function selectKey() { var r = document.createRange(); r.selectNodeContents($("mykey-v")); var sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); }
-  function unlock(key) {
-    state.unlocked = true; $("buy").hidden = true; $("keybox").hidden = true; $("teaser").classList.add("unlocked");
+  function unlock(key, email) {
+    state.unlocked = true; state.licEmail = email || ""; $("buy").hidden = true; $("keybox").hidden = true; $("teaser").classList.add("unlocked");
     showKey(key);
     if (state.result) renderReport();
   }
@@ -260,9 +267,22 @@
     btn.disabled = true; btn.textContent = "Prüfe…";
     LICENSE.verify(key).then(function (res) {
       btn.disabled = false; btn.textContent = "Freischalten";
-      if (res.ok) { store(KEY_LIC, { key: key, at: Date.now() }); msg.textContent = ""; track("pro-freigeschaltet"); unlock(key); $("report-wrap").scrollIntoView({ behavior: "smooth" }); }
+      if (res.ok) { store(KEY_LIC, { key: key, email: res.email, at: Date.now() }); msg.textContent = ""; track("pro-freigeschaltet"); unlock(key, res.email); $("report-wrap").scrollIntoView({ behavior: "smooth" }); }
       else { msg.textContent = res.msg; msg.className = "wait-msg err"; }
     });
+  });
+  // Schlüssel vergessen: Mail an die Kaufadresse, die Seite verrät nicht, ob es einen Kauf gibt
+  $("recform").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var em = $("f-recmail").value.trim(), msg = $("recmsg"), btn = $("recbtn");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { msg.textContent = "Bitte gib die E-Mail-Adresse ein, mit der du gekauft hast."; msg.className = "wait-msg err"; return; }
+    if (!C.api) { msg.textContent = "Der Verkauf ist noch nicht gestartet."; msg.className = "wait-msg err"; return; }
+    btn.disabled = true;
+    api("/recover", { email: em }).then(function (j) {
+      btn.disabled = false;
+      if (j.ok) { msg.className = "wait-msg ok"; msg.textContent = "Wenn es zu dieser Adresse einen Kauf gibt, kommt der Schlüssel in wenigen Minuten per Mail. Schau auch im Spam-Ordner nach."; track("pro-schluessel-mail"); }
+      else { msg.className = "wait-msg err"; msg.textContent = j.error || "Das hat gerade nicht geklappt. Bitte versuch es gleich noch einmal."; }
+    }, function () { btn.disabled = false; msg.className = "wait-msg err"; msg.textContent = "Keine Verbindung. Bitte versuch es gleich noch einmal."; });
   });
   // Rückkehr von Stripe: ?kauf=<Checkout-ID> → Kauf prüfen, Schlüssel ausgeben und speichern
   function afterPurchase() {
@@ -271,10 +291,11 @@
     var msg = $("kaufmsg"); msg.hidden = false; msg.className = "wait-msg"; msg.textContent = "Danke! Dein Kauf wird geprüft…";
     var tries = 0;
     (function check() {
-      api("/verify", { session: m[1] }).then(function (j) {
+      api("/verify", { session: m[1], device: deviceId() }).then(function (j) {
         if (j.key) {
-          store(KEY_LIC, { key: j.key, at: Date.now() }); track("pro-gekauft");
-          msg.textContent = "Danke für deinen Kauf! Der Bericht ist freigeschaltet."; unlock(j.key);
+          store(KEY_LIC, { key: j.key, email: j.email, at: Date.now() }); track("pro-gekauft");
+          msg.textContent = "Danke für deinen Kauf! Der Bericht ist freigeschaltet." + (j.mailed ? " Deinen Lizenzschlüssel bekommst du auch per Mail." : "");
+          unlock(j.key, j.email);
           setTimeout(function () { $("report-wrap").scrollIntoView({ behavior: "smooth" }); }, 400);
         } else if (j.status === 402 && ++tries < 5) setTimeout(check, 3000);
         else { msg.className = "wait-msg err"; msg.textContent = (j.error || "Der Kauf ließ sich gerade nicht prüfen.") + " Lad die Seite in einer Minute neu oder schreib an kontakt@speicherklar.de."; }
@@ -285,9 +306,9 @@
   // Gespeicherten Schlüssel nachprüfen: offline bleibt freigeschaltet, nur ein ausdrücklich ungültiger Schlüssel sperrt
   function restoreLicense() {
     var lic = load(KEY_LIC); if (!lic || !lic.key) return;
-    unlock(lic.key);
+    unlock(lic.key, lic.email);
     if (Date.now() - (lic.at || 0) > 7 * 864e5) LICENSE.verify(lic.key).then(function (res) {
-      if (res.ok) store(KEY_LIC, { key: lic.key, at: Date.now() });
+      if (res.ok) store(KEY_LIC, { key: lic.key, email: res.email || lic.email, at: Date.now() });
       else if (!res.net) { store(KEY_LIC, null); location.reload(); }
     });
   }
@@ -467,7 +488,8 @@
       "<tr><td>PV-Anlage</td><td>Rechenzeitraum " + PRO.PVLIFE + " Jahre. Wert = selbst genutzter Solarstrom zum Strompreis plus Einspeisung zur Vergütung. Größere Anlagen nutzen die zusätzliche Dachfläche, kleinere verkleinern alle Dachflächen gleichmäßig.</td></tr>" +
       "<tr><td>Andere Größen</td><td>" + Math.round(PRO.FIX * 100) + " % des Speicherpreises als fester Anteil. Ladeleistung wie im Angebot, bei kleineren Größen höchstens halbe Kapazität pro Stunde, mindestens 2,5 kW.</td></tr>" +
       "<tr><td>Nicht drin</td><td>Verschattung, Alterung des Akkus, steigende Strompreise, Zinsen, dynamische Tarife, Notstrom. Strompreis und Lebensdauer prüft Abschnitt 6.</td></tr>" +
-      '</tbody></table></div><p class="fine">Dieser Bericht ist eine Rechnung mit deinen Angaben und keine Anlagen-, Rechts- oder Finanzberatung. Er ersetzt nicht die Planung durch einen Fachbetrieb. Erstellt mit Speicherklar Pro, speicherklar.de.</p></section>';
+      '</tbody></table></div><p class="fine">Dieser Bericht ist eine Rechnung mit deinen Angaben und keine Anlagen-, Rechts- oder Finanzberatung. Er ersetzt nicht die Planung durch einen Fachbetrieb. Erstellt mit Speicherklar Pro, speicherklar.de.</p>' +
+      (state.licEmail ? '<p class="lic">Lizenziert für ' + esc(state.licEmail) + "</p>" : "") + '</section>';
 
     $("report").innerHTML = h;
     $("report-wrap").hidden = false;

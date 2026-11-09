@@ -1,5 +1,5 @@
 # Veröffentlicht den Cloudflare Worker für Kauf und Freischaltung von Speicherklar Pro (worker/).
-# Braucht die GitHub-Secrets CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, STRIPE_SECRET_KEY, LICENSE_SECRET.
+# Braucht die GitHub-Secrets CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, STRIPE_SECRET_KEY, LICENSE_SECRET, optional MAILERLITE_API_KEY.
 # Ohne CLOUDFLARE_API_TOKEN wird der Lauf übersprungen.
 name: Worker
 on:
@@ -11,10 +11,26 @@ jobs:
     runs-on: ubuntu-latest
     env:
       HAS_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+      HAS_ML: ${{ secrets.MAILERLITE_API_KEY != '' }}
     steps:
       - uses: actions/checkout@v4
       - if: env.HAS_TOKEN != 'true'
         run: echo "CLOUDFLARE_API_TOKEN fehlt – Worker wird nicht veröffentlicht."
+      - name: KV-Speicher anlegen oder finden
+        if: env.HAS_TOKEN == 'true'
+        working-directory: worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          id=$(npx -y wrangler@3 kv namespace list | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const l=JSON.parse(s.slice(s.indexOf("[")));const n=l.find(x=>x.title.endsWith("speicherklar-pro-LICENSES"));console.log(n?n.id:"")})')
+          if [ -z "$id" ]; then
+            npx -y wrangler@3 kv namespace create LICENSES
+            id=$(npx -y wrangler@3 kv namespace list | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const l=JSON.parse(s.slice(s.indexOf("[")));const n=l.find(x=>x.title.endsWith("speicherklar-pro-LICENSES"));console.log(n?n.id:"")})')
+          fi
+          test -n "$id"
+          sed -i "s/KV_ID_PLATZHALTER/$id/" wrangler.toml
+          echo "KV-Namespace: $id"
       - if: env.HAS_TOKEN == 'true'
         uses: cloudflare/wrangler-action@v3
         with:
@@ -27,3 +43,11 @@ jobs:
         env:
           STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
           LICENSE_SECRET: ${{ secrets.LICENSE_SECRET }}
+      - name: MailerLite-Schlüssel setzen (nur wenn vorhanden)
+        if: env.HAS_TOKEN == 'true' && env.HAS_ML == 'true'
+        working-directory: worker
+        env:
+          ML_KEY: ${{ secrets.MAILERLITE_API_KEY }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: printf '%s' "$ML_KEY" | npx -y wrangler@3 secret put MAILERLITE_API_KEY

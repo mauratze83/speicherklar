@@ -385,6 +385,11 @@ a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
 .mykey code{font-family:var(--f-mono);font-size:13px;word-break:break-all;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px;flex:1;min-width:0;user-select:all}
 .mykey .note{margin:0;font-size:13.5px;color:var(--muted)}
 #kaufmsg{margin:0 0 12px;font-weight:600}
+.recform{display:grid;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.recform label{font-size:14px;color:var(--muted)}
+.recform input{flex:1 1 200px;min-width:0;font:inherit;font-size:15px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.wait-msg.ok{color:var(--pos)}
+.report .lic{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin:10px 0 0}
 </style>
 </head>
 <body>
@@ -519,7 +524,7 @@ a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
         <div class="mykey" id="mykey" hidden>
           <span class="flabel">Dein Lizenzschlüssel</span>
           <div class="mykey-row"><code id="mykey-v"></code><button type="button" class="linkbtn" id="mykey-copy">Kopieren</button></div>
-          <p class="note">Speicher ihn, etwa in einer Notiz oder im Passwort-Manager. Damit schaltest du Pro auf anderen Geräten frei. Die Rechnung kommt per Mail von Stripe.</p>
+          <p class="note">Damit schaltest du Pro auf bis zu drei Geräten frei. Du bekommst ihn auch per Mail, die Rechnung schickt Stripe separat.</p>
         </div>
         <details class="keybox" id="keybox">
           <summary>Schon gekauft? Lizenzschlüssel eingeben</summary>
@@ -528,6 +533,14 @@ a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
             <button class="btn btn-on" type="submit" id="keybtn">Freischalten</button>
           </form>
           <p class="wait-msg" id="keymsg" role="status" aria-live="polite"></p>
+          <form id="recform" class="recform" novalidate>
+            <label for="f-recmail">Schlüssel vergessen? Wir schicken ihn noch einmal an die Adresse, mit der du gekauft hast.</label>
+            <div class="wait-row">
+              <input type="email" id="f-recmail" autocomplete="email" inputmode="email" placeholder="deine@email.de">
+              <button class="btn" type="submit" id="recbtn">Schlüssel schicken</button>
+            </div>
+            <p class="wait-msg" id="recmsg" role="status" aria-live="polite"></p>
+          </form>
         </details>
       </div>
     </div>
@@ -1320,14 +1333,21 @@ var PRO = (function () {
     $("b-note").innerHTML = note.join(" ");
   }
 
+  // Zufällige Geräte-ID für das Gerätelimit (keine Gerätedaten, nur eine Zahl in diesem Browser)
+  function deviceId() {
+    var d = load("sk-pro-geraet");
+    if (!d) { d = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + "-" + Math.random().toString(36).slice(2, 12); store("sk-pro-geraet", d); }
+    return d;
+  }
   var LICENSE = {
     verify: function (key) {
-      if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && key === "DEV-SPEICHERKLAR") return Promise.resolve({ ok: true });
+      if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && key === "DEV-SPEICHERKLAR") return Promise.resolve({ ok: true, email: "" });
       if (!C.api) return Promise.resolve({ ok: false, msg: "Der Verkauf ist noch nicht gestartet." });
-      return api("/validate", { key: key }).then(function (j) {
-        if (j.ok) return { ok: true };
-        if (j.status === 404) return { ok: false, msg: "Diesen Schlüssel kennen wir nicht. Bitte kopier ihn genau so, wie er nach dem Kauf angezeigt wurde." };
-        if (j.status === 410) return { ok: false, msg: j.error === "refunded" ? "Dieser Kauf wurde erstattet, der Schlüssel gilt nicht mehr." : "Zu diesem Schlüssel gibt es keine abgeschlossene Zahlung." };
+      return api("/validate", { key: key, device: deviceId() }).then(function (j) {
+        if (j.ok) return { ok: true, email: j.email || "" };
+        if (j.status === 404) return { ok: false, msg: "Diesen Schlüssel kennen wir nicht. Bitte kopier ihn genau so, wie er in der Mail oder nach dem Kauf angezeigt wurde." };
+        if (j.status === 409) return { ok: false, msg: "Dieser Schlüssel ist schon auf " + (j.max || 3) + " Geräten aktiv. Wenn du ein Gerät gewechselt hast, schreib an kontakt@speicherklar.de, dann gebe ich ihn wieder frei." };
+        if (j.status === 410) return { ok: false, msg: j.error === "refunded" ? "Dieser Kauf wurde erstattet, der Schlüssel gilt nicht mehr." : j.error === "blocked" ? "Dieser Schlüssel ist gesperrt. Bei Fragen: kontakt@speicherklar.de." : "Zu diesem Schlüssel gibt es keine abgeschlossene Zahlung." };
         return { ok: false, net: true, msg: "Die Prüfung hat gerade nicht geklappt. Bitte versuch es gleich noch einmal." };
       }, function () { return { ok: false, net: true, msg: "Keine Verbindung zur Prüfung. Bitte versuch es gleich noch einmal." }; });
     }
@@ -1342,8 +1362,8 @@ var PRO = (function () {
     try { navigator.clipboard.writeText(k).then(done, function () { selectKey(); }); } catch (e) { selectKey(); }
   });
   function selectKey() { var r = document.createRange(); r.selectNodeContents($("mykey-v")); var sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); }
-  function unlock(key) {
-    state.unlocked = true; $("buy").hidden = true; $("keybox").hidden = true; $("teaser").classList.add("unlocked");
+  function unlock(key, email) {
+    state.unlocked = true; state.licEmail = email || ""; $("buy").hidden = true; $("keybox").hidden = true; $("teaser").classList.add("unlocked");
     showKey(key);
     if (state.result) renderReport();
   }
@@ -1354,9 +1374,22 @@ var PRO = (function () {
     btn.disabled = true; btn.textContent = "Prüfe…";
     LICENSE.verify(key).then(function (res) {
       btn.disabled = false; btn.textContent = "Freischalten";
-      if (res.ok) { store(KEY_LIC, { key: key, at: Date.now() }); msg.textContent = ""; track("pro-freigeschaltet"); unlock(key); $("report-wrap").scrollIntoView({ behavior: "smooth" }); }
+      if (res.ok) { store(KEY_LIC, { key: key, email: res.email, at: Date.now() }); msg.textContent = ""; track("pro-freigeschaltet"); unlock(key, res.email); $("report-wrap").scrollIntoView({ behavior: "smooth" }); }
       else { msg.textContent = res.msg; msg.className = "wait-msg err"; }
     });
+  });
+  // Schlüssel vergessen: Mail an die Kaufadresse, die Seite verrät nicht, ob es einen Kauf gibt
+  $("recform").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var em = $("f-recmail").value.trim(), msg = $("recmsg"), btn = $("recbtn");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { msg.textContent = "Bitte gib die E-Mail-Adresse ein, mit der du gekauft hast."; msg.className = "wait-msg err"; return; }
+    if (!C.api) { msg.textContent = "Der Verkauf ist noch nicht gestartet."; msg.className = "wait-msg err"; return; }
+    btn.disabled = true;
+    api("/recover", { email: em }).then(function (j) {
+      btn.disabled = false;
+      if (j.ok) { msg.className = "wait-msg ok"; msg.textContent = "Wenn es zu dieser Adresse einen Kauf gibt, kommt der Schlüssel in wenigen Minuten per Mail. Schau auch im Spam-Ordner nach."; track("pro-schluessel-mail"); }
+      else { msg.className = "wait-msg err"; msg.textContent = j.error || "Das hat gerade nicht geklappt. Bitte versuch es gleich noch einmal."; }
+    }, function () { btn.disabled = false; msg.className = "wait-msg err"; msg.textContent = "Keine Verbindung. Bitte versuch es gleich noch einmal."; });
   });
   // Rückkehr von Stripe: ?kauf=<Checkout-ID> → Kauf prüfen, Schlüssel ausgeben und speichern
   function afterPurchase() {
@@ -1365,10 +1398,11 @@ var PRO = (function () {
     var msg = $("kaufmsg"); msg.hidden = false; msg.className = "wait-msg"; msg.textContent = "Danke! Dein Kauf wird geprüft…";
     var tries = 0;
     (function check() {
-      api("/verify", { session: m[1] }).then(function (j) {
+      api("/verify", { session: m[1], device: deviceId() }).then(function (j) {
         if (j.key) {
-          store(KEY_LIC, { key: j.key, at: Date.now() }); track("pro-gekauft");
-          msg.textContent = "Danke für deinen Kauf! Der Bericht ist freigeschaltet."; unlock(j.key);
+          store(KEY_LIC, { key: j.key, email: j.email, at: Date.now() }); track("pro-gekauft");
+          msg.textContent = "Danke für deinen Kauf! Der Bericht ist freigeschaltet." + (j.mailed ? " Deinen Lizenzschlüssel bekommst du auch per Mail." : "");
+          unlock(j.key, j.email);
           setTimeout(function () { $("report-wrap").scrollIntoView({ behavior: "smooth" }); }, 400);
         } else if (j.status === 402 && ++tries < 5) setTimeout(check, 3000);
         else { msg.className = "wait-msg err"; msg.textContent = (j.error || "Der Kauf ließ sich gerade nicht prüfen.") + " Lad die Seite in einer Minute neu oder schreib an kontakt@speicherklar.de."; }
@@ -1379,9 +1413,9 @@ var PRO = (function () {
   // Gespeicherten Schlüssel nachprüfen: offline bleibt freigeschaltet, nur ein ausdrücklich ungültiger Schlüssel sperrt
   function restoreLicense() {
     var lic = load(KEY_LIC); if (!lic || !lic.key) return;
-    unlock(lic.key);
+    unlock(lic.key, lic.email);
     if (Date.now() - (lic.at || 0) > 7 * 864e5) LICENSE.verify(lic.key).then(function (res) {
-      if (res.ok) store(KEY_LIC, { key: lic.key, at: Date.now() });
+      if (res.ok) store(KEY_LIC, { key: lic.key, email: res.email || lic.email, at: Date.now() });
       else if (!res.net) { store(KEY_LIC, null); location.reload(); }
     });
   }
@@ -1561,7 +1595,8 @@ var PRO = (function () {
       "<tr><td>PV-Anlage</td><td>Rechenzeitraum " + PRO.PVLIFE + " Jahre. Wert = selbst genutzter Solarstrom zum Strompreis plus Einspeisung zur Vergütung. Größere Anlagen nutzen die zusätzliche Dachfläche, kleinere verkleinern alle Dachflächen gleichmäßig.</td></tr>" +
       "<tr><td>Andere Größen</td><td>" + Math.round(PRO.FIX * 100) + " % des Speicherpreises als fester Anteil. Ladeleistung wie im Angebot, bei kleineren Größen höchstens halbe Kapazität pro Stunde, mindestens 2,5 kW.</td></tr>" +
       "<tr><td>Nicht drin</td><td>Verschattung, Alterung des Akkus, steigende Strompreise, Zinsen, dynamische Tarife, Notstrom. Strompreis und Lebensdauer prüft Abschnitt 6.</td></tr>" +
-      '</tbody></table></div><p class="fine">Dieser Bericht ist eine Rechnung mit deinen Angaben und keine Anlagen-, Rechts- oder Finanzberatung. Er ersetzt nicht die Planung durch einen Fachbetrieb. Erstellt mit Speicherklar Pro, speicherklar.de.</p></section>';
+      '</tbody></table></div><p class="fine">Dieser Bericht ist eine Rechnung mit deinen Angaben und keine Anlagen-, Rechts- oder Finanzberatung. Er ersetzt nicht die Planung durch einen Fachbetrieb. Erstellt mit Speicherklar Pro, speicherklar.de.</p>' +
+      (state.licEmail ? '<p class="lic">Lizenziert für ' + esc(state.licEmail) + "</p>" : "") + '</section>';
 
     $("report").innerHTML = h;
     $("report-wrap").hidden = false;

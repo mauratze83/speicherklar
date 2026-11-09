@@ -1,12 +1,17 @@
 /* Speicherklar Pro – Kauf und Freischaltung über Stripe (Managed Payments, Stripe ist Merchant of Record).
-   Läuft als Cloudflare Worker. Speichert nichts: Der Lizenzschlüssel enthält die Stripe-Checkout-ID und eine Signatur.
+   Läuft als Cloudflare Worker. Der Lizenzschlüssel enthält die Stripe-Checkout-ID und eine Signatur.
 
-   POST /checkout  {}            → { url }   Bezahlseite von Stripe (Einführungs- oder Normalpreis nach Datum)
-   POST /verify    { session }   → { key }   nach dem Kauf: bezahlt? dann Schlüssel ausgeben
-   POST /validate  { key }       → { ok }    Schlüssel prüfen (Signatur, bezahlt, nicht erstattet)
+   POST /checkout  {}                  → { url }            Bezahlseite (Einführungs- oder Normalpreis nach Datum)
+   POST /verify    { session, device } → { key, email }     nach dem Kauf: bezahlt? Schlüssel ausgeben, Gerät eintragen, Mail auslösen
+   POST /validate  { key, device }     → { ok, email }      Schlüssel prüfen: Signatur, bezahlt, nicht erstattet, nicht gesperrt, Gerätelimit
+   POST /recover   { email }           → { ok }             Schlüssel noch einmal per Mail an diese Adresse (Antwort verrät nichts)
 
-   Variablen (wrangler.toml): SITE, ALLOWED_ORIGINS, PRICE_INTRO, PRICE_REGULAR, INTRO_UNTIL, STRIPE_VERSION
-   Geheimnisse (wrangler secret / GitHub Actions): STRIPE_SECRET_KEY, LICENSE_SECRET */
+   KV LICENSES:  "lic:<checkout-id>" → { devices: [..], email: "m•••@gmx.de", mailed: true, blocked: false }
+                 "rec:<email>:<tag>" → Zähler gegen Missbrauch von /recover
+   Sperren: im Cloudflare-Dashboard unter Workers KV den Eintrag lic:<checkout-id> öffnen und "blocked": true setzen.
+
+   Variablen (wrangler.toml): SITE, ALLOWED_ORIGINS, PRICE_INTRO, PRICE_REGULAR, INTRO_UNTIL, STRIPE_VERSION, MAX_DEVICES, ML_GROUP_BUYERS, ML_GROUP_RESEND
+   Geheimnisse: STRIPE_SECRET_KEY, LICENSE_SECRET, MAILERLITE_API_KEY (ohne diesen wird keine Mail verschickt) */
 
 const enc = new TextEncoder();
 
@@ -51,13 +56,51 @@ async function parseKey(env, key) {
   return (await sign(env, m[1])) === m[2] ? m[1] : null;
 }
 
-// Bezahlt und nicht (vollständig) erstattet?
+// m•••@gmx.de: erkennbar für den Käufer, für andere nicht vollständig lesbar
+function maskEmail(e) {
+  const [u, d] = String(e || "").split("@");
+  return u && d ? `${u[0]}•••@${d}` : "";
+}
+const validDevice = (d) => /^[A-Za-z0-9-]{8,64}$/.test(String(d || ""));
+
+// Bezahlt und nicht erstattet? Liefert auch die Käufer-Adresse.
 async function paidSession(env, id) {
-  const s = await stripe(env, "GET", `checkout/sessions/${encodeURIComponent(id)}`, { "expand[]": "payment_intent.latest_charge" });
+  let s;
+  try { s = await stripe(env, "GET", `checkout/sessions/${encodeURIComponent(id)}`, { "expand[]": "payment_intent.latest_charge" }); }
+  catch (e) { if (e.status === 404) return { ok: false, reason: "unknown" }; throw e; }
   if (s.payment_status !== "paid") return { ok: false, reason: "unpaid" };
   const charge = s.payment_intent && s.payment_intent.latest_charge;
   if (charge && charge.refunded) return { ok: false, reason: "refunded" };
-  return { ok: true };
+  return { ok: true, email: (s.customer_details && s.customer_details.email) || "" };
+}
+
+async function getLic(env, id) {
+  if (!env.LICENSES) return { devices: [] };
+  return (await env.LICENSES.get(`lic:${id}`, "json")) || { devices: [] };
+}
+const putLic = (env, id, lic) => env.LICENSES ? env.LICENSES.put(`lic:${id}`, JSON.stringify(lic)) : null;
+
+// Gerät eintragen, solange das Limit nicht erreicht ist
+function admit(env, lic, device) {
+  const max = Number(env.MAX_DEVICES || 3);
+  if (lic.blocked) return "blocked";
+  if (!validDevice(device) || lic.devices.includes(device)) return "ok";
+  if (lic.devices.length >= max) return "limit";
+  lic.devices.push(device); lic.changed = true;
+  return "ok";
+}
+
+// MailerLite: Käufer mit Schlüssel in eine Gruppe eintragen; die Automatisierung dort verschickt die Mail
+async function mailKey(env, email, key, group) {
+  if (!env.MAILERLITE_API_KEY || !group || !email) return false;
+  const h = { Authorization: `Bearer ${env.MAILERLITE_API_KEY}`, "Content-Type": "application/json", Accept: "application/json" };
+  const r = await fetch("https://connect.mailerlite.com/api/subscribers", { method: "POST", headers: h, body: JSON.stringify({ email, fields: { lizenz: key } }) });
+  if (!r.ok) return false;
+  const sub = (await r.json()).data;
+  // Erst austragen, dann eintragen: so startet die Automatisierung auch beim zweiten Mal
+  await fetch(`https://connect.mailerlite.com/api/subscribers/${sub.id}/groups/${group}`, { method: "DELETE", headers: h });
+  const g = await fetch(`https://connect.mailerlite.com/api/subscribers/${sub.id}/groups/${group}`, { method: "POST", headers: h });
+  return g.ok;
 }
 
 const today = () => new Date().toISOString().slice(0, 10);
@@ -83,23 +126,53 @@ export default {
         });
         return json(req, env, { url: s.url });
       }
+
       if (path === "/verify") {
         const id = String(body.session || "");
         if (!/^cs_[A-Za-z0-9_]+$/.test(id)) return json(req, env, { error: "Ungültige Kauf-ID" }, 400);
-        let p;
-        try { p = await paidSession(env, id); }
-        catch (e) { if (e.status === 404) return json(req, env, { error: "Diesen Kauf finden wir nicht." }, 404); throw e; }
-        if (!p.ok) return json(req, env, { error: p.reason === "refunded" ? "Dieser Kauf wurde erstattet." : "Die Zahlung ist noch nicht abgeschlossen." }, 402);
-        return json(req, env, { key: await makeKey(env, id) });
+        const p = await paidSession(env, id);
+        if (!p.ok) {
+          const msg = { unknown: "Diesen Kauf finden wir nicht.", refunded: "Dieser Kauf wurde erstattet.", unpaid: "Die Zahlung ist noch nicht abgeschlossen." }[p.reason];
+          return json(req, env, { error: msg }, p.reason === "unknown" ? 404 : 402);
+        }
+        const key = await makeKey(env, id), lic = await getLic(env, id);
+        const st = admit(env, lic, body.device);
+        if (!lic.email) { lic.email = maskEmail(p.email); lic.changed = true; }
+        if (!lic.mailed && await mailKey(env, p.email, key, env.ML_GROUP_BUYERS)) { lic.mailed = true; lic.changed = true; }
+        if (lic.changed) { delete lic.changed; await putLic(env, id, lic); }
+        if (st === "blocked") return json(req, env, { error: "Dieser Schlüssel ist gesperrt." }, 410);
+        return json(req, env, { key, email: lic.email, mailed: !!lic.mailed, limit: st === "limit" });
       }
+
       if (path === "/validate") {
         const id = await parseKey(env, body.key);
         if (!id) return json(req, env, { ok: false, error: "unknown" }, 404);
-        let p;
-        try { p = await paidSession(env, id); }
-        catch (e) { if (e.status === 404) return json(req, env, { ok: false, error: "unknown" }, 404); throw e; }
-        return json(req, env, p.ok ? { ok: true } : { ok: false, error: p.reason }, p.ok ? 200 : 410);
+        const p = await paidSession(env, id);
+        if (!p.ok) return json(req, env, { ok: false, error: p.reason }, p.reason === "unknown" ? 404 : 410);
+        const lic = await getLic(env, id);
+        const st = admit(env, lic, body.device);
+        if (!lic.email) { lic.email = maskEmail(p.email); lic.changed = true; }
+        if (lic.changed) { delete lic.changed; await putLic(env, id, lic); }
+        if (st === "blocked") return json(req, env, { ok: false, error: "blocked" }, 410);
+        if (st === "limit") return json(req, env, { ok: false, error: "limit", max: Number(env.MAX_DEVICES || 3) }, 409);
+        return json(req, env, { ok: true, email: lic.email });
       }
+
+      if (path === "/recover") {
+        const email = String(body.email || "").trim().toLowerCase();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 200) return json(req, env, { error: "Bitte gib eine gültige E-Mail-Adresse ein." }, 400);
+        // höchstens 3 Anfragen pro Adresse und Tag
+        if (env.LICENSES) {
+          const rk = `rec:${email}:${today()}`, n = Number((await env.LICENSES.get(rk)) || 0);
+          if (n >= 3) return json(req, env, { ok: true });
+          await env.LICENSES.put(rk, String(n + 1), { expirationTtl: 172800 });
+        }
+        const list = await stripe(env, "GET", "checkout/sessions", { "customer_details[email]": email, status: "complete", limit: "10" });
+        const paid = (list.data || []).filter((s) => s.payment_status === "paid");
+        if (paid.length) await mailKey(env, email, await makeKey(env, paid[0].id), env.ML_GROUP_RESEND || env.ML_GROUP_BUYERS);
+        return json(req, env, { ok: true });
+      }
+
       return json(req, env, { error: "Unbekannter Pfad" }, 404);
     } catch (e) {
       return json(req, env, { error: "Stripe nicht erreichbar", detail: e.message }, 502);
