@@ -29,3 +29,33 @@ head = f"""<!doctype html>
 html = head + (S / "body.html").read_text().replace("<!--RATGEBER-->", (S / "ratgeber-teaser.html").read_text()).replace("<!--HEADER-->", header("./", "rechner")).replace("<!--FOOTER-->", footer("./")) + "\n<script>\n" + sim + "\n" + (S / "draw.js").read_text().split("if (typeof module")[0] + "\n" + (S / "ui.js").read_text() + "</script>\n</body>\n</html>\n"
 (S.parent / "index.html").write_text(html)
 print("index.html:", len(html), "Zeichen")
+
+# Speicherklar Pro: pro/index.html (Angebots-Check)
+def js(name): return (S / name).read_text().split('if(typeof module!=="undefined")')[0].split("if (typeof module")[0]
+pro_css = ((S / "fonts.css").read_text() + (S / "style.css").read_text()).replace("url(fonts/", "url(../fonts/") + (S / "pro.css").read_text()
+pro_head = f"""<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Angebots-Check für PV-Speicher – Speicherklar Pro</title>
+<meta name="description" content="Passt der Speicher in deinem PV-Angebot? Angebot eintragen, kostenlos die Einordnung sehen, Bericht mit passender Größe, Preis-Check und Fragen an den Installateur.">
+<link rel="canonical" href="https://speicherklar.de/pro/">
+<meta property="og:title" content="Speicherklar Pro – Angebots-Check für deinen Stromspeicher">
+<meta property="og:description" content="Ist der Speicher in deinem Angebot zu groß? Rechne es nach, bevor du unterschreibst.">
+<meta property="og:url" content="https://speicherklar.de/pro/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_DE">
+<meta name="theme-color" content="#EDF0F2">
+<link rel="icon" href="{FAVICON}">
+{analytics()}
+<style>
+{pro_css}</style>
+</head>
+<body>
+"""
+pro_html = pro_head + (S / "pro-body.html").read_text().replace("<!--HEADER-->", header("../", "pro")).replace("<!--FOOTER-->", footer("../")) + \
+    "\n<script>\n" + "\n".join([js("sim.js"), js("draw.js"), js("markt.js"), (S / "pro-config.js").read_text(), js("pro.js"), (S / "pro-ui.js").read_text()]) + "</script>\n</body>\n</html>\n"
+(S.parent / "pro").mkdir(exist_ok=True)
+(S.parent / "pro" / "index.html").write_text(pro_html)
+print("pro/index.html:", len(pro_html), "Zeichen")

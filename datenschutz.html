@@ -280,6 +280,11 @@ svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
 .ic-fill{fill:var(--sun);transform-origin:4.5px 12px;transition:transform 220ms var(--ease-out)}
 @media (prefers-reduced-motion:reduce){.ic-house,.ic-pv-n,.ic-roof,.ic-fill{transition:none}}
 
+/* Übergang zum Angebots-Check */
+.procta{display:flex;align-items:center;justify-content:space-between;gap:12px 18px;flex-wrap:wrap;border:1px solid var(--sun);background:var(--sun-soft);border-radius:8px;padding:14px 16px}
+.procta p{margin:0;font-size:15px;flex:1 1 260px}
+a.btn{text-decoration:none;display:inline-block}
+
 .about{display:grid;grid-template-columns:minmax(0,1fr) 340px;column-gap:56px;align-items:start}
 .about-text{grid-column:1;grid-row:1}.about-body{grid-column:1;grid-row:2}
 .about-photo{grid-column:2;grid-row:1/span 2;margin:8px 0 0;position:sticky;top:24px}
@@ -333,12 +338,12 @@ html.js .chart.in .cpanel svg{clip-path:inset(0 0 0 0)}
       <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="5" y="4" width="16" height="20" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><rect x="10" y="1.5" width="6" height="3" rx="1" fill="currentColor"/><rect x="8" y="14" width="10" height="7" rx="1" fill="var(--sun)"/></svg>
       Speicherklar
     </a>
-    <nav aria-label="Seitenbereiche"><a href="./#rechner">Rechner</a><a href="./ratgeber/">Ratgeber</a><a href="./#annahmen">Annahmen</a><a href="./#pro">Pro</a><a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">Instagram</a></nav>
+    <nav aria-label="Seitenbereiche"><a href="./#rechner">Rechner</a><a href="./ratgeber/">Ratgeber</a><a href="./#annahmen">Annahmen</a><a href="./pro/">Angebots-Check</a><a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">Instagram</a></nav>
   </div>
 </header>
 <main class="wrap page"><div class="doc">
 <h1>Datenschutzerklärung</h1>
-<p>Kurz gesagt: Speicherklar setzt keine Cookies, nutzt kein Tracking und lädt keine Inhalte von fremden Servern. Deine Eingaben im Rechner werden nur in deinem Browser verarbeitet und nicht übertragen. Nur wenn du dich freiwillig in die Warteliste einträgst, geht deine E-Mail-Adresse an unseren Newsletter-Dienst.</p>
+<p>Kurz gesagt: Speicherklar setzt keine Cookies, nutzt kein Tracking und lädt keine Inhalte von fremden Servern. Deine Eingaben im Rechner werden nur in deinem Browser verarbeitet und nicht übertragen. Nur wenn du dich freiwillig in die Warteliste einträgst, geht deine E-Mail-Adresse an unseren Newsletter-Dienst. Wenn du Speicherklar Pro kaufst, wickelt Polar den Kauf ab und prüft deinen Lizenzschlüssel.</p>
 <h2>1. Verantwortlicher</h2>
 <p>Manuel Maurer, Steinrath 8c, 47807 Krefeld<br>E-Mail: kontakt@speicherklar.de</p>
 <h2>2. Hosting</h2>
@@ -350,15 +355,19 @@ html.js .chart.in .cpanel svg{clip-path:inset(0 0 0 0)}
 <h2>5. Kontakt per E-Mail</h2>
 <p>Wenn du mir eine E-Mail schreibst, verarbeite ich deine Angaben, um deine Anfrage zu beantworten (Art. 6 Abs. 1 lit. b bzw. f DSGVO). Die Daten werden gelöscht, sobald sie dafür nicht mehr erforderlich sind und keine gesetzlichen Aufbewahrungspflichten bestehen.</p>
 <h2 id="warteliste">6. Warteliste für Speicherklar Pro</h2>
-<p>Wenn du dich in die Warteliste einträgst, verarbeite ich deine E-Mail-Adresse, um dich über den Start von Speicherklar Pro und den Einführungspreis zu informieren. Rechtsgrundlage ist deine Einwilligung (Art. 6 Abs. 1 lit. a DSGVO).</p>
+<p>Wenn du dich in die Warteliste einträgst, verarbeite ich deine E-Mail-Adresse, um dich über den Start von Speicherklar Pro, den Vorab-Zugang und den Einführungspreis zu informieren. Rechtsgrundlage ist deine Einwilligung (Art. 6 Abs. 1 lit. a DSGVO).</p>
 <p>Für die Warteliste nutze ich MailerLite, einen Dienst der UAB MailerLite, J. Basanavičiaus 15, LT-03108 Vilnius, Litauen. Deine Adresse wird erst beim Absenden des Formulars direkt an MailerLite übertragen und dort in der EU gespeichert. MailerLite verarbeitet die Daten in meinem Auftrag; mit MailerLite besteht ein Vertrag zur Auftragsverarbeitung nach Art. 28 DSGVO. Weitere Informationen findest du in der <a href="https://www.mailerlite.com/legal/privacy-policy">Datenschutzerklärung von MailerLite</a>.</p>
 <p>Ich nutze das Double-Opt-in-Verfahren: Du bekommst nach der Anmeldung eine Mail mit einem Bestätigungslink. Erst wenn du ihn klickst, landest du auf der Liste. Um die Anmeldung nachweisen zu können, speichert MailerLite den Zeitpunkt der Anmeldung und der Bestätigung sowie die IP-Adresse.</p>
 <p>Du kannst deine Einwilligung jederzeit widerrufen, über den Abmeldelink in jeder Mail oder per Mail an kontakt@speicherklar.de. Deine Adresse wird dann gelöscht. Spätestens wenn Speicherklar Pro gestartet ist und die Start-Mail verschickt wurde, lösche ich Adressen, die nicht ausdrücklich weitere Mails wollen.</p>
-<h2 id="reichweite">7. Reichweitenmessung mit Umami</h2>
+<h2 id="pro">7. Speicherklar Pro (Angebots-Check)</h2>
+<p>Auch der Angebots-Check rechnet nur in deinem Browser. Damit deine Eingaben beim nächsten Besuch noch da sind, speichert dein Browser sie lokal auf deinem Gerät (Local Storage), ebenso einen Lizenzschlüssel, falls du Pro gekauft hast. Diese Daten werden nicht an mich übertragen. Du kannst sie jederzeit löschen, indem du die Websitedaten von speicherklar.de in deinem Browser löschst. Rechtsgrundlage ist § 25 Abs. 2 Nr. 2 TDDDG, weil die Speicherung für die von dir gewünschte Funktion nötig ist.</p>
+<p>Den Kauf wickelt Polar ab, ein Dienst der Polar Software Inc., 3500 South DuPont Highway, Dover, DE 19901, USA. Polar ist dein Vertragspartner beim Kauf (Merchant of Record), stellt die Rechnung aus und verarbeitet dafür deine Angaben auf der Bezahlseite, etwa Name, E-Mail-Adresse, Rechnungsadresse und Zahlungsdaten. Die Zahlung selbst verarbeitet Stripe. Es gilt die <a href="https://polar.sh/legal/privacy">Datenschutzerklärung von Polar</a>. Von Polar erfahre ich, wer gekauft hat (Name, E-Mail-Adresse, Bestellung), um Rückfragen beantworten und meine Einnahmen nachweisen zu können (Art. 6 Abs. 1 lit. b und c DSGVO). Polar sitzt in den USA, dabei können Daten in die USA übermittelt werden.</p>
+<p>Wenn du deinen Lizenzschlüssel eingibst, schickt dein Browser den Schlüssel direkt an die Prüfstelle von Polar (api.polar.sh). Dabei wird deine IP-Adresse übertragen. Deine Eingaben aus dem Angebots-Check werden nicht übertragen. Rechtsgrundlage ist die Erfüllung des Vertrags (Art. 6 Abs. 1 lit. b DSGVO).</p>
+<h2 id="reichweite">8. Reichweitenmessung mit Umami</h2>
 <p>Um zu sehen, wie viele Menschen Speicherklar nutzen und welche Seiten gelesen werden, setze ich Umami Cloud ein, einen Dienst der Umami Software, Inc. (USA). Ich habe als Speicherort die EU gewählt. Weil Umami ein US-Unternehmen ist, können Daten trotzdem in die USA übermittelt werden, etwa für Support oder Sicherheit; dafür gelten die EU-Standardvertragsklauseln, die Teil des Vertrags zur Auftragsverarbeitung sind. Umami setzt keine Cookies und speichert nichts auf deinem Gerät.</p>
-<p>Erfasst werden die aufgerufene Seite, die Seite, von der du kommst, Browser, Betriebssystem, Gerätetyp, Bildschirmgröße, Land und Sprache sowie zwei Ereignisse: dass der Rechner benutzt wurde und dass sich jemand in die Warteliste eingetragen hat. Was du in den Rechner eingibst, wird nicht übertragen. Deine IP-Adresse wird nur kurz für die Übertragung verarbeitet und nicht in den Statistiken gespeichert. Ich sehe nur zusammengefasste Zahlen und kann daraus keine einzelne Person erkennen.</p>
+<p>Erfasst werden die aufgerufene Seite, die Seite, von der du kommst, Browser, Betriebssystem, Gerätetyp, Bildschirmgröße, Land und Sprache sowie einige Ereignisse ohne Inhalt: dass der Rechner benutzt wurde, dass sich jemand in die Warteliste eingetragen hat, dass ein Angebot geprüft, der Kauf-Knopf geklickt, Pro freigeschaltet oder ein Bericht gespeichert wurde. Was du in den Rechner oder den Angebots-Check eingibst, wird nicht übertragen. Deine IP-Adresse wird nur kurz für die Übertragung verarbeitet und nicht in den Statistiken gespeichert. Ich sehe nur zusammengefasste Zahlen und kann daraus keine einzelne Person erkennen.</p>
 <p>Rechtsgrundlage ist mein berechtigtes Interesse an einer datensparsamen Auswertung der Nutzung (Art. 6 Abs. 1 lit. f DSGVO, § 25 Abs. 2 Nr. 2 TDDDG). Umami verarbeitet die Daten in meinem Auftrag; es besteht ein Vertrag zur Auftragsverarbeitung nach Art. 28 DSGVO (<a href="https://umami.is/dpa">umami.is/dpa</a>). Die Daten werden nach 6 Monaten gelöscht. Du kannst widersprechen, indem du in deinem Browser Skripte von cloud.umami.is blockierst, oder per Mail an kontakt@speicherklar.de. Mehr in der <a href="https://umami.is/privacy">Datenschutzerklärung von Umami</a>.</p>
-<h2>8. Deine Rechte</h2>
+<h2>9. Deine Rechte</h2>
 <p>Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch (Art. 15–21 DSGVO). Außerdem kannst du dich bei einer Datenschutz-Aufsichtsbehörde beschweren, zum Beispiel bei der Landesbeauftragten für Datenschutz und Informationsfreiheit Nordrhein-Westfalen.</p>
 <p><small>Stand: 9. November 2026</small></p>
 </div></main>

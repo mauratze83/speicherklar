@@ -74,7 +74,9 @@ function pvProfile(region,kwp,tilt,aspect){
 }
 
 /* Verbrauch: kWh je Stunde. monthly (optional, 12 Werte) ersetzt die Standard-Saisonkurve */
-function loadProfile(cons,ev,evTime,monthly){
+/* hp: Wärmepumpe kWh/Jahr, nach Heizmonaten verteilt, über den Tag fast gleichmäßig */
+var HP_M=[0.16,0.14,0.12,0.08,0.05,0.03,0.03,0.03,0.04,0.08,0.11,0.15],HP_H=[0.9,0.9,0.9,0.9,0.95,1.05,1.15,1.15,1.1,1,0.95,0.9,0.9,0.9,0.95,1,1.05,1.1,1.1,1.05,1,0.95,0.95,0.9];
+function loadProfile(cons,ev,evTime,monthly,hp){
   var load=new Float64Array(8760),h0sum=H0.reduce(function(a,b){return a+b;},0);
   var evHours=evTime==="day"?[10,11,12,13,14,15]:[18,19,20,21,22],evDaily=(ev||0)/365;
   var mtot=[];
@@ -84,12 +86,14 @@ function loadProfile(cons,ev,evTime,monthly){
   for(var m2=0;m2<12;m2++){var dl=mtot[m2]/MDAYS[m2];
     for(var d=0;d<MDAYS[m2];d++,day++)for(var h=0;h<24;h++)
       load[idx++]=dl*DAYLOAD[day]*H0[h]/h0sum+(evHours.indexOf(h)>=0?evDaily/evHours.length:0);}
+  if(hp>0){var hm=HP_M.reduce(function(a,b){return a+b;},0),hh=HP_H.reduce(function(a,b){return a+b;},0),i2=0;
+    for(var m3=0;m3<12;m3++){var dd=hp*HP_M[m3]/hm/MDAYS[m3];for(var d3=0;d3<MDAYS[m3];d3++)for(var h3=0;h3<24;h3++)load[i2++]+=dd*HP_H[h3]/hh;}}
   return load;
 }
 
 /* Energiefluss mit Speicher. feedCap: max. Einspeiseleistung in kW (Infinity = keine Grenze) */
-function runBattery(gen,load,cap,feedCap){
-  var soc=0,eta=Math.sqrt(0.88),pmax=Math.min(cap*0.5,5)/STEPS,stby=cap>0?0.025/STEPS:0;
+function runBattery(gen,load,cap,feedCap,pw){
+  var soc=0,eta=Math.sqrt(0.88),pmax=(pw||Math.min(cap*0.5,5))/STEPS,stby=cap>0?0.025/STEPS:0;
   var fcap=(feedCap||Infinity)/STEPS,feed=0,grid=0,curt=0,G=0,Ld=0;
   for(var i=0,n=8760*STEPS;i<n;i++){
     var h=(i/STEPS)|0,gq=gen[h]/STEPS,lq=load[h]*QW[i]/STEPS;
@@ -103,8 +107,8 @@ function runBattery(gen,load,cap,feedCap){
 /* Durchschnittstag je Monat (gleiche Rechnung wie runBattery, Werte in kWh je Stunde = mittlere kW).
    Liefert für jeden Monat m: gen, load, direct (Solar direkt verbraucht), charge (Solar in den Speicher),
    discharge (aus dem Speicher ins Haus), imp (Netzbezug), exp (Einspeisung), soc (Füllstand 0–1, Stundenende). */
-function daySeries(gen,load,cap,feedCap){
-  var soc=0,eta=Math.sqrt(0.88),pmax=Math.min(cap*0.5,5)/STEPS,stby=cap>0?0.025/STEPS:0,fcap=(feedCap||Infinity)/STEPS;
+function daySeries(gen,load,cap,feedCap,pw){
+  var soc=0,eta=Math.sqrt(0.88),pmax=(pw||Math.min(cap*0.5,5))/STEPS,stby=cap>0?0.025/STEPS:0,fcap=(feedCap||Infinity)/STEPS;
   var K=["gen","load","direct","charge","discharge","imp","exp","soc"],out=[];
   for(var m=0;m<12;m++){var o={};K.forEach(function(k){o[k]=new Float64Array(24);});out.push(o);}
   var mOf=new Uint8Array(8760),hh=0;for(var mm=0;mm<12;mm++)for(var d=0;d<MDAYS[mm]*24;d++)mOf[hh++]=mm;
@@ -123,12 +127,12 @@ function daySeries(gen,load,cap,feedCap){
 function profiles(p){
   var gen=new Float64Array(8760),kwpTot=0;
   p.roofs.forEach(function(r){var g=pvProfile(p.region,r.kwp,r.tilt,r.aspect);for(var i=0;i<8760;i++)gen[i]+=g[i];kwpTot+=r.kwp;});
-  var load=loadProfile(p.cons,p.ev,p.evTime,p.monthly);
+  var load=loadProfile(p.cons,p.ev,p.evTime,p.monthly,p.hp);
   return {gen:gen,load:load,kwp:kwpTot,fc:p.feedLimit?kwpTot*p.feedLimit:Infinity};
 }
 
 /* Durchschnittstage für eine Speichergröße (cap in kWh, 0 = ohne Speicher) */
-function dayProfile(p,cap){var pr=profiles(p);return daySeries(pr.gen,pr.load,cap,pr.fc);}
+function dayProfile(p,cap,pw){var pr=profiles(p);return daySeries(pr.gen,pr.load,cap,pr.fc,pw);}
 
 /* p: {region, roofs:[{kwp,tilt,aspect}], cons, ev, evTime, monthly, bat, bprice, life, price, feed, feedLimit} */
 function evaluate(p){
@@ -144,7 +148,7 @@ function evaluate(p){
   var best=sweep.reduce(function(a,b){return b.net>a.net?b:a;});
   return {gen:gen,load:load,fc:fc,kwp:kwpTot,base:base,chosen:sweep[p.bat-1],best:best,sweep:sweep,
     // Kosten der PV-Anlage ohne Speicher (Stromrechnung mit PV): für spätere Pro-Auswertung
-    pvValue:(p.cons+(p.ev||0)-base.grid)*p.price/100+base.feed*p.feed/100};
+    pvValue:(p.cons+(p.ev||0)+(p.hp||0)-base.grid)*p.price/100+base.feed*p.feed/100};
 }
 
 if(typeof module!=="undefined")module.exports={REGIONS:REGIONS,pvProfile:pvProfile,loadProfile:loadProfile,runBattery:runBattery,daySeries:daySeries,dayProfile:dayProfile,profiles:profiles,evaluate:evaluate};

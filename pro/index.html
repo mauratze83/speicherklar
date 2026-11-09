@@ -1,0 +1,1410 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Angebots-Check für PV-Speicher – Speicherklar Pro</title>
+<meta name="description" content="Passt der Speicher in deinem PV-Angebot? Angebot eintragen, kostenlos die Einordnung sehen, Bericht mit passender Größe, Preis-Check und Fragen an den Installateur.">
+<link rel="canonical" href="https://speicherklar.de/pro/">
+<meta property="og:title" content="Speicherklar Pro – Angebots-Check für deinen Stromspeicher">
+<meta property="og:description" content="Ist der Speicher in deinem Angebot zu groß? Rechne es nach, bevor du unterschreibst.">
+<meta property="og:url" content="https://speicherklar.de/pro/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_DE">
+<meta name="theme-color" content="#EDF0F2">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Crect x='5' y='4' width='16' height='20' rx='2.5' fill='none' stroke='%2315212B' stroke-width='2'/%3E%3Crect x='10' y='1.5' width='6' height='3' rx='1' fill='%2315212B'/%3E%3Crect x='8' y='14' width='10' height='7' rx='1' fill='%23E39A0B'/%3E%3C/svg%3E">
+<script defer src="https://cloud.umami.is/script.js" data-website-id="f4570047-b7d7-42e7-944e-a06941b94082" data-domains="speicherklar.de"></script>
+<style>
+@font-face{font-family:"Archivo";src:url(../fonts/archivo-var.woff2) format("woff2");font-weight:100 900;font-stretch:62% 125%;font-display:swap}
+@font-face{font-family:"Source Sans 3";src:url(../fonts/source-sans-3-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Source Sans 3";src:url(../fonts/source-sans-3-latin-600-normal.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Source Sans 3";src:url(../fonts/source-sans-3-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"JetBrains Mono";src:url(../fonts/jetbrains-mono-latin-500-normal.woff2) format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"JetBrains Mono";src:url(../fonts/jetbrains-mono-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+/* Layout: ein Werkzeug als Bühne. Kurze These oben, darunter Eingaben | Ergebnis im Zählerkasten, dann offene Annahmen, dann Pro-Vorschau. */
+:root{
+  --bg:#EDF0F2; --surface:#FFFFFF; --ink:#15212B; --muted:#56666F; --line:#CBD3DA;
+  --sun:#E39A0B; --sun-ink:#8A5A00; --sun-soft:#FBEFD6;
+  --meter:#1B1F23; --meter-digit:#F3F1EA; --meter-red:#C9302C;
+  --pos:#2E7D5B; --neg:#B4412F; --track:#DCE2E7;
+  --c-charge:#9FD3B8; --c-exp:#F6D99A; --c-imp:#AEB9C2; --sky:#DCE8F0; --cloud:#C3CDD5; --house:#FFFFFF;
+  --ease-out:cubic-bezier(0.23, 1, 0.32, 1); --ease-in-out:cubic-bezier(0.77, 0, 0.175, 1);
+  --f-display:"Archivo", "Arial Narrow", system-ui, sans-serif;
+  --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F161C; --surface:#17212A; --ink:#E6ECF1; --muted:#97A7B3; --line:#2A3742;
+  --sun:#F2B33D; --sun-ink:#F2B33D; --sun-soft:#2E2614;
+  --meter:#06090C; --meter-digit:#E9E6DC; --meter-red:#D9443F;
+  --pos:#5CC596; --neg:#E5735E; --track:#26323C;
+  --c-charge:#2F6B52; --c-exp:#6B5523; --c-imp:#4B5966; --sky:#17232D; --cloud:#3A4855; --house:#1E2A35;
+  color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0F161C; --surface:#17212A; --ink:#E6ECF1; --muted:#97A7B3; --line:#2A3742;
+  --sun:#F2B33D; --sun-ink:#F2B33D; --sun-soft:#2E2614;
+  --meter:#06090C; --meter-digit:#E9E6DC; --meter-red:#D9443F;
+  --pos:#5CC596; --neg:#E5735E; --track:#26323C;
+  --c-charge:#2F6B52; --c-exp:#6B5523; --c-imp:#4B5966; --sky:#17232D; --cloud:#3A4855; --house:#1E2A35;
+  color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55;margin:0}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--sun-ink)}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+
+header.top{border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px;flex-wrap:wrap}
+.brand{color:var(--ink);text-decoration:none;font-family:var(--f-display);font-weight:800;font-stretch:118%;font-size:21px;letter-spacing:.01em;display:flex;align-items:center;gap:10px}
+.brand svg{flex:none}
+nav{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:15px}
+nav a{color:var(--muted);text-decoration:none}
+nav a:hover{color:var(--ink)}
+nav a[aria-current]{color:var(--ink);font-weight:600}
+
+.hero{padding-block:44px 22px}
+.eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sun-ink)}
+h1{font-family:var(--f-display);font-weight:800;font-stretch:112%;font-size:clamp(34px,5.6vw,60px);line-height:1.02;letter-spacing:-.01em;margin:10px 0 14px;max-width:16ch;text-wrap:balance}
+h1 em{font-style:normal;font-stretch:72%;font-weight:700;color:var(--sun-ink)}
+.lede{max-width:60ch;color:var(--muted);font-size:19px;margin:0}
+.facts{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:20px;font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.facts b{color:var(--ink);font-weight:700}
+
+.tool{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:20px;padding-block:18px 40px}
+@media (max-width:860px){.tool{grid-template-columns:minmax(0,1fr)}}
+.panel{min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px}
+.panel h2{font-family:var(--f-display);font-stretch:105%;font-size:20px;margin:0 0 4px}
+.panel .sub{color:var(--muted);font-size:14.5px;margin:0 0 18px}
+fieldset{min-width:0;min-inline-size:0;border:0;padding:0;margin:0 0 18px;display:grid;gap:16px}
+legend{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding:0}
+.field{display:grid;gap:4px}
+.field .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.field label{font-weight:600;font-size:15.5px}
+.field output{font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.field .hint{font-size:13px;color:var(--muted)}
+input[type=range]{width:100%;accent-color:var(--sun);height:26px;margin:0}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{font:inherit;font-size:14px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.seg button{transition:transform 160ms var(--ease-out),background-color 150ms ease,color 150ms ease,border-color 150ms ease;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.seg button:active{transform:scale(0.97)}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.field.big label{font-size:17px}
+.field.big output{font-size:16px;font-weight:700;color:var(--sun-ink)}
+
+.result{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;align-content:start}
+.verdict{font-family:var(--f-display);font-stretch:100%;font-weight:700;font-size:clamp(21px,2.6vw,27px);line-height:1.2;margin:0;text-wrap:balance}
+.verdict .ok{color:var(--pos)} .verdict .no{color:var(--neg)}
+
+.meterbox{background:var(--meter);border-radius:8px;padding:16px 18px;color:var(--meter-digit);display:grid;gap:10px}
+.meterbox .cap{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.7}
+.wheels{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.wheel{font-family:var(--f-mono);font-weight:700;font-size:clamp(26px,4vw,36px);width:1.05em;height:calc(1.25em + 4px);overflow:hidden;text-align:center;background:linear-gradient(#000 0,#2a2f35 12%,#15191d 50%,#2a2f35 88%,#000 100%);border-radius:3px;padding:2px 0;line-height:1.25;color:var(--meter-digit)}
+.wheel.red{background:linear-gradient(#5a0f0d 0,var(--meter-red) 14%,#9c2421 50%,var(--meter-red) 86%,#5a0f0d 100%);color:#fff}
+.wheel .strip{display:block;transition:transform 260ms var(--ease-out);will-change:transform}
+.wheel .strip span{display:block;height:1.25em;line-height:1.25;padding-top:2px}
+.wheels .unit{font-family:var(--f-mono);font-size:15px;margin-left:8px;opacity:.85}
+.meterbox .foot{font-size:13.5px;opacity:.75}
+
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:520px){.kpis{grid-template-columns:1fr}}
+.kpi{border-top:2px solid var(--ink);padding-top:8px}
+.kpi .k{font-size:13.5px;color:var(--muted)}
+.kpi .v{font-family:var(--f-display);font-weight:800;font-stretch:90%;font-size:30px;font-variant-numeric:tabular-nums;line-height:1.1}
+.kpi .d{font-size:13px;color:var(--muted)}
+
+.bars{display:grid;gap:12px}
+.bar .lbl{display:flex;justify-content:space-between;font-size:14px;gap:10px}
+.bar .lbl span:last-child{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.track{height:12px;background:var(--track);border-radius:6px;position:relative;overflow:hidden}
+.track i{position:absolute;inset:0;border-radius:6px;transform-origin:left center;transform:scaleX(0);transition:transform 240ms var(--ease-out)}
+.track i.base{background:var(--line)}
+.track i.with{background:var(--sun)}
+.legend{display:flex;gap:16px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.legend .l1::before{background:var(--line)} .legend .l2::before{background:var(--sun)}
+
+.sweep h3{font-size:15.5px;margin:0 0 2px}
+.sweep p{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.chartwrap{overflow-x:auto}
+.chartwrap svg{display:block;width:100%;min-width:420px;height:auto}
+.chartwrap text{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
+
+section.how{padding-block:30px 10px;border-top:1px solid var(--line)}
+section h2.sec{font-family:var(--f-display);font-stretch:110%;font-weight:800;font-size:clamp(24px,3vw,32px);margin:0 0 6px;text-wrap:balance}
+.how .intro{color:var(--muted);max-width:62ch;margin:0 0 18px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px;min-width:560px}
+th,td{text-align:left;padding:10px 12px 10px 0;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500}
+td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td small{color:var(--muted)}
+
+section.pro{padding-block:36px 44px}
+.procard{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:26px;position:relative}
+@media (max-width:760px){.procard{grid-template-columns:1fr}}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;background:var(--sun-soft);color:var(--sun-ink);padding:3px 8px;border-radius:4px}
+.procard ul{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:10px}
+.procard li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px}
+.procard li svg{margin-top:4px}
+.price{font-family:var(--f-display);font-weight:800;font-stretch:95%;font-size:52px;line-height:1}
+.price small{font-family:var(--f-body);font-weight:400;font-size:16px;color:var(--muted)}
+.pricebox{display:grid;gap:12px;align-content:start;border-left:1px solid var(--line);padding-left:26px}
+@media (max-width:760px){.pricebox{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:20px}}
+.btn{font:inherit;font-weight:700;font-size:16px;background:var(--ink);color:var(--surface);border:0;border-radius:8px;padding:12px 18px;cursor:not-allowed;opacity:.55}
+.pricebox p{margin:0;font-size:14.5px;color:var(--muted)}
+
+footer{border-top:1px solid var(--line);color:var(--muted);font-size:13.5px}
+footer .wrap{padding-block:22px 34px;display:grid;gap:6px}
+
+.rlist{list-style:none;padding:0;margin:0 0 12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.rlist a{transition:transform 200ms var(--ease-out),border-color 150ms ease;display:grid;gap:6px;height:100%;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;color:var(--ink);text-decoration:none}
+.rlist b{font-family:var(--f-display);font-stretch:105%;font-size:19px;line-height:1.2}
+.rlist span{font-size:15px;color:var(--muted)}
+
+@media (hover:hover) and (pointer:fine){
+  .rlist a:hover{transform:translateY(-2px);border-color:var(--sun)}
+  nav a{transition:color 150ms ease}
+}
+/* Seitenaufbau beim ersten Laden, gestaffelt */
+.txt{font:inherit;font-family:var(--f-mono);font-size:16px;width:8ch;padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+.flabel{font-weight:600;font-size:15.5px}
+.field output.warn{color:var(--neg)}
+.field output{white-space:normal;text-align:right;min-width:0}
+.field .row{min-width:0}
+.yield{margin:8px 0 0;font-size:14.5px;color:var(--muted)}
+@keyframes sk-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.hero .eyebrow,.hero h1,.hero .lede,.hero .facts,.tool>.panel{animation:sk-rise 420ms var(--ease-out) both}
+.hero h1{animation-delay:60ms}.hero .lede{animation-delay:120ms}.hero .facts{animation-delay:180ms}
+.tool>.panel:first-child{animation-delay:220ms}.tool>.panel:last-child{animation-delay:280ms}
+/* Bereiche weiter unten blenden einmal ein (nur wenn JS läuft) */
+html.js .reveal{opacity:0;transform:translateY(16px);transition:opacity 500ms var(--ease-out),transform 500ms var(--ease-out)}
+html.js .reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  .hero .eyebrow,.hero h1,.hero .lede,.hero .facts,.tool>.panel{animation:none}
+  .wheel .strip{transition:opacity 150ms ease}
+  .track i{transition:transform 150ms linear}
+  html.js .reveal{transform:none;transition:opacity 300ms ease}
+  .seg button:active{transform:none}
+  .rlist a:hover{transform:none}
+}
+
+.wait{display:grid;gap:8px}
+.wait label{font-weight:700;font-size:15.5px}
+.wait-row{display:flex;gap:8px;flex-wrap:wrap}
+.wait-row input{flex:1 1 180px;min-width:0;font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.wait-row input:focus-visible{outline:3px solid var(--sun);outline-offset:1px}
+.btn.btn-on{cursor:pointer;opacity:1;flex:0 0 auto;transition:transform 160ms var(--ease-out),opacity 150ms ease}
+.btn.btn-on:active{transform:scale(0.97)}
+.btn.btn-on[disabled]{opacity:.6;cursor:default}
+.btn.btn-on.busy{cursor:progress}
+.wait .wait-note{font-size:13px}
+.wait-msg{font-size:14.5px;font-weight:600;margin:0}
+.wait-msg:empty{display:none}
+.wait-msg.ok{color:var(--pos)} .wait-msg.err{color:var(--neg)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+@media (prefers-reduced-motion:reduce){.btn.btn-on:active{transform:none}}
+
+/* Diagramme (Rechner und Artikel) */
+.area.l-direct{fill:var(--sun)} .area.l-dis{fill:var(--pos)} .area.l-imp{fill:var(--c-imp)}
+.area.l-charge{fill:var(--c-charge)} .area.l-exp{fill:var(--c-exp)}
+.lline{fill:none;stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
+svg .grid{stroke:var(--line);stroke-width:1;stroke-dasharray:2 3} svg .grid.zero{stroke-dasharray:none}
+svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
+.clegend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted);margin-top:6px}
+.clegend span{display:inline-flex;align-items:center;gap:6px}
+.sw{display:inline-block;width:11px;height:11px;border-radius:2px}
+.sw.l-direct{background:var(--sun)} .sw.l-dis{background:var(--pos)} .sw.l-imp{background:var(--c-imp)}
+.sw.l-charge{background:var(--c-charge)} .sw.l-exp{background:var(--c-exp)}
+.sw.l-load{height:2px;width:14px;background:var(--ink);border-radius:0}
+.sline{fill:none;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+.sline.s0,.sw.sl.s0{stroke:var(--ink);background:var(--ink)} .sline.s1,.sw.sl.s1{stroke:var(--sun);background:var(--sun)}
+.sline.s2,.sw.sl.s2{stroke:var(--pos);background:var(--pos)} .sline.s3,.sw.sl.s3{stroke:var(--neg);background:var(--neg)}
+.sw.sl{height:3px;width:16px;border-radius:2px}
+.sdot.s0{fill:var(--ink)} .sdot.s1{fill:var(--sun)} .sdot.s2{fill:var(--pos)} .sdot.s3{fill:var(--neg)}
+.slabel{font-family:var(--f-mono);font-size:11px;font-weight:700} .slabel.s0{fill:var(--ink)} .slabel.s1{fill:var(--sun-ink)} .slabel.s2{fill:var(--pos)} .slabel.s3{fill:var(--neg)}
+.spark{display:block;width:120px;height:36px} .spark .sp-pos{fill:var(--sun)} .spark .sp-neg{fill:var(--neg);opacity:.7}
+
+/* Tageskurve im Rechner */
+.daybox h3{font-size:15.5px;margin:0}
+.dayhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.daysum{font-size:14px;color:var(--muted);margin:0 0 8px;min-height:2.6em}
+.daysum b{color:var(--ink)}
+#daychart{display:block;width:100%;min-width:0;height:auto}
+.daybox .chartwrap{overflow:visible}
+
+/* Hausgrafik im Seitenkopf */
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:28px;align-items:center}
+@media (max-width:900px){.hero-grid{grid-template-columns:minmax(0,1fr)}.scene{max-width:480px}}
+.scene{margin:0;display:grid;gap:10px;animation:sk-rise 420ms var(--ease-out) 160ms both}
+.scene-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.scene-cap{font-size:13px;color:var(--muted)}
+.scene svg{display:block;width:100%;height:auto;overflow:visible}
+.scene .sky{fill:var(--sky)}
+.scene .ground{stroke:var(--line);stroke-width:2}
+.scene .sun{transition:transform 900ms var(--ease-in-out)}
+.scene .sun-core{fill:var(--sun)} .scene .sun-glow{fill:var(--sun);opacity:.18;transition:opacity 900ms var(--ease-in-out)}
+.scene[data-season="nov"] .sun-glow{opacity:.06}
+.scene .cloud{fill:var(--cloud);opacity:0;transition:opacity 700ms var(--ease-out),transform 900ms var(--ease-out)}
+.scene .cloud:nth-child(1){transform:translateX(-14px)} .scene .cloud:nth-child(2){transform:translateX(10px)} .scene .cloud:nth-child(3){transform:translateX(16px)}
+.scene[data-season="nov"] .cloud{opacity:.95;transform:none}
+.scene .wall{fill:var(--house);stroke:var(--ink);stroke-width:2}
+.scene .roof{fill:var(--house);stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
+.scene .panel{fill:var(--meter)} .scene .panel-line{stroke:var(--sun);stroke-width:1.2}
+.scene .window{fill:var(--sky);stroke:var(--ink);stroke-width:1.5} .scene .door{fill:none;stroke:var(--ink);stroke-width:1.5}
+.scene .bat{fill:var(--house);stroke:var(--ink);stroke-width:2} .scene .bat-cap{fill:var(--ink)} .scene .bolt{fill:var(--pos)}
+.scene .pylon path{fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round}
+.scene .slabel2{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
+.scene .flow{fill:none;stroke-linecap:round;transition:stroke-width 700ms var(--ease-out),opacity 500ms ease}
+.scene .f-direct{stroke:var(--sun)} .scene .f-exp{stroke:var(--c-exp)} .scene .f-charge{stroke:var(--c-charge)}
+.scene .f-dis{stroke:var(--pos)} .scene .f-imp{stroke:var(--c-imp)}
+.scene .flow.dots{stroke:var(--surface);stroke-dasharray:1 14;stroke-width:3;opacity:.9;transition:none}
+.scene-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.scene-stats div{border-top:2px solid var(--ink);padding-top:6px;display:grid}
+.scene-stats .k{font-size:13px;color:var(--muted)}
+.scene-stats b{font-family:var(--f-display);font-weight:800;font-stretch:90%;font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
+.scene figcaption{font-size:12.5px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.scene{animation:none}.scene .sun,.scene .cloud,.scene .flow{transition:opacity 200ms ease}}
+
+/* Kleine Grafiken an den Eingaben */
+.field .row.ico-row,.field .row:has(.rv){align-items:center}
+.rv{flex:none;display:inline-flex;align-items:center;gap:10px}
+.ico{display:block;flex:none;overflow:visible}
+.ico-compass{width:56px;height:52px;margin:-14px 0 -2px}
+.ico-roof{width:52px;height:38px;margin:-10px 0 -6px}
+.ico-bat{width:46px;height:24px}
+.ic-body{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.ico-compass text{font-family:var(--f-mono);font-size:6.8px;font-weight:600;fill:var(--muted);text-anchor:middle}
+.ic-sunpath{fill:none;stroke:var(--sun);stroke-width:1.3;stroke-dasharray:2.2 2.6;opacity:.8}
+.ic-sun circle{fill:var(--sun)}
+.ic-house{transform-origin:28px 26px;transition:transform 560ms var(--ease-out)}
+.ic-rooff{fill:var(--surface);stroke:var(--ink);stroke-width:1.5}
+.ic-ridge{stroke:var(--ink);stroke-width:1.5}
+.ic-pv rect{fill:var(--sun)}
+.ic-pv line{stroke:var(--surface);stroke-width:.9}
+.ic-pv-n{opacity:0;transition:opacity 260ms ease}
+.ic-ground{stroke:var(--line);stroke-width:1.5;stroke-linecap:round}
+.ic-wall{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.ic-roof{transform-origin:6px 24px;transition:transform 180ms var(--ease-out)}
+.ic-roof line{stroke:var(--ink);stroke-width:2.4;stroke-linecap:round}
+.ic-roof rect{fill:var(--sun)}
+.ic-arc{fill:none;stroke:var(--sun-ink);stroke-width:1.2;stroke-dasharray:2 2}
+.ic-cap{fill:var(--line)}
+.ic-fill{fill:var(--sun);transform-origin:4.5px 12px;transition:transform 220ms var(--ease-out)}
+@media (prefers-reduced-motion:reduce){.ic-house,.ic-pv-n,.ic-roof,.ic-fill{transition:none}}
+
+/* Übergang zum Angebots-Check */
+.procta{display:flex;align-items:center;justify-content:space-between;gap:12px 18px;flex-wrap:wrap;border:1px solid var(--sun);background:var(--sun-soft);border-radius:8px;padding:14px 16px}
+.procta p{margin:0;font-size:15px;flex:1 1 260px}
+a.btn{text-decoration:none;display:inline-block}
+/* Speicherklar Pro: Eingabe, Einordnung, Bericht, Druck */
+[hidden]{display:none!important}
+.unlocked .locked{display:none}
+.pro-tool{align-items:start}
+.in{font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);width:100%;min-width:0}
+.in:focus-visible{outline:3px solid var(--sun);outline-offset:1px}
+.in.txt{width:9ch;font-family:var(--f-mono)}
+.unitin{display:flex;align-items:center;gap:8px}
+.unitin .in{font-family:var(--f-mono);max-width:14ch}
+.unitin span{font-family:var(--f-mono);font-size:14px;color:var(--muted)}
+.field label small{font-weight:400;color:var(--muted)}
+.linkbtn{font:inherit;font-size:14.5px;background:none;border:0;padding:4px 0;color:var(--sun-ink);cursor:pointer;text-align:left;text-decoration:underline;text-underline-offset:3px;justify-self:start}
+.roofs{display:grid;gap:12px}
+.roof{border:1px solid var(--line);border-radius:8px;padding:12px}
+.roofhead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.roofgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:420px){.roofgrid{grid-template-columns:1fr 1fr}.roofgrid label:last-child{grid-column:1/-1}}
+.roofgrid label{display:grid;gap:4px;font-size:13.5px;color:var(--muted)}
+.roofgrid .unitin .in{max-width:none}
+.months{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:6px}
+@media (max-width:520px){.months{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.months label{display:grid;gap:2px;font-size:12.5px;color:var(--muted)}
+.months .in{font-family:var(--f-mono);font-size:15px;padding:6px}
+.months .hint{grid-column:1/-1;margin:0}
+.btn.wide{width:100%;padding:14px 18px;font-size:17px}
+.formerr{color:var(--neg);font-weight:600;margin:0 0 10px;font-size:15px}
+.formerr:empty{display:none}
+
+/* Einordnung */
+.empty h2{margin-bottom:6px}
+.amps{display:grid;gap:10px}
+.amp{display:grid;grid-template-columns:18px minmax(0,1fr);gap:10px;align-items:start;border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.amp .dot{width:14px;height:14px;border-radius:50%;margin-top:4px;background:var(--line)}
+.amp.ok .dot{background:var(--pos)} .amp.warn .dot{background:var(--sun)} .amp.bad .dot{background:var(--neg)}
+.amp .k{font-size:13.5px;color:var(--muted)}
+.amp .v{font-family:var(--f-display);font-weight:800;font-stretch:95%;font-size:22px;line-height:1.15}
+.amp .d{font-size:13px;color:var(--muted)}
+.locked{position:relative;border:1px dashed var(--line);border-radius:8px;padding:16px;overflow:hidden}
+.ghost{display:grid;gap:10px;filter:blur(3px);opacity:.6}
+.gl{height:12px;border-radius:6px;background:var(--track)}
+.gl.w60{width:60%}.gl.w70{width:70%}.gl.w80{width:80%}.gl.w90{width:90%}
+.gchart{height:90px;border-radius:6px;background:linear-gradient(170deg,transparent 40%,var(--sun-soft) 41%,var(--sun-soft) 60%,transparent 61%),var(--track)}
+.buy{display:grid;gap:12px}
+.buy h3{margin:0;font-size:17px}
+.checks{list-style:none;padding:0;margin:0;display:grid;gap:6px;font-size:15px}
+.checks li{padding-left:22px;position:relative}
+.checks li::before{content:"";position:absolute;left:2px;top:6px;width:9px;height:5px;border-left:2.4px solid var(--sun);border-bottom:2.4px solid var(--sun);transform:rotate(-45deg)}
+.buyrow{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.buyrow .price{font-size:40px}
+a.btn{text-decoration:none;display:inline-block}
+a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
+.buy .note{margin:0;font-size:13.5px;color:var(--muted)}
+.keybox summary{cursor:pointer;font-size:14.5px;color:var(--sun-ink);padding:4px 0}
+.keybox form{margin-top:8px}
+.keybox input{flex:1 1 200px;min-width:0;font:inherit;font-family:var(--f-mono);font-size:15px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+
+/* Bericht */
+.report-wrap{padding-block:10px 40px;border-top:1px solid var(--line)}
+.rtools{display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding-block:18px}
+.report{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:clamp(18px,4vw,40px);max-width:860px}
+.rhead h1{font-size:clamp(26px,4vw,38px);max-width:none;margin:8px 0 6px}
+.rmeta{color:var(--muted);margin:0;font-size:15px}
+.rsec{border-top:1px solid var(--line);margin-top:26px;padding-top:20px}
+.rsec h2{font-family:var(--f-display);font-stretch:108%;font-weight:800;font-size:23px;margin:0 0 10px;display:flex;gap:10px;align-items:baseline}
+.rsec h2 span{font-family:var(--f-mono);font-size:13px;font-weight:700;background:var(--sun-soft);color:var(--sun-ink);border-radius:4px;padding:2px 7px}
+.rsec p{max-width:70ch}
+.rlead{font-size:19px;font-weight:600;line-height:1.4}
+.report .amps{grid-template-columns:repeat(3,minmax(0,1fr));margin:14px 0}
+@media (max-width:640px){.report .amps{grid-template-columns:1fr}}
+.rtab{min-width:0;font-size:15px}
+.rtab td.num,.rtab th{white-space:nowrap}
+.rtab .pos,.report b.pos{color:var(--pos)} .rtab .neg,.report b.neg{color:var(--neg)}
+.rtab tr.hl-off td{background:var(--sun-soft)} .rtab tr.hl-rec td{background:color-mix(in srgb,var(--pos) 12%,transparent)} .rtab tr.hl-base td{font-weight:600}
+.mtab{max-width:620px}
+.fine{font-size:13px;color:var(--muted)}
+.rchart{display:block;width:100%;height:auto;min-width:420px}
+.rchart .tolband{fill:var(--track);opacity:.8}
+.rchart .mk.off{fill:var(--sun);stroke:var(--surface);stroke-width:2} .rchart .mk.rec{fill:var(--pos);stroke:var(--surface);stroke-width:2}
+.rchart .mklabel{font-family:var(--f-mono);font-size:12px;font-weight:700} .rchart .mklabel.off{fill:var(--sun-ink)} .rchart .mklabel.rec{fill:var(--pos)}
+.sw.tolsw{background:var(--track);width:14px;height:10px} .sw.dotoff{background:var(--sun);border-radius:50%} .sw.dotrec{background:var(--pos);border-radius:50%}
+.cpanels{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px}
+.cpanel svg{display:block;width:100%;height:auto}
+.ctitle{font-weight:700;font-size:15px}
+.qs{padding-left:22px;display:grid;gap:12px;margin:0}
+.qs li b{display:block}
+.qs li span{color:var(--muted);font-size:15px}
+
+@media print{
+  :root,:root[data-theme]{--bg:#fff;--surface:#fff;--ink:#15212B;--muted:#4A5862;--line:#C5CDD4;--sun:#E39A0B;--sun-ink:#8A5A00;--sun-soft:#FBEFD6;--pos:#2E7D5B;--neg:#B4412F;--track:#E3E8EC;--c-charge:#9FD3B8;--c-exp:#F6D99A;--c-imp:#AEB9C2;color-scheme:light}
+  @page{size:A4;margin:16mm 14mm}
+  body{font-size:11pt;background:#fff}
+  header.top,footer,.pro-hero,.pro-tool,.rtools{display:none!important}
+  .report-wrap{border:0;padding:0}
+  .report-wrap .wrap{padding:0;max-width:none}
+  .report{border:0;padding:0;max-width:none}
+  .rsec{break-inside:auto}
+  .rsec h2{break-after:avoid}
+  .rsec h2,.amp,tr,.cpanel,.rchart,.qs li,.chartwrap,.cpanels{break-inside:avoid}
+  .rchart{min-width:0}
+  .chartwrap,.tablewrap{overflow:visible}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../" aria-label="Speicherklar, zur Startseite">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="5" y="4" width="16" height="20" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><rect x="10" y="1.5" width="6" height="3" rx="1" fill="currentColor"/><rect x="8" y="14" width="10" height="7" rx="1" fill="var(--sun)"/></svg>
+      Speicherklar
+    </a>
+    <nav aria-label="Seitenbereiche"><a href="../#rechner">Rechner</a><a href="../ratgeber/">Ratgeber</a><a href="../#annahmen">Annahmen</a><a href="../pro/" aria-current="page">Angebots-Check</a><a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">Instagram</a></nav>
+  </div>
+</header>
+<main id="top">
+  <section class="hero pro-hero">
+    <div class="wrap">
+      <div class="eyebrow">Speicherklar Pro · Angebots-Check</div>
+      <h1>Passt der Speicher in <em>deinem Angebot?</em></h1>
+      <p class="lede">Trag das Angebot deines Installateurs ein. Du siehst sofort, ob die Speichergröße zu deinem Haushalt passt. Der vollständige Bericht zeigt, was eine passende Größe spart, wie stabil das Ergebnis ist und was du den Installateur fragen solltest.</p>
+      <div class="facts"><span>Eingabe <b>kostenlos</b></span><span>Rechnung <b>in deinem Browser</b></span><span>Bericht als <b>PDF</b></span></div>
+    </div>
+  </section>
+
+  <div class="wrap tool pro-tool">
+    <form class="panel" id="offer" novalidate>
+      <h2>Dein Angebot</h2>
+      <p class="sub">Die Werte stehen im Angebot. Was du nicht weißt, lässt du leer, dann schätzt der Bericht und sagt dir, wonach du fragen solltest.</p>
+
+      <fieldset>
+        <legend>Speicher laut Angebot</legend>
+        <div class="field"><label for="f-model">Modell</label>
+          <input class="in" type="text" id="f-model" maxlength="60" placeholder="z. B. Hersteller und Typ" autocomplete="off"></div>
+        <div class="field"><label for="f-cap">Kapazität</label>
+          <div class="unitin"><input class="in" type="number" id="f-cap" min="1" max="40" step="0.01" inputmode="decimal" required><span>kWh</span></div>
+          <div class="seg" role="group" aria-label="Art der Kapazitätsangabe" id="capkind">
+            <button type="button" data-v="nutzbar" aria-pressed="true">nutzbar</button>
+            <button type="button" data-v="brutto" aria-pressed="false">brutto</button>
+            <button type="button" data-v="unklar" aria-pressed="false">steht nicht dabei</button>
+          </div>
+          <span class="hint">Brutto ist die Gesamtkapazität, nutzbar etwas weniger. Ohne Angabe rechnet der Bericht mit dem Wert wie angegeben.</span></div>
+        <div class="field"><label for="f-pow">Lade- und Entladeleistung <small>(optional)</small></label>
+          <div class="unitin"><input class="in" type="number" id="f-pow" min="0" max="30" step="0.1" inputmode="decimal"><span>kW</span></div></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Preis laut Angebot</legend>
+        <div class="field"><label for="f-total">Gesamtpreis PV-Anlage mit Speicher</label>
+          <div class="unitin"><input class="in" type="number" id="f-total" min="0" max="200000" step="1" inputmode="numeric"><span>€</span></div>
+          <span class="hint">Brutto, ohne Wallbox und andere Extras.</span></div>
+        <div class="field"><label for="f-store">Davon Speicher <small>(Aufpreis gegenüber ohne Speicher)</small></label>
+          <div class="unitin"><input class="in" type="number" id="f-store" min="0" max="100000" step="1" inputmode="numeric"><span>€</span></div>
+          <span class="hint">Steht oft als eigene Position im Angebot. Fehlt sie, schätzt der Bericht mit Marktpreisen.</span></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Dach</legend>
+        <div class="field"><div class="row"><label for="f-plz">Postleitzahl</label><output id="o-plz"></output></div>
+          <input class="in txt" type="text" id="f-plz" inputmode="numeric" maxlength="5" autocomplete="postal-code"></div>
+        <div id="roofs" class="roofs"></div>
+        <button type="button" class="linkbtn" id="add-roof">+ Dachfläche hinzufügen</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>Verbrauch</legend>
+        <div class="field"><label for="f-cons">Haushaltsstrom pro Jahr</label>
+          <div class="unitin"><input class="in" type="number" id="f-cons" min="500" max="30000" step="10" inputmode="numeric"><span>kWh</span></div>
+          <button type="button" class="linkbtn" id="tog-month" aria-expanded="false">Verbrauch nach Monaten eingeben</button>
+          <div class="months" id="months" hidden></div></div>
+        <div class="field"><label for="f-ev">E-Auto pro Jahr</label>
+          <div class="unitin"><input class="in" type="number" id="f-ev" min="0" max="20000" step="10" inputmode="numeric"><span>kWh</span></div>
+          <div class="seg" role="group" aria-label="Wann lädt das Auto meistens?" id="evtime">
+            <button type="button" data-v="day" aria-pressed="false">lädt meist tagsüber</button>
+            <button type="button" data-v="eve" aria-pressed="true">lädt meist abends</button>
+          </div></div>
+        <div class="field"><label for="f-hp">Wärmepumpe pro Jahr</label>
+          <div class="unitin"><input class="in" type="number" id="f-hp" min="0" max="30000" step="10" inputmode="numeric"><span>kWh</span></div>
+          <span class="hint">Leer lassen, wenn keine Wärmepumpe da oder geplant ist.</span></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Preise &amp; Regeln</legend>
+        <div class="field"><label for="f-price">Dein Strompreis</label>
+          <div class="unitin"><input class="in" type="number" id="f-price" min="10" max="80" step="0.01" inputmode="decimal"><span>ct/kWh</span></div></div>
+        <div class="field"><span class="flabel" id="l-eeg">Einspeiseregeln</span>
+          <div class="seg" role="group" aria-labelledby="l-eeg" id="eeg">
+            <button type="button" data-v="now" aria-pressed="true">EEG heute</button>
+            <button type="button" data-v="reform" aria-pressed="false">EEG-Reform 2027</button>
+          </div></div>
+        <div class="field" id="feedfield"><label for="f-feed">Einspeisevergütung</label>
+          <div class="unitin"><input class="in" type="number" id="f-feed" min="0" max="15" step="0.01" inputmode="decimal"><span>ct/kWh</span></div></div>
+        <div class="field"><label for="f-life">Lebensdauer des Speichers</label>
+          <div class="unitin"><input class="in" type="number" id="f-life" min="8" max="25" step="1" inputmode="numeric"><span>Jahre</span></div></div>
+      </fieldset>
+
+      <p class="formerr" id="formerr" role="alert"></p>
+      <button class="btn btn-on wide" type="submit" id="go">Angebot prüfen</button>
+    </form>
+
+    <div class="panel result" id="teaser" aria-live="polite">
+      <div class="empty" id="t-empty">
+        <h2>So sieht dein Ergebnis aus</h2>
+        <p class="sub">Nach dem Prüfen steht hier die Einordnung deines Angebots: Speichergröße, Speicherpreis und Preis der PV-Anlage. Das ist kostenlos.</p>
+      </div>
+      <div id="t-res" hidden>
+        <p class="verdict" id="t-verdict"></p>
+        <div class="amps" id="t-amps"></div>
+        <div class="locked" aria-hidden="true">
+          <div class="ghost">
+            <div class="gl w60"></div><div class="gl w90"></div><div class="gl w80"></div>
+            <div class="gchart"></div>
+            <div class="gl w70"></div><div class="gl w90"></div>
+          </div>
+        </div>
+        <div class="buy" id="buy">
+          <h3>Im vollständigen Bericht</h3>
+          <ul class="checks">
+            <li>Welche Größe passt und was sie in der Anschaffung spart, in Euro</li>
+            <li>Ersparnis, Amortisation und Bilanz für Angebot und passende Größe</li>
+            <li>November gegen Juli: wann dein Speicher voll wird und wann nicht</li>
+            <li>Was sich ändert mit EEG-Reform, Strompreis, E-Auto oder Wärmepumpe</li>
+            <li>Fragen an deinen Installateur, passend zu deinem Angebot</li>
+          </ul>
+          <div class="buyrow">
+            <div class="price" id="b-price">49 € <small>einmalig</small></div>
+            <a class="btn btn-on" id="b-btn" href="#" target="_blank" rel="noopener">Bericht freischalten</a>
+          </div>
+          <p class="note" id="b-note"></p>
+          <p class="note">Mit einem Kauf prüfst du beliebig viele Angebote, auch die von anderen Installateuren. Kein Abo.</p>
+        </div>
+        <details class="keybox" id="keybox">
+          <summary>Schon gekauft? Lizenzschlüssel eingeben</summary>
+          <form id="keyform" class="wait-row" novalidate>
+            <input type="text" id="f-key" autocomplete="off" spellcheck="false" placeholder="Schlüssel aus der Kaufbestätigung" aria-label="Lizenzschlüssel">
+            <button class="btn btn-on" type="submit" id="keybtn">Freischalten</button>
+          </form>
+          <p class="wait-msg" id="keymsg" role="status" aria-live="polite"></p>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <section class="report-wrap" id="report-wrap" hidden>
+    <div class="wrap">
+      <div class="rtools">
+        <button class="btn btn-on" type="button" id="print">Als PDF speichern</button>
+        <button class="linkbtn" type="button" id="edit">Eingaben ändern</button>
+      </div>
+      <article class="report" id="report"></article>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="wrap">
+    <span>Speicherklar ist eine Schätzung, keine Anlagen- oder Finanzberatung. Für eine Kaufentscheidung hol dir Angebote von Fachbetrieben.</span>
+    <span>Sonnendaten: PVGIS © Europäische Union, 2001–2026.</span>
+    <span><a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">Instagram @speicherklar</a> · <a href="../ueber-mich.html">Über mich</a> · <a href="../impressum.html">Impressum</a> · <a href="../datenschutz.html">Datenschutz</a></span>
+  </div>
+</footer>
+
+<script>
+/* Speicherklar Simulationskern – ohne DOM, im Browser und in Node lauffähig */
+var REGIONS={"0":{n:"Sachsen, Thüringen-Ost, Sachsen-Anhalt-Süd",lat:51.2,lon:12.9,H:[22,44.7,84.9,133.1,168.5,180,175.4,150.9,104.5,60.7,31.1,20.3],Kd:[0.72,0.55,0.52,0.47,0.47,0.44,0.48,0.46,0.49,0.55,0.6,0.65]},
+"1":{n:"Berlin, Brandenburg, Mecklenburg-Vorpommern",lat:52.8,lon:13.4,H:[19.7,40.8,79.8,127.6,164.5,175,167.2,146.4,101.4,53.3,24.4,15.6],Kd:[0.71,0.56,0.54,0.5,0.49,0.47,0.51,0.49,0.5,0.59,0.66,0.71]},
+"2":{n:"Hamburg, Schleswig-Holstein, Bremen, Niedersachsen-Nord",lat:53.6,lon:9.6,H:[18.1,36.7,77.1,126.8,155.8,168.5,157,136.5,94.9,50.9,23,13.6],Kd:[0.7,0.57,0.55,0.47,0.5,0.47,0.54,0.51,0.52,0.59,0.66,0.71]},
+"3":{n:"Hannover, Braunschweig, Magdeburg, Kassel",lat:52.0,lon:10.0,H:[20.2,40.1,81.7,127.9,159.9,171.5,161.3,143.6,99.7,54.6,26,16.3],Kd:[0.74,0.59,0.54,0.48,0.51,0.48,0.52,0.5,0.52,0.6,0.68,0.72]},
+"4":{n:"Ruhrgebiet, Niederrhein, Münsterland, Westfalen",lat:51.6,lon:7.2,H:[22.4,42.8,83.5,125.7,158,167.7,161.6,139.5,99.6,55.9,30,17.6],Kd:[0.68,0.55,0.52,0.5,0.5,0.5,0.52,0.51,0.51,0.59,0.61,0.68]},
+"5":{n:"Köln, Bonn, Aachen, Koblenz, Trier",lat:50.5,lon:7.0,H:[24.1,45.6,86.2,127.9,159.3,168.8,164.4,141.2,103.3,57.4,31.1,20.2],Kd:[0.71,0.56,0.53,0.5,0.51,0.49,0.52,0.52,0.51,0.6,0.63,0.68]},
+"6":{n:"Rhein-Main, Pfalz, Saarland, Mannheim",lat:49.9,lon:8.4,H:[26.1,48.1,95.4,139.6,173.2,183.7,181.6,153.4,112.8,59.9,30,19.8],Kd:[0.67,0.53,0.47,0.44,0.45,0.43,0.44,0.45,0.45,0.59,0.67,0.72]},
+"7":{n:"Stuttgart, Baden, Bodensee",lat:48.6,lon:9.0,H:[31.8,54,100.2,134.2,158.4,180.6,180.8,151.9,115,67.5,37.2,27.2],Kd:[0.65,0.5,0.46,0.46,0.5,0.43,0.44,0.45,0.45,0.54,0.59,0.6]},
+"8":{n:"München, Augsburg, Allgäu, Oberbayern",lat:48.0,lon:11.2,H:[33.3,56.9,98.6,133.9,152,180.5,175,152.6,111.8,70,38,28.3],Kd:[0.61,0.48,0.47,0.46,0.49,0.43,0.42,0.42,0.45,0.51,0.59,0.59]},
+"9":{n:"Nürnberg, Würzburg, Franken, Thüringen-Süd",lat:49.8,lon:11.0,H:[25,47.1,90.3,133.9,163.2,180.7,178.5,151.9,107.5,61.3,30.5,20.8],Kd:[0.71,0.55,0.49,0.47,0.49,0.45,0.46,0.47,0.49,0.57,0.64,0.69]}};
+
+var MDAYS=[31,28,31,30,31,30,31,31,30,31,30,31];
+var H0=[0.55,0.45,0.4,0.38,0.38,0.45,0.7,0.95,0.95,0.9,0.9,0.95,1.05,1.0,0.9,0.85,0.9,1.1,1.35,1.45,1.35,1.15,0.95,0.7];
+var SIGMA=0.9, PR=0.789, ALBEDO=0.2, SUB=4, CIRC=0.75;
+// Reflexionsverlust bei flachem Lichteinfall (Martin/Ruiz, a_r = 0.16)
+function IAM(c){return (1-Math.exp(-c/0.16))/(1-Math.exp(-1/0.16));}
+var D2R=Math.PI/180;
+
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;var t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+
+// Tageswetter: je Monat auf Mittel 1 normiert, aufeinanderfolgende Tage korreliert
+var WEATHER=(function(){var r=rng(20261108),out=[],z=0;function gauss(){return Math.sqrt(-2*Math.log(r()+1e-12))*Math.cos(2*Math.PI*r());}
+  for(var m=0;m<12;m++){var arr=[],s=0;for(var d=0;d<MDAYS[m];d++){z=0.55*z+Math.sqrt(1-0.55*0.55)*gauss();var f=Math.min(2.6,Math.exp(SIGMA*z));arr.push(f);s+=f;}var mean=s/arr.length;for(var j=0;j<arr.length;j++)out.push(arr[j]/mean);}return out;})();
+
+// Lastspitzen innerhalb der Stunde (5-Minuten-Schritte) und Tagesschwankung ±25 %
+var STEPS=12;
+var QW=(function(){var r=rng(4711),q=new Float64Array(8760*STEPS);for(var h=0;h<8760;h++){var w=[],s=0;for(var k=0;k<STEPS;k++){var v=0.12+6*Math.pow(r(),9);w.push(v);s+=v;}for(var k2=0;k2<STEPS;k2++)q[h*STEPS+k2]=w[k2]/s*STEPS;}return q;})();
+var DAYLOAD=(function(){var r=rng(1337),a=[];for(var d=0;d<365;d++)a.push(0.75+0.5*r());var m=a.reduce(function(x,y){return x+y;},0)/365;return a.map(function(x){return x/m;});})();
+
+/* Erzeugung: kWh je Stunde für eine Dachfläche. aspect: 0 = Süd, -90 = Ost, 90 = West */
+function pvProfile(region,kwp,tilt,aspect){
+  var R=REGIONS[region],phi=R.lat*D2R,out=new Float64Array(8760);
+  var b=tilt*D2R,g=aspect*D2R;
+  var nE=-Math.sin(b)*Math.sin(g),nN=-Math.sin(b)*Math.cos(g),nU=Math.cos(b);
+  var skyF=(1+Math.cos(b))/2,gndF=ALBEDO*(1-Math.cos(b))/2;
+  var n=0,idx=0;
+  for(var m=0;m<12;m++){
+    var Hday=R.H[m]/MDAYS[m];
+    for(var d=0;d<MDAYS[m];d++,n++){
+      var doy=n+1,f=WEATHER[n];
+      var dec=23.45*D2R*Math.sin(2*Math.PI*(284+doy)/365);
+      var B=2*Math.PI*(doy-81)/365,eot=9.87*Math.sin(2*B)-7.53*Math.cos(B)-1.5*Math.sin(B);
+      var off=(doy>=87&&doy<300)?2:1;
+      var kd=Math.min(1,Math.max(0.12,R.Kd[m]*(1.25-0.25*f)));
+      var cz=[],ct=[],ia=[],sumW=0;
+      for(var h=0;h<24;h++){
+        var czs=0,cts=0,iamW=0;
+        for(var s=0;s<SUB;s++){
+          var t=h+(s+0.5)/SUB-off+R.lon/15+eot/60;
+          var w=15*(t-12)*D2R;
+          var cZ=Math.sin(phi)*Math.sin(dec)+Math.cos(phi)*Math.cos(dec)*Math.cos(w);
+          if(cZ>0){
+            var sE=-Math.cos(dec)*Math.sin(w),sN=Math.cos(phi)*Math.sin(dec)-Math.sin(phi)*Math.cos(dec)*Math.cos(w);
+            var cth=Math.max(0,sE*nE+sN*nN+cZ*nU);
+            czs+=cZ;cts+=cth;iamW+=cth*IAM(cth);
+          }
+        }
+        cz.push(czs/SUB);ct.push(cts/SUB);sumW+=czs/SUB;
+        ia.push(cts>0?iamW/cts:0);
+      }
+      var Hd=Hday*f;
+      for(var h2=0;h2<24;h2++){
+        var ghi=sumW>0?Hd*cz[h2]/sumW:0,beam=0,diff=ghi*kd;
+        var bh=ghi*(1-kd);
+        var circ=0;
+        if(cz[h2]>0.06){beam=bh*ct[h2]/cz[h2]*ia[h2];var Ai=Math.min(0.6,(1-kd)*CIRC);circ=diff*Ai*ct[h2]/cz[h2]*ia[h2];diff*=1-Ai;}else diff+=bh;
+        var gp=beam+circ+diff*skyF*0.95+ghi*gndF;
+        out[idx++]=kwp*gp*PR;
+      }
+    }
+  }
+  return out;
+}
+
+/* Verbrauch: kWh je Stunde. monthly (optional, 12 Werte) ersetzt die Standard-Saisonkurve */
+/* hp: Wärmepumpe kWh/Jahr, nach Heizmonaten verteilt, über den Tag fast gleichmäßig */
+var HP_M=[0.16,0.14,0.12,0.08,0.05,0.03,0.03,0.03,0.04,0.08,0.11,0.15],HP_H=[0.9,0.9,0.9,0.9,0.95,1.05,1.15,1.15,1.1,1,0.95,0.9,0.9,0.9,0.95,1,1.05,1.1,1.1,1.05,1,0.95,0.95,0.9];
+function loadProfile(cons,ev,evTime,monthly,hp){
+  var load=new Float64Array(8760),h0sum=H0.reduce(function(a,b){return a+b;},0);
+  var evHours=evTime==="day"?[10,11,12,13,14,15]:[18,19,20,21,22],evDaily=(ev||0)/365;
+  var mtot=[];
+  if(monthly&&monthly.length===12){var ms=monthly.reduce(function(a,b){return a+b;},0);for(var i=0;i<12;i++)mtot.push(cons*monthly[i]/ms);}
+  else{var seas=[],ss=0;for(var m=0;m<12;m++){var v=1+0.2*Math.cos(2*Math.PI*m/12);seas.push(v);ss+=v*MDAYS[m];}for(var m1=0;m1<12;m1++)mtot.push(cons*seas[m1]*MDAYS[m1]/ss);}
+  var day=0,idx=0;
+  for(var m2=0;m2<12;m2++){var dl=mtot[m2]/MDAYS[m2];
+    for(var d=0;d<MDAYS[m2];d++,day++)for(var h=0;h<24;h++)
+      load[idx++]=dl*DAYLOAD[day]*H0[h]/h0sum+(evHours.indexOf(h)>=0?evDaily/evHours.length:0);}
+  if(hp>0){var hm=HP_M.reduce(function(a,b){return a+b;},0),hh=HP_H.reduce(function(a,b){return a+b;},0),i2=0;
+    for(var m3=0;m3<12;m3++){var dd=hp*HP_M[m3]/hm/MDAYS[m3];for(var d3=0;d3<MDAYS[m3];d3++)for(var h3=0;h3<24;h3++)load[i2++]+=dd*HP_H[h3]/hh;}}
+  return load;
+}
+
+/* Energiefluss mit Speicher. feedCap: max. Einspeiseleistung in kW (Infinity = keine Grenze) */
+function runBattery(gen,load,cap,feedCap,pw){
+  var soc=0,eta=Math.sqrt(0.88),pmax=(pw||Math.min(cap*0.5,5))/STEPS,stby=cap>0?0.025/STEPS:0;
+  var fcap=(feedCap||Infinity)/STEPS,feed=0,grid=0,curt=0,G=0,Ld=0;
+  for(var i=0,n=8760*STEPS;i<n;i++){
+    var h=(i/STEPS)|0,gq=gen[h]/STEPS,lq=load[h]*QW[i]/STEPS;
+    var s=gq-lq-stby;G+=gq;Ld+=lq;
+    if(s>=0){var c=cap>0?Math.min(s,pmax,(cap-soc)/eta):0;soc+=c*eta;var ex=s-c,fe=Math.min(ex,fcap);feed+=fe;curt+=ex-fe;}
+    else{var need=-s,dis=cap>0?Math.min(need,pmax,soc*eta):0;soc-=dis/eta;grid+=need-dis;}
+  }
+  return {feed:feed,grid:grid,curt:curt,gen:G,load:Ld,autarky:1-grid/Ld,selfRate:G>0?(G-feed-curt)/G:0};
+}
+
+/* Durchschnittstag je Monat (gleiche Rechnung wie runBattery, Werte in kWh je Stunde = mittlere kW).
+   Liefert für jeden Monat m: gen, load, direct (Solar direkt verbraucht), charge (Solar in den Speicher),
+   discharge (aus dem Speicher ins Haus), imp (Netzbezug), exp (Einspeisung), soc (Füllstand 0–1, Stundenende). */
+function daySeries(gen,load,cap,feedCap,pw){
+  var soc=0,eta=Math.sqrt(0.88),pmax=(pw||Math.min(cap*0.5,5))/STEPS,stby=cap>0?0.025/STEPS:0,fcap=(feedCap||Infinity)/STEPS;
+  var K=["gen","load","direct","charge","discharge","imp","exp","soc"],out=[];
+  for(var m=0;m<12;m++){var o={};K.forEach(function(k){o[k]=new Float64Array(24);});out.push(o);}
+  var mOf=new Uint8Array(8760),hh=0;for(var mm=0;mm<12;mm++)for(var d=0;d<MDAYS[mm]*24;d++)mOf[hh++]=mm;
+  for(var i=0,n=8760*STEPS;i<n;i++){
+    var h=(i/STEPS)|0,o2=out[mOf[h]],hd=h%24,gq=gen[h]/STEPS,lq=load[h]*QW[i]/STEPS;
+    o2.gen[hd]+=gq;o2.load[hd]+=lq;o2.direct[hd]+=Math.min(gq,lq);
+    var s=gq-lq-stby;
+    if(s>=0){var c=cap>0?Math.min(s,pmax,(cap-soc)/eta):0;soc+=c*eta;o2.charge[hd]+=c;var ex=s-c;o2.exp[hd]+=Math.min(ex,fcap);}
+    else{var need=-s,dis=cap>0?Math.min(need,pmax,soc*eta):0;soc-=dis/eta;o2.discharge[hd]+=dis;o2.imp[hd]+=need-dis;}
+    if(i%STEPS===STEPS-1)o2.soc[hd]+=cap>0?soc/cap:0;
+  }
+  for(var m2=0;m2<12;m2++)K.forEach(function(k){var a=out[m2][k];for(var x=0;x<24;x++)a[x]/=MDAYS[m2];});
+  return out;
+}
+
+function profiles(p){
+  var gen=new Float64Array(8760),kwpTot=0;
+  p.roofs.forEach(function(r){var g=pvProfile(p.region,r.kwp,r.tilt,r.aspect);for(var i=0;i<8760;i++)gen[i]+=g[i];kwpTot+=r.kwp;});
+  var load=loadProfile(p.cons,p.ev,p.evTime,p.monthly,p.hp);
+  return {gen:gen,load:load,kwp:kwpTot,fc:p.feedLimit?kwpTot*p.feedLimit:Infinity};
+}
+
+/* Durchschnittstage für eine Speichergröße (cap in kWh, 0 = ohne Speicher) */
+function dayProfile(p,cap,pw){var pr=profiles(p);return daySeries(pr.gen,pr.load,cap,pr.fc,pw);}
+
+/* p: {region, roofs:[{kwp,tilt,aspect}], cons, ev, evTime, monthly, bat, bprice, life, price, feed, feedLimit} */
+function evaluate(p){
+  var pr=profiles(p),gen=pr.gen,load=pr.load,kwpTot=pr.kwp,fc=pr.fc;
+  var base=runBattery(gen,load,0,fc);
+  function forCap(cap){
+    var r=runBattery(gen,load,cap,fc);
+    var save=(base.grid-r.grid)*p.price/100-(base.feed-r.feed)*p.feed/100;
+    var cost=cap*p.bprice;
+    return {cap:cap,r:r,save:save,cost:cost,payback:save>0?cost/save:Infinity,net:save*p.life-cost,extraSelf:base.grid-r.grid};
+  }
+  var sweep=[];for(var c=1;c<=15;c++)sweep.push(forCap(c));
+  var best=sweep.reduce(function(a,b){return b.net>a.net?b:a;});
+  return {gen:gen,load:load,fc:fc,kwp:kwpTot,base:base,chosen:sweep[p.bat-1],best:best,sweep:sweep,
+    // Kosten der PV-Anlage ohne Speicher (Stromrechnung mit PV): für spätere Pro-Auswertung
+    pvValue:(p.cons+(p.ev||0)+(p.hp||0)-base.grid)*p.price/100+base.feed*p.feed/100};
+}
+
+
+/* Speicherklar Diagramme – reine Funktionen, die SVG-Text liefern. Laufen im Browser (Rechner) und in Node (Artikel-Build).
+   Farben kommen aus den CSS-Variablen der Seite, damit helles und dunkles Design stimmen. */
+
+var DRAW = (function () {
+  var NF0 = function (v) { return Math.round(v).toLocaleString("de-DE"); };
+  var NF1 = function (v) { return (Math.round(v * 10) / 10).toLocaleString("de-DE", { minimumFractionDigits: 1, maximumFractionDigits: 1 }); };
+
+  // Reihenfolge der gestapelten Flächen: alles unterhalb der Verbrauchslinie versorgt das Haus, darüber der Überschuss
+  var LAYERS = [
+    { k: "direct", label: "Direkt genutzt", cls: "l-direct" },
+    { k: "discharge", label: "Aus dem Speicher", cls: "l-dis" },
+    { k: "imp", label: "Aus dem Netz", cls: "l-imp" },
+    { k: "charge", label: "In den Speicher", cls: "l-charge" },
+    { k: "exp", label: "Eingespeist", cls: "l-exp" }
+  ];
+
+  function stack(m) {
+    var tops = [], acc = new Array(24).fill(0);
+    LAYERS.forEach(function (L) {
+      var bottom = acc.slice();
+      for (var h = 0; h < 24; h++) acc[h] += m[L.k][h];
+      tops.push({ bottom: bottom, top: acc.slice() });
+    });
+    return { layers: tops, load: Array.prototype.slice.call(m.load), max: Math.max.apply(null, acc.concat(Array.prototype.slice.call(m.load))) };
+  }
+
+  function niceStep(span, n) {
+    var s = Math.pow(10, Math.floor(Math.log10(span / n)));
+    [1, 2, 2.5, 5, 10].some(function (k) { if (span / (s * k) <= n) { s *= k; return true; } return false; });
+    return s;
+  }
+
+  // Geometrie für den Tageschart; st = Ergebnis von stack(), ymax fest vorgeben, damit Juni und Dezember vergleichbar sind
+  function dayGeometry(st, box, ymax) {
+    var x = function (h) { return box.l + (box.w * h) / 24; };
+    var y = function (v) { return box.t + box.h * (1 - v / ymax); };
+    var pts = function (arr) { var s = ""; for (var h = 0; h < 24; h++) s += (h ? "L" : "") + x(h + 0.5).toFixed(1) + "," + y(arr[h]).toFixed(1); return s; };
+    var area = function (b, t) {
+      var s = "M" + x(0).toFixed(1) + "," + y(t[0]).toFixed(1) + "L" + pts(t);
+      s += "L" + x(24).toFixed(1) + "," + y(t[23]).toFixed(1) + "L" + x(24).toFixed(1) + "," + y(b[23]).toFixed(1);
+      for (var h = 23; h >= 0; h--) s += "L" + x(h + 0.5).toFixed(1) + "," + y(b[h]).toFixed(1);
+      return s + "L" + x(0).toFixed(1) + "," + y(b[0]).toFixed(1) + "Z";
+    };
+    return {
+      areas: st.layers.map(function (L) { return area(L.bottom, L.top); }),
+      load: "M" + x(0).toFixed(1) + "," + y(st.load[0]).toFixed(1) + "L" + pts(st.load) + "L" + x(24).toFixed(1) + "," + y(st.load[23]).toFixed(1),
+      x: x, y: y
+    };
+  }
+
+  function dayAxes(box, ymax, x, y) {
+    var s = "", step = niceStep(ymax, 4);
+    for (var v = 0; v <= ymax + 1e-9; v += step) {
+      s += '<line class="grid' + (v === 0 ? " zero" : "") + '" x1="' + box.l + '" x2="' + (box.l + box.w) + '" y1="' + y(v).toFixed(1) + '" y2="' + y(v).toFixed(1) + '"/>';
+      s += '<text class="ax" x="' + (box.l - 8) + '" y="' + (y(v) + 4).toFixed(1) + '" text-anchor="end">' + NF1(v).replace(",0", "") + "</text>";
+    }
+    [0, 6, 12, 18, 24].forEach(function (h) {
+      s += '<text class="ax" x="' + x(h).toFixed(1) + '" y="' + (box.t + box.h + 18) + '" text-anchor="' + (h === 0 ? "start" : h === 24 ? "end" : "middle") + '">' + h + (h === 24 ? " Uhr" : "") + "</text>";
+    });
+    s += '<text class="ax" x="' + (box.l - 8) + '" y="' + (box.t - 8) + '" text-anchor="end">kW</text>';
+    return s;
+  }
+
+  function legend() {
+    return '<div class="clegend">' + LAYERS.map(function (L) { return '<span><i class="sw ' + L.cls + '"></i>' + L.label + "</span>"; }).join("") +
+      '<span><i class="sw l-load"></i>Verbrauch</span></div>';
+  }
+
+  function daySvgInner(m, box, ymax) {
+    var st = stack(m), g = dayGeometry(st, box, ymax);
+    return dayAxes(box, ymax, g.x, g.y) +
+      g.areas.map(function (d, i) { return '<path class="area ' + LAYERS[i].cls + '" d="' + d + '"/>'; }).join("") +
+      '<path class="lline" d="' + g.load + '"/>';
+  }
+
+  // Statischer Tageschart (Artikel): mehrere Monate nebeneinander, gleiche Skala
+  function dayChart(months, titles) {
+    var W = 340, H = 230, box = { l: 40, t: 24, w: 288, h: 168 };
+    var ymax = 0; months.forEach(function (m) { ymax = Math.max(ymax, stack(m).max); });
+    ymax = Math.ceil(ymax / niceStep(ymax, 4)) * niceStep(ymax, 4);
+    var panels = months.map(function (m, i) {
+      return '<div class="cpanel"><div class="ctitle">' + titles[i] + '</div><svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Tagesverlauf ' + titles[i] + '">' + daySvgInner(m, box, ymax) + "</svg></div>";
+    }).join("");
+    return '<div class="cpanels">' + panels + "</div>" + legend();
+  }
+
+  // Liniendiagramm: Gewinn/Verlust nach Lebensdauer je Speichergröße für mehrere Szenarien.
+  // W = Breite des Zeichenbereichs; die Artikel bekommen eine breite und eine schmale Fassung (Handy).
+  function sweepSvg(series, W) {
+    var H = W < 500 ? 280 : 300, box = { l: 80, t: 26, w: W - 80 - 14, h: H - 26 - 50 }, caps = series[0].values.length;
+    var all = []; series.forEach(function (s) { all = all.concat(s.values); });
+    var max = Math.max(0, Math.max.apply(null, all)), min = Math.min(0, Math.min.apply(null, all));
+    var step = niceStep(max - min || 1, 5), top = Math.ceil(max / step) * step, bot = Math.floor(min / step) * step;
+    if (top === bot) top = bot + step;
+    var x = function (i) { return box.l + (box.w * i) / (caps - 1); };
+    var y = function (v) { return box.t + (box.h * (top - v)) / (top - bot); };
+    var s = "";
+    for (var v = bot; v <= top + 1e-9; v += step) {
+      s += '<line class="grid' + (Math.abs(v) < 1e-9 ? " zero" : "") + '" x1="' + box.l + '" x2="' + (box.l + box.w) + '" y1="' + y(v).toFixed(1) + '" y2="' + y(v).toFixed(1) + '"/>';
+      s += '<text class="ax" x="' + (box.l - 8) + '" y="' + (y(v) + 4).toFixed(1) + '" text-anchor="end">' + (v < 0 ? "−" : v > 0 ? "+" : "") + NF0(Math.abs(v)) + " €</text>";
+    }
+    for (var i = 0; i < caps; i++) if (W >= 500 || i % 2 === 0 || i === caps - 1) s += '<text class="ax" x="' + x(i).toFixed(1) + '" y="' + (box.t + box.h + 20) + '" text-anchor="middle">' + (i + 1) + "</text>";
+    s += '<text class="ax" x="' + (box.l + box.w) + '" y="' + (H - 6) + '" text-anchor="end">Speichergröße in kWh</text>';
+    var bests = series.map(function (se) {
+      var bi = se.values.indexOf(Math.max.apply(null, se.values));
+      return se.values[bi] > 0 ? { i: bi, x: x(bi), y: y(se.values[bi]) } : null;
+    });
+    var placed = [];
+    series.forEach(function (se, k) {
+      var d = se.values.map(function (v, i) { return (i ? "L" : "M") + x(i).toFixed(1) + "," + y(v).toFixed(1); }).join("");
+      s += '<path class="sline s' + k + '" pathLength="1" d="' + d + '"/>';
+    });
+    // Punkte und Beschriftungen nach allen Linien, damit nichts verdeckt wird; Beschriftung unter den Punkt, wenn oben besetzt
+    bests.forEach(function (b, k) {
+      if (!b) return;
+      var hit = function (ly) {
+        return placed.some(function (p) { return Math.abs(p.x - b.x) < 44 && Math.abs(p.y - ly) < 15; }) ||
+          bests.some(function (o, j) { return o && j !== k && Math.abs(o.x - b.x) < 30 && ly - 12 < o.y + 6 && ly + 2 > o.y - 6; });
+      };
+      var ly = b.y - 11;
+      if (hit(ly)) ly = b.y + 22;
+      if (hit(ly)) { ly = b.y + 4; }
+      var lx = b.x, anchor = "middle";
+      if (ly === b.y + 4) { lx = b.x + 10; anchor = "start"; }
+      placed.push({ x: lx, y: ly });
+      s += '<circle class="sdot s' + k + '" cx="' + b.x.toFixed(1) + '" cy="' + b.y.toFixed(1) + '" r="5"/>';
+      s += '<text class="slabel s' + k + '" x="' + lx.toFixed(1) + '" y="' + ly.toFixed(1) + '" text-anchor="' + anchor + '">' + (b.i + 1) + " kWh</text>";
+    });
+    return '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Gewinn nach Lebensdauer je Speichergröße">' + s + "</svg>";
+  }
+  function sweepChart(series) {
+    var leg = '<div class="clegend">' + series.map(function (se, k) { return '<span><i class="sw sl s' + k + '"></i>' + se.label + "</span>"; }).join("") + "</div>";
+    return '<div class="c-wide">' + sweepSvg(series, 640) + '</div><div class="c-narrow">' + sweepSvg(series, 380) + "</div>" + leg;
+  }
+
+  // Mini-Grafik für Ratgeber-Karten (nur Form, keine Achsen)
+  function spark(values) {
+    var W = 120, H = 36, n = values.length, max = Math.max.apply(null, values.map(Math.abs)) || 1, bw = W / n;
+    var mid = values.some(function (v) { return v < 0; }) ? H * 0.62 : H;
+    var s = "";
+    values.forEach(function (v, i) {
+      var h = (Math.abs(v) / max) * (v >= 0 ? mid : H - mid) * 0.95;
+      s += '<rect class="' + (v >= 0 ? "sp-pos" : "sp-neg") + '" x="' + (i * bw + 1).toFixed(1) + '" y="' + (v >= 0 ? mid - h : mid).toFixed(1) + '" width="' + (bw - 2).toFixed(1) + '" height="' + Math.max(1, h).toFixed(1) + '" rx="1.5"/>';
+    });
+    return '<svg class="spark" viewBox="0 0 ' + W + " " + H + '" aria-hidden="true">' + s + "</svg>";
+  }
+
+  return { LAYERS: LAYERS, stack: stack, dayGeometry: dayGeometry, dayAxes: dayAxes, legend: legend, niceStep: niceStep, dayChart: dayChart, sweepChart: sweepChart, spark: spark, NF1: NF1 };
+})();
+
+
+/* Marktspannen für den Preis-Check in Speicherklar Pro.
+   Ein- bis zweimal im Jahr prüfen und STAND anpassen. Werte inkl. Montage, brutto (Privatkunden, 0 % MwSt. auf PV seit 2023). */
+var MARKT = {
+  STAND: "Juli 2026",
+  QUELLEN: [
+    "42watt Magazin, Photovoltaik Kosten 2026 (Juli 2026), u. a. nach Fraunhofer ISE",
+    "ADAC, Stromspeicher für PV-Anlage (August 2026)",
+    "Verbraucherzentrale: 300–700 €/kWh für Speicher inkl. Einbau"
+  ],
+  // PV ohne Speicher, €/kWp nach Anlagengröße: [bis kWp, untere Grenze, obere Grenze]
+  PV: [[5, 1335, 1800], [10, 1100, 1400], [15, 970, 1200], [99, 900, 1100]],
+  // Speicher inkl. Einbau, € je kWh nutzbar. Kleine Speicher kosten je kWh mehr.
+  SPEICHER: { lo: 350, hi: 700, kleinBis: 6, kleinAufschlag: 100, mitte: 525 }
+};
+
+/* Einstellungen für Verkauf und Freischaltung von Speicherklar Pro.
+   Solange organizationId oder checkoutUrl leer sind, zeigt die Seite "Kauf startet bald" und verkauft nichts. */
+var PRO_CONFIG = {
+  provider: "polar",          // Lizenzprüfung über Polar (Merchant of Record)
+  sandbox: true,              // true = Polar-Testumgebung (sandbox.polar.sh), vor dem Start auf false
+  organizationId: "",         // Polar: Settings → Organization ID
+  benefitId: "",              // Polar: Benefits → License Keys → ID (optional, prüft, dass der Schlüssel zu Pro gehört)
+  checkoutUrl: "",            // Polar: Checkout-Link des Produkts
+  price: 49,                  // aktueller Preis in €
+  regularPrice: 89,           // Preis nach der Einführung
+  introUntil: "",             // letzter Tag des Einführungspreises, z. B. "2027-02-28"
+  publicFrom: ""              // ab diesem Tag kann jeder kaufen; vorher nur mit Vorab-Link (?vorab=1) aus der Warteliste-Mail
+};
+
+/* Speicherklar Pro – Angebots-Check. Reine Rechnung ohne DOM, im Browser (nach sim.js und markt.js) und in Node lauffähig.
+
+   PRO.check(o) mit
+   o = { region, roofs:[{kwp,tilt,aspect}], cons, monthly (optional, 12 Werte), ev, evTime, hp,
+         price (ct/kWh), feed (ct/kWh), feedLimit (0 oder 0.5), eeg ("now"|"reform"), life (Jahre),
+         cap (kWh laut Angebot), capKind ("nutzbar"|"brutto"|"unklar"), pow (kW, 0 = unbekannt),
+         total (€ Gesamtpreis, 0 = unbekannt), store (€ Aufpreis Speicher, 0 = unbekannt), model (Text) } */
+var PRO = (function () {
+  var S = typeof require !== "undefined" ? require("./sim.js") : { profiles: profiles, runBattery: runBattery, daySeries: daySeries, REGIONS: REGIONS };
+  var M = typeof require !== "undefined" ? require("./markt.js") : MARKT;
+
+  var FIX = 0.3;        // Anteil des Speicherpreises, der nicht mit der Größe sinkt (Wechselrichter, Montage, Anschluss)
+  var BRUTTO = 0.9;     // nutzbarer Anteil, wenn das Angebot brutto angibt
+  var MAXCAP = 20;
+
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+
+  // Nutzbare Kapazität und Ladeleistung des Angebots
+  function usable(o) { return o.capKind === "brutto" ? o.cap * BRUTTO : o.cap; }
+  function power(o, c, cap) {
+    var offered = o.pow > 0 ? o.pow : Math.min(cap * 0.5, 5);
+    if (Math.abs(c - cap) < 1e-9) return offered;
+    return Math.min(offered, Math.max(2.5, c * 0.5));
+  }
+
+  // Speicherpreis: aus dem Angebot oder geschätzt
+  function storePrice(o, cap) {
+    if (o.store > 0) return { v: o.store, est: false };
+    return { v: Math.round(cap * perKwhBand(cap).mid / 50) * 50, est: true };
+  }
+  function perKwhBand(cap) {
+    var B = M.SPEICHER, add = cap < B.kleinBis ? B.kleinAufschlag : 0;
+    return { lo: B.lo + add, hi: B.hi + add, mid: B.mitte + add };
+  }
+  function costFor(c, cap, sp) { return c <= 0 ? 0 : sp * (FIX + (1 - FIX) * c / cap); }
+
+  // Energiebilanz für alle Größen 0..20 plus die angebotene Größe (unabhängig von Preisen)
+  function energy(o, cap) {
+    var pr = S.profiles(o), caps = [];
+    for (var c = 0; c <= MAXCAP; c++) caps.push(c);
+    if (caps.indexOf(cap) < 0) caps.push(cap);
+    caps.sort(function (a, b) { return a - b; });
+    var runs = caps.map(function (c) { return { cap: c, r: S.runBattery(pr.gen, pr.load, c, pr.fc, c > 0 ? power(o, c, cap) : 0) }; });
+    return { pr: pr, runs: runs };
+  }
+
+  // Wirtschaftlichkeit für gegebene Preise auf Basis einer Energiebilanz
+  function econ(en, o, cap, sp) {
+    var base = en.runs[0].r, life = o.life;
+    var rows = en.runs.map(function (x) {
+      var save = (base.grid - x.r.grid) * o.price / 100 - (base.feed - x.r.feed) * o.feed / 100;
+      var cost = costFor(x.cap, cap, sp);
+      return { cap: x.cap, r: x.r, save: save, cost: cost, net: save * life - cost, payback: save > 0 && x.cap > 0 ? cost / save : Infinity, extra: base.grid - x.r.grid };
+    });
+    var ints = rows.filter(function (r) { return Math.abs(r.cap - Math.round(r.cap)) < 1e-9; });
+    var best = ints.reduce(function (a, b) { return b.net > a.net + 1e-6 ? b : a; });
+    var offer = rows.filter(function (r) { return Math.abs(r.cap - cap) < 1e-9; })[0];
+    var tol = Math.max(250, 0.05 * sp);
+    // Empfehlung: kleinste Größe ab 1 kWh, die fast so viel bringt wie die beste
+    var rec = best.cap === 0 ? best : ints.filter(function (r) { return r.cap >= 1 && r.net >= best.net - tol; })[0];
+    var verdict;
+    if (best.cap === 0 && offer.net < 0) verdict = "nolohn";
+    else if (offer.net >= best.net - tol) verdict = "passt";
+    else verdict = offer.cap > best.cap ? "gross" : "klein";
+    return { rows: rows, ints: ints, best: best, offer: offer, rec: rec, tol: tol, verdict: verdict };
+  }
+
+  function pvBand(kwp) { for (var i = 0; i < M.PV.length; i++) if (kwp <= M.PV[i][0]) return { lo: M.PV[i][1], hi: M.PV[i][2] }; }
+  function rate(v, lo, hi) { return v < lo ? "guenstig" : v <= hi ? "ueblich" : v <= hi * 1.15 ? "hoch" : "teuer"; }
+
+  function scenarios(o, cap, sp, baseEn, baseEc) {
+    var list = [{ name: "Deine Eingaben", o: o, en: baseEn }];
+    var alt = clone(o);
+    if (o.eeg === "reform") { alt.eeg = "now"; alt.feed = 7.7; alt.feedLimit = 0; list.push({ name: "EEG heute (7,7 ct Vergütung)", o: alt }); }
+    else { alt.eeg = "reform"; alt.feed = 0; alt.feedLimit = 0.5; list.push({ name: "EEG-Reform 2027 (keine Vergütung, 50-%-Grenze)", o: alt }); }
+    var lo = clone(o); lo.price = o.price - 5; list.push({ name: "Strom 5 ct billiger", o: lo, en: baseEn });
+    var hi = clone(o); hi.price = o.price + 5; list.push({ name: "Strom 5 ct teurer", o: hi, en: baseEn });
+    var l10 = clone(o); l10.life = 10; list.push({ name: "Speicher hält nur 10 Jahre", o: l10, en: baseEn });
+    var l20 = clone(o); l20.life = 20; list.push({ name: "Speicher hält 20 Jahre", o: l20, en: baseEn });
+    if (!(o.ev > 0)) { var e = clone(o); e.ev = 2500; e.evTime = "eve"; list.push({ name: "Später E-Auto (2.500 kWh, lädt abends)", o: e }); }
+    if (!(o.hp > 0)) { var w = clone(o); w.hp = 3500; list.push({ name: "Später Wärmepumpe (3.500 kWh)", o: w }); }
+    return list.map(function (s) {
+      var en = s.en || energy(s.o, cap), ec = s.en === baseEn && s.o === o ? baseEc : econ(en, s.o, cap, sp);
+      return { name: s.name, best: ec.best.cap, offerNet: ec.offer.net, recNet: ec.rec.net, verdict: ec.verdict, rec: ec.rec.cap };
+    });
+  }
+
+  function questions(o, r) {
+    var q = [], nf = function (v) { return Math.round(v).toLocaleString("de-DE"); };
+    if (r.storeEst) q.push(["Was kostet dieselbe Anlage ohne Speicher?", "Erst damit lässt sich der Speicher allein bewerten. Viele Angebote nennen nur den Gesamtpreis."]);
+    if (o.capKind !== "nutzbar") q.push(["Wie viel Kapazität ist nutzbar, nicht nur brutto?", "Der Bericht rechnet mit " + r.capText + ". Nutzbar ist meist 90–100 % der Bruttoangabe."]);
+    if (r.verdict === "gross") q.push(["Gibt es dasselbe System mit " + r.rec.cap + " kWh, und was kostet es dann?", "Nach dieser Rechnung bringt " + r.rec.cap + " kWh fast denselben Nutzen. Frag nach dem genauen Preisunterschied."]);
+    if (r.verdict === "gross" || r.verdict === "klein") q.push(["Ist der Speicher modular, und was kostet später ein weiteres Modul?", "Dann kannst du klein anfangen und nachrüsten, wenn sich dein Verbrauch ändert, etwa durch E-Auto oder Wärmepumpe."]);
+    if (r.verdict === "nolohn") q.push(["Was kostet die Anlage ohne Speicher, und lässt sich ein Speicher später nachrüsten?", "Bei diesen Preisen holt kein Speicher seine Kosten herein. Ein Wechselrichter, der später einen Speicher aufnehmen kann, hält dir die Option offen."]);
+    if (!(o.pow > 0)) q.push(["Mit wie viel kW lädt und entlädt der Speicher?", "Der Bericht nimmt die halbe Kapazität pro Stunde an, höchstens 5 kW. Ist die Leistung kleiner, deckt der Speicher abendliche Spitzen schlechter."]);
+    else if (o.pow < r.cap * 0.3) q.push(["Reicht die Lade- und Entladeleistung von " + String(o.pow).replace(".", ",") + " kW?", "Im Verhältnis zur Größe ist sie klein. An sonnigen Tagen wird der Speicher dann nicht voll, und Lastspitzen kommen aus dem Netz."]);
+    if (r.storeRate === "hoch" || r.storeRate === "teuer") q.push(["Wie setzt sich der Speicherpreis zusammen?", "Mit " + nf(r.storePerKwh) + " € je kWh liegt er über der üblichen Spanne von " + nf(r.storeBand.lo) + "–" + nf(r.storeBand.hi) + " €. Frag nach Speicher, Wechselrichter, Montage und Zählerschrank einzeln."]);
+    if (r.pvRate === "hoch" || r.pvRate === "teuer") q.push(["Was ist im PV-Preis enthalten?", "Mit " + nf(r.pvPerKwp) + " € je kWp liegt die Anlage über der üblichen Spanne. Gerüst, Zählerschrank, Anmeldung und Optimierer erklären einen Teil davon, aber nicht beliebig viel."]);
+    q.push(["Welche Garantie gibt es auf die Restkapazität?", "Üblich sind 10 Jahre mit mindestens 60–80 % Restkapazität. Wichtig ist, was bei weniger passiert und wer dann zahlt."]);
+    q.push(["Sind Smart Meter und Steuerbox im Angebot, und wer zahlt den Messstellenbetrieb?", "Neue Anlagen ohne diese Technik dürfen nach dem Solarspitzengesetz nur 60 % ihrer Leistung einspeisen. Die jährlichen Messkosten gehören in die Rechnung."]);
+    q.push(["Ist Notstrom oder Ersatzstrom enthalten, und was kostet er extra?", "Nicht jeder braucht ihn. Wenn er im Preis steckt, sollte er auch zu deinem Bedarf passen."]);
+    return q;
+  }
+
+  function check(o) {
+    var cap = usable(o), sp = storePrice(o, cap);
+    var en = energy(o, cap), ec = econ(en, o, cap, sp.v);
+    var kwp = o.roofs.reduce(function (s, r) { return s + r.kwp; }, 0);
+    var band = perKwhBand(cap), perKwh = sp.v / cap;
+    var pv = o.total > 0 ? o.total - sp.v : 0, pb = pvBand(kwp);
+    var res = {
+      cap: cap, capText: (Math.round(cap * 10) / 10).toLocaleString("de-DE") + " kWh nutzbar", kwp: kwp,
+      gen: en.runs[0].r.gen, load: en.runs[0].r.load, base: en.runs[0].r,
+      store: sp.v, storeEst: sp.est, storePerKwh: perKwh, storeBand: band, storeRate: sp.est ? null : rate(perKwh, band.lo, band.hi),
+      pv: pv, pvPerKwp: pv > 0 ? pv / kwp : 0, pvBand: pb, pvRate: pv > 0 && kwp > 0 ? rate(pv / kwp, pb.lo, pb.hi) : null,
+      rows: ec.rows, best: ec.best, offer: ec.offer, rec: ec.rec, tol: ec.tol, verdict: ec.verdict
+    };
+    // Grenznutzen: was jede weitere kWh im Jahr noch bringt
+    res.marginal = ec.ints.slice(1).map(function (r, i) { return { cap: r.cap, add: r.save - ec.ints[i].save }; });
+    res.days = S.daySeries(en.pr.gen, en.pr.load, cap, en.pr.fc, power(o, cap, cap));
+    res.scen = scenarios(o, cap, sp.v, en, ec);
+    res.robust = res.scen.every(function (s) { return s.verdict === res.verdict; });
+    res.questions = questions(o, res);
+    return res;
+  }
+
+  // Kostenlose Vorschau: nur die Einordnung, keine Zahlen
+  function teaser(r) { return { verdict: r.verdict, storeRate: r.storeRate, pvRate: r.pvRate, storeEst: r.storeEst }; }
+
+  return { check: check, teaser: teaser, usable: usable, FIX: FIX, BRUTTO: BRUTTO, MAXCAP: MAXCAP };
+})();
+
+/* Speicherklar Pro – Seite: Eingabe, kostenlose Einordnung, Freischaltung, Bericht. Braucht sim.js, draw.js, markt.js, pro.js, pro-config.js. */
+(function () {
+  var C = PRO_CONFIG, $ = function (id) { return document.getElementById(id); };
+  var nf0 = new Intl.NumberFormat("de-DE", { maximumFractionDigits: 0 });
+  var nf1 = new Intl.NumberFormat("de-DE", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  var nf2 = new Intl.NumberFormat("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  var euro = function (v) { return (v < -0.5 ? "−" : "") + nf0.format(Math.abs(Math.round(v))) + " €"; };
+  var signed = function (v) { return (v >= 0.5 ? "+" : "") + euro(v); };
+  var kwh = function (v) { return (Math.abs(v - Math.round(v)) < 0.05 ? nf0.format(Math.round(v)) : nf1.format(v)) + " kWh"; };
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+  var MONTHS = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"];
+  var ASPECTS = [["0", "Süd"], ["-45", "Südost"], ["45", "Südwest"], ["-90", "Ost"], ["90", "West"], ["-135", "Nordost"], ["135", "Nordwest"], ["180", "Nord"]];
+  var ASPECT_NAME = {}; ASPECTS.forEach(function (a) { ASPECT_NAME[a[0]] = a[1]; });
+  var KEY_IN = "sk-pro-eingabe", KEY_LIC = "sk-pro-lizenz";
+  var state = { capKind: "nutzbar", evTime: "eve", eeg: "now", roofs: [], monthly: null, result: null, input: null, unlocked: false };
+
+  function store(k, v) { try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function load(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
+  function track(n) { try { if (window.umami) window.umami.track(n); } catch (e) {} }
+  function num(id) { var v = $(id).value.replace(",", "."); return v === "" ? 0 : +v; }
+
+  // ---------- Schaltergruppen ----------
+  function seg(id, key, after) {
+    var btns = document.querySelectorAll("#" + id + " button");
+    Array.prototype.forEach.call(btns, function (b) {
+      b.addEventListener("click", function () { setSeg(id, key, b.getAttribute("data-v")); if (after) after(); });
+    });
+  }
+  function setSeg(id, key, v) {
+    state[key] = v;
+    Array.prototype.forEach.call(document.querySelectorAll("#" + id + " button"), function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-v") === v)); });
+  }
+
+  // ---------- Dachflächen ----------
+  function drawRoofs() {
+    var html = state.roofs.map(function (r, i) {
+      var opts = ASPECTS.map(function (a) { return '<option value="' + a[0] + '"' + (String(r.aspect) === a[0] ? " selected" : "") + ">" + a[1] + "</option>"; }).join("");
+      return '<div class="roof" data-i="' + i + '"><div class="roofhead"><span class="flabel">Dachfläche ' + (i + 1) + "</span>" +
+        (state.roofs.length > 1 ? '<button type="button" class="linkbtn rm" data-rm="' + i + '" aria-label="Dachfläche ' + (i + 1) + ' entfernen">entfernen</button>' : "") + "</div>" +
+        '<div class="roofgrid">' +
+        '<label>Leistung<span class="unitin"><input class="in" type="number" min="0.5" max="50" step="0.01" inputmode="decimal" data-k="kwp" value="' + r.kwp + '"><span>kWp</span></span></label>' +
+        "<label>Ausrichtung<select class=\"in\" data-k=\"aspect\">" + opts + "</select></label>" +
+        '<label>Neigung<span class="unitin"><input class="in" type="number" min="0" max="90" step="1" inputmode="numeric" data-k="tilt" value="' + r.tilt + '"><span>°</span></span></label>' +
+        "</div></div>";
+    }).join("");
+    $("roofs").innerHTML = html;
+  }
+  $("roofs").addEventListener("input", function (e) {
+    var k = e.target.getAttribute("data-k"); if (!k) return;
+    var i = +e.target.closest(".roof").getAttribute("data-i");
+    state.roofs[i][k] = k === "aspect" ? +e.target.value : +String(e.target.value).replace(",", ".");
+  });
+  $("roofs").addEventListener("click", function (e) {
+    var i = e.target.getAttribute("data-rm"); if (i === null) return;
+    state.roofs.splice(+i, 1); drawRoofs();
+  });
+  $("add-roof").addEventListener("click", function () { state.roofs.push({ kwp: 3, aspect: 0, tilt: 30 }); drawRoofs(); });
+
+  // ---------- Monatswerte ----------
+  function drawMonths() {
+    $("months").innerHTML = MONTHS.map(function (m, i) {
+      return '<label>' + m + '<input class="in" type="number" min="0" max="5000" step="1" inputmode="numeric" data-m="' + i + '" value="' + (state.monthly ? state.monthly[i] : "") + '"></label>';
+    }).join("") + '<p class="hint">Haushaltsstrom ohne E-Auto und Wärmepumpe. Die Summe ersetzt den Jahreswert.</p>';
+  }
+  $("tog-month").addEventListener("click", function () {
+    var open = $("months").hidden;
+    $("months").hidden = !open; this.setAttribute("aria-expanded", String(open));
+    this.textContent = open ? "Nur Jahreswert verwenden" : "Verbrauch nach Monaten eingeben";
+    if (open) { if (!state.monthly) state.monthly = new Array(12).fill(""); drawMonths(); } else state.monthly = null;
+  });
+  $("months").addEventListener("input", function (e) {
+    var m = e.target.getAttribute("data-m"); if (m === null) return;
+    state.monthly[+m] = e.target.value;
+    var s = state.monthly.reduce(function (a, b) { return a + (+b || 0); }, 0);
+    if (s > 0) $("f-cons").value = Math.round(s);
+  });
+
+  function regionOf(plz) { plz = String(plz || "").replace(/\D/g, ""); return plz.length === 5 && REGIONS[plz[0]] ? plz[0] : null; }
+  $("f-plz").addEventListener("input", function () {
+    var r = regionOf(this.value);
+    var empty = !this.value.trim();
+    $("o-plz").textContent = r ? REGIONS[r].n : empty ? "für die Sonnendaten" : "5-stellige PLZ";
+    $("o-plz").className = r || empty ? "" : "warn";
+  });
+
+  seg("capkind", "capKind"); seg("evtime", "evTime");
+  seg("eeg", "eeg", function () {
+    if (state.eeg === "reform") { state.prevFeed = $("f-feed").value; $("f-feed").value = 0; }
+    else $("f-feed").value = state.prevFeed && +state.prevFeed > 0 ? state.prevFeed : 7.7;
+  });
+
+  // ---------- Eingaben lesen, speichern, vorbefüllen ----------
+  function read() {
+    var monthly = null;
+    if (state.monthly) { var m = state.monthly.map(function (v) { return +v || 0; }); if (m.every(function (v) { return v > 0; })) monthly = m; }
+    return {
+      model: $("f-model").value.trim().slice(0, 60), cap: num("f-cap"), capKind: state.capKind, pow: num("f-pow"),
+      total: num("f-total"), store: num("f-store"), plz: $("f-plz").value.trim(), region: regionOf($("f-plz").value),
+      roofs: state.roofs.map(function (r) { return { kwp: +r.kwp || 0, aspect: +r.aspect, tilt: +r.tilt || 0 }; }),
+      cons: num("f-cons"), monthly: monthly, ev: num("f-ev"), evTime: state.evTime, hp: num("f-hp"),
+      price: num("f-price"), eeg: state.eeg, feed: num("f-feed"), feedLimit: state.eeg === "reform" ? 0.5 : 0, life: num("f-life") || 15
+    };
+  }
+  function validate(o) {
+    if (!(o.cap >= 1)) return ["f-cap", "Bitte gib die Speicherkapazität aus dem Angebot ein."];
+    if (!o.region) return ["f-plz", "Bitte gib eine 5-stellige Postleitzahl ein."];
+    if (!o.roofs.length || o.roofs.some(function (r) { return !(r.kwp > 0); })) return ["roofs", "Bitte gib für jede Dachfläche die Leistung in kWp ein."];
+    if (!(o.cons >= 500)) return ["f-cons", "Bitte gib deinen Haushaltsstrom pro Jahr ein (mindestens 500 kWh)."];
+    if (!(o.price >= 10)) return ["f-price", "Bitte gib deinen Strompreis in ct/kWh ein."];
+    if (o.store > 0 && o.total > 0 && o.store >= o.total) return ["f-store", "Der Speicheranteil ist größer als der Gesamtpreis. Bitte prüf die beiden Werte."];
+    return null;
+  }
+  function fill(o) {
+    $("f-model").value = o.model || ""; $("f-cap").value = o.cap || ""; $("f-pow").value = o.pow || "";
+    $("f-total").value = o.total || ""; $("f-store").value = o.store || ""; $("f-plz").value = o.plz || "";
+    $("f-cons").value = o.cons || ""; $("f-ev").value = o.ev || ""; $("f-hp").value = o.hp || "";
+    $("f-price").value = o.price || ""; $("f-feed").value = o.feed != null ? o.feed : 7.7; $("f-life").value = o.life || 15;
+    setSeg("capkind", "capKind", o.capKind || "nutzbar"); setSeg("evtime", "evTime", o.evTime || "eve"); setSeg("eeg", "eeg", o.eeg || "now");
+    state.roofs = (o.roofs && o.roofs.length ? o.roofs : [{ kwp: 9, aspect: 0, tilt: 35 }]).map(function (r) { return { kwp: r.kwp, aspect: r.aspect, tilt: r.tilt }; });
+    drawRoofs();
+    if (o.monthly) { state.monthly = o.monthly.slice(); $("months").hidden = false; $("tog-month").setAttribute("aria-expanded", "true"); $("tog-month").textContent = "Nur Jahreswert verwenden"; drawMonths(); }
+    $("f-plz").dispatchEvent(new Event("input"));
+  }
+  // Übergabe aus dem kostenlosen Rechner: speicherklar.de/pro/#plz=…&kwp=… (Hash, geht nicht an einen Server)
+  function fromHash() {
+    var h = location.hash.slice(1); if (!/plz=|kwp=/.test(h)) return null;
+    var q = {}; h.split("&").forEach(function (kv) { var p = kv.split("="); q[p[0]] = decodeURIComponent(p[1] || ""); });
+    var kwp = +q.kwp || 9, tilt = +q.tilt || 35;
+    var roofs = q.aspect === "ow" ? [{ kwp: kwp / 2, aspect: -90, tilt: tilt }, { kwp: kwp / 2, aspect: 90, tilt: tilt }] : [{ kwp: kwp, aspect: +q.aspect || 0, tilt: tilt }];
+    history.replaceState(null, "", location.pathname + location.search);
+    return { plz: q.plz || "", roofs: roofs, cons: +q.cons || 4500, ev: +q.ev || 0, evTime: q.evt === "day" ? "day" : "eve", cap: +q.bat || "",
+      price: +q.price || 33, eeg: q.eeg === "reform" ? "reform" : "now", feed: q.feed != null ? +q.feed : 7.7, life: +q.life || 15 };
+  }
+
+  // ---------- Kostenlose Einordnung ----------
+  var VERDICT = {
+    passt: ["ok", "Größe passt", "Die Speichergröße passt zu deinem Haushalt."],
+    gross: ["warn", "Eher zu groß", "Der Speicher ist größer, als es sich für deinen Haushalt rechnet."],
+    klein: ["warn", "Eher zu klein", "Ein etwas größerer Speicher würde sich für deinen Haushalt besser rechnen."],
+    nolohn: ["bad", "Rechnet sich nicht", "Bei diesem Preis holt kein Speicher seine Kosten herein."]
+  };
+  var RATE = { guenstig: ["ok", "günstig"], ueblich: ["ok", "üblich"], hoch: ["warn", "eher hoch"], teuer: ["bad", "teuer"] };
+  function amp(cls, k, v, d) { return '<div class="amp ' + cls + '"><span class="dot" aria-hidden="true"></span><div><div class="k">' + k + '</div><div class="v">' + v + "</div>" + (d ? '<div class="d">' + d + "</div>" : "") + "</div></div>"; }
+  function amps(t, o) {
+    var v = VERDICT[t.verdict], s = "";
+    s += amp(v[0], "Speichergröße", v[1]);
+    s += t.storeRate ? amp(RATE[t.storeRate][0], "Speicherpreis je kWh", RATE[t.storeRate][1]) : amp("na", "Speicherpreis je kWh", "nicht prüfbar", "Dafür fehlt der Preis des Speichers allein.");
+    s += t.pvRate ? amp(RATE[t.pvRate][0], "Preis der PV-Anlage je kWp", RATE[t.pvRate][1]) : amp("na", "Preis der PV-Anlage je kWp", "nicht prüfbar", o.total > 0 ? "Dafür fehlt der Preis des Speichers allein." : "Dafür fehlt der Gesamtpreis.");
+    return s;
+  }
+  function showTeaser() {
+    var r = state.result, t = PRO.teaser(r);
+    $("t-empty").hidden = true; $("t-res").hidden = false;
+    $("t-verdict").innerHTML = VERDICT[t.verdict][2];
+    $("t-amps").innerHTML = amps(t, state.input);
+  }
+
+  function runCheck(scroll) {
+    var o = read(), err = validate(o);
+    $("formerr").textContent = err ? err[1] : "";
+    if (err) { var el = $(err[0]); if (el && el.focus) el.focus(); return; }
+    store(KEY_IN, o);
+    var btn = $("go"); btn.disabled = true; btn.textContent = "Rechne…";
+    setTimeout(function () {
+      state.input = o; state.result = PRO.check(o);
+      btn.disabled = false; btn.textContent = "Angebot prüfen";
+      showTeaser(); track("pro-geprueft");
+      if (state.unlocked) { renderReport(); if (scroll) $("report-wrap").scrollIntoView({ behavior: "smooth" }); }
+      else if (scroll) $("teaser").scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 30);
+  }
+  $("offer").addEventListener("submit", function (e) { e.preventDefault(); runCheck(true); });
+
+  // ---------- Kauf ----------
+  function today() { return new Date().toISOString().slice(0, 10); }
+  function dateDe(iso) { var p = iso.split("-"); return p[2] + "." + p[1] + "." + p[0]; }
+  function setupBuy() {
+    var vorab = /[?&]vorab=1/.test(location.search) || load("sk-pro-vorab");
+    if (/[?&]vorab=1/.test(location.search)) store("sk-pro-vorab", true);
+    var open = C.checkoutUrl && C.organizationId && (!C.publicFrom || today() >= C.publicFrom || vorab);
+    var intro = C.introUntil && today() <= C.introUntil;
+    var price = intro ? C.price : C.regularPrice;
+    $("b-price").innerHTML = price + " € <small>einmalig</small>";
+    var note = [];
+    if (intro) note.push("Einführungspreis bis " + dateDe(C.introUntil) + ", danach " + C.regularPrice + " €.");
+    if (open) {
+      $("b-btn").href = C.checkoutUrl; $("b-btn").textContent = "Bericht freischalten · " + price + " €";
+      $("b-btn").addEventListener("click", function () { track("pro-kauf-klick"); });
+      note.push("Bezahlung über Polar. Den Lizenzschlüssel bekommst du per Mail, dann hier eingeben.");
+      if (C.publicFrom && today() < C.publicFrom) note.push("Vorab-Zugang für die Warteliste.");
+    } else {
+      $("b-btn").removeAttribute("href"); $("b-btn").classList.remove("btn-on"); $("b-btn").setAttribute("aria-disabled", "true");
+      $("b-btn").textContent = C.publicFrom ? "Kauf ab " + dateDe(C.publicFrom) : "Kauf startet bald";
+      note.push('Trag dich auf der <a href="../#pro">Warteliste</a> ein, dann bekommst du den Vorab-Zugang.');
+    }
+    $("b-note").innerHTML = note.join(" ");
+  }
+
+  // ---------- Freischaltung (Polar-Lizenzschlüssel, öffentliche Prüfung ohne Server) ----------
+  var LICENSE = {
+    api: function () { return C.sandbox ? "https://sandbox-api.polar.sh" : "https://api.polar.sh"; },
+    verify: function (key) {
+      if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && key === "DEV-SPEICHERKLAR") return Promise.resolve({ ok: true });
+      if (!C.organizationId) return Promise.resolve({ ok: false, msg: "Der Verkauf ist noch nicht gestartet." });
+      var body = { key: key, organization_id: C.organizationId };
+      if (C.benefitId) body.benefit_id = C.benefitId;
+      return fetch(this.api() + "/v1/customer-portal/license-keys/validate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
+        .then(function (r) {
+          if (r.ok) return r.json().then(function (j) { return j.status === "granted" ? { ok: true } : { ok: false, msg: "Dieser Schlüssel ist nicht mehr gültig." }; });
+          if (r.status === 404) return { ok: false, msg: "Diesen Schlüssel kennen wir nicht. Bitte kopier ihn genau aus der Kaufbestätigung." };
+          return { ok: false, net: true, msg: "Die Prüfung hat gerade nicht geklappt. Bitte versuch es gleich noch einmal." };
+        }, function () { return { ok: false, net: true, msg: "Keine Verbindung zur Prüfung. Bitte versuch es gleich noch einmal." }; });
+    }
+  };
+  function unlock() {
+    state.unlocked = true; $("buy").hidden = true; $("keybox").hidden = true; $("teaser").classList.add("unlocked");
+    if (state.result) renderReport();
+  }
+  $("keyform").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var key = $("f-key").value.trim(), msg = $("keymsg"), btn = $("keybtn");
+    if (key.length < 6) { msg.textContent = "Bitte gib den Schlüssel aus der Kaufbestätigung ein."; msg.className = "wait-msg err"; return; }
+    btn.disabled = true; btn.textContent = "Prüfe…";
+    LICENSE.verify(key).then(function (res) {
+      btn.disabled = false; btn.textContent = "Freischalten";
+      if (res.ok) { store(KEY_LIC, { key: key, at: Date.now() }); msg.textContent = ""; track("pro-freigeschaltet"); unlock(); $("report-wrap").scrollIntoView({ behavior: "smooth" }); }
+      else { msg.textContent = res.msg; msg.className = "wait-msg err"; }
+    });
+  });
+  // Gespeicherten Schlüssel nachprüfen: offline bleibt freigeschaltet, nur ein ausdrücklich ungültiger Schlüssel sperrt
+  function restoreLicense() {
+    var lic = load(KEY_LIC); if (!lic || !lic.key) return;
+    unlock();
+    if (Date.now() - (lic.at || 0) > 7 * 864e5) LICENSE.verify(lic.key).then(function (res) {
+      if (res.ok) store(KEY_LIC, { key: lic.key, at: Date.now() });
+      else if (!res.net) { store(KEY_LIC, null); location.reload(); }
+    });
+  }
+
+  // ---------- Bericht ----------
+  function sizeChart(r) {
+    var rows = r.rows.filter(function (x) { return Math.abs(x.cap - Math.round(x.cap)) < 1e-9 || Math.abs(x.cap - r.cap) < 1e-9; });
+    var W = 640, H = 260, box = { l: 70, t: 22, w: W - 70 - 12, h: H - 22 - 46 };
+    var vals = rows.map(function (x) { return x.net; }), max = Math.max(0, Math.max.apply(null, vals)), min = Math.min(0, Math.min.apply(null, vals));
+    var step = DRAW.niceStep(max - min || 1, 5), top = Math.ceil(max / step) * step, bot = Math.floor(min / step) * step; if (top === bot) top = bot + step;
+    var X = function (c) { return box.l + box.w * c / PRO.MAXCAP; }, Y = function (v) { return box.t + box.h * (top - v) / (top - bot); };
+    var s = "";
+    for (var v = bot; v <= top + 1e-9; v += step) {
+      s += '<line class="grid' + (Math.abs(v) < 1e-9 ? " zero" : "") + '" x1="' + box.l + '" x2="' + (box.l + box.w) + '" y1="' + Y(v).toFixed(1) + '" y2="' + Y(v).toFixed(1) + '"/>';
+      s += '<text class="ax" x="' + (box.l - 8) + '" y="' + (Y(v) + 4).toFixed(1) + '" text-anchor="end">' + (v < 0 ? "−" : v > 0 ? "+" : "") + nf0.format(Math.abs(v)) + " €</text>";
+    }
+    for (var c = 0; c <= PRO.MAXCAP; c += 2) s += '<text class="ax" x="' + X(c).toFixed(1) + '" y="' + (box.t + box.h + 18) + '" text-anchor="middle">' + c + "</text>";
+    s += '<text class="ax" x="' + (box.l + box.w) + '" y="' + (H - 4) + '" text-anchor="end">Speichergröße in kWh (nutzbar)</text>';
+    var tolTop = Y(r.best.net), tolBot = Y(r.best.net - r.tol);
+    s += '<rect class="tolband" x="' + box.l + '" width="' + box.w + '" y="' + tolTop.toFixed(1) + '" height="' + Math.max(1, tolBot - tolTop).toFixed(1) + '"/>';
+    var ints = rows.filter(function (x) { return Math.abs(x.cap - Math.round(x.cap)) < 1e-9; });
+    s += '<path class="sline s0" d="' + ints.map(function (x, i) { return (i ? "L" : "M") + X(x.cap).toFixed(1) + "," + Y(x.net).toFixed(1); }).join("") + '"/>';
+    function mark(x, cls, label, below) {
+      var px = X(x.cap), py = Y(x.net), ly = below ? py + 20 : py - 10;
+      var anchor = px < box.l + 40 ? "start" : px > box.l + box.w - 40 ? "end" : "middle";
+      return '<circle class="mk ' + cls + '" cx="' + px.toFixed(1) + '" cy="' + py.toFixed(1) + '" r="6"/><text class="mklabel ' + cls + '" x="' + px.toFixed(1) + '" y="' + ly.toFixed(1) + '" text-anchor="' + anchor + '">' + label + "</text>";
+    }
+    var same = Math.abs(r.rec.cap - r.cap) < 0.5;
+    if (!same && r.rec.cap > 0) s += mark(r.rec, "rec", "Empfehlung " + kwh(r.rec.cap), r.offer.net > r.rec.net && Math.abs(r.offer.cap - r.rec.cap) < 8);
+    s += mark(r.offer, "off", "Angebot " + kwh(r.cap), !same && r.offer.net < r.rec.net && Math.abs(r.offer.cap - r.rec.cap) < 8);
+    return '<svg class="rchart" viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Bilanz nach Lebensdauer je Speichergröße">' + s + "</svg>" +
+      '<div class="clegend"><span><i class="sw sl s0"></i>Bilanz nach ' + state.input.life + ' Jahren</span><span><i class="sw tolsw"></i>fast so gut wie die beste Größe</span><span><i class="sw dotoff"></i>Angebot</span>' + (same ? "" : '<span><i class="sw dotrec"></i>Empfehlung</span>') + "</div>";
+  }
+
+  function dayText(m, name) {
+    var socMax = Math.max.apply(null, m.soc), full = -1, imp = 0;
+    for (var h = 0; h < 24; h++) { imp += m.imp[h]; if (full < 0 && m.soc[h] >= 0.95) full = h; }
+    return full >= 0 ? "Im " + name + " ist der Speicher im Schnitt gegen " + (full + 1) + " Uhr voll. Aus dem Netz kommen " + nf1.format(imp) + " kWh am Tag."
+      : "Im " + name + " erreicht der Speicher im Schnitt höchstens " + Math.round(socMax * 100) + " % Füllstand" + (socMax >= 0.8 ? ", an sonnigen Tagen wird er voll, an trüben nicht" : "") + ". Aus dem Netz kommen " + nf1.format(imp) + " kWh am Tag.";
+  }
+
+  function renderReport() {
+    var r = state.result, o = state.input, life = o.life, same = Math.abs(r.rec.cap - r.cap) < 0.5;
+    var v = VERDICT[r.verdict], t = PRO.teaser(r), off = r.offer, rec = r.rec;
+    var stand = new Date().toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" });
+    var roofsTxt = o.roofs.map(function (x) { return nf1.format(x.kwp) + " kWp " + ASPECT_NAME[String(x.aspect)] + " " + x.tilt + "°"; }).join(", ");
+    var h = "";
+
+    h += '<header class="rhead"><div class="eyebrow">Speicherklar Pro · Angebots-Check · ' + stand + "</div>" +
+      "<h1>" + (o.model ? esc(o.model) + ", " : "") + kwh(r.cap) + " Speicher</h1>" +
+      '<p class="rmeta">' + roofsTxt + " · " + REGIONS[o.region].n.split(",")[0] + " · " + nf0.format(o.cons) + " kWh Haushalt" +
+      (o.ev ? " · " + nf0.format(o.ev) + " kWh E-Auto" : "") + (o.hp ? " · " + nf0.format(o.hp) + " kWh Wärmepumpe" : "") + "</p></header>";
+
+    // 1 Ergebnis
+    h += '<section class="rsec"><h2><span>1</span>Ergebnis auf einen Blick</h2>';
+    var lead = v[2] + " ";
+    if (r.verdict === "gross") lead += "Mit " + kwh(rec.cap) + " statt " + kwh(r.cap) + " zahlst du geschätzt " + euro(off.cost - rec.cost) + " weniger und hast nach " + life + " Jahren " + (rec.net >= off.net ? euro(rec.net - off.net) + " mehr übrig." : "fast gleich viel übrig.");
+    else if (r.verdict === "klein") lead += "Mit " + kwh(rec.cap) + " statt " + kwh(r.cap) + " hättest du nach " + life + " Jahren rund " + euro(rec.net - off.net) + " mehr übrig, bei geschätzt " + euro(rec.cost - off.cost) + " höherem Preis.";
+    else if (r.verdict === "passt") lead += off.net >= 0 ? "Der Speicher holt seine Kosten nach etwa " + nf1.format(off.payback) + " Jahren herein." : "";
+    else lead += "Nach " + life + " Jahren fehlen beim Angebot rund " + euro(-off.net) + ". Ohne Speicher stehst du wirtschaftlich besser da.";
+    h += '<p class="rlead">' + lead + "</p>";
+    h += '<div class="amps">' + amps(t, o) + "</div>";
+    var cols = same || r.verdict === "nolohn" ? [["Angebot · " + kwh(r.cap), off]] : [["Angebot · " + kwh(r.cap), off], ["Empfehlung · " + kwh(rec.cap), rec]];
+    var row = function (label, f, note) { return "<tr><td>" + label + (note ? " <small>" + note + "</small>" : "") + "</td>" + cols.map(function (c) { return '<td class="num">' + f(c[1]) + "</td>"; }).join("") + "</tr>"; };
+    h += '<div class="tablewrap"><table class="rtab"><thead><tr><th></th>' + cols.map(function (c) { return "<th>" + c[0] + "</th>"; }).join("") + "</tr></thead><tbody>" +
+      row("Preis Speicher", function (x) { return euro(x.cost) + (x === off && !r.storeEst ? "" : "*"); }) +
+      row("Zusätzlich selbst genutzt", function (x) { return nf0.format(x.extra) + " kWh/Jahr"; }) +
+      row("Ersparnis pro Jahr", function (x) { return euro(x.save); }) +
+      row("Amortisation", function (x) { return isFinite(x.payback) ? nf1.format(x.payback) + " Jahre" : "nie"; }) +
+      row("Bilanz nach " + life + " Jahren", function (x) { return '<b class="' + (x.net >= 0 ? "pos" : "neg") + '">' + signed(x.net) + "</b>"; }) +
+      row("Autarkie", function (x) { return Math.round(r.base.autarky * 100) + " % → " + Math.round(x.r.autarky * 100) + " %"; }, "ohne → mit Speicher") +
+      "</tbody></table></div>";
+    h += '<p class="fine">* geschätzt: ' + (r.storeEst ? "Speicherpreis aus der Marktspanne, weil das Angebot ihn nicht einzeln nennt. " : "") +
+      "Für andere Größen zählt " + Math.round(PRO.FIX * 100) + " % des Speicherpreises als fester Anteil (Wechselrichter, Montage), der Rest wächst mit der Kapazität.</p></section>";
+
+    // 2 Größe
+    var mc = r.store * (1 - PRO.FIX) / r.cap, lastWorth = 0;
+    r.marginal.forEach(function (m) { if (m.add * life >= mc) lastWorth = m.cap; });
+    h += '<section class="rsec"><h2><span>2</span>Welche Größe passt</h2>';
+    h += "<p>Die Linie zeigt für jede Speichergröße, was nach " + life + " Jahren übrig bleibt: Ersparnis minus Anschaffung. Im grauen Band liegen Größen, die höchstens " + euro(r.tol) + " schlechter abschneiden als die beste. Die Empfehlung ist die kleinste Größe in diesem Band, weil ein kleinerer Speicher weniger Geld bindet.</p>";
+    h += '<div class="chartwrap">' + sizeChart(r) + "</div>";
+    h += "<p>Jede zusätzliche kWh kostet bei diesem Angebot etwa <b>" + euro(mc) + "</b>. Damit sie sich in " + life + " Jahren bezahlt macht, muss sie <b>" + euro(mc / life) + " im Jahr</b> sparen. " +
+      (lastWorth > 0 ? "Das schafft jede kWh bis " + lastWorth + " kWh, danach bringt eine weitere kWh weniger, als sie kostet." : "Das schafft schon die erste kWh nicht.") + "</p>";
+    var upto = Math.min(PRO.MAXCAP, Math.max(Math.ceil(r.cap), r.best.cap) + 2);
+    h += '<div class="tablewrap"><table class="rtab mtab"><thead><tr><th>Größe</th><th>Ersparnis/Jahr</th><th>diese kWh bringt</th><th>Bilanz nach ' + life + " J.</th></tr></thead><tbody>";
+    r.rows.filter(function (x) { return x.cap >= 1 && x.cap <= upto && (Math.abs(x.cap - Math.round(x.cap)) < 1e-9); }).forEach(function (x) {
+      var m = r.marginal.filter(function (y) { return y.cap === x.cap; })[0];
+      var isOff = Math.abs(x.cap - r.cap) < 0.5, isRec = x.cap === rec.cap;
+      h += "<tr" + (isOff ? ' class="hl-off"' : isRec ? ' class="hl-rec"' : "") + "><td>" + x.cap + " kWh" + (isOff ? " <small>≈ Angebot</small>" : isRec ? " <small>Empfehlung</small>" : "") + '</td><td class="num">' + euro(x.save) + '</td><td class="num">' + (m ? "+" + euro(m.add) + "/Jahr" : "") + '</td><td class="num ' + (x.net >= 0 ? "pos" : "neg") + '">' + signed(x.net) + "</td></tr>";
+    });
+    h += "</tbody></table></div></section>";
+
+    // 3 Jahreszeiten
+    h += '<section class="rsec"><h2><span>3</span>November gegen Juli</h2>';
+    h += "<p>Ein durchschnittlicher Tag mit deinem Speicher (" + kwh(r.cap) + "). Im Sommer reicht der Überschuss meist, um ihn zu füllen, im Winter fehlt er. Ein größerer Speicher hilft im Winter deshalb kaum.</p>";
+    h += DRAW.dayChart([r.days[6], r.days[10]], ["Juli", "November"]);
+    h += "<p>" + dayText(r.days[6], "Juli") + " " + dayText(r.days[10], "November") + "</p></section>";
+
+    // 4 Preise
+    h += '<section class="rsec"><h2><span>4</span>Preis-Check</h2>';
+    if (r.storeEst) h += "<p>Das Angebot nennt den Speicher nicht einzeln. Der Bericht rechnet mit geschätzten <b>" + euro(r.store) + "</b> (" + euro(r.store / r.cap) + " je kWh, Mitte der Marktspanne). Frag nach dem Preis ohne Speicher, dann wird der Check genau.</p>";
+    else h += "<p>Speicher: <b>" + euro(r.storePerKwh) + " je kWh</b> nutzbar. Üblich sind " + nf0.format(r.storeBand.lo) + "–" + nf0.format(r.storeBand.hi) + " € je kWh inklusive Einbau" + (r.cap < MARKT.SPEICHER.kleinBis ? ", bei kleinen Speichern etwas mehr" : "") + ". Einordnung: <b>" + RATE[r.storeRate][1] + "</b>.</p>";
+    if (r.pvRate) h += "<p>PV-Anlage ohne Speicher: <b>" + euro(r.pv) + "</b>, also <b>" + euro(r.pvPerKwp) + " je kWp</b>. Für " + nf1.format(r.kwp) + " kWp sind " + nf0.format(r.pvBand.lo) + "–" + nf0.format(r.pvBand.hi) + " € je kWp üblich. Einordnung: <b>" + RATE[r.pvRate][1] + "</b>." + (r.storeEst ? " Weil der Speicherpreis geschätzt ist, ist auch dieser Wert nur ein Anhaltspunkt." : "") + "</p>";
+    else h += "<p>Für den Preis der PV-Anlage fehlt der Gesamtpreis im Angebot.</p>";
+    h += '<p class="fine">Marktspannen Stand ' + MARKT.STAND + ": " + MARKT.QUELLEN.join("; ") + ". Teurer kann berechtigt sein, etwa bei schwieriger Montage, neuem Zählerschrank oder Notstrom. Dann sollte das im Angebot stehen.</p></section>";
+
+    // 5 Szenarien
+    var same5 = r.scen.filter(function (s) { return s.verdict === r.verdict; }).length;
+    h += '<section class="rsec"><h2><span>5</span>Wie stabil ist das Ergebnis?</h2>';
+    h += "<p>Niemand weiß, wie sich Strompreis und Regeln entwickeln. Deshalb rechnet der Bericht dein Angebot mit veränderten Annahmen nach. In <b>" + same5 + " von " + r.scen.length + "</b> Fällen bleibt die Einordnung gleich" + (same5 === r.scen.length ? ". Das Ergebnis ist robust." : ". Wo sie sich ändert, lohnt ein zweiter Blick.") + "</p>";
+    h += '<div class="tablewrap"><table class="rtab"><thead><tr><th>Annahme</th><th>beste Größe</th><th>Bilanz Angebot</th><th>Einordnung</th></tr></thead><tbody>';
+    r.scen.forEach(function (s, i) {
+      h += "<tr" + (i === 0 ? ' class="hl-base"' : "") + "><td>" + s.name + '</td><td class="num">' + (s.best ? s.best + " kWh" : "ohne") + '</td><td class="num ' + (s.offerNet >= 0 ? "pos" : "neg") + '">' + signed(s.offerNet) + "</td><td>" + VERDICT[s.verdict][1] + "</td></tr>";
+    });
+    h += "</tbody></table></div></section>";
+
+    // 6 Fragen
+    h += '<section class="rsec"><h2><span>6</span>Fragen an deinen Installateur</h2><p>Zum Ausdrucken und Mitnehmen. Die ersten Fragen ergeben sich direkt aus deinem Angebot.</p><ol class="qs">';
+    r.questions.forEach(function (q) { h += "<li><b>" + q[0] + "</b><span>" + q[1] + "</span></li>"; });
+    h += "</ol></section>";
+
+    // 7 Annahmen
+    h += '<section class="rsec"><h2><span>7</span>Annahmen und Grenzen</h2><div class="tablewrap"><table class="rtab"><tbody>' +
+      "<tr><td>Deine Eingaben</td><td>" + kwh(o.cap) + " " + (o.capKind === "brutto" ? "brutto, gerechnet mit " + Math.round(PRO.BRUTTO * 100) + " % nutzbar" : o.capKind === "unklar" ? "(Art nicht angegeben, gerechnet als nutzbar)" : "nutzbar") +
+      (o.pow ? ", " + nf1.format(o.pow) + " kW Leistung" : ", Leistung nicht angegeben (gerechnet: halbe Kapazität pro Stunde, höchstens 5 kW)") +
+      "; Strompreis " + nf2.format(o.price) + " ct/kWh; " + (o.eeg === "reform" ? "EEG-Reform 2027 (keine Vergütung, Einspeisung höchstens 50 %)" : "Einspeisevergütung " + nf2.format(o.feed) + " ct/kWh") + "; Lebensdauer " + life + " Jahre" + (o.monthly ? "; Verbrauch nach Monaten" : "") + "</td></tr>" +
+      "<tr><td>Rechnung</td><td>Jahressimulation in 5-Minuten-Schritten mit Sonnendaten PVGIS-SARAH3 für deine PLZ-Region, Standardlastprofil H0" + (o.hp ? ", Wärmepumpe nach Heizmonaten verteilt" : "") + ". Speicher mit 88 % Wirkungsgrad je Zyklus und 25 W Standby. Erzeugung im Jahr: " + nf0.format(Math.round(r.gen / 10) * 10) + " kWh, Verbrauch: " + nf0.format(Math.round(r.load / 10) * 10) + " kWh.</td></tr>" +
+      "<tr><td>Andere Größen</td><td>" + Math.round(PRO.FIX * 100) + " % des Speicherpreises als fester Anteil. Ladeleistung wie im Angebot, bei kleineren Größen höchstens halbe Kapazität pro Stunde, mindestens 2,5 kW.</td></tr>" +
+      "<tr><td>Nicht drin</td><td>Verschattung, Alterung des Akkus, steigende Strompreise, Zinsen, dynamische Tarife, Notstrom. Strompreis und Lebensdauer prüft Abschnitt 5.</td></tr>" +
+      '</tbody></table></div><p class="fine">Dieser Bericht ist eine Rechnung mit deinen Angaben und keine Anlagen-, Rechts- oder Finanzberatung. Er ersetzt nicht die Planung durch einen Fachbetrieb. Erstellt mit Speicherklar Pro, speicherklar.de.</p></section>';
+
+    $("report").innerHTML = h;
+    $("report-wrap").hidden = false;
+  }
+
+  $("print").addEventListener("click", function () { track("pro-pdf"); window.print(); });
+  $("edit").addEventListener("click", function () { $("offer").scrollIntoView({ behavior: "smooth" }); });
+  window.addEventListener("beforeprint", function () { document.title = "Speicherklar Angebots-Check " + (state.input && state.input.model ? state.input.model : ""); });
+
+  // ---------- Start ----------
+  var start = fromHash() || load(KEY_IN) || { roofs: [{ kwp: 9, aspect: 0, tilt: 35 }], cons: 4500, price: 33, feed: 7.7, life: 15 };
+  fill(start);
+  setupBuy();
+  restoreLicense();
+  if (start.cap) runCheck(false);
+})();
+</script>
+</body>
+</html>

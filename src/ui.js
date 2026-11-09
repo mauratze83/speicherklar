@@ -183,6 +183,9 @@
     $("verdict").innerHTML=v;
     chart(res,p);
     dayState.days=daySeries(res.gen,res.load,p.bat,res.fc);drawDay();
+    // Übergabe an den Angebots-Check im Hash (wird nicht an einen Server gesendet)
+    var q={plz:$("plz").value.replace(/\D/g,""),kwp:$("pv").value,aspect:state.aspect,tilt:$("tilt").value,cons:p.cons,ev:p.ev,evt:p.evTime,bat:p.bat,price:p.price,eeg:state.eeg,feed:p.feed,life:p.life};
+    $("to-pro").href="pro/#"+Object.keys(q).map(function(k){return k+"="+encodeURIComponent(q[k]);}).join("&");
   }
 
   seg("aspect","aspect");
@@ -195,6 +198,7 @@
 
   // Zählung ohne Cookies (Umami), nur wenn das Skript geladen ist; keine Eingabewerte
   function track(n){try{if(window.umami)window.umami.track(n);}catch(e){}}
+  $("to-pro").addEventListener("click",function(){track("rechner-zu-pro");});
   var used=false;function markUsed(){if(!used){used=true;track("rechner-genutzt");}}
   $("inputs").addEventListener("change",markUsed);
   Array.prototype.forEach.call(document.querySelectorAll("#inputs .seg button"),function(b){b.addEventListener("click",markUsed);});

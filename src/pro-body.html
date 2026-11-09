@@ -1,0 +1,140 @@
+<!--HEADER-->
+<main id="top">
+  <section class="hero pro-hero">
+    <div class="wrap">
+      <div class="eyebrow">Speicherklar Pro · Angebots-Check</div>
+      <h1>Passt der Speicher in <em>deinem Angebot?</em></h1>
+      <p class="lede">Trag das Angebot deines Installateurs ein. Du siehst sofort, ob die Speichergröße zu deinem Haushalt passt. Der vollständige Bericht zeigt, was eine passende Größe spart, wie stabil das Ergebnis ist und was du den Installateur fragen solltest.</p>
+      <div class="facts"><span>Eingabe <b>kostenlos</b></span><span>Rechnung <b>in deinem Browser</b></span><span>Bericht als <b>PDF</b></span></div>
+    </div>
+  </section>
+
+  <div class="wrap tool pro-tool">
+    <form class="panel" id="offer" novalidate>
+      <h2>Dein Angebot</h2>
+      <p class="sub">Die Werte stehen im Angebot. Was du nicht weißt, lässt du leer, dann schätzt der Bericht und sagt dir, wonach du fragen solltest.</p>
+
+      <fieldset>
+        <legend>Speicher laut Angebot</legend>
+        <div class="field"><label for="f-model">Modell</label>
+          <input class="in" type="text" id="f-model" maxlength="60" placeholder="z. B. Hersteller und Typ" autocomplete="off"></div>
+        <div class="field"><label for="f-cap">Kapazität</label>
+          <div class="unitin"><input class="in" type="number" id="f-cap" min="1" max="40" step="0.01" inputmode="decimal" required><span>kWh</span></div>
+          <div class="seg" role="group" aria-label="Art der Kapazitätsangabe" id="capkind">
+            <button type="button" data-v="nutzbar" aria-pressed="true">nutzbar</button>
+            <button type="button" data-v="brutto" aria-pressed="false">brutto</button>
+            <button type="button" data-v="unklar" aria-pressed="false">steht nicht dabei</button>
+          </div>
+          <span class="hint">Brutto ist die Gesamtkapazität, nutzbar etwas weniger. Ohne Angabe rechnet der Bericht mit dem Wert wie angegeben.</span></div>
+        <div class="field"><label for="f-pow">Lade- und Entladeleistung <small>(optional)</small></label>
+          <div class="unitin"><input class="in" type="number" id="f-pow" min="0" max="30" step="0.1" inputmode="decimal"><span>kW</span></div></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Preis laut Angebot</legend>
+        <div class="field"><label for="f-total">Gesamtpreis PV-Anlage mit Speicher</label>
+          <div class="unitin"><input class="in" type="number" id="f-total" min="0" max="200000" step="1" inputmode="numeric"><span>€</span></div>
+          <span class="hint">Brutto, ohne Wallbox und andere Extras.</span></div>
+        <div class="field"><label for="f-store">Davon Speicher <small>(Aufpreis gegenüber ohne Speicher)</small></label>
+          <div class="unitin"><input class="in" type="number" id="f-store" min="0" max="100000" step="1" inputmode="numeric"><span>€</span></div>
+          <span class="hint">Steht oft als eigene Position im Angebot. Fehlt sie, schätzt der Bericht mit Marktpreisen.</span></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Dach</legend>
+        <div class="field"><div class="row"><label for="f-plz">Postleitzahl</label><output id="o-plz"></output></div>
+          <input class="in txt" type="text" id="f-plz" inputmode="numeric" maxlength="5" autocomplete="postal-code"></div>
+        <div id="roofs" class="roofs"></div>
+        <button type="button" class="linkbtn" id="add-roof">+ Dachfläche hinzufügen</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>Verbrauch</legend>
+        <div class="field"><label for="f-cons">Haushaltsstrom pro Jahr</label>
+          <div class="unitin"><input class="in" type="number" id="f-cons" min="500" max="30000" step="10" inputmode="numeric"><span>kWh</span></div>
+          <button type="button" class="linkbtn" id="tog-month" aria-expanded="false">Verbrauch nach Monaten eingeben</button>
+          <div class="months" id="months" hidden></div></div>
+        <div class="field"><label for="f-ev">E-Auto pro Jahr</label>
+          <div class="unitin"><input class="in" type="number" id="f-ev" min="0" max="20000" step="10" inputmode="numeric"><span>kWh</span></div>
+          <div class="seg" role="group" aria-label="Wann lädt das Auto meistens?" id="evtime">
+            <button type="button" data-v="day" aria-pressed="false">lädt meist tagsüber</button>
+            <button type="button" data-v="eve" aria-pressed="true">lädt meist abends</button>
+          </div></div>
+        <div class="field"><label for="f-hp">Wärmepumpe pro Jahr</label>
+          <div class="unitin"><input class="in" type="number" id="f-hp" min="0" max="30000" step="10" inputmode="numeric"><span>kWh</span></div>
+          <span class="hint">Leer lassen, wenn keine Wärmepumpe da oder geplant ist.</span></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Preise &amp; Regeln</legend>
+        <div class="field"><label for="f-price">Dein Strompreis</label>
+          <div class="unitin"><input class="in" type="number" id="f-price" min="10" max="80" step="0.01" inputmode="decimal"><span>ct/kWh</span></div></div>
+        <div class="field"><span class="flabel" id="l-eeg">Einspeiseregeln</span>
+          <div class="seg" role="group" aria-labelledby="l-eeg" id="eeg">
+            <button type="button" data-v="now" aria-pressed="true">EEG heute</button>
+            <button type="button" data-v="reform" aria-pressed="false">EEG-Reform 2027</button>
+          </div></div>
+        <div class="field" id="feedfield"><label for="f-feed">Einspeisevergütung</label>
+          <div class="unitin"><input class="in" type="number" id="f-feed" min="0" max="15" step="0.01" inputmode="decimal"><span>ct/kWh</span></div></div>
+        <div class="field"><label for="f-life">Lebensdauer des Speichers</label>
+          <div class="unitin"><input class="in" type="number" id="f-life" min="8" max="25" step="1" inputmode="numeric"><span>Jahre</span></div></div>
+      </fieldset>
+
+      <p class="formerr" id="formerr" role="alert"></p>
+      <button class="btn btn-on wide" type="submit" id="go">Angebot prüfen</button>
+    </form>
+
+    <div class="panel result" id="teaser" aria-live="polite">
+      <div class="empty" id="t-empty">
+        <h2>So sieht dein Ergebnis aus</h2>
+        <p class="sub">Nach dem Prüfen steht hier die Einordnung deines Angebots: Speichergröße, Speicherpreis und Preis der PV-Anlage. Das ist kostenlos.</p>
+      </div>
+      <div id="t-res" hidden>
+        <p class="verdict" id="t-verdict"></p>
+        <div class="amps" id="t-amps"></div>
+        <div class="locked" aria-hidden="true">
+          <div class="ghost">
+            <div class="gl w60"></div><div class="gl w90"></div><div class="gl w80"></div>
+            <div class="gchart"></div>
+            <div class="gl w70"></div><div class="gl w90"></div>
+          </div>
+        </div>
+        <div class="buy" id="buy">
+          <h3>Im vollständigen Bericht</h3>
+          <ul class="checks">
+            <li>Welche Größe passt und was sie in der Anschaffung spart, in Euro</li>
+            <li>Ersparnis, Amortisation und Bilanz für Angebot und passende Größe</li>
+            <li>November gegen Juli: wann dein Speicher voll wird und wann nicht</li>
+            <li>Was sich ändert mit EEG-Reform, Strompreis, E-Auto oder Wärmepumpe</li>
+            <li>Fragen an deinen Installateur, passend zu deinem Angebot</li>
+          </ul>
+          <div class="buyrow">
+            <div class="price" id="b-price">49 € <small>einmalig</small></div>
+            <a class="btn btn-on" id="b-btn" href="#" target="_blank" rel="noopener">Bericht freischalten</a>
+          </div>
+          <p class="note" id="b-note"></p>
+          <p class="note">Mit einem Kauf prüfst du beliebig viele Angebote, auch die von anderen Installateuren. Kein Abo.</p>
+        </div>
+        <details class="keybox" id="keybox">
+          <summary>Schon gekauft? Lizenzschlüssel eingeben</summary>
+          <form id="keyform" class="wait-row" novalidate>
+            <input type="text" id="f-key" autocomplete="off" spellcheck="false" placeholder="Schlüssel aus der Kaufbestätigung" aria-label="Lizenzschlüssel">
+            <button class="btn btn-on" type="submit" id="keybtn">Freischalten</button>
+          </form>
+          <p class="wait-msg" id="keymsg" role="status" aria-live="polite"></p>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <section class="report-wrap" id="report-wrap" hidden>
+    <div class="wrap">
+      <div class="rtools">
+        <button class="btn btn-on" type="button" id="print">Als PDF speichern</button>
+        <button class="linkbtn" type="button" id="edit">Eingaben ändern</button>
+      </div>
+      <article class="report" id="report"></article>
+    </div>
+  </section>
+</main>
+<!--FOOTER-->

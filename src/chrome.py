@@ -1,7 +1,7 @@
 """Gemeinsame Kopf- und Fußzeile für alle Seiten von speicherklar.de.
 
 prefix: Pfad zur Website-Wurzel aus Sicht der Seite ("./" für Seiten im Hauptordner, "../" für ratgeber/).
-active: "rechner" | "ratgeber" | None – markiert den aktuellen Menüpunkt.
+active: "rechner" | "ratgeber" | "pro" | None – markiert den aktuellen Menüpunkt.
 """
 
 IG = "https://www.instagram.com/speicherklar/"
@@ -27,7 +27,7 @@ def header(prefix="./", active=None):
         item(f"{prefix}#rechner", "Rechner", "rechner"),
         item(f"{prefix}ratgeber/", "Ratgeber", "ratgeber"),
         item(f"{prefix}#annahmen", "Annahmen"),
-        item(f"{prefix}#pro", "Pro"),
+        item(f"{prefix}pro/", "Angebots-Check", "pro"),
         f'<a href="{IG}" target="_blank" rel="noopener">Instagram</a>',
     ])
     return f"""<header class="top">

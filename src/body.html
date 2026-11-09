@@ -174,6 +174,11 @@
         <p>Gewinn oder Verlust über die Lebensdauer, für jede Größe von 1 bis 15 kWh. Deine Wahl ist umrandet.</p>
         <div class="chartwrap"><svg id="chart" viewBox="0 0 560 210" role="img" aria-label="Bilanz je Speichergröße"></svg></div>
       </div>
+
+      <div class="procta">
+        <p><b>Du hast schon ein Angebot?</b> Prüf, ob Größe und Preis passen. Deine Werte von hier werden übernommen.</p>
+        <a class="btn btn-on" id="to-pro" href="pro/">Angebot prüfen</a>
+      </div>
     </div>
   </div>
 
@@ -213,27 +218,28 @@
     <div class="wrap">
       <div class="procard reveal">
         <div>
-          <span class="tag">Vorschau · erscheint Anfang 2027</span>
-          <h2 class="sec" style="margin-top:12px">Speicherklar Pro plant die ganze Anlage</h2>
-          <p style="color:var(--muted);margin:0">Der kostenlose Rechner prüft den Speicher für ein Dach. Pro rechnet dein Haus komplett durch, bevor du unterschreibst.</p>
+          <span class="tag">Speicherklar Pro · erscheint Anfang 2027</span>
+          <h2 class="sec" style="margin-top:12px">Angebots-Check: Passt der Speicher in deinem Angebot?</h2>
+          <p style="color:var(--muted);margin:0">Der kostenlose Rechner zeigt, was ein Speicher grundsätzlich bringt. Pro prüft das konkrete Angebot deines Installateurs, bevor du unterschreibst.</p>
           <ul>
-            <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" fill="none" stroke="var(--sun)" stroke-width="2.4"/></svg><span>Mehrere Dachflächen mit eigener Leistung, Ausrichtung und Neigung, auch Gaube und Garage.</span></li>
-            <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" fill="none" stroke="var(--sun)" stroke-width="2.4"/></svg><span>Dein Verbrauch nach Monaten, mit Wärmepumpe, Homeoffice und E-Auto, heute oder geplant.</span></li>
-            <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" fill="none" stroke="var(--sun)" stroke-width="2.4"/></svg><span>Beste Kombination aus PV-Größe und Speicher, nicht nur der Speicher allein.</span></li>
-            <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" fill="none" stroke="var(--sun)" stroke-width="2.4"/></svg><span>Angebots-Check: Angebot deines Solarteurs eingeben und sehen, ob Preis und Größe passen.</span></li>
-            <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" fill="none" stroke="var(--sun)" stroke-width="2.4"/></svg><span>Bericht zum Ausdrucken, fürs Gespräch mit dem Solarteur.</span></li>
+            <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" fill="none" stroke="var(--sun)" stroke-width="2.4"/></svg><span>Angebot eintragen: Speichergröße, Leistung, Preis. Die Einordnung siehst du kostenlos.</span></li>
+            <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" fill="none" stroke="var(--sun)" stroke-width="2.4"/></svg><span>Welche Größe passt und was sie in der Anschaffung spart, in Euro.</span></li>
+            <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" fill="none" stroke="var(--sun)" stroke-width="2.4"/></svg><span>Preis-Check für Speicher und PV-Anlage gegen aktuelle Marktpreise.</span></li>
+            <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" fill="none" stroke="var(--sun)" stroke-width="2.4"/></svg><span>Mehrere Dachflächen, Verbrauch nach Monaten, E-Auto und Wärmepumpe, heute oder geplant.</span></li>
+            <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" fill="none" stroke="var(--sun)" stroke-width="2.4"/></svg><span>Bericht als PDF mit Fragen an deinen Installateur, fürs nächste Gespräch.</span></li>
           </ul>
         </div>
         <div class="pricebox">
           <div class="price">89 € <small>einmalig</small></div>
-          <p>Kein Abo. Updates für Vergütung und Preise sind dabei. Deine Daten bleiben in deinem Browser.</p>
+          <p>Kein Abo. Beliebig viele Angebote prüfen, Updates für Vergütung und Preise sind dabei. Deine Daten bleiben in deinem Browser.</p>
+          <p><a href="pro/">Angebots-Check ansehen</a>: Eingabe und Einordnung sind schon jetzt kostenlos.</p>
           <form class="wait" id="wait" novalidate>
             <label for="wait-email">Sag mir Bescheid, wenn Pro startet</label>
             <div class="wait-row">
               <input type="email" id="wait-email" name="email" autocomplete="email" inputmode="email" placeholder="deine@email.de" required>
               <button class="btn btn-on" type="submit" id="wait-btn">Eintragen</button>
             </div>
-            <p class="wait-note">Zum Start gibt es einen Einführungspreis für alle auf der Liste. Nur eine Mail zum Start, kein Spam, Abmeldung jederzeit. <a href="datenschutz.html#warteliste">Datenschutz</a></p>
+            <p class="wait-note">Wer auf der Liste steht, kann vor allen anderen kaufen, zum Einführungspreis. Nur eine Mail zum Start, kein Spam, Abmeldung jederzeit. <a href="datenschutz.html#warteliste">Datenschutz</a></p>
             <p class="wait-msg" id="wait-msg" role="status" aria-live="polite"></p>
           </form>
           <p>Oder folg <a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">@speicherklar</a> auf Instagram.</p>
