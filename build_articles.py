@@ -11,6 +11,14 @@ FAV = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 
 # Gleiche Grundstyles wie die Startseite (Farben, Schriften, Kopf, Fuß, Breite), dazu Textseiten-Typografie unter .doc
 BASE = (ROOT / "src/fonts.css").read_text() + (ROOT / "src/style.css").read_text()
 DOC = """
+.about{display:grid;grid-template-columns:minmax(0,1fr) 340px;column-gap:56px;align-items:start}
+.about-text{grid-column:1;grid-row:1}.about-body{grid-column:1;grid-row:2}
+.about-photo{grid-column:2;grid-row:1/span 2;margin:8px 0 0;position:sticky;top:24px}
+.about-photo img{display:block;width:100%;height:auto;border-radius:18px;box-shadow:0 1px 0 var(--line),0 18px 40px -24px rgba(0,0,0,.35);background:var(--meter)}
+html.js .about-photo img{opacity:0;transform:translateY(10px) scale(.985);transition:opacity .6s var(--ease-out),transform .6s var(--ease-out)}
+html.js .about-photo.in img{opacity:1;transform:none}
+@media (max-width:760px){.about{grid-template-columns:minmax(0,1fr)}.about-photo{grid-column:1;grid-row:2;position:static;max-width:300px;margin:6px 0 4px}.about-body{grid-row:3}}
+@media (prefers-reduced-motion:reduce){html.js .about-photo img{opacity:1;transform:none;transition:none}}
 main.page{padding-block:36px 40px}
 .doc{max-width:760px;font-size:18px;line-height:1.65}
 .doc .eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sun-ink)}
@@ -50,7 +58,7 @@ html.js .chart.in .cpanel svg{clip-path:inset(0 0 0 0)}
 @media (prefers-reduced-motion:reduce){html.js .chart .sline{stroke-dasharray:none;transition:none} html.js .chart .sdot,html.js .chart .slabel{opacity:1;transition:none} html.js .chart .cpanel svg{clip-path:none;transition:none}}
 """
 # Blendet Diagramme einmal ein, wenn sie ins Bild kommen. Ohne JavaScript sind sie sofort sichtbar.
-REVEAL = """<script>try{if("IntersectionObserver" in window){document.documentElement.classList.add("js");var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});},{rootMargin:"0px 0px -60px 0px"});document.querySelectorAll(".chart").forEach(function(c){io.observe(c);});}}catch(e){}</script>"""
+REVEAL = """<script>try{if("IntersectionObserver" in window){document.documentElement.classList.add("js");var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});},{rootMargin:"0px 0px -60px 0px"});document.querySelectorAll(".chart,.about-photo").forEach(function(c){io.observe(c);});}}catch(e){}</script>"""
 
 # Grafiken aus dem Simulationsmodell rechnen (Node)
 _specs = {a["slug"]: a["chart"] for a in ARTICLES if a.get("chart")}
@@ -106,6 +114,16 @@ sp = lambda a: CHARTS.get(a["slug"], {}).get("spark", "")
 items = "".join(f'<li><a href="{a["slug"]}.html">{sp(a)}<b>{a["title"]}</b><span>{a["desc"]}</span></a></li>' for a in ARTICLES)
 (out / "index.html").write_text(page("Ratgeber Stromspeicher | Speicherklar", "Artikel rund um Stromspeicher und PV-Anlagen, mit Zahlen aus der Jahressimulation statt aus dem Prospekt.", "https://speicherklar.de/ratgeber/",
     f'<div class="doc"><div class="eyebrow">Ratgeber</div><h1>Stromspeicher, ehrlich gerechnet</h1><p class="lead">Fragen rund um PV-Anlage und Speicher, beantwortet mit Zahlen aus unserer Jahressimulation.</p></div><ul class="rlist">{items}</ul>{CTA}'))
+
+# Über mich
+ABOUT_URL = "https://speicherklar.de/ueber-mich.html"
+ABOUT_HEAD = ('<meta property="og:image" content="https://speicherklar.de/img/manuel-og.jpg">'
+  '<script type="application/ld+json">{"@context":"https://schema.org","@type":"AboutPage","url":"' + ABOUT_URL + '",'
+  '"mainEntity":{"@type":"Person","name":"Manuel Maurer","url":"' + ABOUT_URL + '","image":"https://speicherklar.de/img/manuel-960.jpg",'
+  '"homeLocation":{"@type":"Place","name":"Krefeld"},"sameAs":["https://www.instagram.com/speicherklar/"]}}</script>')
+(ROOT / "ueber-mich.html").write_text(page("Über mich | Speicherklar", "Wer hinter Speicherklar steckt, warum der Rechner ein ganzes Jahr simuliert und womit sich die Seite finanziert.",
+    ABOUT_URL, (ROOT / "src/ueber-mich.html").read_text(), ABOUT_HEAD, prefix="./", active=None))
+urls.append((ABOUT_URL, "2026-11-09"))
 
 (ROOT / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
     "".join(f"  <url><loc>{u}</loc><lastmod>{d}</lastmod></url>\n" for u, d in urls) + "</urlset>\n")
