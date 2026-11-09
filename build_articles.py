@@ -2,7 +2,8 @@
 import pathlib, json, html, sys
 ROOT = pathlib.Path(__file__).parent
 sys.path.insert(0, str(ROOT / "src"))
-from articles import ARTICLES, STAND, BEISPIEL
+from articles import ARTICLES, STAND, BEISPIEL, CHART_BASE
+import subprocess
 
 from chrome import header, footer
 
@@ -29,7 +30,46 @@ main.page{padding-block:36px 40px}
 .cta b{font-family:var(--f-display);font-stretch:105%;font-size:21px}
 .cta .btn{display:inline-block;justify-self:start;opacity:1;cursor:pointer;text-decoration:none}
 .page .rlist{margin:8px 0 0}
+.chart{margin:28px 0;max-width:760px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 18px 14px}
+.chart figcaption{display:grid;gap:2px;margin-bottom:10px}
+.chart figcaption b{font-family:var(--f-display);font-stretch:105%;font-size:18px;line-height:1.25}
+.chart figcaption span{font-size:14px;color:var(--muted);line-height:1.45}
+.chart .c-wide svg,.chart .c-narrow svg{display:block;width:100%;height:auto}
+.chart .c-narrow{display:none}
+@media (max-width:560px){.chart .c-wide{display:none}.chart .c-narrow{display:block}}
+.chart svg .ax{font-size:12px} .chart .slabel{font-size:12px}
+.cpanels{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px}
+.cpanel svg{display:block;width:100%;height:auto}
+.ctitle{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.rlist .spark{margin-bottom:4px}
+html.js .chart .sline{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1100ms var(--ease-in-out)}
+html.js .chart .sdot,html.js .chart .slabel{opacity:0;transition:opacity 300ms var(--ease-out) 900ms}
+html.js .chart .cpanel svg{clip-path:inset(0 100% 0 0);transition:clip-path 1000ms var(--ease-in-out)}
+html.js .chart.in .sline{stroke-dashoffset:0} html.js .chart.in .sdot,html.js .chart.in .slabel{opacity:1}
+html.js .chart.in .cpanel svg{clip-path:inset(0 0 0 0)}
+@media (prefers-reduced-motion:reduce){html.js .chart .sline{stroke-dasharray:none;transition:none} html.js .chart .sdot,html.js .chart .slabel{opacity:1;transition:none} html.js .chart .cpanel svg{clip-path:none;transition:none}}
 """
+# Blendet Diagramme einmal ein, wenn sie ins Bild kommen. Ohne JavaScript sind sie sofort sichtbar.
+REVEAL = """<script>try{if("IntersectionObserver" in window){document.documentElement.classList.add("js");var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});},{rootMargin:"0px 0px -60px 0px"});document.querySelectorAll(".chart").forEach(function(c){io.observe(c);});}}catch(e){}</script>"""
+
+# Grafiken aus dem Simulationsmodell rechnen (Node)
+_specs = {a["slug"]: a["chart"] for a in ARTICLES if a.get("chart")}
+CHARTS = json.loads(subprocess.run(["node", str(ROOT / "src/charts.js")], input=json.dumps({"base": CHART_BASE, "charts": _specs}),
+                                   capture_output=True, text=True, check=True).stdout) if _specs else {}
+
+def figure(slug):
+    c = ARTICLES_BY[slug].get("chart"); g = CHARTS.get(slug)
+    if not c or not g: return ""
+    return f'<figure class="chart"><figcaption><b>{html.escape(c["title"])}</b><span>{html.escape(c.get("caption", ""))}</span></figcaption>{g["html"]}</figure>'
+
+ARTICLES_BY = {a["slug"]: a for a in ARTICLES}
+
+def _with_figure(a):
+    body, fig = a["body"], figure(a["slug"])
+    if not fig: return body
+    i = body.find("</p>")
+    return body[:i + 4] + fig + body[i + 4:] if i >= 0 else fig + body
+
 
 def page(title, desc, canonical, main, extra_head="", prefix="../", active="ratgeber", robots=False):
     base = BASE.replace("url(fonts/", f"url({prefix}fonts/")
@@ -43,6 +83,7 @@ def page(title, desc, canonical, main, extra_head="", prefix="../", active="ratg
 {header(prefix, active)}
 <main class="wrap page">{main}</main>
 {footer(prefix)}
+{REVEAL}
 </body></html>
 """
 
@@ -57,11 +98,12 @@ for a in ARTICLES:
           {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": x}} for q, x in a["faq"]]}]
     head = "".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in ld)
     main = f"""<article class="doc"><div class="eyebrow">Ratgeber</div><h1>{a['h1']}</h1><p class="lead">{a['lead']}</p><p class="meta">Stand: {STAND}</p>
-{a['body']}{CTA}<h2>Häufige Fragen</h2>{faq_html}<p class="note" style="margin-top:28px">{BEISPIEL}</p></article>"""
+{_with_figure(a)}{CTA}<h2>Häufige Fragen</h2>{faq_html}<p class="note" style="margin-top:28px">{BEISPIEL}</p></article>"""
     (out / f"{a['slug']}.html").write_text(page(f"{a['title']} | Speicherklar", a["desc"], url, main, head))
     urls.append((url, a["date"]))
 
-items = "".join(f'<li><a href="{a["slug"]}.html"><b>{a["title"]}</b><span>{a["desc"]}</span></a></li>' for a in ARTICLES)
+sp = lambda a: CHARTS.get(a["slug"], {}).get("spark", "")
+items = "".join(f'<li><a href="{a["slug"]}.html">{sp(a)}<b>{a["title"]}</b><span>{a["desc"]}</span></a></li>' for a in ARTICLES)
 (out / "index.html").write_text(page("Ratgeber Stromspeicher | Speicherklar", "Artikel rund um Stromspeicher und PV-Anlagen, mit Zahlen aus der Jahressimulation statt aus dem Prospekt.", "https://speicherklar.de/ratgeber/",
     f'<div class="doc"><div class="eyebrow">Ratgeber</div><h1>Stromspeicher, ehrlich gerechnet</h1><p class="lead">Fragen rund um PV-Anlage und Speicher, beantwortet mit Zahlen aus unserer Jahressimulation.</p></div><ul class="rlist">{items}</ul>{CTA}'))
 
@@ -76,5 +118,7 @@ for f in ("impressum", "datenschutz"):
     (ROOT / f"{f}.html").write_text(page(f"{title} – Speicherklar", title, "", f'<div class="doc">{body}</div>', prefix="./", active=None, robots=True))
 
 # Ratgeber-Liste für die Startseite
-(ROOT / "src/ratgeber-teaser.html").write_text("".join(f'<li><a href="ratgeber/{a["slug"]}.html"><b>{a["title"]}</b><span>{a["desc"]}</span></a></li>' for a in ARTICLES[:6]))
+(ROOT / "src/ratgeber-teaser.html").write_text("".join(f'<li><a href="ratgeber/{a["slug"]}.html">{sp(a)}<b>{a["title"]}</b><span>{a["desc"]}</span></a></li>' for a in ARTICLES[:6]))
 print("Artikel:", len(ARTICLES))
+for slug, g in CHARTS.items():
+    for f in g.get("facts", []): print(f"  Grafik {slug}: {f['label']} -> beste Größe {f['best']} kWh, {f['net']:+} €")

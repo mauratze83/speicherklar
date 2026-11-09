@@ -2,11 +2,64 @@
 
 <main>
   <section class="hero">
-    <div class="wrap">
+    <div class="wrap hero-grid">
+      <div class="hero-text">
       <div class="eyebrow">Für alle, die eine PV-Anlage planen</div>
       <h1>Verkäufer rechnen mit Juli. <em>Wir rechnen mit November.</em></h1>
       <p class="lede">Du planst eine Solaranlage und fragst dich, ob ein Speicher dazugehört und wie groß er sein sollte? Gib Standort, Dach und Verbrauch ein. Der Rechner spielt ein ganzes Jahr in 5-Minuten-Schritten durch, mit Sonnendaten der EU-Kommission für deine Region, trüben Wochen und Abendspitzen.</p>
       <div class="facts"><span><b>kostenlos</b> · ohne Anmeldung</span><span>Sonnendaten <b>PVGIS 2014–2023</b></span><span>mit Szenario <b>EEG-Reform 2027</b></span></div>
+      </div>
+      <figure class="scene" id="scene" data-season="jul">
+        <div class="scene-top">
+          <div class="seg" role="group" aria-label="Jahreszeit" id="season">
+            <button type="button" data-v="jul" aria-pressed="true">Juli</button>
+            <button type="button" data-v="nov" aria-pressed="false">November</button>
+          </div>
+          <span class="scene-cap">Ein Durchschnittstag im Beispielhaus</span>
+        </div>
+        <svg viewBox="0 0 480 320" role="img" aria-labelledby="scene-desc">
+          <desc id="scene-desc">Haus mit Solardach, Speicher und Stromnetz. Die Linienstärke zeigt, wie viel Strom fließt.</desc>
+          <rect class="sky" x="0" y="0" width="480" height="290" rx="14"/>
+          <g class="sun"><circle r="34" class="sun-glow"/><circle r="20" class="sun-core"/></g>
+          <g class="clouds">
+            <path class="cloud" d="M48 92a18 18 0 0 1 34-8a14 14 0 0 1 24 10a12 12 0 0 1-2 24H50a14 14 0 0 1-2-26z"/>
+            <path class="cloud" d="M150 64a14 14 0 0 1 27-6a11 11 0 0 1 19 8a10 10 0 0 1-2 19h-42a11 11 0 0 1-2-21z"/>
+            <path class="cloud" d="M300 70a12 12 0 0 1 23-5a9 9 0 0 1 16 7a8 8 0 0 1-2 16h-35a9 9 0 0 1-2-18z"/>
+          </g>
+          <line class="ground" x1="0" y1="290" x2="480" y2="290"/>
+          <g class="flows">
+            <path class="flow f-exp" id="f-exp" d="M228 142C290 98 360 104 404 134"/>
+            <path class="flow f-charge" id="f-charge" d="M262 170C292 176 306 192 312 230C314 236 318 240 320 246"/>
+            <path class="flow f-dis" id="f-dis" d="M318 266L292 266"/>
+            <path class="flow f-imp" id="f-imp" d="M408 290C392 308 322 308 292 284"/>
+          </g>
+          <g class="house">
+            <rect x="150" y="200" width="140" height="90" class="wall"/>
+            <path d="M135 200L220 135L305 200Z" class="roof"/>
+            <path d="M146.2 191.5L198.7 151.4L206.6 158.4L154.4 199Z" class="panel"/>
+            <path d="M159.3 181.5L167.5 188.6M172.4 171.5L180.6 178.6M185.6 161.4L193.8 168.5" class="panel-line"/>
+            <rect x="170" y="222" width="30" height="24" rx="2" class="window"/>
+            <rect x="240" y="246" width="26" height="44" rx="2" class="door"/>
+          </g>
+          <path class="flow f-direct" id="f-direct" d="M184 180C190 196 196 206 208 216"/>
+          <g class="battery">
+            <rect x="320" y="236" width="26" height="54" rx="4" class="bat"/>
+            <rect x="327" y="231" width="12" height="5" rx="1.5" class="bat-cap"/>
+            <path d="M335 248l-6 13h6l-3 12 9-16h-6l3-9z" class="bolt"/>
+          </g>
+          <g class="pylon">
+            <path d="M410 134L396 290M410 134L424 290M398 168H422M394 200H426M401 236H419M398 168L424 290M422 168L396 290" />
+          </g>
+          <text class="slabel2" x="333" y="226" text-anchor="middle">Speicher</text>
+          <text class="slabel2" x="410" y="124" text-anchor="middle">Netz</text>
+        </svg>
+        <div class="scene-stats">
+          <div><span class="k">Vom Dach</span><b id="sc-gen">–</b></div>
+          <div><span class="k">Haus braucht</span><b id="sc-load">–</b></div>
+          <div><span class="k">Aus dem Netz</span><b id="sc-imp">–</b></div>
+        </div>
+        <figcaption id="sc-note">kWh pro Tag. Beispiel: 9 kWp Süd, 4.500 kWh, 8 kWh Speicher, Ruhrgebiet.</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -103,6 +156,17 @@
           <div class="track"><i class="base" id="t-ev0"></i></div>
           <div class="track" style="margin-top:4px"><i class="with" id="t-ev1"></i></div></div>
         <div class="legend"><span class="l1">ohne Speicher</span><span class="l2">mit Speicher</span></div>
+      </div>
+
+      <div class="daybox">
+        <div class="dayhead"><h3>Ein typischer Tag mit deinem Speicher</h3>
+          <div class="seg" role="group" aria-label="Monat" id="daymonth">
+            <button type="button" data-v="5" aria-pressed="true">Juni</button>
+            <button type="button" data-v="11" aria-pressed="false">Dezember</button>
+          </div></div>
+        <p class="daysum" id="daysum"></p>
+        <div class="chartwrap"><svg id="daychart" viewBox="0 0 560 250" role="img" aria-label="Durchschnittlicher Tagesverlauf"></svg></div>
+        <div id="daylegend"></div>
       </div>
 
       <div class="sweep">

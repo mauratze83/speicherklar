@@ -14,6 +14,7 @@
   --sun:#E39A0B; --sun-ink:#8A5A00; --sun-soft:#FBEFD6;
   --meter:#1B1F23; --meter-digit:#F3F1EA; --meter-red:#C9302C;
   --pos:#2E7D5B; --neg:#B4412F; --track:#DCE2E7;
+  --c-charge:#9FD3B8; --c-exp:#F6D99A; --c-imp:#AEB9C2; --sky:#DCE8F0; --cloud:#C3CDD5; --house:#FFFFFF;
   --ease-out:cubic-bezier(0.23, 1, 0.32, 1); --ease-in-out:cubic-bezier(0.77, 0, 0.175, 1);
   --f-display:"Archivo", "Arial Narrow", system-ui, sans-serif;
   --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
@@ -23,12 +24,16 @@
   --bg:#0F161C; --surface:#17212A; --ink:#E6ECF1; --muted:#97A7B3; --line:#2A3742;
   --sun:#F2B33D; --sun-ink:#F2B33D; --sun-soft:#2E2614;
   --meter:#06090C; --meter-digit:#E9E6DC; --meter-red:#D9443F;
-  --pos:#5CC596; --neg:#E5735E; --track:#26323C; color-scheme:dark }}
+  --pos:#5CC596; --neg:#E5735E; --track:#26323C;
+  --c-charge:#2F6B52; --c-exp:#6B5523; --c-imp:#4B5966; --sky:#17232D; --cloud:#3A4855; --house:#1E2A35;
+  color-scheme:dark }}
 :root[data-theme="dark"]{
   --bg:#0F161C; --surface:#17212A; --ink:#E6ECF1; --muted:#97A7B3; --line:#2A3742;
   --sun:#F2B33D; --sun-ink:#F2B33D; --sun-soft:#2E2614;
   --meter:#06090C; --meter-digit:#E9E6DC; --meter-red:#D9443F;
-  --pos:#5CC596; --neg:#E5735E; --track:#26323C; color-scheme:dark }
+  --pos:#5CC596; --neg:#E5735E; --track:#26323C;
+  --c-charge:#2F6B52; --c-exp:#6B5523; --c-imp:#4B5966; --sky:#17232D; --cloud:#3A4855; --house:#1E2A35;
+  color-scheme:dark }
 
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55;margin:0}
@@ -187,6 +192,67 @@ html.js .reveal.in{opacity:1;transform:none}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 @media (prefers-reduced-motion:reduce){.btn.btn-on:active{transform:none}}
 
+/* Diagramme (Rechner und Artikel) */
+.area.l-direct{fill:var(--sun)} .area.l-dis{fill:var(--pos)} .area.l-imp{fill:var(--c-imp)}
+.area.l-charge{fill:var(--c-charge)} .area.l-exp{fill:var(--c-exp)}
+.lline{fill:none;stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
+svg .grid{stroke:var(--line);stroke-width:1;stroke-dasharray:2 3} svg .grid.zero{stroke-dasharray:none}
+svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
+.clegend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted);margin-top:6px}
+.clegend span{display:inline-flex;align-items:center;gap:6px}
+.sw{display:inline-block;width:11px;height:11px;border-radius:2px}
+.sw.l-direct{background:var(--sun)} .sw.l-dis{background:var(--pos)} .sw.l-imp{background:var(--c-imp)}
+.sw.l-charge{background:var(--c-charge)} .sw.l-exp{background:var(--c-exp)}
+.sw.l-load{height:2px;width:14px;background:var(--ink);border-radius:0}
+.sline{fill:none;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+.sline.s0,.sw.sl.s0{stroke:var(--ink);background:var(--ink)} .sline.s1,.sw.sl.s1{stroke:var(--sun);background:var(--sun)}
+.sline.s2,.sw.sl.s2{stroke:var(--pos);background:var(--pos)} .sline.s3,.sw.sl.s3{stroke:var(--neg);background:var(--neg)}
+.sw.sl{height:3px;width:16px;border-radius:2px}
+.sdot.s0{fill:var(--ink)} .sdot.s1{fill:var(--sun)} .sdot.s2{fill:var(--pos)} .sdot.s3{fill:var(--neg)}
+.slabel{font-family:var(--f-mono);font-size:11px;font-weight:700} .slabel.s0{fill:var(--ink)} .slabel.s1{fill:var(--sun-ink)} .slabel.s2{fill:var(--pos)} .slabel.s3{fill:var(--neg)}
+.spark{display:block;width:120px;height:36px} .spark .sp-pos{fill:var(--sun)} .spark .sp-neg{fill:var(--neg);opacity:.7}
+
+/* Tageskurve im Rechner */
+.daybox h3{font-size:15.5px;margin:0}
+.dayhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.daysum{font-size:14px;color:var(--muted);margin:0 0 8px;min-height:2.6em}
+.daysum b{color:var(--ink)}
+#daychart{display:block;width:100%;min-width:0;height:auto}
+.daybox .chartwrap{overflow:visible}
+
+/* Hausgrafik im Seitenkopf */
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:28px;align-items:center}
+@media (max-width:900px){.hero-grid{grid-template-columns:minmax(0,1fr)}.scene{max-width:480px}}
+.scene{margin:0;display:grid;gap:10px;animation:sk-rise 420ms var(--ease-out) 160ms both}
+.scene-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.scene-cap{font-size:13px;color:var(--muted)}
+.scene svg{display:block;width:100%;height:auto;overflow:visible}
+.scene .sky{fill:var(--sky)}
+.scene .ground{stroke:var(--line);stroke-width:2}
+.scene .sun{transition:transform 900ms var(--ease-in-out)}
+.scene .sun-core{fill:var(--sun)} .scene .sun-glow{fill:var(--sun);opacity:.18;transition:opacity 900ms var(--ease-in-out)}
+.scene[data-season="nov"] .sun-glow{opacity:.06}
+.scene .cloud{fill:var(--cloud);opacity:0;transition:opacity 700ms var(--ease-out),transform 900ms var(--ease-out)}
+.scene .cloud:nth-child(1){transform:translateX(-14px)} .scene .cloud:nth-child(2){transform:translateX(10px)} .scene .cloud:nth-child(3){transform:translateX(16px)}
+.scene[data-season="nov"] .cloud{opacity:.95;transform:none}
+.scene .wall{fill:var(--house);stroke:var(--ink);stroke-width:2}
+.scene .roof{fill:var(--house);stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
+.scene .panel{fill:var(--meter)} .scene .panel-line{stroke:var(--sun);stroke-width:1.2}
+.scene .window{fill:var(--sky);stroke:var(--ink);stroke-width:1.5} .scene .door{fill:none;stroke:var(--ink);stroke-width:1.5}
+.scene .bat{fill:var(--house);stroke:var(--ink);stroke-width:2} .scene .bat-cap{fill:var(--ink)} .scene .bolt{fill:var(--pos)}
+.scene .pylon path{fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round}
+.scene .slabel2{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
+.scene .flow{fill:none;stroke-linecap:round;transition:stroke-width 700ms var(--ease-out),opacity 500ms ease}
+.scene .f-direct{stroke:var(--sun)} .scene .f-exp{stroke:var(--c-exp)} .scene .f-charge{stroke:var(--c-charge)}
+.scene .f-dis{stroke:var(--pos)} .scene .f-imp{stroke:var(--c-imp)}
+.scene .flow.dots{stroke:var(--surface);stroke-dasharray:1 14;stroke-width:3;opacity:.9;transition:none}
+.scene-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.scene-stats div{border-top:2px solid var(--ink);padding-top:6px;display:grid}
+.scene-stats .k{font-size:13px;color:var(--muted)}
+.scene-stats b{font-family:var(--f-display);font-weight:800;font-stretch:90%;font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
+.scene figcaption{font-size:12.5px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.scene{animation:none}.scene .sun,.scene .cloud,.scene .flow{transition:opacity 200ms ease}}
+
 main.page{padding-block:36px 40px}
 .doc{max-width:760px;font-size:18px;line-height:1.65}
 .doc .eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sun-ink)}
@@ -206,6 +272,24 @@ main.page{padding-block:36px 40px}
 .cta b{font-family:var(--f-display);font-stretch:105%;font-size:21px}
 .cta .btn{display:inline-block;justify-self:start;opacity:1;cursor:pointer;text-decoration:none}
 .page .rlist{margin:8px 0 0}
+.chart{margin:28px 0;max-width:760px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 18px 14px}
+.chart figcaption{display:grid;gap:2px;margin-bottom:10px}
+.chart figcaption b{font-family:var(--f-display);font-stretch:105%;font-size:18px;line-height:1.25}
+.chart figcaption span{font-size:14px;color:var(--muted);line-height:1.45}
+.chart .c-wide svg,.chart .c-narrow svg{display:block;width:100%;height:auto}
+.chart .c-narrow{display:none}
+@media (max-width:560px){.chart .c-wide{display:none}.chart .c-narrow{display:block}}
+.chart svg .ax{font-size:12px} .chart .slabel{font-size:12px}
+.cpanels{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px}
+.cpanel svg{display:block;width:100%;height:auto}
+.ctitle{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.rlist .spark{margin-bottom:4px}
+html.js .chart .sline{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1100ms var(--ease-in-out)}
+html.js .chart .sdot,html.js .chart .slabel{opacity:0;transition:opacity 300ms var(--ease-out) 900ms}
+html.js .chart .cpanel svg{clip-path:inset(0 100% 0 0);transition:clip-path 1000ms var(--ease-in-out)}
+html.js .chart.in .sline{stroke-dashoffset:0} html.js .chart.in .sdot,html.js .chart.in .slabel{opacity:1}
+html.js .chart.in .cpanel svg{clip-path:inset(0 0 0 0)}
+@media (prefers-reduced-motion:reduce){html.js .chart .sline{stroke-dasharray:none;transition:none} html.js .chart .sdot,html.js .chart .slabel{opacity:1;transition:none} html.js .chart .cpanel svg{clip-path:none;transition:none}}
 </style><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Ost-West-Dach: Braucht es einen Speicher?", "description": "Eine Ost-West-Anlage liefert morgens und abends Strom. Deshalb reicht meist ein kleinerer Speicher als bei Süd. Die Zahlen im Vergleich.", "datePublished": "2026-11-09", "dateModified": "2026-11-09", "inLanguage": "de", "author": {"@type": "Organization", "name": "Speicherklar"}, "mainEntityOfPage": "https://speicherklar.de/ratgeber/ost-west-dach-speicher.html"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Lohnt sich Ost-West überhaupt?", "acceptedAnswer": {"@type": "Answer", "text": "Ja. Die Erzeugung ist etwas geringer, aber der Strom kommt zu Zeiten, in denen du ihn brauchst, und die Fläche ist oft größer. Für den Eigenverbrauch ist Ost-West oft eine sehr gute Wahl."}}, {"@type": "Question", "name": "Brauche ich bei Ost-West zwei Wechselrichter?", "acceptedAnswer": {"@type": "Answer", "text": "Meist nicht. Moderne Wechselrichter haben zwei getrennte Eingänge, einen für jede Dachseite."}}]}</script></head>
 <body>
 <header class="top">
@@ -219,7 +303,7 @@ main.page{padding-block:36px 40px}
 </header>
 <main class="wrap page"><article class="doc"><div class="eyebrow">Ratgeber</div><h1>Ost-West-Dach: Braucht es einen Speicher?</h1><p class="lead">Ja, aber einen kleineren. Bei einer Ost-West-Anlage rechnet sich meist ein Speicher mit etwa 4 kWh, bei einem Süddach mit gleicher Leistung eher 6 kWh.</p><p class="meta">Stand: November 2026</p>
 
-<p>Ost-West-Dächer gelten oft als zweite Wahl. Für den Eigenverbrauch sind sie aber besser als ihr Ruf: Sie liefern morgens und am späten Nachmittag Strom, also dann, wenn im Haus Kaffeemaschine, Herd und Waschmaschine laufen.</p>
+<p>Ost-West-Dächer gelten oft als zweite Wahl. Für den Eigenverbrauch sind sie aber besser als ihr Ruf: Sie liefern morgens und am späten Nachmittag Strom, also dann, wenn im Haus Kaffeemaschine, Herd und Waschmaschine laufen.</p><figure class="chart"><figcaption><b>Gewinn nach 15 Jahren: Süd gegen Ost-West</b><span>Je 9 kWp, 35° Neigung, 4.500 kWh Verbrauch, Speicher 500 €/kWh, Strom 33 ct/kWh, Einspeisung 7,7 ct.</span></figcaption><div class="c-wide"><svg viewBox="0 0 640 300" role="img" aria-label="Gewinn nach Lebensdauer je Speichergröße"><line class="grid" x1="80" x2="626" y1="250.0" y2="250.0"/><text class="ax" x="72" y="254.0" text-anchor="end">−1.000 €</text><line class="grid zero" x1="80" x2="626" y1="194.0" y2="194.0"/><text class="ax" x="72" y="198.0" text-anchor="end">0 €</text><line class="grid" x1="80" x2="626" y1="138.0" y2="138.0"/><text class="ax" x="72" y="142.0" text-anchor="end">+1.000 €</text><line class="grid" x1="80" x2="626" y1="82.0" y2="82.0"/><text class="ax" x="72" y="86.0" text-anchor="end">+2.000 €</text><line class="grid" x1="80" x2="626" y1="26.0" y2="26.0"/><text class="ax" x="72" y="30.0" text-anchor="end">+3.000 €</text><text class="ax" x="80.0" y="270" text-anchor="middle">1</text><text class="ax" x="129.6" y="270" text-anchor="middle">2</text><text class="ax" x="179.3" y="270" text-anchor="middle">3</text><text class="ax" x="228.9" y="270" text-anchor="middle">4</text><text class="ax" x="278.5" y="270" text-anchor="middle">5</text><text class="ax" x="328.2" y="270" text-anchor="middle">6</text><text class="ax" x="377.8" y="270" text-anchor="middle">7</text><text class="ax" x="427.5" y="270" text-anchor="middle">8</text><text class="ax" x="477.1" y="270" text-anchor="middle">9</text><text class="ax" x="526.7" y="270" text-anchor="middle">10</text><text class="ax" x="576.4" y="270" text-anchor="middle">11</text><text class="ax" x="626.0" y="270" text-anchor="middle">12</text><text class="ax" x="626" y="294" text-anchor="end">Speichergröße in kWh</text><path class="sline s0" pathLength="1" d="M80.0,166.8L129.6,119.0L179.3,81.9L228.9,56.6L278.5,43.1L328.2,39.6L377.8,42.7L427.5,51.5L477.1,64.6L526.7,82.2L576.4,102.7L626.0,123.9"/><path class="sline s1" pathLength="1" d="M80.0,164.1L129.6,119.2L179.3,97.6L228.9,94.1L278.5,100.0L328.2,111.3L377.8,126.5L427.5,145.2L477.1,166.3L526.7,188.9L576.4,212.7L626.0,236.8"/><circle class="sdot s0" cx="328.2" cy="39.6" r="5"/><text class="slabel s0" x="328.2" y="28.6" text-anchor="middle">6 kWh</text><circle class="sdot s1" cx="228.9" cy="94.1" r="5"/><text class="slabel s1" x="228.9" y="83.1" text-anchor="middle">4 kWh</text></svg></div><div class="c-narrow"><svg viewBox="0 0 380 280" role="img" aria-label="Gewinn nach Lebensdauer je Speichergröße"><line class="grid" x1="80" x2="366" y1="230.0" y2="230.0"/><text class="ax" x="72" y="234.0" text-anchor="end">−1.000 €</text><line class="grid zero" x1="80" x2="366" y1="179.0" y2="179.0"/><text class="ax" x="72" y="183.0" text-anchor="end">0 €</text><line class="grid" x1="80" x2="366" y1="128.0" y2="128.0"/><text class="ax" x="72" y="132.0" text-anchor="end">+1.000 €</text><line class="grid" x1="80" x2="366" y1="77.0" y2="77.0"/><text class="ax" x="72" y="81.0" text-anchor="end">+2.000 €</text><line class="grid" x1="80" x2="366" y1="26.0" y2="26.0"/><text class="ax" x="72" y="30.0" text-anchor="end">+3.000 €</text><text class="ax" x="80.0" y="250" text-anchor="middle">1</text><text class="ax" x="132.0" y="250" text-anchor="middle">3</text><text class="ax" x="184.0" y="250" text-anchor="middle">5</text><text class="ax" x="236.0" y="250" text-anchor="middle">7</text><text class="ax" x="288.0" y="250" text-anchor="middle">9</text><text class="ax" x="340.0" y="250" text-anchor="middle">11</text><text class="ax" x="366.0" y="250" text-anchor="middle">12</text><text class="ax" x="366" y="274" text-anchor="end">Speichergröße in kWh</text><path class="sline s0" pathLength="1" d="M80.0,154.3L106.0,110.7L132.0,76.9L158.0,53.8L184.0,41.6L210.0,38.3L236.0,41.2L262.0,49.3L288.0,61.2L314.0,77.2L340.0,95.8L366.0,115.1"/><path class="sline s1" pathLength="1" d="M80.0,151.8L106.0,110.9L132.0,91.2L158.0,88.0L184.0,93.4L210.0,103.7L236.0,117.5L262.0,134.5L288.0,153.8L314.0,174.4L340.0,196.0L366.0,218.0"/><circle class="sdot s0" cx="210.0" cy="38.3" r="5"/><text class="slabel s0" x="210.0" y="27.3" text-anchor="middle">6 kWh</text><circle class="sdot s1" cx="158.0" cy="88.0" r="5"/><text class="slabel s1" x="158.0" y="77.0" text-anchor="middle">4 kWh</text></svg></div><div class="clegend"><span><i class="sw sl s0"></i>Süd</span><span><i class="sw sl s1"></i>Ost-West</span></div></figure>
 
 <h2>Süd gegen Ost-West im Vergleich</h2>
 <p>Beide Anlagen haben 9 kWp, 35° Neigung, das Haus verbraucht 4.500 kWh. Bei Ost-West ist die Leistung je zur Hälfte auf beide Dachseiten verteilt.</p>
@@ -250,4 +334,5 @@ main.page{padding-block:36px 40px}
     <span><a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">Instagram @speicherklar</a> · <a href="../impressum.html">Impressum</a> · <a href="../datenschutz.html">Datenschutz</a></span>
   </div>
 </footer>
+<script>try{if("IntersectionObserver" in window){document.documentElement.classList.add("js");var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});},{rootMargin:"0px 0px -60px 0px"});document.querySelectorAll(".chart").forEach(function(c){io.observe(c);});}}catch(e){}</script>
 </body></html>

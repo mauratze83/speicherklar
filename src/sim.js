@@ -100,12 +100,39 @@ function runBattery(gen,load,cap,feedCap){
   return {feed:feed,grid:grid,curt:curt,gen:G,load:Ld,autarky:1-grid/Ld,selfRate:G>0?(G-feed-curt)/G:0};
 }
 
-/* p: {region, roofs:[{kwp,tilt,aspect}], cons, ev, evTime, monthly, bat, bprice, life, price, feed, feedLimit} */
-function evaluate(p){
+/* Durchschnittstag je Monat (gleiche Rechnung wie runBattery, Werte in kWh je Stunde = mittlere kW).
+   Liefert für jeden Monat m: gen, load, direct (Solar direkt verbraucht), charge (Solar in den Speicher),
+   discharge (aus dem Speicher ins Haus), imp (Netzbezug), exp (Einspeisung), soc (Füllstand 0–1, Stundenende). */
+function daySeries(gen,load,cap,feedCap){
+  var soc=0,eta=Math.sqrt(0.88),pmax=Math.min(cap*0.5,5)/STEPS,stby=cap>0?0.025/STEPS:0,fcap=(feedCap||Infinity)/STEPS;
+  var K=["gen","load","direct","charge","discharge","imp","exp","soc"],out=[];
+  for(var m=0;m<12;m++){var o={};K.forEach(function(k){o[k]=new Float64Array(24);});out.push(o);}
+  var mOf=new Uint8Array(8760),hh=0;for(var mm=0;mm<12;mm++)for(var d=0;d<MDAYS[mm]*24;d++)mOf[hh++]=mm;
+  for(var i=0,n=8760*STEPS;i<n;i++){
+    var h=(i/STEPS)|0,o2=out[mOf[h]],hd=h%24,gq=gen[h]/STEPS,lq=load[h]*QW[i]/STEPS;
+    o2.gen[hd]+=gq;o2.load[hd]+=lq;o2.direct[hd]+=Math.min(gq,lq);
+    var s=gq-lq-stby;
+    if(s>=0){var c=cap>0?Math.min(s,pmax,(cap-soc)/eta):0;soc+=c*eta;o2.charge[hd]+=c;var ex=s-c;o2.exp[hd]+=Math.min(ex,fcap);}
+    else{var need=-s,dis=cap>0?Math.min(need,pmax,soc*eta):0;soc-=dis/eta;o2.discharge[hd]+=dis;o2.imp[hd]+=need-dis;}
+    if(i%STEPS===STEPS-1)o2.soc[hd]+=cap>0?soc/cap:0;
+  }
+  for(var m2=0;m2<12;m2++)K.forEach(function(k){var a=out[m2][k];for(var x=0;x<24;x++)a[x]/=MDAYS[m2];});
+  return out;
+}
+
+function profiles(p){
   var gen=new Float64Array(8760),kwpTot=0;
   p.roofs.forEach(function(r){var g=pvProfile(p.region,r.kwp,r.tilt,r.aspect);for(var i=0;i<8760;i++)gen[i]+=g[i];kwpTot+=r.kwp;});
   var load=loadProfile(p.cons,p.ev,p.evTime,p.monthly);
-  var fc=p.feedLimit?kwpTot*p.feedLimit:Infinity;
+  return {gen:gen,load:load,kwp:kwpTot,fc:p.feedLimit?kwpTot*p.feedLimit:Infinity};
+}
+
+/* Durchschnittstage für eine Speichergröße (cap in kWh, 0 = ohne Speicher) */
+function dayProfile(p,cap){var pr=profiles(p);return daySeries(pr.gen,pr.load,cap,pr.fc);}
+
+/* p: {region, roofs:[{kwp,tilt,aspect}], cons, ev, evTime, monthly, bat, bprice, life, price, feed, feedLimit} */
+function evaluate(p){
+  var pr=profiles(p),gen=pr.gen,load=pr.load,kwpTot=pr.kwp,fc=pr.fc;
   var base=runBattery(gen,load,0,fc);
   function forCap(cap){
     var r=runBattery(gen,load,cap,fc);
@@ -115,9 +142,9 @@ function evaluate(p){
   }
   var sweep=[];for(var c=1;c<=15;c++)sweep.push(forCap(c));
   var best=sweep.reduce(function(a,b){return b.net>a.net?b:a;});
-  return {gen:gen,kwp:kwpTot,base:base,chosen:sweep[p.bat-1],best:best,sweep:sweep,
+  return {gen:gen,load:load,fc:fc,kwp:kwpTot,base:base,chosen:sweep[p.bat-1],best:best,sweep:sweep,
     // Kosten der PV-Anlage ohne Speicher (Stromrechnung mit PV): für spätere Pro-Auswertung
     pvValue:(p.cons+(p.ev||0)-base.grid)*p.price/100+base.feed*p.feed/100};
 }
 
-if(typeof module!=="undefined")module.exports={REGIONS:REGIONS,pvProfile:pvProfile,loadProfile:loadProfile,runBattery:runBattery,evaluate:evaluate};
+if(typeof module!=="undefined")module.exports={REGIONS:REGIONS,pvProfile:pvProfile,loadProfile:loadProfile,runBattery:runBattery,daySeries:daySeries,dayProfile:dayProfile,profiles:profiles,evaluate:evaluate};

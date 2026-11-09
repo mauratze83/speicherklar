@@ -26,6 +26,7 @@
   --sun:#E39A0B; --sun-ink:#8A5A00; --sun-soft:#FBEFD6;
   --meter:#1B1F23; --meter-digit:#F3F1EA; --meter-red:#C9302C;
   --pos:#2E7D5B; --neg:#B4412F; --track:#DCE2E7;
+  --c-charge:#9FD3B8; --c-exp:#F6D99A; --c-imp:#AEB9C2; --sky:#DCE8F0; --cloud:#C3CDD5; --house:#FFFFFF;
   --ease-out:cubic-bezier(0.23, 1, 0.32, 1); --ease-in-out:cubic-bezier(0.77, 0, 0.175, 1);
   --f-display:"Archivo", "Arial Narrow", system-ui, sans-serif;
   --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
@@ -35,12 +36,16 @@
   --bg:#0F161C; --surface:#17212A; --ink:#E6ECF1; --muted:#97A7B3; --line:#2A3742;
   --sun:#F2B33D; --sun-ink:#F2B33D; --sun-soft:#2E2614;
   --meter:#06090C; --meter-digit:#E9E6DC; --meter-red:#D9443F;
-  --pos:#5CC596; --neg:#E5735E; --track:#26323C; color-scheme:dark }}
+  --pos:#5CC596; --neg:#E5735E; --track:#26323C;
+  --c-charge:#2F6B52; --c-exp:#6B5523; --c-imp:#4B5966; --sky:#17232D; --cloud:#3A4855; --house:#1E2A35;
+  color-scheme:dark }}
 :root[data-theme="dark"]{
   --bg:#0F161C; --surface:#17212A; --ink:#E6ECF1; --muted:#97A7B3; --line:#2A3742;
   --sun:#F2B33D; --sun-ink:#F2B33D; --sun-soft:#2E2614;
   --meter:#06090C; --meter-digit:#E9E6DC; --meter-red:#D9443F;
-  --pos:#5CC596; --neg:#E5735E; --track:#26323C; color-scheme:dark }
+  --pos:#5CC596; --neg:#E5735E; --track:#26323C;
+  --c-charge:#2F6B52; --c-exp:#6B5523; --c-imp:#4B5966; --sky:#17232D; --cloud:#3A4855; --house:#1E2A35;
+  color-scheme:dark }
 
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55;margin:0}
@@ -198,6 +203,67 @@ html.js .reveal.in{opacity:1;transform:none}
 .wait-msg.ok{color:var(--pos)} .wait-msg.err{color:var(--neg)}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 @media (prefers-reduced-motion:reduce){.btn.btn-on:active{transform:none}}
+
+/* Diagramme (Rechner und Artikel) */
+.area.l-direct{fill:var(--sun)} .area.l-dis{fill:var(--pos)} .area.l-imp{fill:var(--c-imp)}
+.area.l-charge{fill:var(--c-charge)} .area.l-exp{fill:var(--c-exp)}
+.lline{fill:none;stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
+svg .grid{stroke:var(--line);stroke-width:1;stroke-dasharray:2 3} svg .grid.zero{stroke-dasharray:none}
+svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
+.clegend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted);margin-top:6px}
+.clegend span{display:inline-flex;align-items:center;gap:6px}
+.sw{display:inline-block;width:11px;height:11px;border-radius:2px}
+.sw.l-direct{background:var(--sun)} .sw.l-dis{background:var(--pos)} .sw.l-imp{background:var(--c-imp)}
+.sw.l-charge{background:var(--c-charge)} .sw.l-exp{background:var(--c-exp)}
+.sw.l-load{height:2px;width:14px;background:var(--ink);border-radius:0}
+.sline{fill:none;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+.sline.s0,.sw.sl.s0{stroke:var(--ink);background:var(--ink)} .sline.s1,.sw.sl.s1{stroke:var(--sun);background:var(--sun)}
+.sline.s2,.sw.sl.s2{stroke:var(--pos);background:var(--pos)} .sline.s3,.sw.sl.s3{stroke:var(--neg);background:var(--neg)}
+.sw.sl{height:3px;width:16px;border-radius:2px}
+.sdot.s0{fill:var(--ink)} .sdot.s1{fill:var(--sun)} .sdot.s2{fill:var(--pos)} .sdot.s3{fill:var(--neg)}
+.slabel{font-family:var(--f-mono);font-size:11px;font-weight:700} .slabel.s0{fill:var(--ink)} .slabel.s1{fill:var(--sun-ink)} .slabel.s2{fill:var(--pos)} .slabel.s3{fill:var(--neg)}
+.spark{display:block;width:120px;height:36px} .spark .sp-pos{fill:var(--sun)} .spark .sp-neg{fill:var(--neg);opacity:.7}
+
+/* Tageskurve im Rechner */
+.daybox h3{font-size:15.5px;margin:0}
+.dayhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.daysum{font-size:14px;color:var(--muted);margin:0 0 8px;min-height:2.6em}
+.daysum b{color:var(--ink)}
+#daychart{display:block;width:100%;min-width:0;height:auto}
+.daybox .chartwrap{overflow:visible}
+
+/* Hausgrafik im Seitenkopf */
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:28px;align-items:center}
+@media (max-width:900px){.hero-grid{grid-template-columns:minmax(0,1fr)}.scene{max-width:480px}}
+.scene{margin:0;display:grid;gap:10px;animation:sk-rise 420ms var(--ease-out) 160ms both}
+.scene-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.scene-cap{font-size:13px;color:var(--muted)}
+.scene svg{display:block;width:100%;height:auto;overflow:visible}
+.scene .sky{fill:var(--sky)}
+.scene .ground{stroke:var(--line);stroke-width:2}
+.scene .sun{transition:transform 900ms var(--ease-in-out)}
+.scene .sun-core{fill:var(--sun)} .scene .sun-glow{fill:var(--sun);opacity:.18;transition:opacity 900ms var(--ease-in-out)}
+.scene[data-season="nov"] .sun-glow{opacity:.06}
+.scene .cloud{fill:var(--cloud);opacity:0;transition:opacity 700ms var(--ease-out),transform 900ms var(--ease-out)}
+.scene .cloud:nth-child(1){transform:translateX(-14px)} .scene .cloud:nth-child(2){transform:translateX(10px)} .scene .cloud:nth-child(3){transform:translateX(16px)}
+.scene[data-season="nov"] .cloud{opacity:.95;transform:none}
+.scene .wall{fill:var(--house);stroke:var(--ink);stroke-width:2}
+.scene .roof{fill:var(--house);stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
+.scene .panel{fill:var(--meter)} .scene .panel-line{stroke:var(--sun);stroke-width:1.2}
+.scene .window{fill:var(--sky);stroke:var(--ink);stroke-width:1.5} .scene .door{fill:none;stroke:var(--ink);stroke-width:1.5}
+.scene .bat{fill:var(--house);stroke:var(--ink);stroke-width:2} .scene .bat-cap{fill:var(--ink)} .scene .bolt{fill:var(--pos)}
+.scene .pylon path{fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round}
+.scene .slabel2{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
+.scene .flow{fill:none;stroke-linecap:round;transition:stroke-width 700ms var(--ease-out),opacity 500ms ease}
+.scene .f-direct{stroke:var(--sun)} .scene .f-exp{stroke:var(--c-exp)} .scene .f-charge{stroke:var(--c-charge)}
+.scene .f-dis{stroke:var(--pos)} .scene .f-imp{stroke:var(--c-imp)}
+.scene .flow.dots{stroke:var(--surface);stroke-dasharray:1 14;stroke-width:3;opacity:.9;transition:none}
+.scene-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.scene-stats div{border-top:2px solid var(--ink);padding-top:6px;display:grid}
+.scene-stats .k{font-size:13px;color:var(--muted)}
+.scene-stats b{font-family:var(--f-display);font-weight:800;font-stretch:90%;font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
+.scene figcaption{font-size:12.5px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.scene{animation:none}.scene .sun,.scene .cloud,.scene .flow{transition:opacity 200ms ease}}
 </style>
 </head>
 <body>
@@ -213,11 +279,64 @@ html.js .reveal.in{opacity:1;transform:none}
 
 <main>
   <section class="hero">
-    <div class="wrap">
+    <div class="wrap hero-grid">
+      <div class="hero-text">
       <div class="eyebrow">Für alle, die eine PV-Anlage planen</div>
       <h1>Verkäufer rechnen mit Juli. <em>Wir rechnen mit November.</em></h1>
       <p class="lede">Du planst eine Solaranlage und fragst dich, ob ein Speicher dazugehört und wie groß er sein sollte? Gib Standort, Dach und Verbrauch ein. Der Rechner spielt ein ganzes Jahr in 5-Minuten-Schritten durch, mit Sonnendaten der EU-Kommission für deine Region, trüben Wochen und Abendspitzen.</p>
       <div class="facts"><span><b>kostenlos</b> · ohne Anmeldung</span><span>Sonnendaten <b>PVGIS 2014–2023</b></span><span>mit Szenario <b>EEG-Reform 2027</b></span></div>
+      </div>
+      <figure class="scene" id="scene" data-season="jul">
+        <div class="scene-top">
+          <div class="seg" role="group" aria-label="Jahreszeit" id="season">
+            <button type="button" data-v="jul" aria-pressed="true">Juli</button>
+            <button type="button" data-v="nov" aria-pressed="false">November</button>
+          </div>
+          <span class="scene-cap">Ein Durchschnittstag im Beispielhaus</span>
+        </div>
+        <svg viewBox="0 0 480 320" role="img" aria-labelledby="scene-desc">
+          <desc id="scene-desc">Haus mit Solardach, Speicher und Stromnetz. Die Linienstärke zeigt, wie viel Strom fließt.</desc>
+          <rect class="sky" x="0" y="0" width="480" height="290" rx="14"/>
+          <g class="sun"><circle r="34" class="sun-glow"/><circle r="20" class="sun-core"/></g>
+          <g class="clouds">
+            <path class="cloud" d="M48 92a18 18 0 0 1 34-8a14 14 0 0 1 24 10a12 12 0 0 1-2 24H50a14 14 0 0 1-2-26z"/>
+            <path class="cloud" d="M150 64a14 14 0 0 1 27-6a11 11 0 0 1 19 8a10 10 0 0 1-2 19h-42a11 11 0 0 1-2-21z"/>
+            <path class="cloud" d="M300 70a12 12 0 0 1 23-5a9 9 0 0 1 16 7a8 8 0 0 1-2 16h-35a9 9 0 0 1-2-18z"/>
+          </g>
+          <line class="ground" x1="0" y1="290" x2="480" y2="290"/>
+          <g class="flows">
+            <path class="flow f-exp" id="f-exp" d="M228 142C290 98 360 104 404 134"/>
+            <path class="flow f-charge" id="f-charge" d="M262 170C292 176 306 192 312 230C314 236 318 240 320 246"/>
+            <path class="flow f-dis" id="f-dis" d="M318 266L292 266"/>
+            <path class="flow f-imp" id="f-imp" d="M408 290C392 308 322 308 292 284"/>
+          </g>
+          <g class="house">
+            <rect x="150" y="200" width="140" height="90" class="wall"/>
+            <path d="M135 200L220 135L305 200Z" class="roof"/>
+            <path d="M146.2 191.5L198.7 151.4L206.6 158.4L154.4 199Z" class="panel"/>
+            <path d="M159.3 181.5L167.5 188.6M172.4 171.5L180.6 178.6M185.6 161.4L193.8 168.5" class="panel-line"/>
+            <rect x="170" y="222" width="30" height="24" rx="2" class="window"/>
+            <rect x="240" y="246" width="26" height="44" rx="2" class="door"/>
+          </g>
+          <path class="flow f-direct" id="f-direct" d="M184 180C190 196 196 206 208 216"/>
+          <g class="battery">
+            <rect x="320" y="236" width="26" height="54" rx="4" class="bat"/>
+            <rect x="327" y="231" width="12" height="5" rx="1.5" class="bat-cap"/>
+            <path d="M335 248l-6 13h6l-3 12 9-16h-6l3-9z" class="bolt"/>
+          </g>
+          <g class="pylon">
+            <path d="M410 134L396 290M410 134L424 290M398 168H422M394 200H426M401 236H419M398 168L424 290M422 168L396 290" />
+          </g>
+          <text class="slabel2" x="333" y="226" text-anchor="middle">Speicher</text>
+          <text class="slabel2" x="410" y="124" text-anchor="middle">Netz</text>
+        </svg>
+        <div class="scene-stats">
+          <div><span class="k">Vom Dach</span><b id="sc-gen">–</b></div>
+          <div><span class="k">Haus braucht</span><b id="sc-load">–</b></div>
+          <div><span class="k">Aus dem Netz</span><b id="sc-imp">–</b></div>
+        </div>
+        <figcaption id="sc-note">kWh pro Tag. Beispiel: 9 kWp Süd, 4.500 kWh, 8 kWh Speicher, Ruhrgebiet.</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -316,6 +435,17 @@ html.js .reveal.in{opacity:1;transform:none}
         <div class="legend"><span class="l1">ohne Speicher</span><span class="l2">mit Speicher</span></div>
       </div>
 
+      <div class="daybox">
+        <div class="dayhead"><h3>Ein typischer Tag mit deinem Speicher</h3>
+          <div class="seg" role="group" aria-label="Monat" id="daymonth">
+            <button type="button" data-v="5" aria-pressed="true">Juni</button>
+            <button type="button" data-v="11" aria-pressed="false">Dezember</button>
+          </div></div>
+        <p class="daysum" id="daysum"></p>
+        <div class="chartwrap"><svg id="daychart" viewBox="0 0 560 250" role="img" aria-label="Durchschnittlicher Tagesverlauf"></svg></div>
+        <div id="daylegend"></div>
+      </div>
+
       <div class="sweep">
         <h3>Welche Größe rechnet sich am besten?</h3>
         <p>Gewinn oder Verlust über die Lebensdauer, für jede Größe von 1 bis 15 kWh. Deine Wahl ist umrandet.</p>
@@ -351,7 +481,7 @@ html.js .reveal.in{opacity:1;transform:none}
     <div class="wrap reveal">
       <h2 class="sec">Ratgeber</h2>
       <p class="intro">Häufige Fragen zu PV-Anlage und Speicher, beantwortet mit Zahlen aus dem Rechner.</p>
-      <ul class="rlist"><li><a href="ratgeber/stromspeicher-lohnt-sich-2027.html"><b>Lohnt sich ein Stromspeicher 2027?</b><span>Mit Zahlen statt Prospekt: Wann sich ein Stromspeicher für eine neue PV-Anlage rechnet, was die EEG-Reform ändert und welche Größe am meisten bringt.</span></a></li><li><a href="ratgeber/speichergroesse-4500-kwh.html"><b>Welche Speichergröße bei 4.500 kWh Verbrauch?</b><span>Bei 4.500 kWh Jahresverbrauch rechnet sich meist ein Speicher mit 5 bis 7 kWh. Die Zahlen für 6, 9 und 12 kWp und warum größer nicht besser ist.</span></a></li><li><a href="ratgeber/ost-west-dach-speicher.html"><b>Ost-West-Dach: Braucht es einen Speicher?</b><span>Eine Ost-West-Anlage liefert morgens und abends Strom. Deshalb reicht meist ein kleinerer Speicher als bei Süd. Die Zahlen im Vergleich.</span></a></li><li><a href="ratgeber/stromspeicher-nachruesten.html"><b>Stromspeicher nachrüsten: Lohnt sich das?</b><span>Ob sich ein Speicher für deine bestehende PV-Anlage lohnt, entscheidet vor allem deine Einspeisevergütung. Ab etwa 12 ct wird es knapp, bei 20 ct nie.</span></a></li></ul>
+      <ul class="rlist"><li><a href="ratgeber/stromspeicher-lohnt-sich-2027.html"><svg class="spark" viewBox="0 0 120 36" aria-hidden="true"><rect class="sp-pos" x="1.0" y="30.0" width="8.0" height="6.0" rx="1.5"/><rect class="sp-pos" x="11.0" y="19.4" width="8.0" height="16.6" rx="1.5"/><rect class="sp-pos" x="21.0" y="11.2" width="8.0" height="24.8" rx="1.5"/><rect class="sp-pos" x="31.0" y="5.6" width="8.0" height="30.4" rx="1.5"/><rect class="sp-pos" x="41.0" y="2.6" width="8.0" height="33.4" rx="1.5"/><rect class="sp-pos" x="51.0" y="1.8" width="8.0" height="34.2" rx="1.5"/><rect class="sp-pos" x="61.0" y="2.5" width="8.0" height="33.5" rx="1.5"/><rect class="sp-pos" x="71.0" y="4.5" width="8.0" height="31.5" rx="1.5"/><rect class="sp-pos" x="81.0" y="7.4" width="8.0" height="28.6" rx="1.5"/><rect class="sp-pos" x="91.0" y="11.2" width="8.0" height="24.8" rx="1.5"/><rect class="sp-pos" x="101.0" y="15.8" width="8.0" height="20.2" rx="1.5"/><rect class="sp-pos" x="111.0" y="20.5" width="8.0" height="15.5" rx="1.5"/></svg><b>Lohnt sich ein Stromspeicher 2027?</b><span>Mit Zahlen statt Prospekt: Wann sich ein Stromspeicher für eine neue PV-Anlage rechnet, was die EEG-Reform ändert und welche Größe am meisten bringt.</span></a></li><li><a href="ratgeber/speichergroesse-4500-kwh.html"><svg class="spark" viewBox="0 0 120 36" aria-hidden="true"><rect class="sp-pos" x="1.0" y="30.0" width="8.0" height="6.0" rx="1.5"/><rect class="sp-pos" x="11.0" y="19.4" width="8.0" height="16.6" rx="1.5"/><rect class="sp-pos" x="21.0" y="11.2" width="8.0" height="24.8" rx="1.5"/><rect class="sp-pos" x="31.0" y="5.6" width="8.0" height="30.4" rx="1.5"/><rect class="sp-pos" x="41.0" y="2.6" width="8.0" height="33.4" rx="1.5"/><rect class="sp-pos" x="51.0" y="1.8" width="8.0" height="34.2" rx="1.5"/><rect class="sp-pos" x="61.0" y="2.5" width="8.0" height="33.5" rx="1.5"/><rect class="sp-pos" x="71.0" y="4.5" width="8.0" height="31.5" rx="1.5"/><rect class="sp-pos" x="81.0" y="7.4" width="8.0" height="28.6" rx="1.5"/><rect class="sp-pos" x="91.0" y="11.2" width="8.0" height="24.8" rx="1.5"/><rect class="sp-pos" x="101.0" y="15.8" width="8.0" height="20.2" rx="1.5"/><rect class="sp-pos" x="111.0" y="20.5" width="8.0" height="15.5" rx="1.5"/></svg><b>Welche Speichergröße bei 4.500 kWh Verbrauch?</b><span>Bei 4.500 kWh Jahresverbrauch rechnet sich meist ein Speicher mit 5 bis 7 kWh. Die Zahlen für 6, 9 und 12 kWp und warum größer nicht besser ist.</span></a></li><li><a href="ratgeber/ost-west-dach-speicher.html"><svg class="spark" viewBox="0 0 120 36" aria-hidden="true"><rect class="sp-pos" x="1.0" y="30.0" width="8.0" height="6.0" rx="1.5"/><rect class="sp-pos" x="11.0" y="19.4" width="8.0" height="16.6" rx="1.5"/><rect class="sp-pos" x="21.0" y="11.2" width="8.0" height="24.8" rx="1.5"/><rect class="sp-pos" x="31.0" y="5.6" width="8.0" height="30.4" rx="1.5"/><rect class="sp-pos" x="41.0" y="2.6" width="8.0" height="33.4" rx="1.5"/><rect class="sp-pos" x="51.0" y="1.8" width="8.0" height="34.2" rx="1.5"/><rect class="sp-pos" x="61.0" y="2.5" width="8.0" height="33.5" rx="1.5"/><rect class="sp-pos" x="71.0" y="4.5" width="8.0" height="31.5" rx="1.5"/><rect class="sp-pos" x="81.0" y="7.4" width="8.0" height="28.6" rx="1.5"/><rect class="sp-pos" x="91.0" y="11.2" width="8.0" height="24.8" rx="1.5"/><rect class="sp-pos" x="101.0" y="15.8" width="8.0" height="20.2" rx="1.5"/><rect class="sp-pos" x="111.0" y="20.5" width="8.0" height="15.5" rx="1.5"/></svg><b>Ost-West-Dach: Braucht es einen Speicher?</b><span>Eine Ost-West-Anlage liefert morgens und abends Strom. Deshalb reicht meist ein kleinerer Speicher als bei Süd. Die Zahlen im Vergleich.</span></a></li><li><a href="ratgeber/stromspeicher-nachruesten.html"><svg class="spark" viewBox="0 0 120 36" aria-hidden="true"><rect class="sp-pos" x="1.0" y="26.3" width="8.0" height="9.7" rx="1.5"/><rect class="sp-pos" x="11.0" y="15.9" width="8.0" height="20.1" rx="1.5"/><rect class="sp-pos" x="21.0" y="8.5" width="8.0" height="27.5" rx="1.5"/><rect class="sp-pos" x="31.0" y="3.8" width="8.0" height="32.2" rx="1.5"/><rect class="sp-pos" x="41.0" y="1.8" width="8.0" height="34.2" rx="1.5"/><rect class="sp-pos" x="51.0" y="1.9" width="8.0" height="34.1" rx="1.5"/><rect class="sp-pos" x="61.0" y="3.7" width="8.0" height="32.3" rx="1.5"/><rect class="sp-pos" x="71.0" y="6.8" width="8.0" height="29.2" rx="1.5"/><rect class="sp-pos" x="81.0" y="10.9" width="8.0" height="25.1" rx="1.5"/><rect class="sp-pos" x="91.0" y="15.8" width="8.0" height="20.2" rx="1.5"/><rect class="sp-pos" x="101.0" y="21.2" width="8.0" height="14.8" rx="1.5"/><rect class="sp-pos" x="111.0" y="26.8" width="8.0" height="9.2" rx="1.5"/></svg><b>Stromspeicher nachrüsten: Lohnt sich das?</b><span>Ob sich ein Speicher für deine bestehende PV-Anlage lohnt, entscheidet vor allem deine Einspeisevergütung. Ab etwa 12 ct wird es knapp, bei 20 ct nie.</span></a></li></ul>
       <p><a href="ratgeber/">Alle Artikel</a></p>
     </div>
   </section>
@@ -501,12 +631,39 @@ function runBattery(gen,load,cap,feedCap){
   return {feed:feed,grid:grid,curt:curt,gen:G,load:Ld,autarky:1-grid/Ld,selfRate:G>0?(G-feed-curt)/G:0};
 }
 
-/* p: {region, roofs:[{kwp,tilt,aspect}], cons, ev, evTime, monthly, bat, bprice, life, price, feed, feedLimit} */
-function evaluate(p){
+/* Durchschnittstag je Monat (gleiche Rechnung wie runBattery, Werte in kWh je Stunde = mittlere kW).
+   Liefert für jeden Monat m: gen, load, direct (Solar direkt verbraucht), charge (Solar in den Speicher),
+   discharge (aus dem Speicher ins Haus), imp (Netzbezug), exp (Einspeisung), soc (Füllstand 0–1, Stundenende). */
+function daySeries(gen,load,cap,feedCap){
+  var soc=0,eta=Math.sqrt(0.88),pmax=Math.min(cap*0.5,5)/STEPS,stby=cap>0?0.025/STEPS:0,fcap=(feedCap||Infinity)/STEPS;
+  var K=["gen","load","direct","charge","discharge","imp","exp","soc"],out=[];
+  for(var m=0;m<12;m++){var o={};K.forEach(function(k){o[k]=new Float64Array(24);});out.push(o);}
+  var mOf=new Uint8Array(8760),hh=0;for(var mm=0;mm<12;mm++)for(var d=0;d<MDAYS[mm]*24;d++)mOf[hh++]=mm;
+  for(var i=0,n=8760*STEPS;i<n;i++){
+    var h=(i/STEPS)|0,o2=out[mOf[h]],hd=h%24,gq=gen[h]/STEPS,lq=load[h]*QW[i]/STEPS;
+    o2.gen[hd]+=gq;o2.load[hd]+=lq;o2.direct[hd]+=Math.min(gq,lq);
+    var s=gq-lq-stby;
+    if(s>=0){var c=cap>0?Math.min(s,pmax,(cap-soc)/eta):0;soc+=c*eta;o2.charge[hd]+=c;var ex=s-c;o2.exp[hd]+=Math.min(ex,fcap);}
+    else{var need=-s,dis=cap>0?Math.min(need,pmax,soc*eta):0;soc-=dis/eta;o2.discharge[hd]+=dis;o2.imp[hd]+=need-dis;}
+    if(i%STEPS===STEPS-1)o2.soc[hd]+=cap>0?soc/cap:0;
+  }
+  for(var m2=0;m2<12;m2++)K.forEach(function(k){var a=out[m2][k];for(var x=0;x<24;x++)a[x]/=MDAYS[m2];});
+  return out;
+}
+
+function profiles(p){
   var gen=new Float64Array(8760),kwpTot=0;
   p.roofs.forEach(function(r){var g=pvProfile(p.region,r.kwp,r.tilt,r.aspect);for(var i=0;i<8760;i++)gen[i]+=g[i];kwpTot+=r.kwp;});
   var load=loadProfile(p.cons,p.ev,p.evTime,p.monthly);
-  var fc=p.feedLimit?kwpTot*p.feedLimit:Infinity;
+  return {gen:gen,load:load,kwp:kwpTot,fc:p.feedLimit?kwpTot*p.feedLimit:Infinity};
+}
+
+/* Durchschnittstage für eine Speichergröße (cap in kWh, 0 = ohne Speicher) */
+function dayProfile(p,cap){var pr=profiles(p);return daySeries(pr.gen,pr.load,cap,pr.fc);}
+
+/* p: {region, roofs:[{kwp,tilt,aspect}], cons, ev, evTime, monthly, bat, bprice, life, price, feed, feedLimit} */
+function evaluate(p){
+  var pr=profiles(p),gen=pr.gen,load=pr.load,kwpTot=pr.kwp,fc=pr.fc;
   var base=runBattery(gen,load,0,fc);
   function forCap(cap){
     var r=runBattery(gen,load,cap,fc);
@@ -516,10 +673,161 @@ function evaluate(p){
   }
   var sweep=[];for(var c=1;c<=15;c++)sweep.push(forCap(c));
   var best=sweep.reduce(function(a,b){return b.net>a.net?b:a;});
-  return {gen:gen,kwp:kwpTot,base:base,chosen:sweep[p.bat-1],best:best,sweep:sweep,
+  return {gen:gen,load:load,fc:fc,kwp:kwpTot,base:base,chosen:sweep[p.bat-1],best:best,sweep:sweep,
     // Kosten der PV-Anlage ohne Speicher (Stromrechnung mit PV): für spätere Pro-Auswertung
     pvValue:(p.cons+(p.ev||0)-base.grid)*p.price/100+base.feed*p.feed/100};
 }
+
+
+/* Speicherklar Diagramme – reine Funktionen, die SVG-Text liefern. Laufen im Browser (Rechner) und in Node (Artikel-Build).
+   Farben kommen aus den CSS-Variablen der Seite, damit helles und dunkles Design stimmen. */
+
+var DRAW = (function () {
+  var NF0 = function (v) { return Math.round(v).toLocaleString("de-DE"); };
+  var NF1 = function (v) { return (Math.round(v * 10) / 10).toLocaleString("de-DE", { minimumFractionDigits: 1, maximumFractionDigits: 1 }); };
+
+  // Reihenfolge der gestapelten Flächen: alles unterhalb der Verbrauchslinie versorgt das Haus, darüber der Überschuss
+  var LAYERS = [
+    { k: "direct", label: "Direkt genutzt", cls: "l-direct" },
+    { k: "discharge", label: "Aus dem Speicher", cls: "l-dis" },
+    { k: "imp", label: "Aus dem Netz", cls: "l-imp" },
+    { k: "charge", label: "In den Speicher", cls: "l-charge" },
+    { k: "exp", label: "Eingespeist", cls: "l-exp" }
+  ];
+
+  function stack(m) {
+    var tops = [], acc = new Array(24).fill(0);
+    LAYERS.forEach(function (L) {
+      var bottom = acc.slice();
+      for (var h = 0; h < 24; h++) acc[h] += m[L.k][h];
+      tops.push({ bottom: bottom, top: acc.slice() });
+    });
+    return { layers: tops, load: Array.prototype.slice.call(m.load), max: Math.max.apply(null, acc.concat(Array.prototype.slice.call(m.load))) };
+  }
+
+  function niceStep(span, n) {
+    var s = Math.pow(10, Math.floor(Math.log10(span / n)));
+    [1, 2, 2.5, 5, 10].some(function (k) { if (span / (s * k) <= n) { s *= k; return true; } return false; });
+    return s;
+  }
+
+  // Geometrie für den Tageschart; st = Ergebnis von stack(), ymax fest vorgeben, damit Juni und Dezember vergleichbar sind
+  function dayGeometry(st, box, ymax) {
+    var x = function (h) { return box.l + (box.w * h) / 24; };
+    var y = function (v) { return box.t + box.h * (1 - v / ymax); };
+    var pts = function (arr) { var s = ""; for (var h = 0; h < 24; h++) s += (h ? "L" : "") + x(h + 0.5).toFixed(1) + "," + y(arr[h]).toFixed(1); return s; };
+    var area = function (b, t) {
+      var s = "M" + x(0).toFixed(1) + "," + y(t[0]).toFixed(1) + "L" + pts(t);
+      s += "L" + x(24).toFixed(1) + "," + y(t[23]).toFixed(1) + "L" + x(24).toFixed(1) + "," + y(b[23]).toFixed(1);
+      for (var h = 23; h >= 0; h--) s += "L" + x(h + 0.5).toFixed(1) + "," + y(b[h]).toFixed(1);
+      return s + "L" + x(0).toFixed(1) + "," + y(b[0]).toFixed(1) + "Z";
+    };
+    return {
+      areas: st.layers.map(function (L) { return area(L.bottom, L.top); }),
+      load: "M" + x(0).toFixed(1) + "," + y(st.load[0]).toFixed(1) + "L" + pts(st.load) + "L" + x(24).toFixed(1) + "," + y(st.load[23]).toFixed(1),
+      x: x, y: y
+    };
+  }
+
+  function dayAxes(box, ymax, x, y) {
+    var s = "", step = niceStep(ymax, 4);
+    for (var v = 0; v <= ymax + 1e-9; v += step) {
+      s += '<line class="grid' + (v === 0 ? " zero" : "") + '" x1="' + box.l + '" x2="' + (box.l + box.w) + '" y1="' + y(v).toFixed(1) + '" y2="' + y(v).toFixed(1) + '"/>';
+      s += '<text class="ax" x="' + (box.l - 8) + '" y="' + (y(v) + 4).toFixed(1) + '" text-anchor="end">' + NF1(v).replace(",0", "") + "</text>";
+    }
+    [0, 6, 12, 18, 24].forEach(function (h) {
+      s += '<text class="ax" x="' + x(h).toFixed(1) + '" y="' + (box.t + box.h + 18) + '" text-anchor="' + (h === 0 ? "start" : h === 24 ? "end" : "middle") + '">' + h + (h === 24 ? " Uhr" : "") + "</text>";
+    });
+    s += '<text class="ax" x="' + (box.l - 8) + '" y="' + (box.t - 8) + '" text-anchor="end">kW</text>';
+    return s;
+  }
+
+  function legend() {
+    return '<div class="clegend">' + LAYERS.map(function (L) { return '<span><i class="sw ' + L.cls + '"></i>' + L.label + "</span>"; }).join("") +
+      '<span><i class="sw l-load"></i>Verbrauch</span></div>';
+  }
+
+  function daySvgInner(m, box, ymax) {
+    var st = stack(m), g = dayGeometry(st, box, ymax);
+    return dayAxes(box, ymax, g.x, g.y) +
+      g.areas.map(function (d, i) { return '<path class="area ' + LAYERS[i].cls + '" d="' + d + '"/>'; }).join("") +
+      '<path class="lline" d="' + g.load + '"/>';
+  }
+
+  // Statischer Tageschart (Artikel): mehrere Monate nebeneinander, gleiche Skala
+  function dayChart(months, titles) {
+    var W = 340, H = 230, box = { l: 40, t: 24, w: 288, h: 168 };
+    var ymax = 0; months.forEach(function (m) { ymax = Math.max(ymax, stack(m).max); });
+    ymax = Math.ceil(ymax / niceStep(ymax, 4)) * niceStep(ymax, 4);
+    var panels = months.map(function (m, i) {
+      return '<div class="cpanel"><div class="ctitle">' + titles[i] + '</div><svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Tagesverlauf ' + titles[i] + '">' + daySvgInner(m, box, ymax) + "</svg></div>";
+    }).join("");
+    return '<div class="cpanels">' + panels + "</div>" + legend();
+  }
+
+  // Liniendiagramm: Gewinn/Verlust nach Lebensdauer je Speichergröße für mehrere Szenarien.
+  // W = Breite des Zeichenbereichs; die Artikel bekommen eine breite und eine schmale Fassung (Handy).
+  function sweepSvg(series, W) {
+    var H = W < 500 ? 280 : 300, box = { l: 80, t: 26, w: W - 80 - 14, h: H - 26 - 50 }, caps = series[0].values.length;
+    var all = []; series.forEach(function (s) { all = all.concat(s.values); });
+    var max = Math.max(0, Math.max.apply(null, all)), min = Math.min(0, Math.min.apply(null, all));
+    var step = niceStep(max - min || 1, 5), top = Math.ceil(max / step) * step, bot = Math.floor(min / step) * step;
+    if (top === bot) top = bot + step;
+    var x = function (i) { return box.l + (box.w * i) / (caps - 1); };
+    var y = function (v) { return box.t + (box.h * (top - v)) / (top - bot); };
+    var s = "";
+    for (var v = bot; v <= top + 1e-9; v += step) {
+      s += '<line class="grid' + (Math.abs(v) < 1e-9 ? " zero" : "") + '" x1="' + box.l + '" x2="' + (box.l + box.w) + '" y1="' + y(v).toFixed(1) + '" y2="' + y(v).toFixed(1) + '"/>';
+      s += '<text class="ax" x="' + (box.l - 8) + '" y="' + (y(v) + 4).toFixed(1) + '" text-anchor="end">' + (v < 0 ? "−" : v > 0 ? "+" : "") + NF0(Math.abs(v)) + " €</text>";
+    }
+    for (var i = 0; i < caps; i++) if (W >= 500 || i % 2 === 0 || i === caps - 1) s += '<text class="ax" x="' + x(i).toFixed(1) + '" y="' + (box.t + box.h + 20) + '" text-anchor="middle">' + (i + 1) + "</text>";
+    s += '<text class="ax" x="' + (box.l + box.w) + '" y="' + (H - 6) + '" text-anchor="end">Speichergröße in kWh</text>';
+    var bests = series.map(function (se) {
+      var bi = se.values.indexOf(Math.max.apply(null, se.values));
+      return se.values[bi] > 0 ? { i: bi, x: x(bi), y: y(se.values[bi]) } : null;
+    });
+    var placed = [];
+    series.forEach(function (se, k) {
+      var d = se.values.map(function (v, i) { return (i ? "L" : "M") + x(i).toFixed(1) + "," + y(v).toFixed(1); }).join("");
+      s += '<path class="sline s' + k + '" pathLength="1" d="' + d + '"/>';
+    });
+    // Punkte und Beschriftungen nach allen Linien, damit nichts verdeckt wird; Beschriftung unter den Punkt, wenn oben besetzt
+    bests.forEach(function (b, k) {
+      if (!b) return;
+      var hit = function (ly) {
+        return placed.some(function (p) { return Math.abs(p.x - b.x) < 44 && Math.abs(p.y - ly) < 15; }) ||
+          bests.some(function (o, j) { return o && j !== k && Math.abs(o.x - b.x) < 30 && ly - 12 < o.y + 6 && ly + 2 > o.y - 6; });
+      };
+      var ly = b.y - 11;
+      if (hit(ly)) ly = b.y + 22;
+      if (hit(ly)) { ly = b.y + 4; }
+      var lx = b.x, anchor = "middle";
+      if (ly === b.y + 4) { lx = b.x + 10; anchor = "start"; }
+      placed.push({ x: lx, y: ly });
+      s += '<circle class="sdot s' + k + '" cx="' + b.x.toFixed(1) + '" cy="' + b.y.toFixed(1) + '" r="5"/>';
+      s += '<text class="slabel s' + k + '" x="' + lx.toFixed(1) + '" y="' + ly.toFixed(1) + '" text-anchor="' + anchor + '">' + (b.i + 1) + " kWh</text>";
+    });
+    return '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Gewinn nach Lebensdauer je Speichergröße">' + s + "</svg>";
+  }
+  function sweepChart(series) {
+    var leg = '<div class="clegend">' + series.map(function (se, k) { return '<span><i class="sw sl s' + k + '"></i>' + se.label + "</span>"; }).join("") + "</div>";
+    return '<div class="c-wide">' + sweepSvg(series, 640) + '</div><div class="c-narrow">' + sweepSvg(series, 380) + "</div>" + leg;
+  }
+
+  // Mini-Grafik für Ratgeber-Karten (nur Form, keine Achsen)
+  function spark(values) {
+    var W = 120, H = 36, n = values.length, max = Math.max.apply(null, values.map(Math.abs)) || 1, bw = W / n;
+    var mid = values.some(function (v) { return v < 0; }) ? H * 0.62 : H;
+    var s = "";
+    values.forEach(function (v, i) {
+      var h = (Math.abs(v) / max) * (v >= 0 ? mid : H - mid) * 0.95;
+      s += '<rect class="' + (v >= 0 ? "sp-pos" : "sp-neg") + '" x="' + (i * bw + 1).toFixed(1) + '" y="' + (v >= 0 ? mid - h : mid).toFixed(1) + '" width="' + (bw - 2).toFixed(1) + '" height="' + Math.max(1, h).toFixed(1) + '" rx="1.5"/>';
+    });
+    return '<svg class="spark" viewBox="0 0 ' + W + " " + H + '" aria-hidden="true">' + s + "</svg>";
+  }
+
+  return { LAYERS: LAYERS, stack: stack, dayGeometry: dayGeometry, dayAxes: dayAxes, legend: legend, niceStep: niceStep, dayChart: dayChart, sweepChart: sweepChart, spark: spark, NF1: NF1 };
+})();
 
 
 (function(){
@@ -622,6 +930,51 @@ function evaluate(p){
     $("chart").innerHTML=svg;
   }
 
+
+  // ---------- Tageskurve ----------
+  // Kubische Bézierkurve wie --ease-out in CSS: cubic-bezier(0.23, 1, 0.32, 1)
+  function bezier(x1,y1,x2,y2){return function(t){var lo=0,hi=1,m=t;for(var i=0;i<24;i++){m=(lo+hi)/2;var x=3*(1-m)*(1-m)*m*x1+3*(1-m)*m*m*x2+m*m*m;if(x<t)lo=m;else hi=m;}return 3*(1-m)*(1-m)*m*y1+3*(1-m)*m*m*y2+m*m*m;};}
+  var EASE=bezier(0.23,1,0.32,1);
+  var REDUCE=false;try{REDUCE=window.matchMedia("(prefers-reduced-motion: reduce)").matches;}catch(e){}
+  var MONTH_NAME=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+  var DAYBOX={l:40,t:22,w:500,h:190},DAYH=250,dayState={month:5,days:null,shown:null,anim:0};
+  $("daylegend").innerHTML=DRAW.legend();
+  var rz=0;window.addEventListener("resize",function(){cancelAnimationFrame(rz);rz=requestAnimationFrame(function(){if(dayState.shown)dayFrame(dayState.shown);});});
+
+  function dayTarget(){
+    var d=dayState.days,st=DRAW.stack(d[dayState.month]);
+    var ym=Math.max(DRAW.stack(d[5]).max,DRAW.stack(d[11]).max),step=DRAW.niceStep(ym,4);
+    st.ymax=Math.ceil(ym/step)*step;return st;
+  }
+  function dayFrame(st){
+    var svg=$("daychart"),W=Math.max(280,Math.round(svg.getBoundingClientRect().width||560));
+    DAYBOX.w=W-DAYBOX.l-14;DAYBOX.h=W<480?170:190;svg.setAttribute("viewBox","0 0 "+W+" "+(DAYBOX.h+DAYBOX.t+30));
+    var g=DRAW.dayGeometry(st,DAYBOX,st.ymax),s=DRAW.dayAxes(DAYBOX,st.ymax,g.x,g.y);
+    g.areas.forEach(function(d,i){s+='<path class="area '+DRAW.LAYERS[i].cls+'" d="'+d+'"/>';});
+    $("daychart").innerHTML=s+'<path class="lline" d="'+g.load+'"/>';
+  }
+  function lerpStack(a,b,t){
+    var L=function(x,y){var o=[];for(var i=0;i<24;i++)o.push(x[i]+(y[i]-x[i])*t);return o;};
+    return {layers:a.layers.map(function(la,i){return {bottom:L(la.bottom,b.layers[i].bottom),top:L(la.top,b.layers[i].top)};}),load:L(a.load,b.load),ymax:a.ymax+(b.ymax-a.ymax)*t};
+  }
+  function drawDay(){
+    var target=dayTarget(),from=dayState.shown;
+    cancelAnimationFrame(dayState.anim);
+    if(!from||REDUCE){dayState.shown=target;dayFrame(target);}
+    else{
+      var t0=performance.now(),D=320;
+      var step=function(now){var k=Math.min(1,(now-t0)/D),cur=lerpStack(from,target,EASE(k));dayState.shown=cur;dayFrame(cur);if(k<1)dayState.anim=requestAnimationFrame(step);};
+      dayState.anim=requestAnimationFrame(step);
+    }
+    var m=dayState.days[dayState.month],sum=function(a){var s=0;for(var i=0;i<24;i++)s+=a[i];return s;};
+    var imp=sum(m.imp),socMax=Math.max.apply(null,m.soc),full=-1;
+    for(var h=0;h<24;h++)if(m.soc[h]>=0.95){full=h;break;}
+    var name=MONTH_NAME[dayState.month];
+    $("daysum").innerHTML=full>=0
+      ?"Im "+name+" ist der Speicher im Schnitt gegen <b>"+(full+1)+" Uhr voll</b> und versorgt das Haus abends. Aus dem Netz kommen nur <b>"+nf1.format(imp)+" kWh am Tag</b>."
+      :"Im "+name+" wird der Speicher im Schnitt nur zu <b>"+Math.round(socMax*100)+" % voll</b>. Aus dem Netz kommen <b>"+nf1.format(imp)+" kWh am Tag</b>, ein größerer Speicher ändert daran wenig.";
+  }
+
   function render(){
     var plzOk=regionFromPlz();
     var p=read();outputs(p,plzOk);
@@ -649,10 +1002,12 @@ function evaluate(p){
     else if(res.best.net>0)v+=' Das ist auch die wirtschaftlichste Größe.';
     $("verdict").innerHTML=v;
     chart(res,p);
+    dayState.days=daySeries(res.gen,res.load,p.bat,res.fc);drawDay();
   }
 
   seg("aspect","aspect");
   seg("evtime","evTime");
+  Array.prototype.forEach.call(document.querySelectorAll("#daymonth button"),function(btn){btn.addEventListener("click",function(){dayState.month=+btn.getAttribute("data-v");Array.prototype.forEach.call(document.querySelectorAll("#daymonth button"),function(x){x.setAttribute("aria-pressed",String(x===btn));});drawDay();});});
   seg("eeg","eeg",function(){
     if(state.eeg==="reform"){state.prevFeed=$("feed").value;$("feed").value=0;}
     else $("feed").value=state.prevFeed&&+state.prevFeed>0?state.prevFeed:7.7;
@@ -662,6 +1017,43 @@ function evaluate(p){
   $("inputs").addEventListener("input",function(){if(pending)cancelAnimationFrame(pending);pending=requestAnimationFrame(render);});
   $("inputs").addEventListener("submit",function(e){e.preventDefault();});
   render();
+
+  // ---------- Hausgrafik im Seitenkopf ----------
+  (function(){
+    var fig=$("scene");if(!fig)return;
+    var p0=read(),days=dayProfile(p0,p0.bat),IDX={jul:6,nov:10};
+    var sum=function(a){var s=0;for(var i=0;i<24;i++)s+=a[i];return s;};
+    var data={};Object.keys(IDX).forEach(function(k){var m=days[IDX[k]];data[k]={gen:sum(m.gen),load:sum(m.load),imp:sum(m.imp),direct:sum(m.direct),charge:sum(m.charge),dis:sum(m.discharge),exp:sum(m.exp)};});
+    var SUN={jul:[150,58],nov:[62,226]};
+    var sunEl=fig.querySelector(".sun"),flows={direct:"f-direct",charge:"f-charge",dis:"f-dis",imp:"f-imp",exp:"f-exp"};
+    var width=function(v){return v<0.05?0:Math.min(16,1.5+v*0.45);};
+    var dots=[];
+    function runDots(){
+      if(REDUCE||!fig.animate)return;
+      dots.forEach(function(el){el.remove();});dots=[];
+      Object.keys(flows).forEach(function(k){
+        var base=$(flows[k]);if(!base||parseFloat(base.style.strokeWidth)<1)return;
+        var d=base.cloneNode();d.removeAttribute("id");d.setAttribute("class","flow dots");d.removeAttribute("style");d.removeAttribute("stroke-width");base.parentNode.appendChild(d);dots.push(d);
+        var an=d.animate([{strokeDashoffset:30},{strokeDashoffset:0}],{duration:900,iterations:4,easing:"linear"});
+        an.onfinish=function(){d.remove();};
+      });
+    }
+    function show(season,animate){
+      var v=data[season];fig.setAttribute("data-season",season);
+      sunEl.style.transform="translate("+SUN[season][0]+"px,"+SUN[season][1]+"px)";
+      Object.keys(flows).forEach(function(k){var el=$(flows[k]),w=width(v[k]);el.style.strokeWidth=w.toFixed(1)+"px";el.style.opacity=w?1:0;});
+      $("sc-gen").textContent=nf1.format(v.gen);$("sc-load").textContent=nf1.format(v.load);$("sc-imp").textContent=nf1.format(v.imp);
+      Array.prototype.forEach.call(document.querySelectorAll("#season button"),function(b){b.setAttribute("aria-pressed",String(b.getAttribute("data-v")===season));});
+      if(animate)setTimeout(runDots,450);
+    }
+    $("sc-note").textContent="kWh pro Tag. Beispiel: "+nf1.format(p0.roofs.reduce(function(s,r){return s+r.kwp;},0))+" kWp Süd, "+nf0.format(p0.cons)+" kWh im Jahr, "+p0.bat+" kWh Speicher, "+REGIONS[p0.region].n.split(",")[0]+".";
+    var touched=false;
+    Array.prototype.forEach.call(document.querySelectorAll("#season button"),function(b){b.addEventListener("click",function(){touched=true;show(b.getAttribute("data-v"),true);});});
+    // Startbild Juli; einmal nach dem Laden wechselt die Szene in den November, die Kernaussage der Seite
+    fig.classList.add("no-trans");show("jul",false);void fig.offsetWidth;fig.classList.remove("no-trans");
+    if(REDUCE){show("nov",false);return;}
+    setTimeout(function(){if(!touched)show("nov",true);},1600);
+  })();
 
   // Warteliste: sendet direkt an MailerLite (Double-Opt-in), nur beim Absenden
   (function(){

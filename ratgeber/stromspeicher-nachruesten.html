@@ -14,6 +14,7 @@
   --sun:#E39A0B; --sun-ink:#8A5A00; --sun-soft:#FBEFD6;
   --meter:#1B1F23; --meter-digit:#F3F1EA; --meter-red:#C9302C;
   --pos:#2E7D5B; --neg:#B4412F; --track:#DCE2E7;
+  --c-charge:#9FD3B8; --c-exp:#F6D99A; --c-imp:#AEB9C2; --sky:#DCE8F0; --cloud:#C3CDD5; --house:#FFFFFF;
   --ease-out:cubic-bezier(0.23, 1, 0.32, 1); --ease-in-out:cubic-bezier(0.77, 0, 0.175, 1);
   --f-display:"Archivo", "Arial Narrow", system-ui, sans-serif;
   --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
@@ -23,12 +24,16 @@
   --bg:#0F161C; --surface:#17212A; --ink:#E6ECF1; --muted:#97A7B3; --line:#2A3742;
   --sun:#F2B33D; --sun-ink:#F2B33D; --sun-soft:#2E2614;
   --meter:#06090C; --meter-digit:#E9E6DC; --meter-red:#D9443F;
-  --pos:#5CC596; --neg:#E5735E; --track:#26323C; color-scheme:dark }}
+  --pos:#5CC596; --neg:#E5735E; --track:#26323C;
+  --c-charge:#2F6B52; --c-exp:#6B5523; --c-imp:#4B5966; --sky:#17232D; --cloud:#3A4855; --house:#1E2A35;
+  color-scheme:dark }}
 :root[data-theme="dark"]{
   --bg:#0F161C; --surface:#17212A; --ink:#E6ECF1; --muted:#97A7B3; --line:#2A3742;
   --sun:#F2B33D; --sun-ink:#F2B33D; --sun-soft:#2E2614;
   --meter:#06090C; --meter-digit:#E9E6DC; --meter-red:#D9443F;
-  --pos:#5CC596; --neg:#E5735E; --track:#26323C; color-scheme:dark }
+  --pos:#5CC596; --neg:#E5735E; --track:#26323C;
+  --c-charge:#2F6B52; --c-exp:#6B5523; --c-imp:#4B5966; --sky:#17232D; --cloud:#3A4855; --house:#1E2A35;
+  color-scheme:dark }
 
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55;margin:0}
@@ -187,6 +192,67 @@ html.js .reveal.in{opacity:1;transform:none}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 @media (prefers-reduced-motion:reduce){.btn.btn-on:active{transform:none}}
 
+/* Diagramme (Rechner und Artikel) */
+.area.l-direct{fill:var(--sun)} .area.l-dis{fill:var(--pos)} .area.l-imp{fill:var(--c-imp)}
+.area.l-charge{fill:var(--c-charge)} .area.l-exp{fill:var(--c-exp)}
+.lline{fill:none;stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
+svg .grid{stroke:var(--line);stroke-width:1;stroke-dasharray:2 3} svg .grid.zero{stroke-dasharray:none}
+svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
+.clegend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted);margin-top:6px}
+.clegend span{display:inline-flex;align-items:center;gap:6px}
+.sw{display:inline-block;width:11px;height:11px;border-radius:2px}
+.sw.l-direct{background:var(--sun)} .sw.l-dis{background:var(--pos)} .sw.l-imp{background:var(--c-imp)}
+.sw.l-charge{background:var(--c-charge)} .sw.l-exp{background:var(--c-exp)}
+.sw.l-load{height:2px;width:14px;background:var(--ink);border-radius:0}
+.sline{fill:none;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+.sline.s0,.sw.sl.s0{stroke:var(--ink);background:var(--ink)} .sline.s1,.sw.sl.s1{stroke:var(--sun);background:var(--sun)}
+.sline.s2,.sw.sl.s2{stroke:var(--pos);background:var(--pos)} .sline.s3,.sw.sl.s3{stroke:var(--neg);background:var(--neg)}
+.sw.sl{height:3px;width:16px;border-radius:2px}
+.sdot.s0{fill:var(--ink)} .sdot.s1{fill:var(--sun)} .sdot.s2{fill:var(--pos)} .sdot.s3{fill:var(--neg)}
+.slabel{font-family:var(--f-mono);font-size:11px;font-weight:700} .slabel.s0{fill:var(--ink)} .slabel.s1{fill:var(--sun-ink)} .slabel.s2{fill:var(--pos)} .slabel.s3{fill:var(--neg)}
+.spark{display:block;width:120px;height:36px} .spark .sp-pos{fill:var(--sun)} .spark .sp-neg{fill:var(--neg);opacity:.7}
+
+/* Tageskurve im Rechner */
+.daybox h3{font-size:15.5px;margin:0}
+.dayhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.daysum{font-size:14px;color:var(--muted);margin:0 0 8px;min-height:2.6em}
+.daysum b{color:var(--ink)}
+#daychart{display:block;width:100%;min-width:0;height:auto}
+.daybox .chartwrap{overflow:visible}
+
+/* Hausgrafik im Seitenkopf */
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:28px;align-items:center}
+@media (max-width:900px){.hero-grid{grid-template-columns:minmax(0,1fr)}.scene{max-width:480px}}
+.scene{margin:0;display:grid;gap:10px;animation:sk-rise 420ms var(--ease-out) 160ms both}
+.scene-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.scene-cap{font-size:13px;color:var(--muted)}
+.scene svg{display:block;width:100%;height:auto;overflow:visible}
+.scene .sky{fill:var(--sky)}
+.scene .ground{stroke:var(--line);stroke-width:2}
+.scene .sun{transition:transform 900ms var(--ease-in-out)}
+.scene .sun-core{fill:var(--sun)} .scene .sun-glow{fill:var(--sun);opacity:.18;transition:opacity 900ms var(--ease-in-out)}
+.scene[data-season="nov"] .sun-glow{opacity:.06}
+.scene .cloud{fill:var(--cloud);opacity:0;transition:opacity 700ms var(--ease-out),transform 900ms var(--ease-out)}
+.scene .cloud:nth-child(1){transform:translateX(-14px)} .scene .cloud:nth-child(2){transform:translateX(10px)} .scene .cloud:nth-child(3){transform:translateX(16px)}
+.scene[data-season="nov"] .cloud{opacity:.95;transform:none}
+.scene .wall{fill:var(--house);stroke:var(--ink);stroke-width:2}
+.scene .roof{fill:var(--house);stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
+.scene .panel{fill:var(--meter)} .scene .panel-line{stroke:var(--sun);stroke-width:1.2}
+.scene .window{fill:var(--sky);stroke:var(--ink);stroke-width:1.5} .scene .door{fill:none;stroke:var(--ink);stroke-width:1.5}
+.scene .bat{fill:var(--house);stroke:var(--ink);stroke-width:2} .scene .bat-cap{fill:var(--ink)} .scene .bolt{fill:var(--pos)}
+.scene .pylon path{fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round}
+.scene .slabel2{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
+.scene .flow{fill:none;stroke-linecap:round;transition:stroke-width 700ms var(--ease-out),opacity 500ms ease}
+.scene .f-direct{stroke:var(--sun)} .scene .f-exp{stroke:var(--c-exp)} .scene .f-charge{stroke:var(--c-charge)}
+.scene .f-dis{stroke:var(--pos)} .scene .f-imp{stroke:var(--c-imp)}
+.scene .flow.dots{stroke:var(--surface);stroke-dasharray:1 14;stroke-width:3;opacity:.9;transition:none}
+.scene-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.scene-stats div{border-top:2px solid var(--ink);padding-top:6px;display:grid}
+.scene-stats .k{font-size:13px;color:var(--muted)}
+.scene-stats b{font-family:var(--f-display);font-weight:800;font-stretch:90%;font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
+.scene figcaption{font-size:12.5px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.scene{animation:none}.scene .sun,.scene .cloud,.scene .flow{transition:opacity 200ms ease}}
+
 main.page{padding-block:36px 40px}
 .doc{max-width:760px;font-size:18px;line-height:1.65}
 .doc .eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sun-ink)}
@@ -206,6 +272,24 @@ main.page{padding-block:36px 40px}
 .cta b{font-family:var(--f-display);font-stretch:105%;font-size:21px}
 .cta .btn{display:inline-block;justify-self:start;opacity:1;cursor:pointer;text-decoration:none}
 .page .rlist{margin:8px 0 0}
+.chart{margin:28px 0;max-width:760px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 18px 14px}
+.chart figcaption{display:grid;gap:2px;margin-bottom:10px}
+.chart figcaption b{font-family:var(--f-display);font-stretch:105%;font-size:18px;line-height:1.25}
+.chart figcaption span{font-size:14px;color:var(--muted);line-height:1.45}
+.chart .c-wide svg,.chart .c-narrow svg{display:block;width:100%;height:auto}
+.chart .c-narrow{display:none}
+@media (max-width:560px){.chart .c-wide{display:none}.chart .c-narrow{display:block}}
+.chart svg .ax{font-size:12px} .chart .slabel{font-size:12px}
+.cpanels{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px}
+.cpanel svg{display:block;width:100%;height:auto}
+.ctitle{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.rlist .spark{margin-bottom:4px}
+html.js .chart .sline{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1100ms var(--ease-in-out)}
+html.js .chart .sdot,html.js .chart .slabel{opacity:0;transition:opacity 300ms var(--ease-out) 900ms}
+html.js .chart .cpanel svg{clip-path:inset(0 100% 0 0);transition:clip-path 1000ms var(--ease-in-out)}
+html.js .chart.in .sline{stroke-dashoffset:0} html.js .chart.in .sdot,html.js .chart.in .slabel{opacity:1}
+html.js .chart.in .cpanel svg{clip-path:inset(0 0 0 0)}
+@media (prefers-reduced-motion:reduce){html.js .chart .sline{stroke-dasharray:none;transition:none} html.js .chart .sdot,html.js .chart .slabel{opacity:1;transition:none} html.js .chart .cpanel svg{clip-path:none;transition:none}}
 </style><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Stromspeicher nachrüsten: Lohnt sich das?", "description": "Ob sich ein Speicher für deine bestehende PV-Anlage lohnt, entscheidet vor allem deine Einspeisevergütung. Ab etwa 12 ct wird es knapp, bei 20 ct nie.", "datePublished": "2026-11-09", "dateModified": "2026-11-09", "inLanguage": "de", "author": {"@type": "Organization", "name": "Speicherklar"}, "mainEntityOfPage": "https://speicherklar.de/ratgeber/stromspeicher-nachruesten.html"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Kann ich an jede PV-Anlage einen Speicher nachrüsten?", "acceptedAnswer": {"@type": "Answer", "text": "Meist ja. Hat dein Wechselrichter keinen Anschluss für einen Speicher, gibt es Speicher mit eigenem Wechselrichter. Die schließt ein Elektriker am Hausnetz an."}}, {"@type": "Question", "name": "Wo finde ich meine Einspeisevergütung?", "acceptedAnswer": {"@type": "Answer", "text": "Auf der Jahresabrechnung deines Netzbetreibers. Dort steht der Satz in Cent pro Kilowattstunde. Gib ihn im Rechner unter Einspeisevergütung ein."}}, {"@type": "Question", "name": "Lohnt sich ein Speicher nach 20 Jahren EEG?", "acceptedAnswer": {"@type": "Answer", "text": "Oft ja. Ohne feste Vergütung ist jede selbst genutzte Kilowattstunde viel mehr wert als eine eingespeiste. Im Beispiel rechnet sich ein 5-kWh-Speicher dann in gut 7 Jahren."}}]}</script></head>
 <body>
 <header class="top">
@@ -219,7 +303,7 @@ main.page{padding-block:36px 40px}
 </header>
 <main class="wrap page"><article class="doc"><div class="eyebrow">Ratgeber</div><h1>Stromspeicher nachrüsten: Lohnt sich das?</h1><p class="lead">Kurze Antwort: Das hängt vor allem an deiner Einspeisevergütung. Bekommst du unter 8 ct pro kWh, lohnt sich ein kleiner Speicher meist. Bekommst du 20 ct oder mehr, lohnt er sich nicht.</p><p class="meta">Stand: November 2026</p>
 
-<p>Du hast schon eine PV-Anlage und überlegst, einen Speicher dazuzukaufen? Dann ist die Rechnung anders als bei einer neuen Anlage. Der Speicher spart dir Netzstrom, aber jede Kilowattstunde, die er auffängt, speist du nicht mehr ein. Je mehr du fürs Einspeisen bekommst, desto weniger bleibt übrig.</p>
+<p>Du hast schon eine PV-Anlage und überlegst, einen Speicher dazuzukaufen? Dann ist die Rechnung anders als bei einer neuen Anlage. Der Speicher spart dir Netzstrom, aber jede Kilowattstunde, die er auffängt, speist du nicht mehr ein. Je mehr du fürs Einspeisen bekommst, desto weniger bleibt übrig.</p><figure class="chart"><figcaption><b>Nachrüsten: Gewinn nach 15 Jahren je Einspeisevergütung</b><span>7 kWp Süd, 4.500 kWh Verbrauch, Speicher 700 €/kWh (Nachrüsten), Strom 33 ct/kWh.</span></figcaption><div class="c-wide"><svg viewBox="0 0 640 300" role="img" aria-label="Gewinn nach Lebensdauer je Speichergröße"><line class="grid" x1="80" x2="626" y1="250.0" y2="250.0"/><text class="ax" x="72" y="254.0" text-anchor="end">−8.000 €</text><line class="grid" x1="80" x2="626" y1="212.7" y2="212.7"/><text class="ax" x="72" y="216.7" text-anchor="end">−6.000 €</text><line class="grid" x1="80" x2="626" y1="175.3" y2="175.3"/><text class="ax" x="72" y="179.3" text-anchor="end">−4.000 €</text><line class="grid" x1="80" x2="626" y1="138.0" y2="138.0"/><text class="ax" x="72" y="142.0" text-anchor="end">−2.000 €</text><line class="grid zero" x1="80" x2="626" y1="100.7" y2="100.7"/><text class="ax" x="72" y="104.7" text-anchor="end">0 €</text><line class="grid" x1="80" x2="626" y1="63.3" y2="63.3"/><text class="ax" x="72" y="67.3" text-anchor="end">+2.000 €</text><line class="grid" x1="80" x2="626" y1="26.0" y2="26.0"/><text class="ax" x="72" y="30.0" text-anchor="end">+4.000 €</text><text class="ax" x="80.0" y="270" text-anchor="middle">1</text><text class="ax" x="129.6" y="270" text-anchor="middle">2</text><text class="ax" x="179.3" y="270" text-anchor="middle">3</text><text class="ax" x="228.9" y="270" text-anchor="middle">4</text><text class="ax" x="278.5" y="270" text-anchor="middle">5</text><text class="ax" x="328.2" y="270" text-anchor="middle">6</text><text class="ax" x="377.8" y="270" text-anchor="middle">7</text><text class="ax" x="427.5" y="270" text-anchor="middle">8</text><text class="ax" x="477.1" y="270" text-anchor="middle">9</text><text class="ax" x="526.7" y="270" text-anchor="middle">10</text><text class="ax" x="576.4" y="270" text-anchor="middle">11</text><text class="ax" x="626.0" y="270" text-anchor="middle">12</text><text class="ax" x="626" y="294" text-anchor="end">Speichergröße in kWh</text><path class="sline s0" pathLength="1" d="M80.0,81.6L129.6,61.2L179.3,46.6L228.9,37.4L278.5,33.5L328.2,33.7L377.8,37.3L427.5,43.3L477.1,51.4L526.7,60.9L576.4,71.5L626.0,82.5"/><path class="sline s1" pathLength="1" d="M80.0,95.3L129.6,83.7L179.3,76.5L228.9,73.1L278.5,73.7L328.2,77.4L377.8,83.5L427.5,91.3L477.1,100.7L526.7,111.2L576.4,122.5L626.0,134.0"/><path class="sline s2" pathLength="1" d="M80.0,102.9L129.6,96.3L179.3,93.1L228.9,93.1L278.5,96.2L328.2,101.7L377.8,109.3L427.5,118.2L477.1,128.3L526.7,139.3L576.4,150.9L626.0,162.8"/><path class="sline s3" pathLength="1" d="M80.0,117.1L129.6,119.7L179.3,124.1L228.9,130.3L278.5,138.1L328.2,147.1L377.8,157.2L427.5,168.1L477.1,179.6L526.7,191.6L576.4,203.9L626.0,216.3"/><circle class="sdot s0" cx="278.5" cy="33.5" r="5"/><text class="slabel s0" x="278.5" y="22.5" text-anchor="middle">5 kWh</text><circle class="sdot s1" cx="228.9" cy="73.1" r="5"/><text class="slabel s1" x="228.9" y="62.1" text-anchor="middle">4 kWh</text><circle class="sdot s2" cx="228.9" cy="93.1" r="5"/><text class="slabel s2" x="228.9" y="115.1" text-anchor="middle">4 kWh</text></svg></div><div class="c-narrow"><svg viewBox="0 0 380 280" role="img" aria-label="Gewinn nach Lebensdauer je Speichergröße"><line class="grid" x1="80" x2="366" y1="230.0" y2="230.0"/><text class="ax" x="72" y="234.0" text-anchor="end">−8.000 €</text><line class="grid" x1="80" x2="366" y1="196.0" y2="196.0"/><text class="ax" x="72" y="200.0" text-anchor="end">−6.000 €</text><line class="grid" x1="80" x2="366" y1="162.0" y2="162.0"/><text class="ax" x="72" y="166.0" text-anchor="end">−4.000 €</text><line class="grid" x1="80" x2="366" y1="128.0" y2="128.0"/><text class="ax" x="72" y="132.0" text-anchor="end">−2.000 €</text><line class="grid zero" x1="80" x2="366" y1="94.0" y2="94.0"/><text class="ax" x="72" y="98.0" text-anchor="end">0 €</text><line class="grid" x1="80" x2="366" y1="60.0" y2="60.0"/><text class="ax" x="72" y="64.0" text-anchor="end">+2.000 €</text><line class="grid" x1="80" x2="366" y1="26.0" y2="26.0"/><text class="ax" x="72" y="30.0" text-anchor="end">+4.000 €</text><text class="ax" x="80.0" y="250" text-anchor="middle">1</text><text class="ax" x="132.0" y="250" text-anchor="middle">3</text><text class="ax" x="184.0" y="250" text-anchor="middle">5</text><text class="ax" x="236.0" y="250" text-anchor="middle">7</text><text class="ax" x="288.0" y="250" text-anchor="middle">9</text><text class="ax" x="340.0" y="250" text-anchor="middle">11</text><text class="ax" x="366.0" y="250" text-anchor="middle">12</text><text class="ax" x="366" y="274" text-anchor="end">Speichergröße in kWh</text><path class="sline s0" pathLength="1" d="M80.0,76.7L106.0,58.1L132.0,44.8L158.0,36.4L184.0,32.8L210.0,33.0L236.0,36.3L262.0,41.7L288.0,49.1L314.0,57.8L340.0,67.5L366.0,77.5"/><path class="sline s1" pathLength="1" d="M80.0,89.1L106.0,78.6L132.0,72.0L158.0,68.9L184.0,69.5L210.0,72.8L236.0,78.4L262.0,85.5L288.0,94.1L314.0,103.6L340.0,113.9L366.0,124.4"/><path class="sline s2" pathLength="1" d="M80.0,96.0L106.0,90.0L132.0,87.1L158.0,87.1L184.0,90.0L210.0,95.0L236.0,101.8L262.0,109.9L288.0,119.2L314.0,129.2L340.0,139.8L366.0,150.6"/><path class="sline s3" pathLength="1" d="M80.0,108.9L106.0,111.3L132.0,115.4L158.0,120.9L184.0,128.1L210.0,136.3L236.0,145.5L262.0,155.4L288.0,165.9L314.0,176.8L340.0,188.0L366.0,199.3"/><circle class="sdot s0" cx="184.0" cy="32.8" r="5"/><text class="slabel s0" x="184.0" y="21.8" text-anchor="middle">5 kWh</text><circle class="sdot s1" cx="158.0" cy="68.9" r="5"/><text class="slabel s1" x="158.0" y="57.9" text-anchor="middle">4 kWh</text><circle class="sdot s2" cx="158.0" cy="87.1" r="5"/><text class="slabel s2" x="158.0" y="109.1" text-anchor="middle">4 kWh</text></svg></div><div class="clegend"><span><i class="sw sl s0"></i>0 ct</span><span><i class="sw sl s1"></i>7,7 ct</span><span><i class="sw sl s2"></i>12 ct</span><span><i class="sw sl s3"></i>20 ct</span></div></figure>
 <p>Unser Beispiel: eine 7-kWp-Anlage auf einem Süddach, 4.500 kWh Verbrauch im Jahr, Strompreis 33 ct. Weil Nachrüsten oft teurer ist als der Kauf zusammen mit der Anlage, rechnen wir hier mit 700 €/kWh statt 500 €/kWh.</p>
 
 <h2>Deine Einspeisevergütung entscheidet</h2>
@@ -266,4 +350,5 @@ main.page{padding-block:36px 40px}
     <span><a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">Instagram @speicherklar</a> · <a href="../impressum.html">Impressum</a> · <a href="../datenschutz.html">Datenschutz</a></span>
   </div>
 </footer>
+<script>try{if("IntersectionObserver" in window){document.documentElement.classList.add("js");var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});},{rootMargin:"0px 0px -60px 0px"});document.querySelectorAll(".chart").forEach(function(c){io.observe(c);});}}catch(e){}</script>
 </body></html>

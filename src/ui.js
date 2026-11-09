@@ -98,6 +98,51 @@
     $("chart").innerHTML=svg;
   }
 
+
+  // ---------- Tageskurve ----------
+  // Kubische Bézierkurve wie --ease-out in CSS: cubic-bezier(0.23, 1, 0.32, 1)
+  function bezier(x1,y1,x2,y2){return function(t){var lo=0,hi=1,m=t;for(var i=0;i<24;i++){m=(lo+hi)/2;var x=3*(1-m)*(1-m)*m*x1+3*(1-m)*m*m*x2+m*m*m;if(x<t)lo=m;else hi=m;}return 3*(1-m)*(1-m)*m*y1+3*(1-m)*m*m*y2+m*m*m;};}
+  var EASE=bezier(0.23,1,0.32,1);
+  var REDUCE=false;try{REDUCE=window.matchMedia("(prefers-reduced-motion: reduce)").matches;}catch(e){}
+  var MONTH_NAME=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+  var DAYBOX={l:40,t:22,w:500,h:190},DAYH=250,dayState={month:5,days:null,shown:null,anim:0};
+  $("daylegend").innerHTML=DRAW.legend();
+  var rz=0;window.addEventListener("resize",function(){cancelAnimationFrame(rz);rz=requestAnimationFrame(function(){if(dayState.shown)dayFrame(dayState.shown);});});
+
+  function dayTarget(){
+    var d=dayState.days,st=DRAW.stack(d[dayState.month]);
+    var ym=Math.max(DRAW.stack(d[5]).max,DRAW.stack(d[11]).max),step=DRAW.niceStep(ym,4);
+    st.ymax=Math.ceil(ym/step)*step;return st;
+  }
+  function dayFrame(st){
+    var svg=$("daychart"),W=Math.max(280,Math.round(svg.getBoundingClientRect().width||560));
+    DAYBOX.w=W-DAYBOX.l-14;DAYBOX.h=W<480?170:190;svg.setAttribute("viewBox","0 0 "+W+" "+(DAYBOX.h+DAYBOX.t+30));
+    var g=DRAW.dayGeometry(st,DAYBOX,st.ymax),s=DRAW.dayAxes(DAYBOX,st.ymax,g.x,g.y);
+    g.areas.forEach(function(d,i){s+='<path class="area '+DRAW.LAYERS[i].cls+'" d="'+d+'"/>';});
+    $("daychart").innerHTML=s+'<path class="lline" d="'+g.load+'"/>';
+  }
+  function lerpStack(a,b,t){
+    var L=function(x,y){var o=[];for(var i=0;i<24;i++)o.push(x[i]+(y[i]-x[i])*t);return o;};
+    return {layers:a.layers.map(function(la,i){return {bottom:L(la.bottom,b.layers[i].bottom),top:L(la.top,b.layers[i].top)};}),load:L(a.load,b.load),ymax:a.ymax+(b.ymax-a.ymax)*t};
+  }
+  function drawDay(){
+    var target=dayTarget(),from=dayState.shown;
+    cancelAnimationFrame(dayState.anim);
+    if(!from||REDUCE){dayState.shown=target;dayFrame(target);}
+    else{
+      var t0=performance.now(),D=320;
+      var step=function(now){var k=Math.min(1,(now-t0)/D),cur=lerpStack(from,target,EASE(k));dayState.shown=cur;dayFrame(cur);if(k<1)dayState.anim=requestAnimationFrame(step);};
+      dayState.anim=requestAnimationFrame(step);
+    }
+    var m=dayState.days[dayState.month],sum=function(a){var s=0;for(var i=0;i<24;i++)s+=a[i];return s;};
+    var imp=sum(m.imp),socMax=Math.max.apply(null,m.soc),full=-1;
+    for(var h=0;h<24;h++)if(m.soc[h]>=0.95){full=h;break;}
+    var name=MONTH_NAME[dayState.month];
+    $("daysum").innerHTML=full>=0
+      ?"Im "+name+" ist der Speicher im Schnitt gegen <b>"+(full+1)+" Uhr voll</b> und versorgt das Haus abends. Aus dem Netz kommen nur <b>"+nf1.format(imp)+" kWh am Tag</b>."
+      :"Im "+name+" wird der Speicher im Schnitt nur zu <b>"+Math.round(socMax*100)+" % voll</b>. Aus dem Netz kommen <b>"+nf1.format(imp)+" kWh am Tag</b>, ein größerer Speicher ändert daran wenig.";
+  }
+
   function render(){
     var plzOk=regionFromPlz();
     var p=read();outputs(p,plzOk);
@@ -125,10 +170,12 @@
     else if(res.best.net>0)v+=' Das ist auch die wirtschaftlichste Größe.';
     $("verdict").innerHTML=v;
     chart(res,p);
+    dayState.days=daySeries(res.gen,res.load,p.bat,res.fc);drawDay();
   }
 
   seg("aspect","aspect");
   seg("evtime","evTime");
+  Array.prototype.forEach.call(document.querySelectorAll("#daymonth button"),function(btn){btn.addEventListener("click",function(){dayState.month=+btn.getAttribute("data-v");Array.prototype.forEach.call(document.querySelectorAll("#daymonth button"),function(x){x.setAttribute("aria-pressed",String(x===btn));});drawDay();});});
   seg("eeg","eeg",function(){
     if(state.eeg==="reform"){state.prevFeed=$("feed").value;$("feed").value=0;}
     else $("feed").value=state.prevFeed&&+state.prevFeed>0?state.prevFeed:7.7;
@@ -138,6 +185,43 @@
   $("inputs").addEventListener("input",function(){if(pending)cancelAnimationFrame(pending);pending=requestAnimationFrame(render);});
   $("inputs").addEventListener("submit",function(e){e.preventDefault();});
   render();
+
+  // ---------- Hausgrafik im Seitenkopf ----------
+  (function(){
+    var fig=$("scene");if(!fig)return;
+    var p0=read(),days=dayProfile(p0,p0.bat),IDX={jul:6,nov:10};
+    var sum=function(a){var s=0;for(var i=0;i<24;i++)s+=a[i];return s;};
+    var data={};Object.keys(IDX).forEach(function(k){var m=days[IDX[k]];data[k]={gen:sum(m.gen),load:sum(m.load),imp:sum(m.imp),direct:sum(m.direct),charge:sum(m.charge),dis:sum(m.discharge),exp:sum(m.exp)};});
+    var SUN={jul:[150,58],nov:[62,226]};
+    var sunEl=fig.querySelector(".sun"),flows={direct:"f-direct",charge:"f-charge",dis:"f-dis",imp:"f-imp",exp:"f-exp"};
+    var width=function(v){return v<0.05?0:Math.min(16,1.5+v*0.45);};
+    var dots=[];
+    function runDots(){
+      if(REDUCE||!fig.animate)return;
+      dots.forEach(function(el){el.remove();});dots=[];
+      Object.keys(flows).forEach(function(k){
+        var base=$(flows[k]);if(!base||parseFloat(base.style.strokeWidth)<1)return;
+        var d=base.cloneNode();d.removeAttribute("id");d.setAttribute("class","flow dots");d.removeAttribute("style");d.removeAttribute("stroke-width");base.parentNode.appendChild(d);dots.push(d);
+        var an=d.animate([{strokeDashoffset:30},{strokeDashoffset:0}],{duration:900,iterations:4,easing:"linear"});
+        an.onfinish=function(){d.remove();};
+      });
+    }
+    function show(season,animate){
+      var v=data[season];fig.setAttribute("data-season",season);
+      sunEl.style.transform="translate("+SUN[season][0]+"px,"+SUN[season][1]+"px)";
+      Object.keys(flows).forEach(function(k){var el=$(flows[k]),w=width(v[k]);el.style.strokeWidth=w.toFixed(1)+"px";el.style.opacity=w?1:0;});
+      $("sc-gen").textContent=nf1.format(v.gen);$("sc-load").textContent=nf1.format(v.load);$("sc-imp").textContent=nf1.format(v.imp);
+      Array.prototype.forEach.call(document.querySelectorAll("#season button"),function(b){b.setAttribute("aria-pressed",String(b.getAttribute("data-v")===season));});
+      if(animate)setTimeout(runDots,450);
+    }
+    $("sc-note").textContent="kWh pro Tag. Beispiel: "+nf1.format(p0.roofs.reduce(function(s,r){return s+r.kwp;},0))+" kWp Süd, "+nf0.format(p0.cons)+" kWh im Jahr, "+p0.bat+" kWh Speicher, "+REGIONS[p0.region].n.split(",")[0]+".";
+    var touched=false;
+    Array.prototype.forEach.call(document.querySelectorAll("#season button"),function(b){b.addEventListener("click",function(){touched=true;show(b.getAttribute("data-v"),true);});});
+    // Startbild Juli; einmal nach dem Laden wechselt die Szene in den November, die Kernaussage der Seite
+    fig.classList.add("no-trans");show("jul",false);void fig.offsetWidth;fig.classList.remove("no-trans");
+    if(REDUCE){show("nov",false);return;}
+    setTimeout(function(){if(!touched)show("nov",true);},1600);
+  })();
 
   // Warteliste: sendet direkt an MailerLite (Double-Opt-in), nur beim Absenden
   (function(){
