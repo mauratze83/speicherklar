@@ -7,7 +7,7 @@ active: "rechner" | "ratgeber" | None – markiert den aktuellen Menüpunkt.
 IG = "https://www.instagram.com/speicherklar/"
 
 # Reichweitenmessung mit Umami Cloud (ohne Cookies). Leer = kein Skript und kein Abschnitt in der Datenschutzerklärung.
-UMAMI_ID = ""
+UMAMI_ID = "f4570047-b7d7-42e7-944e-a06941b94082"
 UMAMI_SRC = "https://cloud.umami.is/script.js"
 
 def analytics():
