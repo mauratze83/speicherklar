@@ -1,5 +1,5 @@
 """Baut index.html aus src/. Aufruf: python3 build.py"""
-import pathlib, sys
+import pathlib, sys, re
 S = pathlib.Path(__file__).parent / "src"
 sys.path.insert(0, str(S))
 from chrome import header, footer, analytics
@@ -27,6 +27,12 @@ head = f"""<!doctype html>
 <body>
 """
 html = head + (S / "body.html").read_text().replace("<!--RATGEBER-->", (S / "ratgeber-teaser.html").read_text()).replace("<!--HEADER-->", header("./", "rechner")).replace("<!--FOOTER-->", footer("./")) + "\n<script>\n" + sim + "\n" + (S / "draw.js").read_text().split("if (typeof module")[0] + "\n" + (S / "ui.js").read_text() + "</script>\n</body>\n</html>\n"
+_cfg = (S / "pro-config.js").read_text()
+_cv = lambda k: re.search(k + r'\s*:\s*"?([^",\n]*)"?', _cfg).group(1)
+PRO_VALUES = {"{{PRO_PUBLIC}}": _cv("publicFrom"), "{{PRO_INTRO}}": _cv("introUntil"), "{{PRO_PRICE}}": _cv("price"), "{{PRO_REGULAR}}": _cv("regularPrice")}
+PRO_VALUES["{{PRO_INTRO_DE}}"] = ".".join(reversed(PRO_VALUES["{{PRO_INTRO}}"].split("-")))
+for _k, _v in PRO_VALUES.items(): html = html.replace(_k, _v)
+assert "{{PRO_" not in html
 (S.parent / "index.html").write_text(html)
 print("index.html:", len(html), "Zeichen")
 

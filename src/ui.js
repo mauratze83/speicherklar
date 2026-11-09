@@ -278,3 +278,11 @@
     }
   }catch(e){}
 })();
+
+/* Pro-Box: Preis und Kauf nach Datum (Werte kommen beim Bauen aus src/pro-config.js) */
+(function(){
+  var b=document.getElementById("pricebox");if(!b)return;
+  var today=new Date().toISOString().slice(0,10),pub=b.getAttribute("data-public"),intro=b.getAttribute("data-intro");
+  if(intro&&today>intro){document.getElementById("pro-price").innerHTML=b.getAttribute("data-regular")+" € <small>einmalig</small>";document.getElementById("pro-intro").hidden=true;}
+  if(pub&&today>=pub){document.getElementById("pro-buy").hidden=false;document.getElementById("wait").hidden=true;document.getElementById("pro-tag").textContent="Speicherklar Pro";}
+})();

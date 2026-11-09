@@ -276,3 +276,5 @@ svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
 a.btn{text-decoration:none;display:inline-block}
 .hero-pro{margin:12px 0 0;max-width:60ch;font-size:16px;color:var(--ink)}
 .hero-pro a{font-weight:600}
+.intro-note{margin:0;font-size:14px;color:var(--muted)}
+#pro-buy{justify-self:start}

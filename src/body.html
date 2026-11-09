@@ -219,7 +219,7 @@
     <div class="wrap">
       <div class="procard reveal">
         <div>
-          <span class="tag">Speicherklar Pro · erscheint Anfang 2027</span>
+          <span class="tag" id="pro-tag">Speicherklar Pro · Kauf ab 1. Dezember 2026</span>
           <h2 class="sec" style="margin-top:12px">Angebots-Check: Passen Speicher und PV-Anlage in deinem Angebot?</h2>
           <p style="color:var(--muted);margin:0">Der kostenlose Rechner zeigt, was ein Speicher grundsätzlich bringt. Pro prüft das konkrete Angebot deines Installateurs und findet die beste Kombination aus PV-Größe und Speicher, bevor du unterschreibst.</p>
           <ul>
@@ -231,17 +231,19 @@
             <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3 3 7-7" fill="none" stroke="var(--sun)" stroke-width="2.4"/></svg><span>Bericht als PDF mit Fragen an deinen Installateur, fürs nächste Gespräch.</span></li>
           </ul>
         </div>
-        <div class="pricebox">
-          <div class="price">89 € <small>einmalig</small></div>
+        <div class="pricebox" id="pricebox" data-public="{{PRO_PUBLIC}}" data-intro="{{PRO_INTRO}}" data-price="{{PRO_PRICE}}" data-regular="{{PRO_REGULAR}}">
+          <div class="price" id="pro-price">{{PRO_PRICE}} € <small>einmalig</small></div>
+          <p class="intro-note" id="pro-intro">Einführungspreis bis {{PRO_INTRO_DE}}, danach {{PRO_REGULAR}} €.</p>
           <p>Kein Abo. Beliebig viele Angebote prüfen, Updates für Vergütung und Preise sind dabei. Deine Daten bleiben in deinem Browser.</p>
           <p><a href="pro/">Angebots-Check ansehen</a>: Eingabe und Einordnung sind schon jetzt kostenlos.</p>
+          <a class="btn btn-on" id="pro-buy" href="pro/" hidden>Zum Angebots-Check</a>
           <form class="wait" id="wait" novalidate>
             <label for="wait-email">Sag mir Bescheid, wenn Pro startet</label>
             <div class="wait-row">
               <input type="email" id="wait-email" name="email" autocomplete="email" inputmode="email" placeholder="deine@email.de" required>
               <button class="btn btn-on" type="submit" id="wait-btn">Eintragen</button>
             </div>
-            <p class="wait-note">Wer auf der Liste steht, kann vor allen anderen kaufen, zum Einführungspreis. Nur eine Mail zum Start, kein Spam, Abmeldung jederzeit. <a href="datenschutz.html#warteliste">Datenschutz</a></p>
+            <p class="wait-note">Wer auf der Liste steht, kann schon vor dem 1. Dezember kaufen, zum Einführungspreis. Nur eine Mail zum Start, kein Spam, Abmeldung jederzeit. <a href="datenschutz.html#warteliste">Datenschutz</a></p>
             <p class="wait-msg" id="wait-msg" role="status" aria-live="polite"></p>
           </form>
           <p>Oder folg <a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">@speicherklar</a> auf Instagram.</p>
