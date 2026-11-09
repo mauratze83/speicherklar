@@ -1,0 +1,29 @@
+# Veröffentlicht den Cloudflare Worker für Kauf und Freischaltung von Speicherklar Pro (worker/).
+# Braucht die GitHub-Secrets CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, STRIPE_SECRET_KEY, LICENSE_SECRET.
+# Ohne CLOUDFLARE_API_TOKEN wird der Lauf übersprungen.
+name: Worker
+on:
+  workflow_dispatch:
+  push:
+    paths: ["worker/**", ".github/workflows/worker.yml"]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      HAS_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - if: env.HAS_TOKEN != 'true'
+        run: echo "CLOUDFLARE_API_TOKEN fehlt – Worker wird nicht veröffentlicht."
+      - if: env.HAS_TOKEN == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: worker
+          secrets: |
+            STRIPE_SECRET_KEY
+            LICENSE_SECRET
+        env:
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          LICENSE_SECRET: ${{ secrets.LICENSE_SECRET }}

@@ -86,6 +86,7 @@
     </form>
 
     <div class="panel result" id="teaser" aria-live="polite">
+      <p class="wait-msg" id="kaufmsg" role="status" hidden></p>
       <div class="empty" id="t-empty">
         <h2>So sieht dein Ergebnis aus</h2>
         <p class="sub">Nach dem Prüfen steht hier die Einordnung deines Angebots: Größe von Speicher und PV-Anlage, Speicherpreis und Preis der PV-Anlage. Das ist kostenlos.</p>
@@ -117,10 +118,15 @@
           <p class="note" id="b-note"></p>
           <p class="note">Mit einem Kauf prüfst du beliebig viele Angebote, auch die von anderen Installateuren. Kein Abo.</p>
         </div>
+        <div class="mykey" id="mykey" hidden>
+          <span class="flabel">Dein Lizenzschlüssel</span>
+          <div class="mykey-row"><code id="mykey-v"></code><button type="button" class="linkbtn" id="mykey-copy">Kopieren</button></div>
+          <p class="note">Speicher ihn, etwa in einer Notiz oder im Passwort-Manager. Damit schaltest du Pro auf anderen Geräten frei. Die Rechnung kommt per Mail von Stripe.</p>
+        </div>
         <details class="keybox" id="keybox">
           <summary>Schon gekauft? Lizenzschlüssel eingeben</summary>
           <form id="keyform" class="wait-row" novalidate>
-            <input type="text" id="f-key" autocomplete="off" spellcheck="false" placeholder="Schlüssel aus der Kaufbestätigung" aria-label="Lizenzschlüssel">
+            <input type="text" id="f-key" autocomplete="off" spellcheck="false" placeholder="SK.cs_…" aria-label="Lizenzschlüssel">
             <button class="btn btn-on" type="submit" id="keybtn">Freischalten</button>
           </form>
           <p class="wait-msg" id="keymsg" role="status" aria-live="polite"></p>

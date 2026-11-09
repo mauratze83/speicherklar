@@ -186,66 +186,106 @@
   }
   $("offer").addEventListener("submit", function (e) { e.preventDefault(); runCheck(true); });
 
-  // ---------- Kauf ----------
+  // ---------- Kauf und Freischaltung über Stripe (Cloudflare Worker, siehe worker/index.js) ----------
   function today() { return new Date().toISOString().slice(0, 10); }
   function dateDe(iso) { var p = iso.split("-"); return p[2] + "." + p[1] + "." + p[0]; }
+  function api(path, body) {
+    return fetch(C.api + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body || {}) })
+      .then(function (r) { return r.json().then(function (j) { j.status = r.status; return j; }, function () { return { status: r.status }; }); });
+  }
   function setupBuy() {
     var vorab = /[?&]vorab=1/.test(location.search) || load("sk-pro-vorab");
     if (/[?&]vorab=1/.test(location.search)) store("sk-pro-vorab", true);
-    var open = C.checkoutUrl && C.organizationId && (!C.publicFrom || today() >= C.publicFrom || vorab);
+    var open = C.api && (!C.publicFrom || today() >= C.publicFrom || vorab);
     var intro = C.introUntil && today() <= C.introUntil;
     var price = intro ? C.price : C.regularPrice;
     $("b-price").innerHTML = price + " € <small>einmalig</small>";
     var note = [];
     if (intro) note.push("Einführungspreis bis " + dateDe(C.introUntil) + ", danach " + C.regularPrice + " €.");
+    var btn = $("b-btn");
     if (open) {
-      $("b-btn").href = C.checkoutUrl; $("b-btn").textContent = "Bericht freischalten · " + price + " €";
-      $("b-btn").addEventListener("click", function () { track("pro-kauf-klick"); });
-      note.push("Bezahlung über Polar. Den Lizenzschlüssel bekommst du per Mail, dann hier eingeben.");
+      btn.href = "#"; btn.textContent = "Bericht freischalten · " + price + " €"; btn.removeAttribute("target");
+      btn.addEventListener("click", function (e) {
+        e.preventDefault(); if (btn.getAttribute("aria-busy") === "true") return;
+        track("pro-kauf-klick"); btn.setAttribute("aria-busy", "true"); btn.textContent = "Bezahlseite wird geöffnet…";
+        api("/checkout").then(function (j) {
+          if (j.url) { location.href = j.url; return; }
+          throw new Error();
+        }).catch(function () {
+          btn.removeAttribute("aria-busy"); btn.textContent = "Bericht freischalten · " + price + " €";
+          $("b-note").textContent = "Die Bezahlseite ließ sich gerade nicht öffnen. Bitte versuch es gleich noch einmal.";
+        });
+      });
+      note.push("Bezahlung über Stripe. Nach dem Kauf ist der Bericht sofort freigeschaltet, die Rechnung kommt per Mail.");
       if (C.publicFrom && today() < C.publicFrom) note.push("Vorab-Zugang für die Warteliste.");
     } else {
-      $("b-btn").removeAttribute("href"); $("b-btn").classList.remove("btn-on"); $("b-btn").setAttribute("aria-disabled", "true");
-      $("b-btn").textContent = C.publicFrom ? "Kauf ab " + dateDe(C.publicFrom) : "Kauf startet bald";
+      btn.removeAttribute("href"); btn.classList.remove("btn-on"); btn.setAttribute("aria-disabled", "true");
+      btn.textContent = C.publicFrom ? "Kauf ab " + dateDe(C.publicFrom) : "Kauf startet bald";
       note.push('Trag dich auf der <a href="../#pro">Warteliste</a> ein, dann bekommst du den Vorab-Zugang.');
     }
     $("b-note").innerHTML = note.join(" ");
   }
 
-  // ---------- Freischaltung (Polar-Lizenzschlüssel, öffentliche Prüfung ohne Server) ----------
   var LICENSE = {
-    api: function () { return C.sandbox ? "https://sandbox-api.polar.sh" : "https://api.polar.sh"; },
     verify: function (key) {
       if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && key === "DEV-SPEICHERKLAR") return Promise.resolve({ ok: true });
-      if (!C.organizationId) return Promise.resolve({ ok: false, msg: "Der Verkauf ist noch nicht gestartet." });
-      var body = { key: key, organization_id: C.organizationId };
-      if (C.benefitId) body.benefit_id = C.benefitId;
-      return fetch(this.api() + "/v1/customer-portal/license-keys/validate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
-        .then(function (r) {
-          if (r.ok) return r.json().then(function (j) { return j.status === "granted" ? { ok: true } : { ok: false, msg: "Dieser Schlüssel ist nicht mehr gültig." }; });
-          if (r.status === 404) return { ok: false, msg: "Diesen Schlüssel kennen wir nicht. Bitte kopier ihn genau aus der Kaufbestätigung." };
-          return { ok: false, net: true, msg: "Die Prüfung hat gerade nicht geklappt. Bitte versuch es gleich noch einmal." };
-        }, function () { return { ok: false, net: true, msg: "Keine Verbindung zur Prüfung. Bitte versuch es gleich noch einmal." }; });
+      if (!C.api) return Promise.resolve({ ok: false, msg: "Der Verkauf ist noch nicht gestartet." });
+      return api("/validate", { key: key }).then(function (j) {
+        if (j.ok) return { ok: true };
+        if (j.status === 404) return { ok: false, msg: "Diesen Schlüssel kennen wir nicht. Bitte kopier ihn genau so, wie er nach dem Kauf angezeigt wurde." };
+        if (j.status === 410) return { ok: false, msg: j.error === "refunded" ? "Dieser Kauf wurde erstattet, der Schlüssel gilt nicht mehr." : "Zu diesem Schlüssel gibt es keine abgeschlossene Zahlung." };
+        return { ok: false, net: true, msg: "Die Prüfung hat gerade nicht geklappt. Bitte versuch es gleich noch einmal." };
+      }, function () { return { ok: false, net: true, msg: "Keine Verbindung zur Prüfung. Bitte versuch es gleich noch einmal." }; });
     }
   };
-  function unlock() {
+  function showKey(key) {
+    if (!key || key === "DEV-SPEICHERKLAR") return;
+    $("mykey-v").textContent = key; $("mykey").hidden = false;
+  }
+  $("mykey-copy").addEventListener("click", function () {
+    var b = this, k = $("mykey-v").textContent;
+    var done = function () { b.textContent = "Kopiert"; setTimeout(function () { b.textContent = "Kopieren"; }, 1800); };
+    try { navigator.clipboard.writeText(k).then(done, function () { selectKey(); }); } catch (e) { selectKey(); }
+  });
+  function selectKey() { var r = document.createRange(); r.selectNodeContents($("mykey-v")); var sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); }
+  function unlock(key) {
     state.unlocked = true; $("buy").hidden = true; $("keybox").hidden = true; $("teaser").classList.add("unlocked");
+    showKey(key);
     if (state.result) renderReport();
   }
   $("keyform").addEventListener("submit", function (e) {
     e.preventDefault();
     var key = $("f-key").value.trim(), msg = $("keymsg"), btn = $("keybtn");
-    if (key.length < 6) { msg.textContent = "Bitte gib den Schlüssel aus der Kaufbestätigung ein."; msg.className = "wait-msg err"; return; }
+    if (key.length < 6) { msg.textContent = "Bitte gib deinen Lizenzschlüssel ein."; msg.className = "wait-msg err"; return; }
     btn.disabled = true; btn.textContent = "Prüfe…";
     LICENSE.verify(key).then(function (res) {
       btn.disabled = false; btn.textContent = "Freischalten";
-      if (res.ok) { store(KEY_LIC, { key: key, at: Date.now() }); msg.textContent = ""; track("pro-freigeschaltet"); unlock(); $("report-wrap").scrollIntoView({ behavior: "smooth" }); }
+      if (res.ok) { store(KEY_LIC, { key: key, at: Date.now() }); msg.textContent = ""; track("pro-freigeschaltet"); unlock(key); $("report-wrap").scrollIntoView({ behavior: "smooth" }); }
       else { msg.textContent = res.msg; msg.className = "wait-msg err"; }
     });
   });
+  // Rückkehr von Stripe: ?kauf=<Checkout-ID> → Kauf prüfen, Schlüssel ausgeben und speichern
+  function afterPurchase() {
+    var m = /[?&]kauf=(cs_[A-Za-z0-9_]+)/.exec(location.search); if (!m) return false;
+    history.replaceState(null, "", location.pathname);
+    var msg = $("kaufmsg"); msg.hidden = false; msg.className = "wait-msg"; msg.textContent = "Danke! Dein Kauf wird geprüft…";
+    var tries = 0;
+    (function check() {
+      api("/verify", { session: m[1] }).then(function (j) {
+        if (j.key) {
+          store(KEY_LIC, { key: j.key, at: Date.now() }); track("pro-gekauft");
+          msg.textContent = "Danke für deinen Kauf! Der Bericht ist freigeschaltet."; unlock(j.key);
+          setTimeout(function () { $("report-wrap").scrollIntoView({ behavior: "smooth" }); }, 400);
+        } else if (j.status === 402 && ++tries < 5) setTimeout(check, 3000);
+        else { msg.className = "wait-msg err"; msg.textContent = (j.error || "Der Kauf ließ sich gerade nicht prüfen.") + " Lad die Seite in einer Minute neu oder schreib an kontakt@speicherklar.de."; }
+      }, function () { msg.className = "wait-msg err"; msg.textContent = "Keine Verbindung zur Prüfung. Lad die Seite gleich neu, dein Kauf geht nicht verloren."; history.replaceState(null, "", location.pathname + "?kauf=" + m[1]); });
+    })();
+    return true;
+  }
   // Gespeicherten Schlüssel nachprüfen: offline bleibt freigeschaltet, nur ein ausdrücklich ungültiger Schlüssel sperrt
   function restoreLicense() {
     var lic = load(KEY_LIC); if (!lic || !lic.key) return;
-    unlock();
+    unlock(lic.key);
     if (Date.now() - (lic.at || 0) > 7 * 864e5) LICENSE.verify(lic.key).then(function (res) {
       if (res.ok) store(KEY_LIC, { key: lic.key, at: Date.now() });
       else if (!res.net) { store(KEY_LIC, null); location.reload(); }
@@ -441,6 +481,6 @@
   var start = fromHash() || load(KEY_IN) || { roofs: [{ kwp: 9, aspect: 0, tilt: 35 }], cons: 4500, price: 33, feed: 7.7, life: 15 };
   fill(start);
   setupBuy();
-  restoreLicense();
+  if (!afterPurchase()) restoreLicense();
   if (start.cap) runCheck(false);
 })();
