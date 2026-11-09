@@ -36,10 +36,24 @@
       feed:+$("feed").value,feedLimit:state.eeg==="reform"?0.5:0};
   }
 
+  // Kleine Grafiken an den Eingaben: Kompass, Dachneigung, Akku
+  var ASP_ROT={"0":180,"-45":135,"45":225,"-90":90,"90":270};
+  function icons(p){
+    var n1=$("ic-n1"),n2=$("ic-n2"),ow=state.aspect==="ow";
+    n1.style.transform="rotate("+(ow?90:ASP_ROT[state.aspect])+"deg)";
+    n2.style.transform="rotate("+(ow?270:ASP_ROT[state.aspect])+"deg)";
+    n2.style.opacity=ow?1:0;
+    var t=+$("tilt").value,r=t*Math.PI/180;
+    $("ic-roof").style.transform="rotate("+(-t)+"deg)";
+    $("ic-arc").setAttribute("d",t?"M17,24A11,11 0 0 0 "+(6+11*Math.cos(r)).toFixed(2)+","+(24-11*Math.sin(r)).toFixed(2):"");
+    $("ic-fill").style.transform="scaleX("+(p.bat/+$("bat").max)+")";
+  }
+
   function outputs(p,plzOk){
     $("o-plz").textContent=plzOk?REGIONS[p.region].n:"5-stellige PLZ eingeben";
     $("o-plz").className=plzOk?"":"warn";
     $("o-tilt").textContent=$("tilt").value+"°";
+    icons(p);
     $("o-pv").textContent=nf1.format(+$("pv").value)+" kWp";
     $("o-cons").textContent=nf0.format(p.cons)+" kWh";
     $("o-ev").textContent=p.ev?nf0.format(p.ev)+" kWh":"kein E-Auto";

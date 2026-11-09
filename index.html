@@ -264,6 +264,28 @@ svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
 .scene-stats b{font-family:var(--f-display);font-weight:800;font-stretch:90%;font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
 .scene figcaption{font-size:12.5px;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){.scene{animation:none}.scene .sun,.scene .cloud,.scene .flow{transition:opacity 200ms ease}}
+
+/* Kleine Grafiken an den Eingaben */
+.field .row.ico-row,.field .row:has(.rv){align-items:center}
+.rv{flex:none;display:inline-flex;align-items:center;gap:10px}
+.ico{display:block;flex:none;overflow:visible}
+.ico-compass{width:48px;height:48px;margin:-10px 0 -8px}
+.ico-roof{width:52px;height:38px;margin:-10px 0 -6px}
+.ico-bat{width:46px;height:24px}
+.ic-ring,.ic-body{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.ico-compass text{font-family:var(--f-mono);font-size:7.4px;font-weight:600;fill:var(--muted);text-anchor:middle}
+.ic-needle{fill:var(--sun);transform-origin:24px 24px;transition:transform 520ms var(--ease-out),opacity 200ms ease}
+.ic-n2{opacity:0}
+.ic-hub{fill:var(--ink)}
+.ic-ground{stroke:var(--line);stroke-width:1.5;stroke-linecap:round}
+.ic-wall{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.ic-roof{transform-origin:6px 24px;transition:transform 180ms var(--ease-out)}
+.ic-roof line{stroke:var(--ink);stroke-width:2.4;stroke-linecap:round}
+.ic-roof rect{fill:var(--sun)}
+.ic-arc{fill:none;stroke:var(--sun-ink);stroke-width:1.2;stroke-dasharray:2 2}
+.ic-cap{fill:var(--line)}
+.ic-fill{fill:var(--sun);transform-origin:4.5px 12px;transition:transform 220ms var(--ease-out)}
+@media (prefers-reduced-motion:reduce){.ic-needle,.ic-roof,.ic-fill{transition:none}}
 </style>
 </head>
 <body>
@@ -350,7 +372,7 @@ svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
         <div class="field"><div class="row"><label for="plz">Postleitzahl</label><output for="plz" id="o-plz"></output></div>
           <input type="text" id="plz" inputmode="numeric" maxlength="5" value="44135" class="txt" aria-describedby="o-plz">
         </div>
-        <div class="field"><span class="flabel" id="l-aspect">Ausrichtung</span>
+        <div class="field"><div class="row ico-row"><span class="flabel" id="l-aspect">Ausrichtung</span><svg class="ico ico-compass" viewBox="0 0 48 48" aria-hidden="true"><circle class="ic-ring" cx="24" cy="24" r="22"/><text x="24" y="10.4">N</text><text x="39.6" y="26.6">O</text><text x="24" y="42.8">S</text><text x="8.4" y="26.6">W</text><g class="ic-needle" id="ic-n1"><path d="M24 12.5 27.2 24h-6.4z"/></g><g class="ic-needle ic-n2" id="ic-n2"><path d="M24 12.5 27.2 24h-6.4z"/></g><circle class="ic-hub" cx="24" cy="24" r="2.6"/></svg></div>
           <div class="seg" role="group" aria-labelledby="l-aspect" id="aspect">
             <button type="button" data-v="0" aria-pressed="true">Süd</button>
             <button type="button" data-v="-45" aria-pressed="false">Südost</button>
@@ -360,7 +382,7 @@ svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
             <button type="button" data-v="90" aria-pressed="false">West</button>
           </div>
           <span class="hint" id="h-aspect">Ost-West heißt: halbe Leistung auf jeder Dachseite.</span></div>
-        <div class="field"><div class="row"><label for="tilt">Dachneigung</label><output for="tilt" id="o-tilt"></output></div>
+        <div class="field"><div class="row"><label for="tilt">Dachneigung</label><span class="rv"><svg class="ico ico-roof" viewBox="0 0 44 32" aria-hidden="true"><line class="ic-ground" x1="2" y1="30.5" x2="42" y2="30.5"/><rect class="ic-wall" x="6" y="24" width="30" height="6.5"/><path class="ic-arc" id="ic-arc" d=""/><g class="ic-roof" id="ic-roof"><line x1="6" y1="24" x2="34" y2="24"/><rect x="9" y="20.6" width="22" height="3.4" rx=".8"/></g></svg><output for="tilt" id="o-tilt"></output></span></div>
           <input type="range" id="tilt" min="0" max="60" step="5" value="35">
           <span class="hint">Flachdach mit Aufständerung: etwa 10–15°.</span></div>
         <div class="field"><div class="row"><label for="pv">PV-Leistung</label><output for="pv" id="o-pv"></output></div>
@@ -383,7 +405,7 @@ svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
 
       <fieldset>
         <legend>Speicher</legend>
-        <div class="field big"><div class="row"><label for="bat">Speichergröße (nutzbar)</label><output for="bat" id="o-bat"></output></div>
+        <div class="field big"><div class="row"><label for="bat">Speichergröße (nutzbar)</label><span class="rv"><svg class="ico ico-bat" viewBox="0 0 46 24" aria-hidden="true"><rect class="ic-body" x="1.5" y="3" width="37" height="18" rx="3.5"/><rect class="ic-cap" x="39.5" y="8.5" width="4" height="7" rx="1.2"/><rect class="ic-fill" id="ic-fill" x="4.5" y="6" width="31" height="12" rx="1.6"/></svg><output for="bat" id="o-bat"></output></span></div>
           <input type="range" id="bat" min="1" max="15" step="1" value="8"></div>
         <div class="field"><div class="row"><label for="bprice">Preis inkl. Einbau</label><output for="bprice" id="o-bprice"></output></div>
           <input type="range" id="bprice" min="250" max="1000" step="25" value="500">
@@ -868,10 +890,24 @@ var DRAW = (function () {
       feed:+$("feed").value,feedLimit:state.eeg==="reform"?0.5:0};
   }
 
+  // Kleine Grafiken an den Eingaben: Kompass, Dachneigung, Akku
+  var ASP_ROT={"0":180,"-45":135,"45":225,"-90":90,"90":270};
+  function icons(p){
+    var n1=$("ic-n1"),n2=$("ic-n2"),ow=state.aspect==="ow";
+    n1.style.transform="rotate("+(ow?90:ASP_ROT[state.aspect])+"deg)";
+    n2.style.transform="rotate("+(ow?270:ASP_ROT[state.aspect])+"deg)";
+    n2.style.opacity=ow?1:0;
+    var t=+$("tilt").value,r=t*Math.PI/180;
+    $("ic-roof").style.transform="rotate("+(-t)+"deg)";
+    $("ic-arc").setAttribute("d",t?"M17,24A11,11 0 0 0 "+(6+11*Math.cos(r)).toFixed(2)+","+(24-11*Math.sin(r)).toFixed(2):"");
+    $("ic-fill").style.transform="scaleX("+(p.bat/+$("bat").max)+")";
+  }
+
   function outputs(p,plzOk){
     $("o-plz").textContent=plzOk?REGIONS[p.region].n:"5-stellige PLZ eingeben";
     $("o-plz").className=plzOk?"":"warn";
     $("o-tilt").textContent=$("tilt").value+"°";
+    icons(p);
     $("o-pv").textContent=nf1.format(+$("pv").value)+" kWp";
     $("o-cons").textContent=nf0.format(p.cons)+" kWh";
     $("o-ev").textContent=p.ev?nf0.format(p.ev)+" kWh":"kein E-Auto";

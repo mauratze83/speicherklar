@@ -242,3 +242,25 @@ svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
 .scene-stats b{font-family:var(--f-display);font-weight:800;font-stretch:90%;font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
 .scene figcaption{font-size:12.5px;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){.scene{animation:none}.scene .sun,.scene .cloud,.scene .flow{transition:opacity 200ms ease}}
+
+/* Kleine Grafiken an den Eingaben */
+.field .row.ico-row,.field .row:has(.rv){align-items:center}
+.rv{flex:none;display:inline-flex;align-items:center;gap:10px}
+.ico{display:block;flex:none;overflow:visible}
+.ico-compass{width:48px;height:48px;margin:-10px 0 -8px}
+.ico-roof{width:52px;height:38px;margin:-10px 0 -6px}
+.ico-bat{width:46px;height:24px}
+.ic-ring,.ic-body{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.ico-compass text{font-family:var(--f-mono);font-size:7.4px;font-weight:600;fill:var(--muted);text-anchor:middle}
+.ic-needle{fill:var(--sun);transform-origin:24px 24px;transition:transform 520ms var(--ease-out),opacity 200ms ease}
+.ic-n2{opacity:0}
+.ic-hub{fill:var(--ink)}
+.ic-ground{stroke:var(--line);stroke-width:1.5;stroke-linecap:round}
+.ic-wall{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.ic-roof{transform-origin:6px 24px;transition:transform 180ms var(--ease-out)}
+.ic-roof line{stroke:var(--ink);stroke-width:2.4;stroke-linecap:round}
+.ic-roof rect{fill:var(--sun)}
+.ic-arc{fill:none;stroke:var(--sun-ink);stroke-width:1.2;stroke-dasharray:2 2}
+.ic-cap{fill:var(--line)}
+.ic-fill{fill:var(--sun);transform-origin:4.5px 12px;transition:transform 220ms var(--ease-out)}
+@media (prefers-reduced-motion:reduce){.ic-needle,.ic-roof,.ic-fill{transition:none}}
