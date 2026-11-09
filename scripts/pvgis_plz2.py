@@ -43,8 +43,10 @@ def areas_from_geonames(raw):
         groups[code[:2]].append((rows[0][0], lat, lon))
     out = {}
     for k, rows in sorted(groups.items()):
-        # Name: die zwei Orte mit den meisten Postleitzahlen im Gebiet
-        names = [n for n, _ in collections.Counter(r[0] for r in rows).most_common(2)]
+        # Name: die zwei Orte mit den meisten Postleitzahlen im Gebiet. Ein zweiter Name zählt nur mit mindestens
+        # 3 Postleitzahlen, sonst wäre es oft eine Großkunden-PLZ (Behörde, Firma) statt eines Orts.
+        common = collections.Counter(r[0] for r in rows).most_common(2)
+        names = [common[0][0]] + [n for n, c in common[1:] if c >= 3]
         out[k] = {"n": ", ".join(names), "lat": round(sum(r[1] for r in rows) / len(rows), 3),
                   "lon": round(sum(r[2] for r in rows) / len(rows), 3), "codes": len(rows)}
     return out
