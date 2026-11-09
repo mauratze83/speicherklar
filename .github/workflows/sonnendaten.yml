@@ -1,0 +1,25 @@
+# Holt die Sonnendaten je PLZ-Gebiet für Speicherklar Pro (PVGIS + GeoNames) und schreibt src/plz2.json zurück.
+# Startet, wenn sich das Skript ändert, oder von Hand unter Actions → Sonnendaten → Run workflow.
+name: Sonnendaten
+on:
+  workflow_dispatch:
+  push:
+    paths: ["scripts/pvgis_plz2.py", ".github/workflows/sonnendaten.yml"]
+permissions:
+  contents: write
+jobs:
+  holen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: python3 scripts/pvgis_plz2.py
+      - name: Ergebnis committen
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/plz2.json
+          git diff --cached --quiet || git commit -m "Sonnendaten je PLZ-Gebiet aktualisiert (PVGIS-SARAH3 2014–2023)"
+          git push
