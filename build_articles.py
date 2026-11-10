@@ -113,7 +113,7 @@ def ask(a):
     return (f'<div class="ask"><b>Noch eine Frage offen?</b><span>Schreib sie mir. Ich antworte dir per Mail, und was öfter gefragt wird, ergänze ich hier im Artikel, ohne deinen Namen.</span>'
             f'<a class="btn ghost" href="mailto:kontakt@speicherklar.de?subject={subj}&amp;body={body}" data-umami-event="frage-mail">Frage per Mail stellen</a></div>')
 
-CTA = """<div class="cta"><b>Rechne dein eigenes Haus durch</b><span>Postleitzahl, Dachausrichtung und Verbrauch eingeben. Der kostenlose Rechner zeigt dir die wirtschaftlichste Speichergröße, auch für das Szenario EEG-Reform 2027.</span><a class="btn" href="../#rechner">Zum Rechner</a><span class="cta-pro">Du hast schon ein Angebot? <a href="../pro/">Speicherklar Pro</a> prüft Speicher und PV-Anlage zusammen und zeigt die beste Kombination für dein Dach. Die Einordnung ist kostenlos.</span></div>"""
+CTA = """<div class="cta"><b>Rechne dein eigenes Haus durch</b><span>Postleitzahl, Dachausrichtung und Verbrauch eingeben. Der kostenlose Rechner zeigt dir die wirtschaftlichste Speichergröße, auch für das Szenario EEG-Reform 2027.</span><a class="btn" href="../#rechner" data-umami-event="artikel-zum-rechner" data-umami-event-artikel="{slug}">Zum Rechner</a><span class="cta-pro">Du hast schon ein Angebot? <a href="../pro/" data-umami-event="artikel-zu-pro" data-umami-event-artikel="{slug}">Speicherklar Pro</a> prüft Speicher und PV-Anlage zusammen und zeigt die beste Kombination für dein Dach. Die Einordnung ist kostenlos.</span></div>"""
 
 # Kernzahl auf den Ratgeber-Karten (Feld "kennzahl": {"v": Wert, "t": kurzer Zusatz}); Zahlen müssen im Artikel stehen
 def sp(a):
@@ -151,13 +151,13 @@ for a in ARTICLES:
           {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": x}} for q, x in a["faq"]]}]
     head = "".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in ld)
     main = f"""<article class="doc"><div class="eyebrow">Ratgeber</div><h1>{a['h1']}</h1><p class="lead">{a['lead']}</p><p class="meta">Stand: {STAND}</p>
-{_with_figure(a)}{CTA}<h2>Häufige Fragen</h2>{faq_html}{ask(a)}{more(a)}<p class="note" style="margin-top:28px">{BEISPIEL}</p></article>"""
+{_with_figure(a)}{CTA.replace("{slug}", a["slug"])}<h2>Häufige Fragen</h2>{faq_html}{ask(a)}{more(a)}<p class="note" style="margin-top:28px">{BEISPIEL}</p></article>"""
     (out / f"{a['slug']}.html").write_text(page(f"{a['title']} | Speicherklar", a["desc"], url, main, head, og_image=f"img/og/{a['slug']}.png"))
     urls.append((url, a["date"]))
 
 items = "".join(f'<li><a href="{a["slug"]}.html">{sp(a)}<b>{a["title"]}</b><span>{a["desc"]}</span></a></li>' for a in NEWEST)
 (out / "index.html").write_text(page("Ratgeber Stromspeicher | Speicherklar", "Artikel rund um Stromspeicher und PV-Anlagen, mit Zahlen aus der Jahressimulation statt aus dem Prospekt. Mit Angebots-Check für PV-Anlage und Speicher.", "https://speicherklar.de/ratgeber/",
-    f'<div class="doc"><div class="eyebrow">Ratgeber</div><h1>Stromspeicher, ehrlich gerechnet</h1><p class="lead">Fragen rund um PV-Anlage und Speicher, beantwortet mit Zahlen aus unserer Jahressimulation.</p></div><ul class="rlist">{items}</ul>{CTA}', og_image="img/og/ratgeber.png"))
+    f'<div class="doc"><div class="eyebrow">Ratgeber</div><h1>Stromspeicher, ehrlich gerechnet</h1><p class="lead">Fragen rund um PV-Anlage und Speicher, beantwortet mit Zahlen aus unserer Jahressimulation.</p></div><ul class="rlist">{items}</ul>{CTA.replace("{slug}", "uebersicht")}', og_image="img/og/ratgeber.png"))
 
 # Über mich
 ABOUT_URL = "https://speicherklar.de/ueber-mich.html"

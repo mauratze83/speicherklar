@@ -254,7 +254,7 @@ ARTICLES = [
 <li><b>Lade- und Entladeleistung</b> in kW.</li>
 <li><b>Dein Jahresverbrauch</b> von der letzten Stromrechnung, dazu E-Auto oder Wärmepumpe, wenn sie geplant sind.</li>
 </ul>
-<p>Mit diesen Werten ordnet der <a href="../pro/">Angebots-Check</a> dein Angebot kostenlos ein.</p>
+<p>Mit diesen Werten ordnet der <a href="../pro/" data-umami-event="artikel-zu-pro" data-umami-event-artikel="pv-angebot-pruefen">Angebots-Check</a> dein Angebot kostenlos ein.</p>
 
 <h2>Wann ein großer Speicher doch passt</h2>
 <p>Mit einem E-Auto, das meist abends lädt, sieht es anders aus. Kommen im Beispiel 2.500 kWh fürs Auto dazu, passt das 10-kWh-Angebot. Lädt das Auto meist tagsüber direkt aus der Anlage, braucht es weniger Speicher.</p>
