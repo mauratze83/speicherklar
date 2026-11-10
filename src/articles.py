@@ -218,4 +218,63 @@ ARTICLES = [
  ("Lohnt sich ein Speicher nach 20 Jahren EEG?", "Oft ja. Ohne feste Vergütung ist jede selbst genutzte Kilowattstunde viel mehr wert als eine eingespeiste. Im Beispiel rechnet sich ein 5-kWh-Speicher dann in gut 7 Jahren."),
 ],
 },
+{
+"slug": "pv-angebot-pruefen",
+"kennzahl": {"v": "6 statt 10 kWh", "t": "Speichergröße, die im Beispiel am meisten bringt"},
+"title": "PV-Angebot prüfen: Ist der Speicher zu groß?",
+"h1": "PV-Angebot prüfen: Ist der Speicher zu groß?",
+"desc": "Im Beispiel bringt ein 6-kWh-Speicher in 15 Jahren rund 580 € mehr als die angebotenen 10 kWh. So prüfst du dein PV-Angebot, bevor du unterschreibst.",
+"date": "2026-11-10",
+"lead": "Oft ja. In unserem Beispielhaushalt mit 4.500 kWh Verbrauch steht ein 10-kWh-Speicher im Angebot, am meisten bringt aber einer mit 6 kWh. Der kleinere spart pro Jahr etwas weniger, kostet dafür deutlich weniger.",
+"body": """
+<p>Unser Beispiel: 9 kWp auf einem Süddach mit 35° Neigung im Ruhrgebiet, 4.500 kWh Verbrauch im Jahr, Strompreis 33 ct, Einspeisevergütung 7,70 ct. Im Angebot steht ein Speicher mit 10 kWh nutzbarer Kapazität und 5 kW Leistung. Der Aufpreis für den Speicher beträgt 6.500 €, also 650 €/kWh.</p>
+
+<h2>Warum Angebote oft größer ausfallen</h2>
+<p>Ein größerer Speicher fängt im Sommer mehr Strom ab. Das sieht im Prospekt gut aus. Im Winter wird er aber selten voll, weil die Anlage dann kaum Überschuss hat. Jede zusätzliche Kilowattstunde Speicher bringt deshalb weniger als die vorherige. Ab einer bestimmten Größe kostet sie mehr, als sie über die Jahre spart.</p>
+<p>Das ist kein Vorwurf an den Installateur. Viele Systeme gibt es nur in festen Stufen, und manche Haushalte planen später ein E-Auto. Du solltest nur wissen, welche Größe für deinen Verbrauch reicht.</p>
+
+<h2>Beispielrechnung: 10 kWh im Angebot</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>Speicher</th><th>Ersparnis/Jahr</th><th>Kosten</th><th>Bilanz nach 15 Jahren</th></tr></thead>
+<tbody>
+<tr><td>4 kWh</td><td class="num">301 €</td><td class="num">3.770 €</td><td class="num">+744 €</td></tr>
+<tr><td>5 kWh</td><td class="num">346 €</td><td class="num">4.225 €</td><td class="num">+970 €</td></tr>
+<tr class="hl"><td>6 kWh</td><td class="num">384 €</td><td class="num">4.680 €</td><td class="num">+1.078 €</td></tr>
+<tr><td>7 kWh</td><td class="num">413 €</td><td class="num">5.135 €</td><td class="num">+1.066 €</td></tr>
+<tr><td>8 kWh</td><td class="num">436 €</td><td class="num">5.590 €</td><td class="num">+954 €</td></tr>
+<tr><td>10 kWh (Angebot)</td><td class="num">466 €</td><td class="num">6.500 €</td><td class="num">+497 €</td></tr>
+</tbody></table></div>
+<p>Die Kosten der kleineren Speicher haben wir aus dem Angebot heruntergerechnet. Dabei gilt: Rund 30 % des Preises sinken nicht mit der Größe, etwa Wechselrichter, Montage und Anschluss.</p>
+<p>Der 10-kWh-Speicher spart nur 82 € pro Jahr mehr als der mit 6 kWh. Dafür kostet er 1.820 € mehr. Über 15 Jahre bleiben beim kleineren Speicher rund 580 € mehr übrig. Zwischen 5 und 7 kWh liegt die Bilanz eng beieinander. Diese Spanne passt zum Beispielhaushalt.</p>
+
+<h2>Diese Angaben brauchst du aus dem Angebot</h2>
+<ul>
+<li><b>Nutzbare Kapazität</b>, nicht brutto. Brutto ist die Gesamtkapazität, nutzbar etwas weniger. Steht nur eine Zahl da, frag nach.</li>
+<li><b>Aufpreis für den Speicher.</b> Steht oft als eigene Position. Fehlt er, frag nach dem Preis derselben Anlage ohne Speicher.</li>
+<li><b>Lade- und Entladeleistung</b> in kW.</li>
+<li><b>Dein Jahresverbrauch</b> von der letzten Stromrechnung, dazu E-Auto oder Wärmepumpe, wenn sie geplant sind.</li>
+</ul>
+<p>Mit diesen Werten ordnet der <a href="../pro/">Angebots-Check</a> dein Angebot kostenlos ein.</p>
+
+<h2>Wann ein großer Speicher doch passt</h2>
+<p>Mit einem E-Auto, das meist abends lädt, sieht es anders aus. Kommen im Beispiel 2.500 kWh fürs Auto dazu, passt das 10-kWh-Angebot. Lädt das Auto meist tagsüber direkt aus der Anlage, braucht es weniger Speicher.</p>
+<p>Ein höherer Strompreis oder ein günstigerer Speicherpreis verschieben die passende Größe ebenfalls nach oben.</p>
+
+<h2>Was du den Installateur fragen kannst</h2>
+<ul>
+<li>Gibt es dasselbe System mit 5 oder 6 kWh, und was kostet es dann?</li>
+<li>Ist der Speicher modular, und was kostet später ein weiteres Modul?</li>
+<li>Welche Garantie gibt es auf die Restkapazität?</li>
+<li>Ist Notstrom oder Ersatzstrom enthalten, und was kostet er extra?</li>
+</ul>
+
+<h2>Was das Modell nicht abbildet</h2>
+<p>Die Rechnung kennt keine Verschattung, keine Alterung des Speichers und keinen Notstrom. Das Lastprofil einer Wärmepumpe bildet nur der Angebots-Check ab, nicht der kostenlose Rechner.</p>
+""",
+"faq": [
+ ("Wie groß sollte ein Speicher bei 4.500 kWh sein?", "Im Beispiel mit 9 kWp lohnen sich 5 bis 7 kWh am meisten. Mit E-Auto oder anderer Dachausrichtung kann es anders aussehen."),
+ ("Ist ein zu großer Speicher schlimm?", "Er schadet nicht, kostet aber mehr, als er zusätzlich spart. Im Beispiel bleiben mit 10 statt 6 kWh rund 580 € weniger übrig."),
+ ("Woran erkenne ich, ob das Angebot brutto oder nutzbar angibt?", "Am Datenblatt des Speichers. Dort stehen beide Werte. Im Angebot fehlt die Angabe oft."),
+],
+},
 ]
