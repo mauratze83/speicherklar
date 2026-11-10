@@ -1,5 +1,5 @@
 """Baut die Ratgeber-Seiten, die Ratgeber-Übersicht und die Sitemap. Aufruf: python3 build_articles.py"""
-import pathlib, json, html, sys
+import pathlib, json, html, sys, re
 ROOT = pathlib.Path(__file__).parent
 sys.path.insert(0, str(ROOT / "src"))
 from articles import ARTICLES, STAND, BEISPIEL, CHART_BASE
@@ -115,6 +115,33 @@ def ask(a):
 
 CTA = """<div class="cta"><b>Rechne dein eigenes Haus durch</b><span>Postleitzahl, Dachausrichtung und Verbrauch eingeben. Der kostenlose Rechner zeigt dir die wirtschaftlichste Speichergröße, auch für das Szenario EEG-Reform 2027.</span><a class="btn" href="../#rechner">Zum Rechner</a><span class="cta-pro">Du hast schon ein Angebot? <a href="../pro/">Speicherklar Pro</a> prüft Speicher und PV-Anlage zusammen und zeigt die beste Kombination für dein Dach. Die Einordnung ist kostenlos.</span></div>"""
 
+# Kernzahl auf den Ratgeber-Karten (Feld "kennzahl": {"v": Wert, "t": kurzer Zusatz}); Zahlen müssen im Artikel stehen
+def sp(a):
+    k = a.get("kennzahl")
+    return f'<i class="kz"><em>{k["v"]}</em><small>{k["t"]}</small></i>' if k else ""
+
+# Neueste zuerst (gleiches Datum: später eingetragen = neuer). Gilt für Übersicht und Startseite.
+NEWEST = [a for _, a in sorted(enumerate(ARTICLES), key=lambda x: (x[1]["date"], x[0]), reverse=True)]
+
+# „Weiterlesen“: optionales Feld "related" (Liste von Slugs), sonst automatisch nach gemeinsamen Stichwörtern in Titel und Beschreibung
+_STOP = {"lohnt", "sich", "dein", "deine", "deinen", "einen", "einer", "speicher", "stromspeicher", "welche", "warum", "wann", "nicht", "kwh", "jahre", "jahren", "beispiel", "bringt", "mehr", "rund"}
+def _words(a):
+    t = re.sub(r"[^a-zäöüß0-9 ]", " ", (a["title"] + " " + a["desc"]).lower())
+    return {w for w in t.split() if len(w) >= 4 and w not in _STOP}
+def related(a, n=3):
+    picks = [ARTICLES_BY[s] for s in a.get("related", []) if s in ARTICLES_BY and s != a["slug"]]
+    if len(picks) < n:
+        wa = _words(a)
+        rest = [b for b in NEWEST if b["slug"] != a["slug"] and b not in picks]
+        rest.sort(key=lambda b: len(wa & _words(b)), reverse=True)  # stabil: bei Gleichstand neueste zuerst
+        picks += rest[:n - len(picks)]
+    return picks[:n]
+def more(a):
+    r = related(a)
+    if not r: return ""
+    li = "".join(f'<li><a href="{b["slug"]}.html">{sp(b)}<b>{b["title"]}</b><span>{b["desc"]}</span></a></li>' for b in r)
+    return f'<h2>Weiterlesen</h2><ul class="rlist">{li}</ul>'
+
 out = ROOT / "ratgeber"; out.mkdir(exist_ok=True)
 urls = [("https://speicherklar.de/", "2026-11-08"), ("https://speicherklar.de/ratgeber/", max(a["date"] for a in ARTICLES))]
 for a in ARTICLES:
@@ -124,15 +151,11 @@ for a in ARTICLES:
           {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": x}} for q, x in a["faq"]]}]
     head = "".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in ld)
     main = f"""<article class="doc"><div class="eyebrow">Ratgeber</div><h1>{a['h1']}</h1><p class="lead">{a['lead']}</p><p class="meta">Stand: {STAND}</p>
-{_with_figure(a)}{CTA}<h2>Häufige Fragen</h2>{faq_html}{ask(a)}<p class="note" style="margin-top:28px">{BEISPIEL}</p></article>"""
+{_with_figure(a)}{CTA}<h2>Häufige Fragen</h2>{faq_html}{ask(a)}{more(a)}<p class="note" style="margin-top:28px">{BEISPIEL}</p></article>"""
     (out / f"{a['slug']}.html").write_text(page(f"{a['title']} | Speicherklar", a["desc"], url, main, head, og_image=f"img/og/{a['slug']}.png"))
     urls.append((url, a["date"]))
 
-# Kernzahl auf den Ratgeber-Karten (Feld "kennzahl": {"v": Wert, "t": kurzer Zusatz}); Zahlen müssen im Artikel stehen
-def sp(a):
-    k = a.get("kennzahl")
-    return f'<i class="kz"><em>{k["v"]}</em><small>{k["t"]}</small></i>' if k else ""
-items = "".join(f'<li><a href="{a["slug"]}.html">{sp(a)}<b>{a["title"]}</b><span>{a["desc"]}</span></a></li>' for a in ARTICLES)
+items = "".join(f'<li><a href="{a["slug"]}.html">{sp(a)}<b>{a["title"]}</b><span>{a["desc"]}</span></a></li>' for a in NEWEST)
 (out / "index.html").write_text(page("Ratgeber Stromspeicher | Speicherklar", "Artikel rund um Stromspeicher und PV-Anlagen, mit Zahlen aus der Jahressimulation statt aus dem Prospekt. Mit Angebots-Check für PV-Anlage und Speicher.", "https://speicherklar.de/ratgeber/",
     f'<div class="doc"><div class="eyebrow">Ratgeber</div><h1>Stromspeicher, ehrlich gerechnet</h1><p class="lead">Fragen rund um PV-Anlage und Speicher, beantwortet mit Zahlen aus unserer Jahressimulation.</p></div><ul class="rlist">{items}</ul>{CTA}', og_image="img/og/ratgeber.png"))
 
@@ -167,7 +190,7 @@ for f in ("impressum", "datenschutz"):
     (ROOT / f"{f}.html").write_text(page(f"{title} – Speicherklar", title, "", f'<div class="doc">{body}</div>', prefix="./", active=None, robots=True))
 
 # Ratgeber-Liste für die Startseite
-(ROOT / "src/ratgeber-teaser.html").write_text("".join(f'<li><a href="ratgeber/{a["slug"]}.html">{sp(a)}<b>{a["title"]}</b><span>{a["desc"]}</span></a></li>' for a in ARTICLES[:6]))
+(ROOT / "src/ratgeber-teaser.html").write_text("".join(f'<li><a href="ratgeber/{a["slug"]}.html">{sp(a)}<b>{a["title"]}</b><span>{a["desc"]}</span></a></li>' for a in NEWEST[:6]))
 print("Artikel:", len(ARTICLES))
 for slug, g in CHARTS.items():
     for f in g.get("facts", []): print(f"  Grafik {slug}: {f['label']} -> beste Größe {f['best']} kWh, {f['net']:+} €")
