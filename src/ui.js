@@ -105,7 +105,7 @@
   var EASE=bezier(0.23,1,0.32,1);
   var REDUCE=false;try{REDUCE=window.matchMedia("(prefers-reduced-motion: reduce)").matches;}catch(e){}
   var MONTH_NAME=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
-  var DAYBOX={l:40,t:22,w:500,h:190},DAYH=250,dayState={month:5,days:null,shown:null,anim:0};
+  var DAYBOX={l:40,t:22,w:500,h:190},DAYH=250,dayState={month:5,days:null,shown:null,anim:0,built:"",paths:null,line:null};
   $("daylegend").innerHTML=DRAW.legend();
   var rz=0;window.addEventListener("resize",function(){cancelAnimationFrame(rz);rz=requestAnimationFrame(function(){if(dayState.shown)dayFrame(dayState.shown);});});
 
@@ -117,9 +117,17 @@
   function dayFrame(st){
     var svg=$("daychart"),W=Math.max(280,Math.round(svg.getBoundingClientRect().width||560));
     DAYBOX.w=W-DAYBOX.l-14;DAYBOX.h=W<480?170:190;svg.setAttribute("viewBox","0 0 "+W+" "+(DAYBOX.h+DAYBOX.t+30));
-    var g=DRAW.dayGeometry(st,DAYBOX,st.ymax),s=DRAW.dayAxes(DAYBOX,st.ymax,g.x,g.y);
-    g.areas.forEach(function(d,i){s+='<path class="area '+DRAW.LAYERS[i].cls+'" d="'+d+'"/>';});
-    $("daychart").innerHTML=s+'<path class="lline" d="'+g.load+'"/>';
+    var g=DRAW.dayGeometry(st,DAYBOX,st.ymax),key=W+"|"+st.ymax;
+    if(dayState.built!==key){
+      var s=DRAW.dayAxes(DAYBOX,st.ymax,g.x,g.y);
+      g.areas.forEach(function(d,i){s+='<path class="area '+DRAW.LAYERS[i].cls+'" d="'+d+'"/>';});
+      svg.innerHTML=s+'<path class="lline" d="'+g.load+'"/>';
+      dayState.built=key;dayState.paths=svg.querySelectorAll("path.area");dayState.line=svg.querySelector("path.lline");
+    }else{
+      // Während der Überblendung nur die Flächen und die Lastlinie neu setzen, Achsen bleiben stehen
+      g.areas.forEach(function(d,i){dayState.paths[i].setAttribute("d",d);});
+      dayState.line.setAttribute("d",g.load);
+    }
   }
   function lerpStack(a,b,t){
     var L=function(x,y){var o=[];for(var i=0;i<24;i++)o.push(x[i]+(y[i]-x[i])*t);return o;};
@@ -130,7 +138,7 @@
     cancelAnimationFrame(dayState.anim);
     if(!from||REDUCE){dayState.shown=target;dayFrame(target);}
     else{
-      var t0=performance.now(),D=320;
+      var t0=performance.now(),D=240;
       var step=function(now){var k=Math.min(1,(now-t0)/D),cur=lerpStack(from,target,EASE(k));dayState.shown=cur;dayFrame(cur);if(k<1)dayState.anim=requestAnimationFrame(step);};
       dayState.anim=requestAnimationFrame(step);
     }

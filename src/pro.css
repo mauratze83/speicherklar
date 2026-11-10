@@ -19,7 +19,7 @@
 .months{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:6px}
 @media (max-width:520px){.months{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .months label{display:grid;gap:2px;font-size:12.5px;color:var(--muted)}
-.months .in{font-family:var(--f-mono);font-size:15px;padding:6px}
+.months .in{font-family:var(--f-mono);font-size:16px;padding:6px}
 .months .hint{grid-column:1/-1;margin:0}
 .btn.wide{width:100%;padding:14px 18px;font-size:17px}
 .formerr{color:var(--neg);font-weight:600;margin:0 0 10px;font-size:15px}
@@ -34,6 +34,10 @@
 .amp .k{font-size:13.5px;color:var(--muted)}
 .amp .v{font-family:var(--f-display);font-weight:800;font-stretch:95%;font-size:22px;line-height:1.15}
 .amp .d{font-size:13px;color:var(--muted)}
+@keyframes sk-amp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+#t-amps.enter .amp{animation:sk-amp 200ms var(--ease-out) both}
+#t-amps.enter .amp:nth-child(2){animation-delay:50ms}#t-amps.enter .amp:nth-child(3){animation-delay:100ms}#t-amps.enter .amp:nth-child(4){animation-delay:150ms}#t-amps.enter .amp:nth-child(n+5){animation-delay:200ms}
+@media (prefers-reduced-motion:reduce){#t-amps.enter .amp{animation:sk-fade 150ms ease both}@keyframes sk-fade{from{opacity:0}to{opacity:1}}}
 .locked{position:relative;border:1px dashed var(--line);border-radius:8px;padding:16px;overflow:hidden}
 .ghost{display:grid;gap:10px;filter:blur(3px);opacity:.6}
 .gl{height:12px;border-radius:6px;background:var(--track)}
@@ -51,7 +55,7 @@ a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
 .buy .note{margin:0;font-size:13.5px;color:var(--muted)}
 .keybox summary{cursor:pointer;font-size:14.5px;color:var(--sun-ink);padding:4px 0}
 .keybox form{margin-top:8px}
-.keybox input{flex:1 1 200px;min-width:0;font:inherit;font-family:var(--f-mono);font-size:15px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.keybox input{flex:1 1 200px;min-width:0;font:inherit;font-family:var(--f-mono);font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
 
 /* Bericht */
 .report-wrap{padding-block:10px 40px;border-top:1px solid var(--line)}
@@ -107,7 +111,7 @@ a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
 #kaufmsg{margin:0 0 12px;font-weight:600}
 .recform{display:grid;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
 .recform label{font-size:14px;color:var(--muted)}
-.recform input{flex:1 1 200px;min-width:0;font:inherit;font-size:15px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.recform input{flex:1 1 200px;min-width:0;font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
 .wait-msg.ok{color:var(--pos)}
 .report .lic{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin:10px 0 0}
 .result>.mykey,.result>.keybox{margin-top:14px}

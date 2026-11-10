@@ -100,7 +100,7 @@ input[type=range]{width:100%;accent-color:var(--sun);height:26px;margin:0}
 .meterbox .cap{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.7}
 .wheels{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
 .wheel{font-family:var(--f-mono);font-weight:700;font-size:clamp(26px,4vw,36px);width:1.05em;height:calc(1.25em + 4px);overflow:hidden;text-align:center;background:linear-gradient(#000 0,#2a2f35 12%,#15191d 50%,#2a2f35 88%,#000 100%);border-radius:3px;padding:2px 0;line-height:1.25;color:var(--meter-digit)}
-.wheel .strip{display:block;transition:transform 260ms var(--ease-out);will-change:transform}
+.wheel .strip{display:block;transition:transform 160ms var(--ease-out);will-change:transform}
 .wheel .strip span{display:block;height:1.25em;line-height:1.25;padding-top:2px}
 .wheels .unit{font-family:var(--f-mono);font-size:15px;margin-left:8px;opacity:.85}
 .meterbox .foot{font-size:13.5px;opacity:.75}
@@ -173,14 +173,14 @@ footer .wrap{padding-block:22px 34px;display:grid;gap:6px}
 .field .row{min-width:0}
 .yield{margin:8px 0 0;font-size:14.5px;color:var(--muted)}
 @keyframes sk-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.hero .eyebrow,.hero h1,.hero .lede,.hero .facts,.tool>.panel{animation:sk-rise 420ms var(--ease-out) both}
-.hero h1{animation-delay:60ms}.hero .lede{animation-delay:120ms}.hero .facts{animation-delay:180ms}
-.tool>.panel:first-child{animation-delay:220ms}.tool>.panel:last-child{animation-delay:280ms}
+/* h1 bleibt sofort sichtbar (LCP), der Rechner ebenfalls: das Werkzeug wartet nicht */
+.hero .eyebrow,.hero .lede,.hero .facts{animation:sk-rise 420ms var(--ease-out) both}
+.hero .lede{animation-delay:60ms}.hero .facts{animation-delay:120ms}
 /* Bereiche weiter unten blenden einmal ein (nur wenn JS läuft) */
-html.js .reveal{opacity:0;transform:translateY(16px);transition:opacity 500ms var(--ease-out),transform 500ms var(--ease-out)}
+html.js .reveal{opacity:0;transform:translateY(12px);transition:opacity 350ms var(--ease-out),transform 350ms var(--ease-out)}
 html.js .reveal.in{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){
-  .hero .eyebrow,.hero h1,.hero .lede,.hero .facts,.tool>.panel{animation:none}
+  .hero .eyebrow,.hero .lede,.hero .facts{animation:none}
   .wheel .strip{transition:opacity 150ms ease}
   .track i{transition:transform 150ms linear}
   html.js .reveal{transform:none;transition:opacity 300ms ease}
@@ -193,7 +193,7 @@ html.js .reveal.in{opacity:1;transform:none}
 .wait-row{display:flex;gap:8px;flex-wrap:wrap}
 .wait-row input{flex:1 1 180px;min-width:0;font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
 .wait-row input:focus-visible{outline:3px solid var(--sun);outline-offset:1px}
-.btn.btn-on{cursor:pointer;opacity:1;flex:0 0 auto;transition:transform 160ms var(--ease-out),opacity 150ms ease}
+.btn.btn-on{cursor:pointer;opacity:1;flex:0 0 auto;transition:transform 160ms var(--ease-out),opacity 150ms ease;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .btn.btn-on:active{transform:scale(0.97)}
 .btn.btn-on[disabled]{opacity:.6;cursor:default}
 .btn.btn-on.busy{cursor:progress}
@@ -263,6 +263,7 @@ svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
 .scene-stats .k{font-size:13px;color:var(--muted)}
 .scene-stats b{font-family:var(--f-display);font-weight:800;font-stretch:90%;font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
 .scene figcaption{font-size:12.5px;color:var(--muted)}
+.scene.no-trans,.scene.no-trans *{transition:none!important}
 @media (prefers-reduced-motion:reduce){.scene{animation:none}.scene .sun,.scene .cloud,.scene .flow{transition:opacity 200ms ease}}
 
 /* Kernzahl auf Ratgeber-Karten */
@@ -299,7 +300,7 @@ a.btn{text-decoration:none;display:inline-block}
 .months{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:6px}
 @media (max-width:520px){.months{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .months label{display:grid;gap:2px;font-size:12.5px;color:var(--muted)}
-.months .in{font-family:var(--f-mono);font-size:15px;padding:6px}
+.months .in{font-family:var(--f-mono);font-size:16px;padding:6px}
 .months .hint{grid-column:1/-1;margin:0}
 .btn.wide{width:100%;padding:14px 18px;font-size:17px}
 .formerr{color:var(--neg);font-weight:600;margin:0 0 10px;font-size:15px}
@@ -314,6 +315,10 @@ a.btn{text-decoration:none;display:inline-block}
 .amp .k{font-size:13.5px;color:var(--muted)}
 .amp .v{font-family:var(--f-display);font-weight:800;font-stretch:95%;font-size:22px;line-height:1.15}
 .amp .d{font-size:13px;color:var(--muted)}
+@keyframes sk-amp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+#t-amps.enter .amp{animation:sk-amp 200ms var(--ease-out) both}
+#t-amps.enter .amp:nth-child(2){animation-delay:50ms}#t-amps.enter .amp:nth-child(3){animation-delay:100ms}#t-amps.enter .amp:nth-child(4){animation-delay:150ms}#t-amps.enter .amp:nth-child(n+5){animation-delay:200ms}
+@media (prefers-reduced-motion:reduce){#t-amps.enter .amp{animation:sk-fade 150ms ease both}@keyframes sk-fade{from{opacity:0}to{opacity:1}}}
 .locked{position:relative;border:1px dashed var(--line);border-radius:8px;padding:16px;overflow:hidden}
 .ghost{display:grid;gap:10px;filter:blur(3px);opacity:.6}
 .gl{height:12px;border-radius:6px;background:var(--track)}
@@ -331,7 +336,7 @@ a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
 .buy .note{margin:0;font-size:13.5px;color:var(--muted)}
 .keybox summary{cursor:pointer;font-size:14.5px;color:var(--sun-ink);padding:4px 0}
 .keybox form{margin-top:8px}
-.keybox input{flex:1 1 200px;min-width:0;font:inherit;font-family:var(--f-mono);font-size:15px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.keybox input{flex:1 1 200px;min-width:0;font:inherit;font-family:var(--f-mono);font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
 
 /* Bericht */
 .report-wrap{padding-block:10px 40px;border-top:1px solid var(--line)}
@@ -387,7 +392,7 @@ a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
 #kaufmsg{margin:0 0 12px;font-weight:600}
 .recform{display:grid;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
 .recform label{font-size:14px;color:var(--muted)}
-.recform input{flex:1 1 200px;min-width:0;font:inherit;font-size:15px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.recform input{flex:1 1 200px;min-width:0;font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
 .wait-msg.ok{color:var(--pos)}
 .report .lic{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin:10px 0 0}
 .result>.mykey,.result>.keybox{margin-top:14px}
@@ -1121,6 +1126,8 @@ var PRO = (function () {
   var ASPECTS = [["0", "Süd"], ["-45", "Südost"], ["45", "Südwest"], ["-90", "Ost"], ["90", "West"], ["-135", "Nordost"], ["135", "Nordwest"], ["180", "Nord"]];
   var ASPECT_NAME = {}; ASPECTS.forEach(function (a) { ASPECT_NAME[a[0]] = a[1]; });
   var KEY_IN = "sk-pro-eingabe", KEY_LIC = "sk-pro-lizenz";
+  var REDUCE = false; try { REDUCE = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+  var SCROLL = REDUCE ? "auto" : "smooth";
   var state = { capKind: "nutzbar", evTime: "eve", eeg: "now", roofs: [], monthly: null, result: null, input: null, unlocked: false };
 
   function store(k, v) { try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
@@ -1275,7 +1282,8 @@ var PRO = (function () {
     var r = state.result, t = PRO.teaser(r);
     $("t-empty").hidden = true; $("t-res").hidden = false;
     $("t-verdict").innerHTML = VERDICT[t.verdict][2] + " " + PVSIZE[t.pvSize][2];
-    $("t-amps").innerHTML = amps(t, state.input);
+    var a = $("t-amps"); a.innerHTML = amps(t, state.input);
+    a.classList.remove("enter"); void a.offsetWidth; a.classList.add("enter");
   }
 
   function runCheck(scroll) {
@@ -1288,8 +1296,8 @@ var PRO = (function () {
       state.input = o; state.result = PRO.check(o);
       btn.disabled = false; btn.textContent = "Angebot prüfen";
       showTeaser(); track("pro-geprueft");
-      if (state.unlocked) { renderReport(); if (scroll) $("report-wrap").scrollIntoView({ behavior: "smooth" }); }
-      else if (scroll) $("teaser").scrollIntoView({ behavior: "smooth", block: "start" });
+      if (state.unlocked) { renderReport(); if (scroll) $("report-wrap").scrollIntoView({ behavior: SCROLL }); }
+      else if (scroll) $("teaser").scrollIntoView({ behavior: SCROLL, block: "start" });
     }, 30);
   }
   $("offer").addEventListener("submit", function (e) { e.preventDefault(); runCheck(true); });
@@ -1385,7 +1393,7 @@ var PRO = (function () {
     btn.disabled = true; btn.textContent = "Prüfe…";
     LICENSE.verify(key).then(function (res) {
       btn.disabled = false; btn.textContent = "Freischalten";
-      if (res.ok) { store(KEY_LIC, { key: key, email: res.email, at: Date.now() }); msg.textContent = ""; track("pro-freigeschaltet"); unlock(key, res.email); if (state.result) $("report-wrap").scrollIntoView({ behavior: "smooth" }); }
+      if (res.ok) { store(KEY_LIC, { key: key, email: res.email, at: Date.now() }); msg.textContent = ""; track("pro-freigeschaltet"); unlock(key, res.email); if (state.result) $("report-wrap").scrollIntoView({ behavior: SCROLL }); }
       else { msg.textContent = res.msg; msg.className = "wait-msg err"; }
     });
   });
@@ -1414,7 +1422,7 @@ var PRO = (function () {
           store(KEY_LIC, { key: j.key, email: j.email, at: Date.now() }); track("pro-gekauft");
           msg.textContent = "Danke für deinen Kauf! Der Bericht ist freigeschaltet." + (j.mailed ? " Deinen Lizenzschlüssel bekommst du auch per Mail." : "");
           unlock(j.key, j.email);
-          setTimeout(function () { $("report-wrap").scrollIntoView({ behavior: "smooth" }); }, 400);
+          setTimeout(function () { $("report-wrap").scrollIntoView({ behavior: SCROLL }); }, 400);
         } else if (j.status === 402 && ++tries < 5) setTimeout(check, 3000);
         else { msg.className = "wait-msg err"; msg.textContent = (j.error || "Der Kauf ließ sich gerade nicht prüfen.") + " Lad die Seite in einer Minute neu oder schreib an kontakt@speicherklar.de."; }
       }, function () { msg.className = "wait-msg err"; msg.textContent = "Keine Verbindung zur Prüfung. Lad die Seite gleich neu, dein Kauf geht nicht verloren."; history.replaceState(null, "", location.pathname + "?kauf=" + m[1]); });
@@ -1614,7 +1622,7 @@ var PRO = (function () {
   }
 
   $("print").addEventListener("click", function () { track("pro-pdf"); window.print(); });
-  $("edit").addEventListener("click", function () { $("offer").scrollIntoView({ behavior: "smooth" }); });
+  $("edit").addEventListener("click", function () { $("offer").scrollIntoView({ behavior: SCROLL }); });
   window.addEventListener("beforeprint", function () { document.title = "Speicherklar Angebots-Check " + (state.input && state.input.model ? state.input.model : ""); });
 
   // ---------- Start ----------

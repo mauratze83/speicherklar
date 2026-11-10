@@ -13,6 +13,8 @@
   var ASPECTS = [["0", "Süd"], ["-45", "Südost"], ["45", "Südwest"], ["-90", "Ost"], ["90", "West"], ["-135", "Nordost"], ["135", "Nordwest"], ["180", "Nord"]];
   var ASPECT_NAME = {}; ASPECTS.forEach(function (a) { ASPECT_NAME[a[0]] = a[1]; });
   var KEY_IN = "sk-pro-eingabe", KEY_LIC = "sk-pro-lizenz";
+  var REDUCE = false; try { REDUCE = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+  var SCROLL = REDUCE ? "auto" : "smooth";
   var state = { capKind: "nutzbar", evTime: "eve", eeg: "now", roofs: [], monthly: null, result: null, input: null, unlocked: false };
 
   function store(k, v) { try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
@@ -167,7 +169,8 @@
     var r = state.result, t = PRO.teaser(r);
     $("t-empty").hidden = true; $("t-res").hidden = false;
     $("t-verdict").innerHTML = VERDICT[t.verdict][2] + " " + PVSIZE[t.pvSize][2];
-    $("t-amps").innerHTML = amps(t, state.input);
+    var a = $("t-amps"); a.innerHTML = amps(t, state.input);
+    a.classList.remove("enter"); void a.offsetWidth; a.classList.add("enter");
   }
 
   function runCheck(scroll) {
@@ -180,8 +183,8 @@
       state.input = o; state.result = PRO.check(o);
       btn.disabled = false; btn.textContent = "Angebot prüfen";
       showTeaser(); track("pro-geprueft");
-      if (state.unlocked) { renderReport(); if (scroll) $("report-wrap").scrollIntoView({ behavior: "smooth" }); }
-      else if (scroll) $("teaser").scrollIntoView({ behavior: "smooth", block: "start" });
+      if (state.unlocked) { renderReport(); if (scroll) $("report-wrap").scrollIntoView({ behavior: SCROLL }); }
+      else if (scroll) $("teaser").scrollIntoView({ behavior: SCROLL, block: "start" });
     }, 30);
   }
   $("offer").addEventListener("submit", function (e) { e.preventDefault(); runCheck(true); });
@@ -277,7 +280,7 @@
     btn.disabled = true; btn.textContent = "Prüfe…";
     LICENSE.verify(key).then(function (res) {
       btn.disabled = false; btn.textContent = "Freischalten";
-      if (res.ok) { store(KEY_LIC, { key: key, email: res.email, at: Date.now() }); msg.textContent = ""; track("pro-freigeschaltet"); unlock(key, res.email); if (state.result) $("report-wrap").scrollIntoView({ behavior: "smooth" }); }
+      if (res.ok) { store(KEY_LIC, { key: key, email: res.email, at: Date.now() }); msg.textContent = ""; track("pro-freigeschaltet"); unlock(key, res.email); if (state.result) $("report-wrap").scrollIntoView({ behavior: SCROLL }); }
       else { msg.textContent = res.msg; msg.className = "wait-msg err"; }
     });
   });
@@ -306,7 +309,7 @@
           store(KEY_LIC, { key: j.key, email: j.email, at: Date.now() }); track("pro-gekauft");
           msg.textContent = "Danke für deinen Kauf! Der Bericht ist freigeschaltet." + (j.mailed ? " Deinen Lizenzschlüssel bekommst du auch per Mail." : "");
           unlock(j.key, j.email);
-          setTimeout(function () { $("report-wrap").scrollIntoView({ behavior: "smooth" }); }, 400);
+          setTimeout(function () { $("report-wrap").scrollIntoView({ behavior: SCROLL }); }, 400);
         } else if (j.status === 402 && ++tries < 5) setTimeout(check, 3000);
         else { msg.className = "wait-msg err"; msg.textContent = (j.error || "Der Kauf ließ sich gerade nicht prüfen.") + " Lad die Seite in einer Minute neu oder schreib an kontakt@speicherklar.de."; }
       }, function () { msg.className = "wait-msg err"; msg.textContent = "Keine Verbindung zur Prüfung. Lad die Seite gleich neu, dein Kauf geht nicht verloren."; history.replaceState(null, "", location.pathname + "?kauf=" + m[1]); });
@@ -506,7 +509,7 @@
   }
 
   $("print").addEventListener("click", function () { track("pro-pdf"); window.print(); });
-  $("edit").addEventListener("click", function () { $("offer").scrollIntoView({ behavior: "smooth" }); });
+  $("edit").addEventListener("click", function () { $("offer").scrollIntoView({ behavior: SCROLL }); });
   window.addEventListener("beforeprint", function () { document.title = "Speicherklar Angebots-Check " + (state.input && state.input.model ? state.input.model : ""); });
 
   // ---------- Start ----------
