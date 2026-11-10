@@ -1,0 +1,64 @@
+<article class="doc">
+<div class="eyebrow">Methodik</div>
+<h1>So rechnet Speicherklar</h1>
+<p class="lead">Jede Zahl auf dieser Seite kommt aus einer Jahressimulation, deren Code du selbst lesen kannst. Hier steht, wie sie funktioniert, wer dafür bezahlt und wie gut sie zu einer unabhängigen Quelle passt.</p>
+<p class="meta">Stand: 10.11.2026</p>
+
+<h2>Unabhängig</h2>
+<p>Ich verkaufe keine PV-Anlagen und keine Speicher. Ich bekomme kein Geld von Herstellern, Händlern oder Installateuren, keine Provision und keine Vermittlungsgebühr. Auf Speicherklar gibt es keine Werbung und keine Partnerlinks.</p>
+<p>Finanzieren soll sich die Seite allein über <a href="pro/">Speicherklar Pro</a>, den Angebots-Check. Pro rechnet mit demselben Simulationskern wie der kostenlose Rechner. Ob du kaufst oder nicht, ändert an keiner Zahl etwas. Was du in Rechner oder Angebots-Check eingibst, bleibt in deinem Browser und wird nicht übertragen.</p>
+
+<h2>Der Code ist öffentlich</h2>
+<p>Die ganze Website liegt öffentlich auf GitHub. Du kannst nachlesen, wie jede Zahl entsteht:</p>
+<ul>
+<li><a href="https://github.com/mauratze83/speicherklar/blob/main/src/sim.js" target="_blank" rel="noopener"><code>src/sim.js</code></a>: der Simulationskern des kostenlosen Rechners, rund 150 Zeilen</li>
+<li><a href="https://github.com/mauratze83/speicherklar/blob/main/src/pro.js" target="_blank" rel="noopener"><code>src/pro.js</code></a>: die Rechnung für den Angebots-Check</li>
+<li><a href="https://github.com/mauratze83/speicherklar/blob/main/test/pro.test.js" target="_blank" rel="noopener"><code>test/pro.test.js</code></a>: Beispielrechnungen und der Abgleich, dass Pro und kostenloser Rechner dasselbe Ergebnis liefern</li>
+<li><a href="https://github.com/mauratze83/speicherklar/commits/main" target="_blank" rel="noopener">Änderungsverlauf</a>: jede Änderung an Rechnung und Texten mit Datum</li>
+</ul>
+<p>Findest du einen Fehler, schreib mir an <a href="mailto:kontakt@speicherklar.de?subject=Fehler%20in%20der%20Rechnung">kontakt@speicherklar.de</a>. Ich prüfe ihn und korrigiere die Zahlen.</p>
+
+<h2>Wie die Rechnung abläuft</h2>
+<ol>
+<li><b>Sonne.</b> Monatsmittel der Einstrahlung 2014–2023 aus PVGIS-SARAH3 der EU-Kommission. Der kostenlose Rechner nutzt 10 Regionen nach der ersten Ziffer der PLZ, der Angebots-Check die zweistelligen PLZ-Gebiete.</li>
+<li><b>Wetter.</b> 365 einzelne Tage, sonnige und trübe wechseln sich ab, oft mehrere trübe am Stück. Daraus entsteht für jede Stunde die Einstrahlung auf dein Dach, nach Sonnenstand, Ausrichtung und Neigung. Anlagenverluste: rund 21 %.</li>
+<li><b>Verbrauch.</b> Standardlastprofil H0 mit Morgen- und Abendspitze, im Winter mehr als im Sommer, dazu kurze Lastspitzen in 5-Minuten-Schritten. E-Auto abends oder tagsüber, Wärmepumpe nur im Angebots-Check.</li>
+<li><b>Speicher.</b> Ein ganzes Jahr in 5-Minuten-Schritten: Überschuss lädt den Speicher, abends entlädt er. 88 % Wirkungsgrad je Zyklus, 25 W Standby, Ladeleistung halbe Kapazität pro Stunde, höchstens 5 kW.</li>
+<li><b>Geld.</b> Jede selbst genutzte kWh spart den Strompreis, jede nicht mehr eingespeiste kostet die Vergütung. Ersparnis mal Lebensdauer minus Speicherpreis ergibt die Bilanz. Das rechnet der Rechner für 1 bis 15 kWh und zeigt die Größe, bei der am meisten übrig bleibt.</li>
+</ol>
+<p>Alle Standardwerte mit Quelle stehen in der Tabelle <a href="./#annahmen">So rechnet Speicherklar</a> auf der Startseite.</p>
+
+<h2>Vergleich mit dem Unabhängigkeitsrechner der HTW Berlin</h2>
+<p>Die Hochschule für Technik und Wirtschaft (HTW) Berlin bietet einen eigenen <a href="https://solar.htw-berlin.de/rechner/unabhaengigkeitsrechner/" target="_blank" rel="noopener">Unabhängigkeitsrechner</a> an. Er rechnet unabhängig von Speicherklar, mit Wetterdaten einer DWD-Station in Brandenburg. Ich habe beide mit denselben Werten gerechnet: 4.500 kWh Verbrauch, 9 kWp, Süddach 35°, bei Speicherklar die Region Berlin/Brandenburg.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Speicher (nutzbar)</th><th>HTW Berlin</th><th>Speicherklar</th><th>Speicherklar mit HTW-Speicherwerten</th></tr></thead>
+<tbody>
+<tr><td>ohne</td><td class="num">36 %</td><td class="num">36 %</td><td class="num">36 %</td></tr>
+<tr><td>4 kWh</td><td class="num">61 %</td><td class="num">65 %</td><td class="num">62 %</td></tr>
+<tr class="hl"><td>6 kWh</td><td class="num">69 %</td><td class="num">72 %</td><td class="num">70 %</td></tr>
+<tr><td>8 kWh</td><td class="num">75 %</td><td class="num">77 %</td><td class="num">75 %</td></tr>
+<tr><td>10 kWh</td><td class="num">77 %</td><td class="num">80 %</td><td class="num">78 %</td></tr>
+</tbody></table></div>
+<p class="note">Autarkiegrad: Anteil des Verbrauchs, den PV-Anlage und Speicher decken. HTW-Werte aus dem Unabhängigkeitsrechner, abgerufen am 10.11.2026. Speicherklar gerechnet mit <code>src/sim.js</code> am selben Tag.</p>
+<p>Ohne Speicher liegen beide gleich. Auch der Jahresertrag passt: 1.024 kWh je kWp bei der HTW, 1.035 kWh bei Speicherklar. Mit Speicher rechnet Speicherklar 2 bis 4 Prozentpunkte mehr Autarkie.</p>
+<p>Der Unterschied kommt vom Speicher selbst. Die HTW nimmt an, dass im Mittel nur 90 % der Kapazität verfügbar sind, weil der Akku altert, und setzt einen Wirkungsgrad von 83,9 % an. Speicherklar rechnet mit voller Kapazität und 88 %. Setzt man die HTW-Werte in Speicherklar ein (letzte Spalte), liegen beide Rechner höchstens einen Prozentpunkt auseinander.</p>
+<p>Was das für dich heißt: Speicherklar ist beim Speicher etwas optimistisch. An der besten Größe ändert das im Beispiel nichts, mit beiden Annahmen sind es 6 kWh. Die Bilanz nach 15 Jahren fällt mit den HTW-Werten aber kleiner aus, im Standard-Beispiel (Ruhrgebiet, 500 €/kWh, 33 ct) rund 2.230 € statt 2.758 €.</p>
+
+<h2>Was die Rechnung nicht abbildet</h2>
+<ul>
+<li>Verschattung durch Bäume, Gauben oder Nachbarhäuser</li>
+<li>Alterung des Speichers (siehe Vergleich oben)</li>
+<li>Steigende Strompreise und Zinsen</li>
+<li>Dynamische Stromtarife</li>
+<li>Notstrom und Ersatzstrom</li>
+<li>Das Lastprofil einer Wärmepumpe im kostenlosen Rechner (der Angebots-Check rechnet sie mit)</li>
+</ul>
+<p>Speicherklar ist eine Schätzung, keine Anlagenplanung. Für die Kaufentscheidung brauchst du Angebote von Fachbetrieben. Speicherklar hilft dir, sie zu prüfen.</p>
+
+<h2>Quellen</h2>
+<ul>
+<li><a href="https://joint-research-centre.ec.europa.eu/photovoltaic-geographical-information-system-pvgis_en" target="_blank" rel="noopener">PVGIS</a>, Gemeinsame Forschungsstelle der EU-Kommission: Sonnendaten SARAH3, 2014–2023</li>
+<li><a href="https://www.bundesnetzagentur.de/DE/Fachthemen/ElektrizitaetundGas/ErneuerbareEnergien/EEG_Foerderung/start.html" target="_blank" rel="noopener">Bundesnetzagentur</a>: Einspeisevergütung nach EEG</li>
+<li><a href="https://solar.htw-berlin.de/faq-unabhaengigkeitsrechner/" target="_blank" rel="noopener">HTW Berlin, FAQ zum Unabhängigkeitsrechner</a>: Annahmen der Vergleichsrechnung</li>
+</ul>
+</article>

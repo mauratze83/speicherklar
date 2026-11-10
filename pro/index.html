@@ -279,6 +279,7 @@ a.btn{text-decoration:none;display:inline-block}
 .hero-pro a{font-weight:600}
 .intro-note{margin:0;font-size:14px;color:var(--muted)}
 #pro-buy{justify-self:start}
+.how .code-note{margin-top:16px}
 /* Speicherklar Pro: Eingabe, Einordnung, Bericht, Druck */
 [hidden]{display:none!important}
 .unlocked .locked{display:none}
@@ -396,6 +397,7 @@ a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
 .wait-msg.ok{color:var(--pos)}
 .report .lic{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin:10px 0 0}
 .result>.mykey,.result>.keybox{margin-top:14px}
+.pro-hero .sample{font-size:16px;margin-top:14px}
 </style>
 </head>
 <body>
@@ -415,6 +417,7 @@ a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
       <h1>Passen Speicher und Anlage in <em>deinem Angebot?</em></h1>
       <p class="lede">Trag das Angebot deines Installateurs ein. Du siehst sofort, ob Speicher und PV-Anlage zu deinem Haushalt passen. Der vollständige Bericht zeigt die beste Kombination aus PV-Größe und Speicher, was sie spart, wie stabil das Ergebnis ist und was du den Installateur fragen solltest.</p>
       <div class="facts"><span>Eingabe <b>kostenlos</b></span><span>PV-Größe <b>und</b> Speicher</span><span>Sonnendaten <b>für dein PLZ-Gebiet</b></span><span>Rechnung <b>in deinem Browser</b></span><span>Bericht als <b>PDF</b></span></div>
+      <p class="lede sample"><a href="musterbericht.pdf" target="_blank" rel="noopener" data-umami-event="pro-musterbericht">Musterbericht ansehen (PDF)</a>: so sieht der vollständige Bericht für ein Beispielangebot aus.</p>
     </div>
   </section>
 
@@ -520,12 +523,14 @@ a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
             <li>Wie sich die richtige Größe mit der EEG-Reform 2027 verschiebt, dazu Strompreis, E-Auto und Wärmepumpe</li>
             <li>Fragen an deinen Installateur, passend zu deinem Angebot</li>
           </ul>
+          <p class="note"><a href="musterbericht.pdf" target="_blank" rel="noopener" data-umami-event="pro-musterbericht">Musterbericht ansehen (PDF, 7 Seiten)</a>: der vollständige Bericht für ein Beispielangebot mit 9 kWp und 10 kWh.</p>
           <div class="buyrow">
             <div class="price" id="b-price">49 € <small>einmalig</small></div>
             <a class="btn btn-on" id="b-btn" href="#" target="_blank" rel="noopener">Bericht freischalten</a>
           </div>
           <p class="note" id="b-note"></p>
           <p class="note">Mit einem Kauf prüfst du beliebig viele Angebote, auch die von anderen Installateuren. Kein Abo.</p>
+          <p class="note">Speicherklar bekommt kein Geld von Herstellern oder Installateuren. Der Bericht rechnet nur mit deinen Angaben und dem <a href="../methodik.html">offenen Rechenkern</a>.</p>
         </div>
       </div>
       <div class="mykey" id="mykey" hidden>
@@ -565,8 +570,9 @@ a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
 <footer>
   <div class="wrap">
     <span>Speicherklar ist eine Schätzung, keine Anlagen- oder Finanzberatung. Für eine Kaufentscheidung hol dir Angebote von Fachbetrieben.</span>
+    <span>Unabhängig: kein Geld von Herstellern oder Installateuren, keine Werbung. Der Rechenweg ist <a href="../methodik.html">offen</a>.</span>
     <span>Sonnendaten: PVGIS © Europäische Union, 2001–2026.</span>
-    <span><a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">Instagram @speicherklar</a> · <a href="../ueber-mich.html">Über mich</a> · <a href="../impressum.html">Impressum</a> · <a href="../datenschutz.html">Datenschutz</a></span>
+    <span><a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">Instagram @speicherklar</a> · <a href="../methodik.html">Methodik</a> · <a href="../ueber-mich.html">Über mich</a> · <a href="../impressum.html">Impressum</a> · <a href="../datenschutz.html">Datenschutz</a></span>
   </div>
 </footer>
 
