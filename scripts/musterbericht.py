@@ -33,8 +33,10 @@ def main():
             b = p.chromium.launch()
             page = b.new_page(locale="de-DE")
             init = (f"localStorage.setItem('sk-pro-eingabe', {json.dumps(json.dumps(MUSTER))});"
-                    "localStorage.setItem('sk-pro-lizenz', JSON.stringify({key:'DEV-SPEICHERKLAR',email:'',at:Date.now()}));")
+                    "localStorage.setItem('sk-pro-lizenz', JSON.stringify({key:'MUSTER',email:'',at:Date.now()}));")
             page.add_init_script(init)
+            # Lizenzprüfung nur in diesem Testbrowser beantworten; die Seite selbst kennt keinen Testschlüssel
+            page.route("**/validate", lambda r: r.fulfill(status=200, content_type="application/json", body='{"ok":true,"email":""}'))
             page.goto(f"http://127.0.0.1:{port}/pro/?vorab=1")
             page.wait_for_selector("#report-wrap:not([hidden]) #report section", timeout=60000)
             page.wait_for_timeout(1500)

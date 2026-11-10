@@ -237,7 +237,6 @@
   }
   var LICENSE = {
     verify: function (key) {
-      if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && key === "DEV-SPEICHERKLAR") return Promise.resolve({ ok: true, email: "" });
       if (!C.api) return Promise.resolve({ ok: false, msg: "Der Verkauf ist noch nicht gestartet." });
       return api("/validate", { key: key, device: deviceId() }).then(function (j) {
         if (j.ok) return { ok: true, email: j.email || "" };
@@ -249,7 +248,7 @@
     }
   };
   function showKey(key) {
-    if (!key || key === "DEV-SPEICHERKLAR") return;
+    if (!key) return;
     $("mykey-v").textContent = key; $("mykey").hidden = false;
   }
   $("mykey-copy").addEventListener("click", function () {
@@ -319,8 +318,10 @@
   // Gespeicherten Schlüssel nachprüfen: offline bleibt freigeschaltet, nur ein ausdrücklich ungültiger Schlüssel sperrt
   function restoreLicense() {
     var lic = load(KEY_LIC); if (!lic || !lic.key) return;
+    // Sofort freischalten, dann bei jedem Aufruf beim Worker gegenprüfen. Ohne Verbindung bleibt es freigeschaltet;
+    // ein unbekannter, erstatteter oder gesperrter Schlüssel wird entfernt.
     unlock(lic.key, lic.email);
-    if (Date.now() - (lic.at || 0) > 7 * 864e5) LICENSE.verify(lic.key).then(function (res) {
+    LICENSE.verify(lic.key).then(function (res) {
       if (res.ok) store(KEY_LIC, { key: lic.key, email: res.email || lic.email, at: Date.now() });
       else if (!res.net) { store(KEY_LIC, null); location.reload(); }
     });

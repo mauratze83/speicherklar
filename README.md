@@ -21,5 +21,7 @@ Kostenloser Speicher-Rechner für geplante PV-Anlagen – https://speicherklar.d
 - `src/plz2.json` – Sonnendaten je zweistelligem PLZ-Gebiet für Pro (PVGIS-SARAH3 2014–2023, Ortsmittelpunkte aus GeoNames, CC BY 4.0). Erzeugt von `scripts/pvgis_plz2.py` per GitHub Actions (Workflow „Sonnendaten“, von Hand startbar), mit Gegenprobe gegen Region 4.
 - `src/markt.js` – Marktspannen für den Preis-Check, ein- bis zweimal im Jahr aktualisieren
 - `node test/pro.test.js` – Beispielrechnungen und Abgleich mit dem kostenlosen Rechner
-- Lokal testen: `python3 -m http.server`, dann `localhost:8000/pro/`; der Schlüssel `DEV-SPEICHERKLAR` schaltet nur auf localhost frei
+- Lokal testen: `python3 -m http.server`, dann `localhost:8000/pro/` (Einordnung ohne Freischaltung). Den vollständigen Bericht prüft `python3 scripts/musterbericht.py` (beantwortet die Lizenzprüfung nur im Testbrowser); auf speicherklar.de mit einem Freischlüssel.
+- Freischaltung: ein gespeicherter Schlüssel wird bei jedem Aufruf der Pro-Seite beim Worker gegengeprüft (`/validate`); ohne Verbindung bleibt Pro freigeschaltet.
+- `pro/musterbericht.pdf` – Musterbericht, erzeugt mit `python3 scripts/musterbericht.py` nach `build.py`; neu erzeugen, wenn sich `pro.js`, `pro-ui.js` oder `sim.js` ändern
 - Kauf vor dem Starttermin (`publicFrom`) nur intern zum Testen: `https://speicherklar.de/pro/?vorab=1`
