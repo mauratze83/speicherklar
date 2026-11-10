@@ -50,6 +50,15 @@ async function sign(env, text) {
   return btoa(String.fromCharCode(...mac.slice(0, 12))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 const makeKey = async (env, sessionId) => `SK.${sessionId}.${await sign(env, sessionId)}`;
+// Freischlüssel (z. B. Familie und Freunde): gelten ohne Kauf, ohne Gerätelimit und ohne Ablauf.
+// Im Repo steht nur der SHA-256-Hash (FREE_KEYS in wrangler.toml). Sperren: Hash dort löschen und pushen.
+async function isFreeKey(env, key) {
+  const list = String(env.FREE_KEYS || "").split(",").map((x) => x.trim()).filter(Boolean);
+  if (!list.length || !key) return false;
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(String(key).trim()));
+  const hex = [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+  return list.includes(hex);
+}
 async function parseKey(env, key) {
   const m = /^SK\.(cs_[A-Za-z0-9_]+)\.([A-Za-z0-9_-]{16})$/.exec(String(key || "").trim());
   if (!m) return null;
@@ -145,6 +154,7 @@ export default {
       }
 
       if (path === "/validate") {
+        if (await isFreeKey(env, body.key)) return json(req, env, { ok: true, email: "" });
         const id = await parseKey(env, body.key);
         if (!id) return json(req, env, { ok: false, error: "unknown" }, 404);
         const p = await paidSession(env, id);
