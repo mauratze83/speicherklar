@@ -297,6 +297,10 @@ a.btn{text-decoration:none;display:inline-block}
 .intro-note{margin:0;font-size:14px;color:var(--muted)}
 #pro-buy{justify-self:start}
 .how .code-note{margin-top:16px}
+.usp{list-style:none;padding:0;margin:4px 0 18px;display:grid;gap:10px;max-width:62ch}
+.usp li{padding-left:22px;position:relative}
+.usp li::before{content:"";position:absolute;left:2px;top:.55em;width:10px;height:10px;border-radius:50%;background:var(--sun)}
+.how .usp-note{margin-top:-8px}
 </style>
 </head>
 <body>
@@ -501,6 +505,19 @@ matchMedia('(min-width:721px)').addEventListener('change',function(m){if(m.match
     </div>
   </div>
 
+  <section class="how" id="unabhaengig">
+    <div class="wrap reveal">
+      <h2 class="sec">Hier bist du kein Lead.</h2>
+      <ul class="usp">
+        <li><b>Ergebnis sofort.</b> Ohne Anmeldung, ohne Mail, ohne Telefonnummer.</li>
+        <li><b>Keine Provision, keine Werbung,</b> keine Partner-Installateure.</li>
+        <li><b>Rechenweg offen.</b> Jede Zeile <a href="https://github.com/mauratze83/speicherklar/blob/main/src/sim.js" target="_blank" rel="noopener">auf GitHub nachlesbar</a>.</li>
+      </ul>
+      <p class="intro">Viele PV-Rechner im Netz zeigen dir das Ergebnis erst nach der Anmeldung. Sie finanzieren sich oft über die Vermittlung an Installateure. Speicherklar finanziert sich nur über Pro. Deshalb darf hier auch rauskommen, dass ein kleinerer Speicher besser passt. Im Beispiel bringen 6 kWh über 15 Jahre rund 580 € mehr als ein angebotener 10-kWh-Speicher für 6.500 €.</p>
+      <p class="intro usp-note"><small>Beispiel: Ruhrgebiet, 9 kWp Süd, 35°, 4.500 kWh, Strom 33 ct, Einspeisung 7,70 ct, 15 Jahre, gerechnet mit dem Angebots-Check. <a href="methodik.html">So rechne ich</a></small></p>
+    </div>
+  </section>
+
   <section class="how" id="annahmen">
     <div class="wrap reveal">
       <h2 class="sec">So rechnet Speicherklar</h2>
@@ -553,7 +570,7 @@ matchMedia('(min-width:721px)').addEventListener('change',function(m){if(m.match
         <div class="pricebox" id="pricebox" data-public="2026-12-01" data-intro="2027-01-31" data-price="49" data-regular="89">
           <div class="price" id="pro-price">49 € <small>einmalig</small></div>
           <p class="intro-note" id="pro-intro">Einführungspreis bis 31.01.2027, danach 89 €.</p>
-          <p>Kein Abo. Beliebig viele Angebote prüfen, Updates für Vergütung und Preise sind dabei. Deine Daten bleiben in deinem Browser.</p>
+          <p>Einmal zahlen, 90 Tage ab Freischaltung beliebig viele Angebote prüfen. Kein Abo, keine Weitergabe an Installateure. Deine Daten bleiben in deinem Browser.</p>
           <p>Eingabe und Einordnung deines Angebots sind schon jetzt kostenlos.</p>
           <a class="btn btn-on" id="pro-buy" href="pro/">Zum Angebots-Check</a>
           <p>Den Start kündige ich auf Instagram an: <a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">@speicherklar</a>.</p>

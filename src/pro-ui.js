@@ -239,14 +239,21 @@
     verify: function (key) {
       if (!C.api) return Promise.resolve({ ok: false, msg: "Der Verkauf ist noch nicht gestartet." });
       return api("/validate", { key: key, device: deviceId() }).then(function (j) {
-        if (j.ok) return { ok: true, email: j.email || "" };
+        if (j.ok) return { ok: true, email: j.email || "", until: j.until || "" };
         if (j.status === 404) return { ok: false, msg: "Diesen Schlüssel kennen wir nicht. Bitte kopier ihn genau so, wie er in der Mail oder nach dem Kauf angezeigt wurde." };
         if (j.status === 409) return { ok: false, msg: "Dieser Schlüssel ist schon auf " + (j.max || 3) + " Geräten aktiv. Wenn du ein Gerät gewechselt hast, schreib an kontakt@speicherklar.de, dann gebe ich ihn wieder frei." };
+        if (j.status === 410 && j.error === "expired") return { ok: false, expired: true, until: j.until || "", msg: expiredMsg(j.until) };
         if (j.status === 410) return { ok: false, msg: j.error === "refunded" ? "Dieser Kauf wurde erstattet, der Schlüssel gilt nicht mehr." : j.error === "blocked" ? "Dieser Schlüssel ist gesperrt. Bei Fragen: kontakt@speicherklar.de." : "Zu diesem Schlüssel gibt es keine abgeschlossene Zahlung." };
         return { ok: false, net: true, msg: "Die Prüfung hat gerade nicht geklappt. Bitte versuch es gleich noch einmal." };
       }, function () { return { ok: false, net: true, msg: "Keine Verbindung zur Prüfung. Bitte versuch es gleich noch einmal." }; });
     }
   };
+  function expiredMsg(until) {
+    return "Dein Zugang zu Pro ist " + (until ? "am " + dateDe(until) + " " : "") + "abgelaufen (" + (C.accessDays || 90) + " Tage ab Freischaltung). Deine PDF-Berichte bleiben deine. Brauchst du länger, schreib an kontakt@speicherklar.de, dann verlängere ich kostenlos.";
+  }
+  function showUntil(until) {
+    $("mykey-until").textContent = until ? "Gültig bis " + dateDe(until) + ". " : "";
+  }
   function showKey(key) {
     if (!key) return;
     $("mykey-v").textContent = key; $("mykey").hidden = false;
@@ -257,7 +264,8 @@
     try { navigator.clipboard.writeText(k).then(done, function () { selectKey(); }); } catch (e) { selectKey(); }
   });
   function selectKey() { var r = document.createRange(); r.selectNodeContents($("mykey-v")); var sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); }
-  function unlock(key, email) {
+  function unlock(key, email, until) {
+    showUntil(until);
     state.unlocked = true; state.licEmail = email || ""; $("buy").hidden = true; $("keybox").hidden = true; $("teaser").classList.add("unlocked");
     showKey(key);
     if (state.result) renderReport();
@@ -279,7 +287,7 @@
     btn.disabled = true; btn.textContent = "Prüfe…";
     LICENSE.verify(key).then(function (res) {
       btn.disabled = false; btn.textContent = "Freischalten";
-      if (res.ok) { store(KEY_LIC, { key: key, email: res.email, at: Date.now() }); msg.textContent = ""; track("pro-freigeschaltet"); unlock(key, res.email); if (state.result) $("report-wrap").scrollIntoView({ behavior: SCROLL }); }
+      if (res.ok) { store(KEY_LIC, { key: key, email: res.email, until: res.until, at: Date.now() }); msg.textContent = ""; track("pro-freigeschaltet"); unlock(key, res.email, res.until); if (state.result) $("report-wrap").scrollIntoView({ behavior: SCROLL }); }
       else { msg.textContent = res.msg; msg.className = "wait-msg err"; }
     });
   });
@@ -305,9 +313,9 @@
     (function check() {
       api("/verify", { session: m[1], device: deviceId() }).then(function (j) {
         if (j.key) {
-          store(KEY_LIC, { key: j.key, email: j.email, at: Date.now() }); track("pro-gekauft");
+          store(KEY_LIC, { key: j.key, email: j.email, until: j.until || "", at: Date.now() }); track("pro-gekauft");
           msg.textContent = "Danke für deinen Kauf! Der Bericht ist freigeschaltet." + (j.mailed ? " Deinen Lizenzschlüssel bekommst du auch per Mail." : "");
-          unlock(j.key, j.email);
+          unlock(j.key, j.email, j.until);
           setTimeout(function () { $("report-wrap").scrollIntoView({ behavior: SCROLL }); }, 400);
         } else if (j.status === 402 && ++tries < 5) setTimeout(check, 3000);
         else { msg.className = "wait-msg err"; msg.textContent = (j.error || "Der Kauf ließ sich gerade nicht prüfen.") + " Lad die Seite in einer Minute neu oder schreib an kontakt@speicherklar.de."; }
@@ -315,14 +323,26 @@
     })();
     return true;
   }
-  // Gespeicherten Schlüssel nachprüfen: offline bleibt freigeschaltet, nur ein ausdrücklich ungültiger Schlüssel sperrt
+  // Gespeicherten Schlüssel nachprüfen: offline bleibt freigeschaltet bis zum gespeicherten Ablaufdatum,
+  // nur ein ausdrücklich ungültiger oder abgelaufener Schlüssel sperrt
+  var KEY_EXP = "sk-pro-abgelaufen";
+  function expire(until) { store(KEY_LIC, null); store(KEY_EXP, until || "?"); location.reload(); }
+  function showExpired() {
+    var u = load(KEY_EXP); if (!u) return;
+    store(KEY_EXP, null);
+    var m = $("kaufmsg"); m.hidden = false; m.className = "wait-msg err"; m.textContent = expiredMsg(u === "?" ? "" : u);
+  }
   function restoreLicense() {
+    showExpired();
     var lic = load(KEY_LIC); if (!lic || !lic.key) return;
+    // Auch ohne Verbindung: nach dem gespeicherten letzten Tag ist Schluss
+    if (lic.until && today() > lic.until) { expire(lic.until); return; }
     // Sofort freischalten, dann bei jedem Aufruf beim Worker gegenprüfen. Ohne Verbindung bleibt es freigeschaltet;
-    // ein unbekannter, erstatteter oder gesperrter Schlüssel wird entfernt.
-    unlock(lic.key, lic.email);
+    // ein unbekannter, erstatteter, gesperrter oder abgelaufener Schlüssel wird entfernt.
+    unlock(lic.key, lic.email, lic.until);
     LICENSE.verify(lic.key).then(function (res) {
-      if (res.ok) store(KEY_LIC, { key: lic.key, email: res.email || lic.email, at: Date.now() });
+      if (res.ok) { store(KEY_LIC, { key: lic.key, email: res.email || lic.email, until: res.until || "", at: Date.now() }); showUntil(res.until); }
+      else if (res.expired) expire(res.until);
       else if (!res.net) { store(KEY_LIC, null); location.reload(); }
     });
   }

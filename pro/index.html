@@ -296,6 +296,10 @@ a.btn{text-decoration:none;display:inline-block}
 .intro-note{margin:0;font-size:14px;color:var(--muted)}
 #pro-buy{justify-self:start}
 .how .code-note{margin-top:16px}
+.usp{list-style:none;padding:0;margin:4px 0 18px;display:grid;gap:10px;max-width:62ch}
+.usp li{padding-left:22px;position:relative}
+.usp li::before{content:"";position:absolute;left:2px;top:.55em;width:10px;height:10px;border-radius:50%;background:var(--sun)}
+.how .usp-note{margin-top:-8px}
 /* Speicherklar Pro: Eingabe, Einordnung, Bericht, Druck */
 [hidden]{display:none!important}
 .unlocked .locked{display:none}
@@ -414,6 +418,8 @@ a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
 .report .lic{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin:10px 0 0}
 .result>.mykey,.result>.keybox{margin-top:14px}
 .pro-hero .sample{font-size:16px;margin-top:14px}
+
+.pro-hero .lede + .lede{margin-top:10px}
 </style>
 </head>
 <body>
@@ -438,8 +444,9 @@ matchMedia('(min-width:721px)').addEventListener('change',function(m){if(m.match
   <section class="hero pro-hero">
     <div class="wrap">
       <div class="eyebrow">Speicherklar Pro · Angebots-Check</div>
-      <h1>Passen Speicher und Anlage in <em>deinem Angebot?</em></h1>
-      <p class="lede">Trag das Angebot deines Installateurs ein. Du siehst sofort, ob Speicher und PV-Anlage zu deinem Haushalt passen. Der vollständige Bericht zeigt die beste Kombination aus PV-Größe und Speicher, was sie spart, wie stabil das Ergebnis ist und was du den Installateur fragen solltest.</p>
+      <h1>Die zweite Rechnung zu deinem Angebot. <em>Bevor du unterschreibst.</em></h1>
+      <p class="lede">Trag Anlage, Speichergröße und Preis aus dem Angebot deines Installateurs ein. Die Ampel siehst du sofort und kostenlos: Passen Speicher und PV-Anlage zu deinem Haushalt? Der vollständige Bericht zeigt, ob der Speicher zu groß ist, was die passende Größe spart, welche PV-Größe zu deinem Dach passt und was du den Installateur fragen solltest.</p>
+      <p class="lede">Ich verdiene nichts an deinem Speicher. Weder am großen noch am kleinen.</p>
       <div class="facts"><span>Eingabe <b>kostenlos</b></span><span>PV-Größe <b>und</b> Speicher</span><span>Sonnendaten <b>für dein PLZ-Gebiet</b></span><span>Rechnung <b>in deinem Browser</b></span><span>Bericht als <b>PDF</b></span></div>
       <p class="lede sample"><a href="musterbericht.pdf" target="_blank" rel="noopener" data-umami-event="pro-musterbericht">Musterbericht ansehen (PDF)</a>: so sieht der vollständige Bericht für ein Beispielangebot aus.</p>
     </div>
@@ -553,14 +560,14 @@ matchMedia('(min-width:721px)').addEventListener('change',function(m){if(m.match
             <a class="btn btn-on" id="b-btn" href="#" target="_blank" rel="noopener">Bericht freischalten</a>
           </div>
           <p class="note" id="b-note"></p>
-          <p class="note">Mit einem Kauf prüfst du beliebig viele Angebote, auch die von anderen Installateuren. Kein Abo.</p>
-          <p class="note">Speicherklar bekommt kein Geld von Herstellern oder Installateuren. Der Bericht rechnet nur mit deinen Angaben und dem <a href="../methodik.html">offenen Rechenkern</a>.</p>
+          <p class="note">Einmal zahlen, 90 Tage ab Freischaltung nutzen. In der Zeit prüfst du beliebig viele Angebote, auch die von anderen Installateuren. Deine PDF-Berichte bleiben dauerhaft deine. Kein Abo, keine automatische Verlängerung. Brauchst du länger, reicht eine Mail an kontakt@speicherklar.de, dann verlängere ich kostenlos.</p>
+          <p class="note">Keine Weitergabe an Installateure. Deine Mail nutze ich nur für deinen Lizenzschlüssel, nicht für einen Newsletter. Speicherklar bekommt kein Geld von Herstellern oder Installateuren. Der Bericht rechnet nur mit deinen Angaben und dem <a href="../methodik.html">offenen Rechenkern</a>.</p>
         </div>
       </div>
       <div class="mykey" id="mykey" hidden>
         <span class="flabel">Dein Lizenzschlüssel</span>
         <div class="mykey-row"><code id="mykey-v"></code><button type="button" class="linkbtn" id="mykey-copy">Kopieren</button></div>
-        <p class="note">Damit schaltest du Pro auf bis zu drei Geräten frei. Du bekommst ihn auch per Mail, die Rechnung schickt Stripe separat.</p>
+        <p class="note"><span id="mykey-until"></span>Damit schaltest du Pro auf bis zu drei Geräten frei, 90 Tage ab der ersten Freischaltung. Du bekommst ihn auch per Mail, die Rechnung schickt Stripe separat.</p>
       </div>
       <details class="keybox" id="keybox">
         <summary>Schon gekauft? Lizenzschlüssel eingeben</summary>
@@ -931,7 +938,8 @@ var PRO_CONFIG = {
   price: 49,                  // Einführungspreis in € (nur Anzeige, muss zur Stripe-Preis-ID PRICE_INTRO passen)
   regularPrice: 89,           // Normalpreis in € (Anzeige, passend zu PRICE_REGULAR)
   introUntil: "2027-01-31",             // letzter Tag des Einführungspreises, z. B. "2027-02-28" (gleich wie INTRO_UNTIL im Worker)
-  publicFrom: "2026-12-01"              // ab diesem Tag kann jeder kaufen; vorher nur mit ?vorab=1 (intern zum Testen)
+  publicFrom: "2026-12-01",             // ab diesem Tag kann jeder kaufen; vorher nur mit ?vorab=1 (intern zum Testen)
+  accessDays: 90                        // Laufzeit ab der ersten Freischaltung (Anzeige; gleich wie ACCESS_DAYS im Worker)
 };
 
 /* Speicherklar Pro – Angebots-Check. Reine Rechnung ohne DOM, im Browser (nach sim.js und markt.js) und in Node lauffähig.
@@ -1382,14 +1390,21 @@ var PRO = (function () {
     verify: function (key) {
       if (!C.api) return Promise.resolve({ ok: false, msg: "Der Verkauf ist noch nicht gestartet." });
       return api("/validate", { key: key, device: deviceId() }).then(function (j) {
-        if (j.ok) return { ok: true, email: j.email || "" };
+        if (j.ok) return { ok: true, email: j.email || "", until: j.until || "" };
         if (j.status === 404) return { ok: false, msg: "Diesen Schlüssel kennen wir nicht. Bitte kopier ihn genau so, wie er in der Mail oder nach dem Kauf angezeigt wurde." };
         if (j.status === 409) return { ok: false, msg: "Dieser Schlüssel ist schon auf " + (j.max || 3) + " Geräten aktiv. Wenn du ein Gerät gewechselt hast, schreib an kontakt@speicherklar.de, dann gebe ich ihn wieder frei." };
+        if (j.status === 410 && j.error === "expired") return { ok: false, expired: true, until: j.until || "", msg: expiredMsg(j.until) };
         if (j.status === 410) return { ok: false, msg: j.error === "refunded" ? "Dieser Kauf wurde erstattet, der Schlüssel gilt nicht mehr." : j.error === "blocked" ? "Dieser Schlüssel ist gesperrt. Bei Fragen: kontakt@speicherklar.de." : "Zu diesem Schlüssel gibt es keine abgeschlossene Zahlung." };
         return { ok: false, net: true, msg: "Die Prüfung hat gerade nicht geklappt. Bitte versuch es gleich noch einmal." };
       }, function () { return { ok: false, net: true, msg: "Keine Verbindung zur Prüfung. Bitte versuch es gleich noch einmal." }; });
     }
   };
+  function expiredMsg(until) {
+    return "Dein Zugang zu Pro ist " + (until ? "am " + dateDe(until) + " " : "") + "abgelaufen (" + (C.accessDays || 90) + " Tage ab Freischaltung). Deine PDF-Berichte bleiben deine. Brauchst du länger, schreib an kontakt@speicherklar.de, dann verlängere ich kostenlos.";
+  }
+  function showUntil(until) {
+    $("mykey-until").textContent = until ? "Gültig bis " + dateDe(until) + ". " : "";
+  }
   function showKey(key) {
     if (!key) return;
     $("mykey-v").textContent = key; $("mykey").hidden = false;
@@ -1400,7 +1415,8 @@ var PRO = (function () {
     try { navigator.clipboard.writeText(k).then(done, function () { selectKey(); }); } catch (e) { selectKey(); }
   });
   function selectKey() { var r = document.createRange(); r.selectNodeContents($("mykey-v")); var sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); }
-  function unlock(key, email) {
+  function unlock(key, email, until) {
+    showUntil(until);
     state.unlocked = true; state.licEmail = email || ""; $("buy").hidden = true; $("keybox").hidden = true; $("teaser").classList.add("unlocked");
     showKey(key);
     if (state.result) renderReport();
@@ -1422,7 +1438,7 @@ var PRO = (function () {
     btn.disabled = true; btn.textContent = "Prüfe…";
     LICENSE.verify(key).then(function (res) {
       btn.disabled = false; btn.textContent = "Freischalten";
-      if (res.ok) { store(KEY_LIC, { key: key, email: res.email, at: Date.now() }); msg.textContent = ""; track("pro-freigeschaltet"); unlock(key, res.email); if (state.result) $("report-wrap").scrollIntoView({ behavior: SCROLL }); }
+      if (res.ok) { store(KEY_LIC, { key: key, email: res.email, until: res.until, at: Date.now() }); msg.textContent = ""; track("pro-freigeschaltet"); unlock(key, res.email, res.until); if (state.result) $("report-wrap").scrollIntoView({ behavior: SCROLL }); }
       else { msg.textContent = res.msg; msg.className = "wait-msg err"; }
     });
   });
@@ -1448,9 +1464,9 @@ var PRO = (function () {
     (function check() {
       api("/verify", { session: m[1], device: deviceId() }).then(function (j) {
         if (j.key) {
-          store(KEY_LIC, { key: j.key, email: j.email, at: Date.now() }); track("pro-gekauft");
+          store(KEY_LIC, { key: j.key, email: j.email, until: j.until || "", at: Date.now() }); track("pro-gekauft");
           msg.textContent = "Danke für deinen Kauf! Der Bericht ist freigeschaltet." + (j.mailed ? " Deinen Lizenzschlüssel bekommst du auch per Mail." : "");
-          unlock(j.key, j.email);
+          unlock(j.key, j.email, j.until);
           setTimeout(function () { $("report-wrap").scrollIntoView({ behavior: SCROLL }); }, 400);
         } else if (j.status === 402 && ++tries < 5) setTimeout(check, 3000);
         else { msg.className = "wait-msg err"; msg.textContent = (j.error || "Der Kauf ließ sich gerade nicht prüfen.") + " Lad die Seite in einer Minute neu oder schreib an kontakt@speicherklar.de."; }
@@ -1458,14 +1474,26 @@ var PRO = (function () {
     })();
     return true;
   }
-  // Gespeicherten Schlüssel nachprüfen: offline bleibt freigeschaltet, nur ein ausdrücklich ungültiger Schlüssel sperrt
+  // Gespeicherten Schlüssel nachprüfen: offline bleibt freigeschaltet bis zum gespeicherten Ablaufdatum,
+  // nur ein ausdrücklich ungültiger oder abgelaufener Schlüssel sperrt
+  var KEY_EXP = "sk-pro-abgelaufen";
+  function expire(until) { store(KEY_LIC, null); store(KEY_EXP, until || "?"); location.reload(); }
+  function showExpired() {
+    var u = load(KEY_EXP); if (!u) return;
+    store(KEY_EXP, null);
+    var m = $("kaufmsg"); m.hidden = false; m.className = "wait-msg err"; m.textContent = expiredMsg(u === "?" ? "" : u);
+  }
   function restoreLicense() {
+    showExpired();
     var lic = load(KEY_LIC); if (!lic || !lic.key) return;
+    // Auch ohne Verbindung: nach dem gespeicherten letzten Tag ist Schluss
+    if (lic.until && today() > lic.until) { expire(lic.until); return; }
     // Sofort freischalten, dann bei jedem Aufruf beim Worker gegenprüfen. Ohne Verbindung bleibt es freigeschaltet;
-    // ein unbekannter, erstatteter oder gesperrter Schlüssel wird entfernt.
-    unlock(lic.key, lic.email);
+    // ein unbekannter, erstatteter, gesperrter oder abgelaufener Schlüssel wird entfernt.
+    unlock(lic.key, lic.email, lic.until);
     LICENSE.verify(lic.key).then(function (res) {
-      if (res.ok) store(KEY_LIC, { key: lic.key, email: res.email || lic.email, at: Date.now() });
+      if (res.ok) { store(KEY_LIC, { key: lic.key, email: res.email || lic.email, until: res.until || "", at: Date.now() }); showUntil(res.until); }
+      else if (res.expired) expire(res.until);
       else if (!res.net) { store(KEY_LIC, null); location.reload(); }
     });
   }

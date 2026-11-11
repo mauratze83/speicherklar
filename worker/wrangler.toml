@@ -12,6 +12,7 @@ PRICE_REGULAR = "price_1UaIovJ9nFUROYPZJINboaxY"   # Stripe-Preis-ID 89 €
 INTRO_UNTIL = "2027-01-31"   # letzter Tag des Einführungspreises (wie introUntil in src/pro-config.js)
 STRIPE_VERSION = ""   # nur setzen, falls Managed Payments eine bestimmte API-Version verlangt
 MAX_DEVICES = "3"     # so viele Browser/Geräte darf ein Schlüssel freischalten
+ACCESS_DAYS = "90"    # Laufzeit eines gekauften Schlüssels ab der ersten Freischaltung (Freischlüssel ohne Ablauf); wie accessDays in src/pro-config.js
 FREE_KEYS = "0681a7e8704ae25cac3dee2b4cdd38c17197e37bbe0169138447ea1dc61ef930"  # SHA-256 von Freischlüsseln (ohne Kauf, ohne Gerätelimit), kommagetrennt; Hash löschen = Schlüssel gesperrt
 ML_GROUP_BUYERS = "203693629868345239"  # MailerLite-Gruppe "Käufer Pro" (Mail mit Schlüssel nach dem Kauf)
 ML_GROUP_RESEND = "203693641177237009"  # MailerLite-Gruppe "Pro Schlüssel erneut" (Mail bei "Schlüssel vergessen?")

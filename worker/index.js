@@ -3,14 +3,19 @@
 
    POST /checkout  {}                  → { url }            Bezahlseite (Einführungs- oder Normalpreis nach Datum)
    POST /verify    { session, device } → { key, email }     nach dem Kauf: bezahlt? Schlüssel ausgeben, Gerät eintragen, Mail auslösen
-   POST /validate  { key, device }     → { ok, email }      Schlüssel prüfen: Signatur, bezahlt, nicht erstattet, nicht gesperrt, Gerätelimit
+   POST /validate  { key, device }     → { ok, email, until } Schlüssel prüfen: Signatur, bezahlt, nicht erstattet, nicht gesperrt, nicht abgelaufen, Gerätelimit
    POST /recover   { email }           → { ok }             Schlüssel noch einmal per Mail an diese Adresse (Antwort verrät nichts)
 
-   KV LICENSES:  "lic:<checkout-id>" → { devices: [..], email: "m•••@gmx.de", mailed: true, blocked: false }
+   Laufzeit: ACCESS_DAYS Tage ab der ersten Freischaltung (activatedAt, gesetzt beim ersten /verify oder /validate).
+   Danach antwortet /validate mit 410 { error: "expired", until }. Der PDF-Bericht des Käufers bleibt davon unberührt.
+
+   KV LICENSES:  "lic:<checkout-id>" → { devices: [..], email: "m•••@gmx.de", mailed: true, blocked: false,
+                                         activatedAt: "2026-12-03T10:00:00.000Z", until: "2027-06-30" (optional) }
                  "rec:<email>:<tag>" → Zähler gegen Missbrauch von /recover
    Sperren: im Cloudflare-Dashboard unter Workers KV den Eintrag lic:<checkout-id> öffnen und "blocked": true setzen.
+   Verlängern: dort "until": "JJJJ-MM-TT" setzen (letzter gültiger Tag); das ersetzt das berechnete Ende.
 
-   Variablen (wrangler.toml): SITE, ALLOWED_ORIGINS, PRICE_INTRO, PRICE_REGULAR, INTRO_UNTIL, STRIPE_VERSION, MAX_DEVICES, ML_GROUP_BUYERS, ML_GROUP_RESEND
+   Variablen (wrangler.toml): SITE, ALLOWED_ORIGINS, PRICE_INTRO, PRICE_REGULAR, INTRO_UNTIL, STRIPE_VERSION, MAX_DEVICES, ACCESS_DAYS, ML_GROUP_BUYERS, ML_GROUP_RESEND
    Geheimnisse: STRIPE_SECRET_KEY, LICENSE_SECRET, MAILERLITE_API_KEY (ohne diesen wird keine Mail verschickt) */
 
 const enc = new TextEncoder();
@@ -114,6 +119,14 @@ async function mailKey(env, email, key, group) {
 
 const today = () => new Date().toISOString().slice(0, 10);
 
+// Laufzeit ab der ersten Freischaltung. Setzt activatedAt beim ersten Aufruf und liefert den letzten gültigen Tag (JJJJ-MM-TT).
+function access(env, lic) {
+  if (!lic.activatedAt) { lic.activatedAt = new Date().toISOString(); lic.changed = true; }
+  if (lic.until) return lic.until;
+  const days = Number(env.ACCESS_DAYS || 90);
+  return new Date(Date.parse(lic.activatedAt) + (days - 1) * 86400000).toISOString().slice(0, 10);
+}
+
 export default {
   async fetch(req, env) {
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors(req, env) });
@@ -146,11 +159,13 @@ export default {
         }
         const key = await makeKey(env, id), lic = await getLic(env, id);
         const st = admit(env, lic, body.device);
+        const until = access(env, lic);
         if (!lic.email) { lic.email = maskEmail(p.email); lic.changed = true; }
         if (!lic.mailed && await mailKey(env, p.email, key, env.ML_GROUP_BUYERS)) { lic.mailed = true; lic.changed = true; }
         if (lic.changed) { delete lic.changed; await putLic(env, id, lic); }
         if (st === "blocked") return json(req, env, { error: "Dieser Schlüssel ist gesperrt." }, 410);
-        return json(req, env, { key, email: lic.email, mailed: !!lic.mailed, limit: st === "limit" });
+        if (today() > until) return json(req, env, { error: "Dieser Schlüssel ist abgelaufen.", until }, 410);
+        return json(req, env, { key, email: lic.email, mailed: !!lic.mailed, limit: st === "limit", until });
       }
 
       if (path === "/validate") {
@@ -160,12 +175,15 @@ export default {
         const p = await paidSession(env, id);
         if (!p.ok) return json(req, env, { ok: false, error: p.reason }, p.reason === "unknown" ? 404 : 410);
         const lic = await getLic(env, id);
-        const st = admit(env, lic, body.device);
+        const until = access(env, lic);
+        // Abgelaufen: kein neues Gerät mehr eintragen
+        const st = today() > until ? (lic.blocked ? "blocked" : "expired") : admit(env, lic, body.device);
         if (!lic.email) { lic.email = maskEmail(p.email); lic.changed = true; }
         if (lic.changed) { delete lic.changed; await putLic(env, id, lic); }
         if (st === "blocked") return json(req, env, { ok: false, error: "blocked" }, 410);
+        if (st === "expired") return json(req, env, { ok: false, error: "expired", until }, 410);
         if (st === "limit") return json(req, env, { ok: false, error: "limit", max: Number(env.MAX_DEVICES || 3) }, 409);
-        return json(req, env, { ok: true, email: lic.email });
+        return json(req, env, { ok: true, email: lic.email, until });
       }
 
       if (path === "/recover") {
