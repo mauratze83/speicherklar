@@ -65,7 +65,17 @@
     el.innerHTML=html+'<span class="unit">kWh / Jahr</span>';
     strips=el.querySelectorAll(".strip");
   })();
+  // Die Rollen drehen erst, wenn der Zähler zu sehen ist (auf dem Handy liegt er weit unten)
+  var wheelsSeen=!("IntersectionObserver" in window),wheelsVal=null;
+  if(!wheelsSeen){
+    try{
+      var wio=new IntersectionObserver(function(es){if(!es[0].isIntersecting)return;wio.disconnect();wheelsSeen=true;
+        var w=$("wheels");w.classList.add("roll");if(wheelsVal!==null)wheels(wheelsVal);setTimeout(function(){w.classList.remove("roll");},1400);},{threshold:0.6});
+      wio.observe($("wheels"));
+    }catch(e){wheelsSeen=true;}
+  }
   function wheels(n){
+    if(!wheelsSeen){wheelsVal=n;$("wheels").setAttribute("aria-label",nf0.format(n)+" Kilowattstunden pro Jahr");return;}
     var s=String(Math.min(99999,Math.max(0,Math.round(n)))).padStart(WHEELS,"0");
     for(var i=0;i<WHEELS;i++)strips[i].style.transform="translateY("+(-(+s[i])*10)+"%)";
     $("wheels").setAttribute("aria-label",nf0.format(n)+" Kilowattstunden pro Jahr");
@@ -238,7 +248,15 @@
     // Startbild Juli; einmal nach dem Laden wechselt die Szene in den November, die Kernaussage der Seite
     fig.classList.add("no-trans");show("jul",false);void fig.offsetWidth;fig.classList.remove("no-trans");
     if(REDUCE){show("nov",false);return;}
-    setTimeout(function(){if(!touched)show("nov",true);},1600);
+    // Einblenden und Wechsel in den November erst, wenn die Grafik im Bild ist (auf dem Handy liegt sie unter dem Text)
+    function start(){fig.classList.remove("wait");setTimeout(function(){if(!touched)show("nov",true);},1600);}
+    if("IntersectionObserver" in window){
+      try{
+        fig.classList.add("wait");
+        var sio=new IntersectionObserver(function(es){if(es[0].isIntersecting){sio.disconnect();start();}},{threshold:0.5});
+        sio.observe(fig);
+      }catch(e){start();}
+    }else start();
   })();
 
   // Bereiche weiter unten einmal einblenden

@@ -115,6 +115,8 @@ input[type=range]{width:100%;accent-color:var(--sun);height:26px;margin:0}
 .wheels{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
 .wheel{font-family:var(--f-mono);font-weight:700;font-size:clamp(26px,4vw,36px);width:1.05em;height:calc(1.25em + 4px);overflow:hidden;text-align:center;background:linear-gradient(#000 0,#2a2f35 12%,#15191d 50%,#2a2f35 88%,#000 100%);border-radius:3px;padding:2px 0;line-height:1.25;color:var(--meter-digit)}
 .wheel .strip{display:block;transition:transform 160ms var(--ease-out);will-change:transform}
+.wheels.roll .strip{transition-duration:900ms}
+.wheels.roll .wheel:nth-child(2) .strip{transition-delay:60ms}.wheels.roll .wheel:nth-child(3) .strip{transition-delay:120ms}.wheels.roll .wheel:nth-child(4) .strip{transition-delay:180ms}.wheels.roll .wheel:nth-child(5) .strip{transition-delay:240ms}
 .wheel .strip span{display:block;height:1.25em;line-height:1.25;padding-top:2px}
 .wheels .unit{font-family:var(--f-mono);font-size:15px;margin-left:8px;opacity:.85}
 .meterbox .foot{font-size:13.5px;opacity:.75}
@@ -278,6 +280,7 @@ svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
 .scene-stats b{font-family:var(--f-display);font-weight:800;font-stretch:90%;font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
 .scene figcaption{font-size:12.5px;color:var(--muted)}
 .scene.no-trans,.scene.no-trans *{transition:none!important}
+.scene.wait{animation-play-state:paused}
 @media (prefers-reduced-motion:reduce){.scene{animation:none}.scene .sun,.scene .cloud,.scene .flow{transition:opacity 200ms ease}}
 
 /* Kernzahl auf Ratgeber-Karten */
@@ -943,7 +946,17 @@ var DRAW = (function () {
     el.innerHTML=html+'<span class="unit">kWh / Jahr</span>';
     strips=el.querySelectorAll(".strip");
   })();
+  // Die Rollen drehen erst, wenn der Zähler zu sehen ist (auf dem Handy liegt er weit unten)
+  var wheelsSeen=!("IntersectionObserver" in window),wheelsVal=null;
+  if(!wheelsSeen){
+    try{
+      var wio=new IntersectionObserver(function(es){if(!es[0].isIntersecting)return;wio.disconnect();wheelsSeen=true;
+        var w=$("wheels");w.classList.add("roll");if(wheelsVal!==null)wheels(wheelsVal);setTimeout(function(){w.classList.remove("roll");},1400);},{threshold:0.6});
+      wio.observe($("wheels"));
+    }catch(e){wheelsSeen=true;}
+  }
   function wheels(n){
+    if(!wheelsSeen){wheelsVal=n;$("wheels").setAttribute("aria-label",nf0.format(n)+" Kilowattstunden pro Jahr");return;}
     var s=String(Math.min(99999,Math.max(0,Math.round(n)))).padStart(WHEELS,"0");
     for(var i=0;i<WHEELS;i++)strips[i].style.transform="translateY("+(-(+s[i])*10)+"%)";
     $("wheels").setAttribute("aria-label",nf0.format(n)+" Kilowattstunden pro Jahr");
@@ -1116,7 +1129,15 @@ var DRAW = (function () {
     // Startbild Juli; einmal nach dem Laden wechselt die Szene in den November, die Kernaussage der Seite
     fig.classList.add("no-trans");show("jul",false);void fig.offsetWidth;fig.classList.remove("no-trans");
     if(REDUCE){show("nov",false);return;}
-    setTimeout(function(){if(!touched)show("nov",true);},1600);
+    // Einblenden und Wechsel in den November erst, wenn die Grafik im Bild ist (auf dem Handy liegt sie unter dem Text)
+    function start(){fig.classList.remove("wait");setTimeout(function(){if(!touched)show("nov",true);},1600);}
+    if("IntersectionObserver" in window){
+      try{
+        fig.classList.add("wait");
+        var sio=new IntersectionObserver(function(es){if(es[0].isIntersecting){sio.disconnect();start();}},{threshold:0.5});
+        sio.observe(fig);
+      }catch(e){start();}
+    }else start();
   })();
 
   // Bereiche weiter unten einmal einblenden

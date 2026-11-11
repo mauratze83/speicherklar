@@ -69,7 +69,7 @@ html.js .chart.in .cpanel svg{clip-path:inset(0 0 0 0)}
 @media (prefers-reduced-motion:reduce){html.js .chart .sline{stroke-dasharray:none;transition:none} html.js .chart .sdot,html.js .chart .slabel{opacity:1;transition:none} html.js .chart .cpanel svg{clip-path:none;transition:none}}
 """
 # Blendet Diagramme einmal ein, wenn sie ins Bild kommen. Ohne JavaScript sind sie sofort sichtbar.
-REVEAL = """<script>try{if("IntersectionObserver" in window){document.documentElement.classList.add("js");var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});},{rootMargin:"0px 0px -60px 0px"});document.querySelectorAll(".chart,.about-photo").forEach(function(c){io.observe(c);});}}catch(e){}</script>"""
+REVEAL = """<script>try{if("IntersectionObserver" in window){document.documentElement.classList.add("js");var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});},{threshold:0.35});document.querySelectorAll(".chart,.about-photo").forEach(function(c){io.observe(c);});}}catch(e){}</script>"""
 
 # Grafiken aus dem Simulationsmodell rechnen (Node)
 _specs = {a["slug"]: a["chart"] for a in ARTICLES if a.get("chart")}
