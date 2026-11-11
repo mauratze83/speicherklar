@@ -19,6 +19,19 @@ LOGO = ('<svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">'
         '<rect x="8" y="14" width="10" height="7" rx="1" fill="var(--sun)"/></svg>')
 
 
+# Burger-Menü für kleine Bildschirme. Ohne JavaScript bleibt die Navigation einfach sichtbar.
+BURGER = ('<svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">'
+          '<path class="l1" d="M3 6h16"/><path class="l2" d="M3 11h16"/><path class="l3" d="M3 16h16"/></svg>')
+
+MENU_JS = """<script>(function(){var h=document.querySelector('header.top');if(!h)return;var b=h.querySelector('.menu-btn'),n=h.querySelector('nav');h.classList.add('js');
+function set(o){h.classList.toggle('open',o);b.setAttribute('aria-expanded',o);b.setAttribute('aria-label',o?'Menü schließen':'Menü öffnen');}
+b.addEventListener('click',function(){set(!h.classList.contains('open'))});
+n.addEventListener('click',function(e){if(e.target.closest('a'))set(false)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&h.classList.contains('open')){set(false);b.focus()}});
+document.addEventListener('click',function(e){if(h.classList.contains('open')&&!h.contains(e.target))set(false)});
+matchMedia('(min-width:721px)').addEventListener('change',function(m){if(m.matches)set(false)});})();</script>"""
+
+
 def header(prefix="./", active=None):
     def item(href, label, key=None):
         cur = ' aria-current="page"' if key and key == active else ""
@@ -36,9 +49,11 @@ def header(prefix="./", active=None):
       {LOGO}
       Speicherklar
     </a>
-    <nav aria-label="Seitenbereiche">{nav}</nav>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="hauptmenu" aria-label="Menü öffnen">{BURGER}</button>
+    <nav id="hauptmenu" aria-label="Seitenbereiche">{nav}</nav>
   </div>
-</header>"""
+</header>
+{MENU_JS}"""
 
 
 def footer(prefix="./"):

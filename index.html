@@ -63,6 +63,19 @@ nav{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:15px}
 nav a{color:var(--muted);text-decoration:none}
 nav a:hover{color:var(--ink)}
 nav a[aria-current]{color:var(--ink);font-weight:600}
+.menu-btn{display:none}
+@media (max-width:720px){
+  header.top.js .menu-btn{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;margin:-6px -10px -6px 0;padding:0;border:0;border-radius:8px;background:none;color:var(--ink);cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .menu-btn path{stroke:currentColor;stroke-width:2;stroke-linecap:round;transform-origin:11px 11px;transition:transform 200ms var(--ease-out),opacity 150ms ease}
+  header.top.open .menu-btn .l1{transform:translateY(5px) rotate(45deg)}
+  header.top.open .menu-btn .l2{opacity:0}
+  header.top.open .menu-btn .l3{transform:translateY(-5px) rotate(-45deg)}
+  header.top.js nav{display:none;flex-basis:100%;flex-direction:column;gap:0;font-size:17px;margin-top:4px;border-top:1px solid var(--line)}
+  header.top.js.open nav{display:flex}
+  header.top.js nav a{display:block;padding:12px 2px;border-bottom:1px solid var(--line)}
+  header.top.js nav a:last-child{border-bottom:0}
+}
+@media (max-width:720px) and (prefers-reduced-motion:reduce){.menu-btn path{transition:none}}
 
 .hero{padding-block:44px 22px}
 .eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sun-ink)}
@@ -290,9 +303,17 @@ a.btn{text-decoration:none;display:inline-block}
       <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="5" y="4" width="16" height="20" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><rect x="10" y="1.5" width="6" height="3" rx="1" fill="currentColor"/><rect x="8" y="14" width="10" height="7" rx="1" fill="var(--sun)"/></svg>
       Speicherklar
     </a>
-    <nav aria-label="Seitenbereiche"><a href="./#rechner" aria-current="page">Rechner</a><a href="./ratgeber/">Ratgeber</a><a href="./#annahmen">Annahmen</a><a href="./pro/">Angebots-Check</a><a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">Instagram</a></nav>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="hauptmenu" aria-label="Menü öffnen"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path class="l1" d="M3 6h16"/><path class="l2" d="M3 11h16"/><path class="l3" d="M3 16h16"/></svg></button>
+    <nav id="hauptmenu" aria-label="Seitenbereiche"><a href="./#rechner" aria-current="page">Rechner</a><a href="./ratgeber/">Ratgeber</a><a href="./#annahmen">Annahmen</a><a href="./pro/">Angebots-Check</a><a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">Instagram</a></nav>
   </div>
 </header>
+<script>(function(){var h=document.querySelector('header.top');if(!h)return;var b=h.querySelector('.menu-btn'),n=h.querySelector('nav');h.classList.add('js');
+function set(o){h.classList.toggle('open',o);b.setAttribute('aria-expanded',o);b.setAttribute('aria-label',o?'Menü schließen':'Menü öffnen');}
+b.addEventListener('click',function(){set(!h.classList.contains('open'))});
+n.addEventListener('click',function(e){if(e.target.closest('a'))set(false)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&h.classList.contains('open')){set(false);b.focus()}});
+document.addEventListener('click',function(e){if(h.classList.contains('open')&&!h.contains(e.target))set(false)});
+matchMedia('(min-width:721px)').addEventListener('change',function(m){if(m.matches)set(false)});})();</script>
 
 <main>
   <section class="hero">
