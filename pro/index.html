@@ -571,7 +571,7 @@ matchMedia('(min-width:721px)').addEventListener('change',function(m){if(m.match
       <div class="mykey" id="mykey" hidden>
         <span class="flabel">Dein Lizenzschlüssel</span>
         <div class="mykey-row"><code id="mykey-v"></code><button type="button" class="linkbtn" id="mykey-copy">Kopieren</button></div>
-        <p class="note"><span id="mykey-until"></span>Damit schaltest du Pro auf bis zu drei Geräten frei, 90 Tage ab der ersten Freischaltung. Du bekommst ihn auch per Mail, die Rechnung schickt Stripe separat.</p>
+        <p class="note"><span id="mykey-until"></span>Damit schaltest du Speicherklar Pro auf bis zu drei Geräten frei, 90 Tage ab der ersten Freischaltung. Du bekommst ihn auch per Mail, die Rechnung schickt Stripe separat.</p>
       </div>
       <details class="keybox" id="keybox">
         <summary>Schon gekauft? Lizenzschlüssel eingeben</summary>
@@ -1404,7 +1404,7 @@ var PRO = (function () {
     }
   };
   function expiredMsg(until) {
-    return "Dein Zugang zu Pro ist " + (until ? "am " + dateDe(until) + " " : "") + "abgelaufen (" + (C.accessDays || 90) + " Tage ab Freischaltung). Deine PDF-Berichte bleiben deine. Brauchst du länger, schreib an kontakt@speicherklar.de, dann verlängere ich kostenlos.";
+    return "Dein Zugang zu Speicherklar Pro ist " + (until ? "am " + dateDe(until) + " " : "") + "abgelaufen (" + (C.accessDays || 90) + " Tage ab Freischaltung). Deine PDF-Berichte bleiben deine. Brauchst du länger, schreib an kontakt@speicherklar.de, dann verlängere ich kostenlos.";
   }
   function showUntil(until) {
     $("mykey-until").textContent = until ? "Gültig bis " + dateDe(until) + ". " : "";
@@ -1424,7 +1424,7 @@ var PRO = (function () {
     state.unlocked = true; state.licEmail = email || ""; $("buy").hidden = true; $("keybox").hidden = true; $("teaser").classList.add("unlocked");
     showKey(key);
     if (state.result) renderReport();
-    else { var m = $("kaufmsg"); m.hidden = false; m.className = "wait-msg ok"; m.textContent = "Pro ist auf diesem Gerät freigeschaltet. Trag dein Angebot ein und klick auf „Angebot prüfen“, dann erscheint der vollständige Bericht."; }
+    else { var m = $("kaufmsg"); m.hidden = false; m.className = "wait-msg ok"; m.textContent = "Speicherklar Pro ist auf diesem Gerät freigeschaltet. Trag dein Angebot ein und klick auf „Angebot prüfen“, dann erscheint der vollständige Bericht."; }
   }
   // Link aus der Schlüssel-Mail: speicherklar.de/pro/#lizenz=SK… (Hash, geht nicht an einen Server)
   function keyFromLink() {

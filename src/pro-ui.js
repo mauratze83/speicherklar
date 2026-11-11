@@ -249,7 +249,7 @@
     }
   };
   function expiredMsg(until) {
-    return "Dein Zugang zu Pro ist " + (until ? "am " + dateDe(until) + " " : "") + "abgelaufen (" + (C.accessDays || 90) + " Tage ab Freischaltung). Deine PDF-Berichte bleiben deine. Brauchst du länger, schreib an kontakt@speicherklar.de, dann verlängere ich kostenlos.";
+    return "Dein Zugang zu Speicherklar Pro ist " + (until ? "am " + dateDe(until) + " " : "") + "abgelaufen (" + (C.accessDays || 90) + " Tage ab Freischaltung). Deine PDF-Berichte bleiben deine. Brauchst du länger, schreib an kontakt@speicherklar.de, dann verlängere ich kostenlos.";
   }
   function showUntil(until) {
     $("mykey-until").textContent = until ? "Gültig bis " + dateDe(until) + ". " : "";
@@ -269,7 +269,7 @@
     state.unlocked = true; state.licEmail = email || ""; $("buy").hidden = true; $("keybox").hidden = true; $("teaser").classList.add("unlocked");
     showKey(key);
     if (state.result) renderReport();
-    else { var m = $("kaufmsg"); m.hidden = false; m.className = "wait-msg ok"; m.textContent = "Pro ist auf diesem Gerät freigeschaltet. Trag dein Angebot ein und klick auf „Angebot prüfen“, dann erscheint der vollständige Bericht."; }
+    else { var m = $("kaufmsg"); m.hidden = false; m.className = "wait-msg ok"; m.textContent = "Speicherklar Pro ist auf diesem Gerät freigeschaltet. Trag dein Angebot ein und klick auf „Angebot prüfen“, dann erscheint der vollständige Bericht."; }
   }
   // Link aus der Schlüssel-Mail: speicherklar.de/pro/#lizenz=SK… (Hash, geht nicht an einen Server)
   function keyFromLink() {
