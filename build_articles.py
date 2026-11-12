@@ -67,6 +67,8 @@ html.js .chart .hbar:nth-child(2) .ht i{transition-delay:50ms}html.js .chart .hb
 @media (hover:hover) and (pointer:fine){.ask .btn.ghost:hover{background:var(--ink);color:var(--surface)}}
 .ask .btn.ghost:active{transform:scale(0.97)}
 @media (prefers-reduced-motion:reduce){.ask .btn.ghost:active{transform:none}}
+.ask .ask-addr{font-size:14px;color:var(--muted);line-height:1.45}
+.ask .ask-addr a{color:var(--sun-ink)}
 .cta{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px;margin:32px 0;display:grid;gap:10px;max-width:760px}
 .cta b{font-family:var(--f-display);font-stretch:105%;font-size:21px}
 .cta .btn{display:inline-block;justify-self:start;opacity:1;cursor:pointer;text-decoration:none}
@@ -162,11 +164,14 @@ def page(title, desc, canonical, main, extra_head="", prefix="../", active="ratg
 """
 
 def ask(a):
-    """Kasten „Frage offen?“: öffnet das Mailprogramm mit vorausgefülltem Betreff, kein Fremddienst."""
+    """Kasten „Frage offen?“: öffnet das Mailprogramm mit vorausgefülltem Betreff, kein Fremddienst.
+    Gezählt wird per umami.track im onclick, nicht per data-umami-event: Umami würde den Klick sonst abfangen und
+    den mailto-Link erst nach dem Senden öffnen, und Safari blockiert das Öffnen des Mailprogramms dann."""
     subj = quote(f"Frage zu: {a['title']}")
     body = quote(f"Hallo Manuel,\n\nmeine Frage zum Artikel https://speicherklar.de/ratgeber/{a['slug']}.html:\n\n")
     return (f'<div class="ask"><b>Noch eine Frage offen?</b><span>Schreib sie mir. Ich antworte dir per Mail, und was öfter gefragt wird, ergänze ich hier im Artikel, ohne deinen Namen.</span>'
-            f'<a class="btn ghost" href="mailto:kontakt@speicherklar.de?subject={subj}&amp;body={body}" data-umami-event="frage-mail">Frage per Mail stellen</a></div>')
+            f'<a class="btn ghost" href="mailto:kontakt@speicherklar.de?subject={subj}&amp;body={body}" onclick="try{{window.umami&amp;&amp;umami.track(\'frage-mail\')}}catch(e){{}}">Frage per Mail stellen</a>'
+            f'<small class="ask-addr">Öffnet sich kein Mailprogramm? Schreib an <a href="mailto:kontakt@speicherklar.de">kontakt@speicherklar.de</a>.</small></div>')
 
 CTA = """<div class="cta"><b>Rechne dein eigenes Haus durch</b><span>Postleitzahl, Dachausrichtung und Verbrauch eingeben. Der kostenlose Rechner zeigt dir die wirtschaftlichste Speichergröße, auch für das Szenario EEG-Reform 2027.</span><a class="btn" href="../#rechner" data-umami-event="artikel-zum-rechner" data-umami-event-artikel="{slug}">Zum Rechner</a><span class="cta-pro">Du hast schon ein Angebot? <a href="../pro/" data-umami-event="artikel-zu-pro" data-umami-event-artikel="{slug}">Speicherklar Pro</a> prüft Speicher und PV-Anlage zusammen und zeigt die beste Kombination für dein Dach. Die Einordnung ist kostenlos.</span></div>"""
 
