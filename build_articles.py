@@ -199,6 +199,12 @@ def more(a):
 
 out = ROOT / "ratgeber"; out.mkdir(exist_ok=True)
 RATGEBER_URL = "https://speicherklar.de/ratgeber/"
+def _de(d): y, m, t = d.split("-"); return f"{int(t)}.{int(m)}.{y}"
+def datum(a):
+    """Sichtbares Datum mit <time>: 'Aktualisiert am …', wenn das Feld updated gesetzt ist, sonst 'Veröffentlicht am …'."""
+    if a.get("updated") and a["updated"] != a["date"]:
+        return f'Aktualisiert am <time datetime="{a["updated"]}">{_de(a["updated"])}</time>'
+    return f'Veröffentlicht am <time datetime="{a["date"]}">{_de(a["date"])}</time>'
 def crumbs(*items):
     """Brotkrumen für Google (speicherklar.de › Ratgeber › Artikel). items: (Name, URL)."""
     return {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
@@ -208,12 +214,15 @@ def ld_tags(*objs):
 for a in ARTICLES:
     url = f"https://speicherklar.de/ratgeber/{a['slug']}.html"
     faq_html = "".join(f"<details><summary>{html.escape(q)}</summary><p>{html.escape(x)}</p></details>" for q, x in a["faq"])
-    ld = [{"@context": "https://schema.org", "@type": "Article", "headline": a["title"], "description": a["desc"], "datePublished": a["date"], "dateModified": a["date"], "inLanguage": "de", "author": {"@type": "Organization", "name": "Speicherklar"}, "mainEntityOfPage": url},
+    ld = [{"@context": "https://schema.org", "@type": "Article", "headline": a["title"], "description": a["desc"], "datePublished": a["date"], "dateModified": a.get("updated", a["date"]), "inLanguage": "de",
+           "author": {"@type": "Person", "name": "Manuel Maurer", "url": "https://speicherklar.de/ueber-mich.html"},
+           "publisher": {"@type": "Organization", "@id": "https://speicherklar.de/#org", "name": "Speicherklar", "url": "https://speicherklar.de/", "logo": {"@type": "ImageObject", "url": "https://speicherklar.de/img/icon-512.png"}},
+           "isBasedOn": "https://speicherklar.de/methodik.html", "image": f"https://speicherklar.de/img/og/{a['slug']}.png", "mainEntityOfPage": url},
           {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": x}} for q, x in a["faq"]]},
           crumbs(("Ratgeber", RATGEBER_URL), (a["title"], url))]
     head = ld_tags(*ld)
-    main = f"""<div class="art"><article class="doc"><div class="eyebrow">Ratgeber</div><h1>{a['h1']}</h1><p class="lead">{a['lead']}</p><p class="meta">Stand: {STAND}</p>
-{_body(a)}{CTA.replace("{slug}", a["slug"])}<h2>Häufige Fragen</h2>{faq_html}{ask(a)}{more(a)}<p class="note" style="margin-top:28px">{BEISPIEL}</p></article>{kbox(a)}</div>"""
+    main = f"""<div class="art"><article class="doc"><div class="eyebrow">Ratgeber</div><h1>{a['h1']}</h1><p class="lead">{a['lead']}</p><p class="meta">{datum(a)} · Von <a href="../ueber-mich.html">Manuel Maurer</a> · <a href="#annahmen">Annahmen</a> · <a href="../methodik.html">Rechenweg</a></p>
+{_body(a)}{CTA.replace("{slug}", a["slug"])}<h2>Häufige Fragen</h2>{faq_html}{ask(a)}{more(a)}<p class="note" id="annahmen" style="margin-top:28px">{BEISPIEL}</p></article>{kbox(a)}</div>"""
     (out / f"{a['slug']}.html").write_text(page(f"{a['title']} | Speicherklar", a["desc"], url, main, head, og_image=f"img/og/{a['slug']}.png"))
 
 items = "".join(f'<li><a href="{a["slug"]}.html">{sp(a)}<b>{a["title"]}</b><span>{a["desc"]}</span></a></li>' for a in NEWEST)

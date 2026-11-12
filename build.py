@@ -17,6 +17,25 @@ HOME_LD = '<script type="application/ld+json">' + json.dumps({"@context": "https
      "operatingSystem": "Web-Browser", "inLanguage": "de", "isAccessibleForFree": True,
      "description": "Jahressimulation in 5-Minuten-Schritten mit Sonnendaten der Region. Zeigt, welche Speichergröße sich für eine geplante PV-Anlage lohnt.",
      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "publisher": {"@id": SITE + "#org"}}]}, ensure_ascii=False) + '</script>'
+import subprocess, re as _re0
+def prerender(body):
+    """Ergebnis des Standard-Beispiels fest ins HTML schreiben (für Crawler ohne JavaScript).
+    Startwerte kommen aus body.html und ui.js, gerechnet wird mit src/sim.js (scripts/prerender.js)."""
+    val = lambda i: float(_re0.search(rf'id="{i}"[^>]*value="([^"]+)"', body).group(1))
+    d = {k: val(k) for k in ("pv", "tilt", "cons", "ev", "bat", "bprice", "life", "price", "feed")}
+    d = {k: int(v) if v == int(v) else v for k, v in d.items()}
+    d["region"] = _re0.search(r'region:"(\d)"', (S / "ui.js").read_text()).group(1)
+    r = json.loads(subprocess.run(["node", str(S.parent / "scripts/prerender.js"), json.dumps(d)], check=True, capture_output=True, text=True).stdout)
+    global PRERENDER; PRERENDER = r
+    rep = {'id="verdict">Rechne…<': f'id="verdict">{r["verdict"]}<',
+           'id="k-save">–<': f'id="k-save">{r["save"]}<', 'id="k-pay">–<': f'id="k-pay">{r["pay"]}<',
+           'id="k-cost">–<': f'id="k-cost">{r["cost"]}<', 'id="k-netd">–<': f'id="k-netd">{r["netd"]}<',
+           'id="k-net">–<': f'id="k-net" style="color:var(--{"pos" if r["netPos"] else "neg"})">{r["net"]}<',
+           '<!--SWEEPSUM-->': f'{r["example"]} {r["sweep"]}'}
+    for a, b in rep.items():
+        assert a in body, f"prerender: {a} fehlt in body.html"
+        body = body.replace(a, b)
+    return body
 head = f"""<!doctype html>
 <html lang="de">
 <head>
@@ -39,7 +58,7 @@ head = f"""<!doctype html>
 </head>
 <body>
 """
-html = head + (S / "body.html").read_text().replace("<!--RATGEBER-->", (S / "ratgeber-teaser.html").read_text()).replace("<!--HEADER-->", header("./", "rechner")).replace("<!--FOOTER-->", footer("./")) + "\n<script>\n" + sim + "\n" + (S / "draw.js").read_text().split("if (typeof module")[0] + "\n" + (S / "ui.js").read_text() + "</script>\n</body>\n</html>\n"
+html = head + prerender((S / "body.html").read_text()).replace("<!--RATGEBER-->", (S / "ratgeber-teaser.html").read_text()).replace("<!--HEADER-->", header("./", "rechner")).replace("<!--FOOTER-->", footer("./")) + "\n<script>\n" + sim + "\n" + (S / "draw.js").read_text().split("if (typeof module")[0] + "\n" + (S / "ui.js").read_text() + "</script>\n</body>\n</html>\n"
 _cfg = (S / "pro-config.js").read_text()
 _cv = lambda k: re.search(k + r'\s*:\s*"?([^",\n]*)"?', _cfg).group(1)
 PRO_VALUES = {"{{PRO_PUBLIC}}": _cv("publicFrom"), "{{PRO_INTRO}}": _cv("introUntil"), "{{PRO_PRICE}}": _cv("price"), "{{PRO_REGULAR}}": _cv("regularPrice")}
@@ -101,5 +120,37 @@ for rel in pages:
     rows.append(f"  <url><loc>{url}</loc><lastmod>{dates[url]['date']}</lastmod></url>\n")
 dates = {u: v for u, v in dates.items() if any(f"<loc>{u}</loc>" in r for r in rows)}
 _df.write_text(json.dumps(dates, indent=1, sort_keys=True) + "\n")
+# llms.txt: kurze Übersicht der Seite für KI-Suchdienste (Format llmstxt.org). Wird aus den Artikeln und
+# dem vorgerechneten Standard-Beispiel erzeugt, damit die Zahlen immer zu sim.js passen.
+import sys as _sys
+_sys.path.insert(0, str(S))
+from articles import ARTICLES as _ARTS
+_b = PRERENDER["best"]
+_nf = lambda v: f"{v:,.0f}".replace(",", ".")
+llms = f"""# Speicherklar
+
+> Kostenloser Stromspeicher-Rechner für Leute, die eine PV-Anlage planen: Welche Speichergröße lohnt sich? Ohne Anmeldung, ohne Provision, ohne Werbung. Jahressimulation in 5-Minuten-Schritten mit Sonnendaten aus PVGIS 2014–2023, Rechenweg offen auf GitHub.
+
+Betrieben von Manuel Maurer, Krefeld. Speicherklar verdient nichts an verkauften Speichern und hat keine Partner-Installateure. Die Seite finanziert sich nur über Speicherklar Pro.
+
+Ergebnis des Rechners mit den Startwerten. {PRERENDER["example"]} Am meisten bleibt bei {_b["cap"]} kWh nutzbarer Speicherkapazität: +{_nf(_b["net"])} € {PRERENDER["netd"]}, bezahlt nach {str(_b["payback"]).replace(".", ",")} Jahren. Größere Speicher sparen pro Jahr etwas mehr, kosten aber mehr, als sie zusätzlich sparen.
+
+Nicht im Modell: Wärmepumpen-Lastprofil (nur in Speicherklar Pro), Notstrom, Verschattung, Alterung des Speichers, dynamische Stromtarife.
+
+## Rechner und Methodik
+
+- [Stromspeicher-Rechner]({SITE}): PLZ, Dachausrichtung, Neigung, kWp, Jahresverbrauch und E-Auto eingeben; zeigt Ersparnis, Amortisation, Bilanz und die wirtschaftlichste Speichergröße von 1 bis 15 kWh.
+- [Methodik]({SITE}methodik.html): Rechenweg, Annahmen, Quellen, Grenzen und Vergleich mit dem Unabhängigkeitsrechner der HTW Berlin.
+- [Speicherklar Pro]({SITE}pro/): Angebots-Check für ein konkretes Installateur-Angebot. Erste Einschätzung kostenlos als Ampel (Speichergröße, PV-Größe, Preis je kWh und je kWp), danach ein PDF-Bericht mit der besten Kombination aus PV-Anlage und Speicher.
+
+## Ratgeber
+
+""" + "".join(f"- [{a['title']}]({SITE}ratgeber/{a['slug']}.html): {a['desc']}\n" for a in _ARTS) + f"""
+## Optional
+
+- [Über mich]({SITE}ueber-mich.html)
+- [Quellcode auf GitHub](https://github.com/mauratze83/speicherklar): öffentlich zum Nachlesen, alle Rechte vorbehalten.
+"""
+(ROOT / "llms.txt").write_text(llms)
 (ROOT / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(rows) + "</urlset>\n")
 print("sitemap.xml:", len(rows), "Seiten")

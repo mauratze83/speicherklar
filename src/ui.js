@@ -189,6 +189,7 @@
     if(res.best.cap!==p.bat)v+=res.best.net>0?' Am meisten bleibt bei '+res.best.cap+' kWh übrig.':' Bei diesen Preisen rechnet sich keine Größe.';
     else if(res.best.net>0)v+=' Das ist auch die wirtschaftlichste Größe.';
     $("verdict").innerHTML=v;
+    $("sweepsum").innerHTML=res.best.net>0?"Mit deinen Werten bleibt am meisten bei <b>"+res.best.cap+"&nbsp;kWh</b>: +"+euro(res.best.net).replace(" €","&nbsp;€")+" nach "+p.life+" Jahren, bezahlt nach "+nf1.format(res.best.payback)+" Jahren.":"Mit deinen Werten rechnet sich keine Speichergröße.";
     chart(res,p);
     var okNet=c.net>=0&&isFinite(c.payback);
     $("rbar-main").textContent=p.bat+" kWh · "+(okNet?"bezahlt nach "+nf1.format(c.payback)+" J.":"rechnet sich nicht");

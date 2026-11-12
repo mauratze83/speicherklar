@@ -148,6 +148,7 @@ input[type=range]{width:100%;accent-color:var(--sun);height:26px;margin:0}
 
 .sweep h3{font-size:15.5px;margin:0 0 2px}
 .sweep p{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.sweep p.sweepsum{color:var(--ink)}
 .chartwrap{overflow-x:auto}
 .chartwrap svg{display:block;width:100%;min-width:420px;height:auto}
 .chartwrap text{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
@@ -540,7 +541,7 @@ matchMedia('(min-width:721px)').addEventListener('change',function(m){if(m.match
 
     <div class="panel result" id="ergebnis" aria-live="polite">
       <div>
-        <p class="verdict" id="verdict">Rechne…</p>
+        <p class="verdict" id="verdict">Mit 8 kWh <span class="ok">rechnet sich der Speicher nach etwa 9,2 Jahren.</span> Am meisten bleibt bei 6 kWh übrig.</p>
         <p class="yield" id="yield"></p>
       </div>
 
@@ -551,9 +552,9 @@ matchMedia('(min-width:721px)').addEventListener('change',function(m){if(m.match
       </div>
 
       <div class="kpis">
-        <div class="kpi"><div class="k">Ersparnis pro Jahr</div><div class="v" id="k-save">–</div><div class="d">gegenüber ohne Speicher</div></div>
-        <div class="kpi"><div class="k">Amortisation</div><div class="v" id="k-pay">–</div><div class="d" id="k-cost">–</div></div>
-        <div class="kpi"><div class="k">Bilanz nach Lebensdauer</div><div class="v" id="k-net">–</div><div class="d" id="k-netd">–</div></div>
+        <div class="kpi"><div class="k">Ersparnis pro Jahr</div><div class="v" id="k-save">436 €</div><div class="d">gegenüber ohne Speicher</div></div>
+        <div class="kpi"><div class="k">Amortisation</div><div class="v" id="k-pay">9,2 J.</div><div class="d" id="k-cost">bei 4.000 € Anschaffung</div></div>
+        <div class="kpi"><div class="k">Bilanz nach Lebensdauer</div><div class="v" id="k-net" style="color:var(--pos)">+2.544 €</div><div class="d" id="k-netd">nach 15 Jahren</div></div>
       </div>
 
       <div class="bars">
@@ -580,6 +581,7 @@ matchMedia('(min-width:721px)').addEventListener('change',function(m){if(m.match
       <div class="sweep">
         <h3>Welche Größe rechnet sich am besten?</h3>
         <p>Gewinn oder Verlust über die Lebensdauer, für jede Größe von 1 bis 15 kWh.</p>
+        <p class="sweepsum" id="sweepsum">Beispiel: Ruhrgebiet, 9 kWp Süd, 35° Neigung, 4.500 kWh Verbrauch im Jahr, Speicher 500 €/kWh, Strompreis 33,00 ct, Einspeisung 7,70 ct, 15 Jahre. Am meisten bleibt bei <b>6&nbsp;kWh</b>: +2.758&nbsp;€ nach 15 Jahren, bezahlt nach 7,8 Jahren.</p>
         <div class="chartwrap"><svg id="chart" viewBox="0 0 560 210" role="img" aria-label="Bilanz je Speichergröße"></svg></div>
         <div class="legend"><span class="lbest">beste Größe</span><span class="lpick">deine Wahl</span></div>
       </div>
@@ -1165,6 +1167,7 @@ var DRAW = (function () {
     if(res.best.cap!==p.bat)v+=res.best.net>0?' Am meisten bleibt bei '+res.best.cap+' kWh übrig.':' Bei diesen Preisen rechnet sich keine Größe.';
     else if(res.best.net>0)v+=' Das ist auch die wirtschaftlichste Größe.';
     $("verdict").innerHTML=v;
+    $("sweepsum").innerHTML=res.best.net>0?"Mit deinen Werten bleibt am meisten bei <b>"+res.best.cap+"&nbsp;kWh</b>: +"+euro(res.best.net).replace(" €","&nbsp;€")+" nach "+p.life+" Jahren, bezahlt nach "+nf1.format(res.best.payback)+" Jahren.":"Mit deinen Werten rechnet sich keine Speichergröße.";
     chart(res,p);
     var okNet=c.net>=0&&isFinite(c.payback);
     $("rbar-main").textContent=p.bat+" kWh · "+(okNet?"bezahlt nach "+nf1.format(c.payback)+" J.":"rechnet sich nicht");
