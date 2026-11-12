@@ -90,9 +90,9 @@ def _with_figure(a):
     return body[:i + 4] + fig + body[i + 4:] if i >= 0 else fig + body
 
 
-def page(title, desc, canonical, main, extra_head="", prefix="../", active="ratgeber", robots=False, og_image=None):
+def page(title, desc, canonical, main, extra_head="", prefix="../", active="ratgeber", robots=False, og_image=None, og_type="article"):
     base = BASE.replace("url(fonts/", f"url({prefix}fonts/")
-    meta = '<meta name="robots" content="noindex">' if robots else (f'<link rel="canonical" href="{canonical}"><meta property="og:title" content="{html.escape(title)}"><meta property="og:description" content="{html.escape(desc)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="article"><meta property="og:locale" content="de_DE">')
+    meta = '<meta name="robots" content="noindex">' if robots else (f'<link rel="canonical" href="{canonical}"><meta property="og:title" content="{html.escape(title)}"><meta property="og:description" content="{html.escape(desc)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="{og_type}"><meta property="og:locale" content="de_DE">')
     return f"""<!doctype html>
 <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{html.escape(title)}</title><meta name="description" content="{html.escape(desc)}">
@@ -143,21 +143,27 @@ def more(a):
     return f'<h2>Weiterlesen</h2><ul class="rlist">{li}</ul>'
 
 out = ROOT / "ratgeber"; out.mkdir(exist_ok=True)
-urls = [("https://speicherklar.de/", "2026-11-08"), ("https://speicherklar.de/ratgeber/", max(a["date"] for a in ARTICLES))]
+RATGEBER_URL = "https://speicherklar.de/ratgeber/"
+def crumbs(*items):
+    """Brotkrumen für Google (speicherklar.de › Ratgeber › Artikel). items: (Name, URL)."""
+    return {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+        {"@type": "ListItem", "position": i + 1, "name": n, "item": u} for i, (n, u) in enumerate((("Speicherklar", "https://speicherklar.de/"),) + items)]}
+def ld_tags(*objs):
+    return "".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in objs)
 for a in ARTICLES:
     url = f"https://speicherklar.de/ratgeber/{a['slug']}.html"
     faq_html = "".join(f"<details><summary>{html.escape(q)}</summary><p>{html.escape(x)}</p></details>" for q, x in a["faq"])
     ld = [{"@context": "https://schema.org", "@type": "Article", "headline": a["title"], "description": a["desc"], "datePublished": a["date"], "dateModified": a["date"], "inLanguage": "de", "author": {"@type": "Organization", "name": "Speicherklar"}, "mainEntityOfPage": url},
-          {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": x}} for q, x in a["faq"]]}]
-    head = "".join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in ld)
+          {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": x}} for q, x in a["faq"]]},
+          crumbs(("Ratgeber", RATGEBER_URL), (a["title"], url))]
+    head = ld_tags(*ld)
     main = f"""<article class="doc"><div class="eyebrow">Ratgeber</div><h1>{a['h1']}</h1><p class="lead">{a['lead']}</p><p class="meta">Stand: {STAND}</p>
 {_with_figure(a)}{CTA.replace("{slug}", a["slug"])}<h2>Häufige Fragen</h2>{faq_html}{ask(a)}{more(a)}<p class="note" style="margin-top:28px">{BEISPIEL}</p></article>"""
     (out / f"{a['slug']}.html").write_text(page(f"{a['title']} | Speicherklar", a["desc"], url, main, head, og_image=f"img/og/{a['slug']}.png"))
-    urls.append((url, a["date"]))
 
 items = "".join(f'<li><a href="{a["slug"]}.html">{sp(a)}<b>{a["title"]}</b><span>{a["desc"]}</span></a></li>' for a in NEWEST)
 (out / "index.html").write_text(page("Ratgeber Stromspeicher | Speicherklar", "Artikel rund um Stromspeicher und PV-Anlagen, mit Zahlen aus der Jahressimulation statt aus dem Prospekt. Mit Angebots-Check für PV-Anlage und Speicher.", "https://speicherklar.de/ratgeber/",
-    f'<div class="doc"><div class="eyebrow">Ratgeber</div><h1>Stromspeicher, ehrlich gerechnet</h1><p class="lead">Fragen rund um PV-Anlage und Speicher, beantwortet mit Zahlen aus unserer Jahressimulation.</p></div><ul class="rlist">{items}</ul>{CTA.replace("{slug}", "uebersicht")}', og_image="img/og/ratgeber.png"))
+    f'<div class="doc"><div class="eyebrow">Ratgeber</div><h1>Stromspeicher, ehrlich gerechnet</h1><p class="lead">Fragen rund um PV-Anlage und Speicher, beantwortet mit Zahlen aus unserer Jahressimulation.</p></div><ul class="rlist">{items}</ul>{CTA.replace("{slug}", "uebersicht")}', ld_tags(crumbs(("Ratgeber", RATGEBER_URL))), og_image="img/og/ratgeber.png", og_type="website"))
 
 # Über mich
 ABOUT_URL = "https://speicherklar.de/ueber-mich.html"
@@ -166,7 +172,6 @@ ABOUT_HEAD = ('<script type="application/ld+json">{"@context":"https://schema.or
   '"homeLocation":{"@type":"Place","name":"Krefeld"},"sameAs":["https://www.instagram.com/speicherklar/"]}}</script>')
 (ROOT / "ueber-mich.html").write_text(page("Über mich | Speicherklar", "Wer hinter Speicherklar steckt, warum der Rechner ein ganzes Jahr simuliert und womit sich die Seite finanziert.",
     ABOUT_URL, (ROOT / "src/ueber-mich.html").read_text(), ABOUT_HEAD, prefix="./", active=None, og_image="img/manuel-og.jpg"))
-urls.append((ABOUT_URL, "2026-11-10"))
 
 # Methodik: Rechenweg, öffentlicher Code, Unabhängigkeit, Vergleich mit der HTW Berlin
 METHODIK_URL = "https://speicherklar.de/methodik.html"
@@ -174,11 +179,7 @@ METHODIK_URL = "https://speicherklar.de/methodik.html"
     "Wie der Speicherklar-Rechner rechnet, warum der Code öffentlich ist, wer die Seite bezahlt und wie die Ergebnisse zum Unabhängigkeitsrechner der HTW Berlin passen.",
     METHODIK_URL, (ROOT / "src/methodik.html").read_text() + CTA.replace("../", "./").replace("{slug}", "methodik"),
     prefix="./", active=None, og_image="img/og/start.png"))
-urls.append((METHODIK_URL, "2026-11-10"))
-urls.append(("https://speicherklar.de/pro/", "2026-11-09"))
-
-(ROOT / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-    "".join(f"  <url><loc>{u}</loc><lastmod>{d}</lastmod></url>\n" for u, d in urls) + "</urlset>\n")
+# Die Sitemap schreibt build.py am Ende (mit Änderungsdatum je Seite), weil es zuletzt läuft.
 
 from chrome import UMAMI_ID
 UMAMI_TEXT = """<h2 id="reichweite">7. Reichweitenmessung mit Umami</h2>

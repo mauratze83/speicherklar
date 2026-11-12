@@ -70,6 +70,8 @@ def build(articles):
          sub="Verkäufer rechnen mit Juli. <em>Wir rechnen mit November.</em> Jahressimulation für deine Region, Ausrichtung und deinen Verbrauch."), 1200, 630)
     want(OG / "ratgeber.png", card_html("Ratgeber", "Stromspeicher, ehrlich gerechnet",
          sub="Fragen rund um PV-Anlage und Speicher, beantwortet mit Zahlen aus der Jahressimulation."), 1200, 630)
+    want(OG / "pro.png", card_html("Speicherklar Pro", "Die zweite Rechnung zu deinem Angebot",
+         sub="Bevor du unterschreibst: Passen Speicher und PV-Anlage? <em>Erste Einschätzung kostenlos.</em>"), 1200, 630)
     for a in articles:
         want(OG / f"{a['slug']}.png", card_html("Ratgeber", a["title"], kz=a.get("kennzahl")), 1200, 630)
     for name, s, i in (("apple-touch-icon.png", 180, 112), ("icon-192.png", 192, 120), ("icon-512.png", 512, 320),
