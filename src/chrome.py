@@ -40,7 +40,7 @@ def header(prefix="./", active=None):
         item(f"{prefix}#rechner", "Rechner", "rechner"),
         item(f"{prefix}ratgeber/", "Ratgeber", "ratgeber"),
         item(f"{prefix}#annahmen", "Annahmen"),
-        item(f"{prefix}pro/", "Angebots-Check", "pro"),
+        item(f"{prefix}pro/", "Speicherklar Pro", "pro"),
         f'<a href="{IG}" target="_blank" rel="noopener">Instagram</a>',
     ])
     return f"""<header class="top">
