@@ -189,6 +189,15 @@
   }
   $("offer").addEventListener("submit", function (e) { e.preventDefault(); runCheck(true); });
 
+  // Ergebnisspalte neben dem Formular mitlaufen lassen: passt sie in den Bildschirm, bleibt sie oben stehen,
+  // sonst scrollt sie bis zu ihrem unteren Ende mit und bleibt dann stehen
+  (function () {
+    var t = $("teaser");
+    function fit() { t.style.top = Math.min(80, window.innerHeight - t.offsetHeight - 20) + "px"; t.classList.add("stick"); }
+    fit(); window.addEventListener("resize", fit);
+    if ("ResizeObserver" in window) { try { new ResizeObserver(fit).observe(t); } catch (e) {} }
+  })();
+
   // ---------- Kauf und Freischaltung über Stripe (Cloudflare Worker, siehe worker/index.js) ----------
   function today() { return new Date().toISOString().slice(0, 10); }
   function dateDe(iso) { var p = iso.split("-"); return p[2] + "." + p[1] + "." + p[0]; }

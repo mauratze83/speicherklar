@@ -511,6 +511,18 @@ a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
 }
 @media (max-width:520px){.peek-sheet{width:80%}.peek-card{width:90%;margin-top:204px}}
 @media (prefers-reduced-motion:reduce){.peek{animation:none}.peek-sheet{transition:none}}
+
+/* Ergebnisspalte: zeigt vor dem Prüfen, was kommt, und läuft am Desktop neben dem Formular mit, wenn sie in den Bildschirm passt */
+.amps-ghost{margin-top:14px}
+.amps-ghost .amp{border-style:dashed}
+.amps-ghost .dot{background:var(--line)}
+.amps-ghost .v{color:var(--muted)}
+#teaser .buy{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
+@media (min-width:861px){#teaser.stick{position:sticky}}
+@media (max-width:860px){#teaser{top:auto!important}}
+.amps-ghost{grid-template-columns:repeat(2,minmax(0,1fr))}
+.amps-ghost .amp{padding:10px 12px}
+@media (max-width:420px){.amps-ghost{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -642,8 +654,14 @@ matchMedia('(min-width:721px)').addEventListener('change',function(m){if(m.match
     <div class="panel result" id="teaser" aria-live="polite">
       <p class="wait-msg" id="kaufmsg" role="status" hidden></p>
       <div class="empty" id="t-empty">
-        <h2>So sieht dein Ergebnis aus</h2>
-        <p class="sub">Nach dem Prüfen steht hier die Einordnung deines Angebots: Größe von Speicher und PV-Anlage, Speicherpreis und Preis der PV-Anlage. Das ist kostenlos.</p>
+        <h2>Erst die Ampel, kostenlos</h2>
+        <p class="sub">Nach dem Prüfen steht hier die Einordnung deines Angebots: Größe von Speicher und PV-Anlage, Speicherpreis und Preis der PV-Anlage.</p>
+        <div class="amps amps-ghost" aria-hidden="true">
+          <div class="amp"><span class="dot"></span><div><div class="k">Speichergröße</div><div class="v">?</div></div></div>
+          <div class="amp"><span class="dot"></span><div><div class="k">Größe der PV-Anlage</div><div class="v">?</div></div></div>
+          <div class="amp"><span class="dot"></span><div><div class="k">Speicherpreis je kWh</div><div class="v">?</div></div></div>
+          <div class="amp"><span class="dot"></span><div><div class="k">Preis der PV-Anlage je kWp</div><div class="v">?</div></div></div>
+        </div>
       </div>
       <div id="t-res" hidden>
         <p class="verdict" id="t-verdict"></p>
@@ -655,25 +673,25 @@ matchMedia('(min-width:721px)').addEventListener('change',function(m){if(m.match
             <div class="gl w70"></div><div class="gl w90"></div>
           </div>
         </div>
-        <div class="buy" id="buy">
-          <h3>Im vollständigen Bericht</h3>
-          <ul class="checks">
-            <li>Beste Kombination aus PV-Größe und Speicher für dein Dach, in Euro</li>
-            <li>Welche Speichergröße passt und was sie in der Anschaffung spart</li>
-            <li>Ersparnis, Amortisation und Bilanz für Angebot und passende Größe</li>
-            <li>November gegen Juli: wann dein Speicher voll wird und wann nicht</li>
-            <li>Wie sich die richtige Größe mit der EEG-Reform 2027 verschiebt, dazu Strompreis, E-Auto und Wärmepumpe</li>
-            <li>Fragen an deinen Installateur, passend zu deinem Angebot</li>
-          </ul>
-          <p class="note"><a href="musterbericht.pdf" target="_blank" rel="noopener" data-umami-event="pro-musterbericht">Musterbericht ansehen (PDF, 7 Seiten)</a>: der vollständige Bericht für ein Beispielangebot mit 9 kWp und 10 kWh.</p>
-          <div class="buyrow">
-            <div class="price" id="b-price">49 € <small>einmalig</small></div>
-            <a class="btn btn-on" id="b-btn" href="#" target="_blank" rel="noopener">Bericht freischalten</a>
-          </div>
-          <p class="note" id="b-note"></p>
-          <p class="note">Einmal zahlen, 90 Tage ab Freischaltung nutzen. In der Zeit prüfst du beliebig viele Angebote, auch die von anderen Installateuren. Deine PDF-Berichte bleiben dauerhaft deine. Kein Abo, keine automatische Verlängerung. Brauchst du länger, reicht eine Mail an kontakt@speicherklar.de, dann verlängere ich kostenlos.</p>
-          <p class="note">Keine Weitergabe an Installateure. Deine Mail nutze ich nur für deinen Lizenzschlüssel, nicht für einen Newsletter. Speicherklar bekommt kein Geld von Herstellern oder Installateuren. Der Bericht rechnet nur mit deinen Angaben und dem <a href="../methodik.html">offenen Rechenkern</a>.</p>
+      </div>
+      <div class="buy" id="buy">
+        <h3>Dann der vollständige Bericht</h3>
+        <ul class="checks">
+          <li>Beste Kombination aus PV-Größe und Speicher für dein Dach, in Euro</li>
+          <li>Welche Speichergröße passt und was sie in der Anschaffung spart</li>
+          <li>Ersparnis, Amortisation und Bilanz für Angebot und passende Größe</li>
+          <li>November gegen Juli: wann dein Speicher voll wird und wann nicht</li>
+          <li>Wie sich die richtige Größe mit der EEG-Reform 2027 verschiebt, dazu Strompreis, E-Auto und Wärmepumpe</li>
+          <li>Fragen an deinen Installateur, passend zu deinem Angebot</li>
+        </ul>
+        <p class="note"><a href="musterbericht.pdf" target="_blank" rel="noopener" data-umami-event="pro-musterbericht">Musterbericht ansehen (PDF, 7 Seiten)</a>: der vollständige Bericht für ein Beispielangebot mit 9 kWp und 10 kWh.</p>
+        <div class="buyrow">
+          <div class="price" id="b-price">49 € <small>einmalig</small></div>
+          <a class="btn btn-on" id="b-btn" href="#" target="_blank" rel="noopener">Bericht freischalten</a>
         </div>
+        <p class="note" id="b-note"></p>
+        <p class="note">Einmal zahlen, 90 Tage ab Freischaltung nutzen. In der Zeit prüfst du beliebig viele Angebote, auch die von anderen Installateuren. Deine PDF-Berichte bleiben dauerhaft deine. Kein Abo, keine automatische Verlängerung. Brauchst du länger, reicht eine Mail an kontakt@speicherklar.de, dann verlängere ich kostenlos.</p>
+        <p class="note">Keine Weitergabe an Installateure. Deine Mail nutze ich nur für deinen Lizenzschlüssel, nicht für einen Newsletter. Speicherklar bekommt kein Geld von Herstellern oder Installateuren. Der Bericht rechnet nur mit deinen Angaben und dem <a href="../methodik.html">offenen Rechenkern</a>.</p>
       </div>
       <div class="mykey" id="mykey" hidden>
         <span class="flabel">Dein Lizenzschlüssel</span>
@@ -1450,6 +1468,15 @@ var PRO = (function () {
     }, 30);
   }
   $("offer").addEventListener("submit", function (e) { e.preventDefault(); runCheck(true); });
+
+  // Ergebnisspalte neben dem Formular mitlaufen lassen: passt sie in den Bildschirm, bleibt sie oben stehen,
+  // sonst scrollt sie bis zu ihrem unteren Ende mit und bleibt dann stehen
+  (function () {
+    var t = $("teaser");
+    function fit() { t.style.top = Math.min(80, window.innerHeight - t.offsetHeight - 20) + "px"; t.classList.add("stick"); }
+    fit(); window.addEventListener("resize", fit);
+    if ("ResizeObserver" in window) { try { new ResizeObserver(fit).observe(t); } catch (e) {} }
+  })();
 
   // ---------- Kauf und Freischaltung über Stripe (Cloudflare Worker, siehe worker/index.js) ----------
   function today() { return new Date().toISOString().slice(0, 10); }
