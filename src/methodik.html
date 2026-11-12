@@ -2,7 +2,7 @@
 <div class="eyebrow">Methodik</div>
 <h1>So rechnet Speicherklar</h1>
 <p class="lead">Jede Zahl auf dieser Seite kommt aus einer Jahressimulation, deren Code du selbst lesen kannst. Hier steht, wie sie funktioniert, wer dafür bezahlt und wie gut sie zu einer unabhängigen Quelle passt.</p>
-<p class="meta">Stand: 10.11.2026</p>
+<p class="meta">Stand: 12.11.2026</p>
 
 <h2>Unabhängig</h2>
 <p>Ich verkaufe keine PV-Anlagen und keine Speicher. Ich bekomme kein Geld von Herstellern, Händlern oder Installateuren, keine Provision und keine Vermittlungsgebühr. Auf Speicherklar gibt es keine Werbung und keine Partnerlinks.</p>
@@ -49,12 +49,30 @@
 <ul>
 <li>Verschattung durch Bäume, Gauben oder Nachbarhäuser</li>
 <li>Alterung des Speichers (siehe Vergleich oben)</li>
-<li>Steigende Strompreise und Zinsen</li>
+<li>Steigende oder fallende Strompreise (siehe <a href="#strompreis">nächster Abschnitt</a>)</li>
+<li>Zinsen</li>
 <li>Dynamische Stromtarife</li>
 <li>Notstrom und Ersatzstrom</li>
 <li>Das Lastprofil einer Wärmepumpe im kostenlosen Rechner (der Angebots-Check rechnet sie mit)</li>
 </ul>
 <p>Speicherklar ist eine Schätzung, keine Anlagenplanung. Für die Kaufentscheidung brauchst du Angebote von Fachbetrieben. Speicherklar hilft dir, sie zu prüfen.</p>
+
+<h2 id="strompreis">Warum der Strompreis in der Rechnung gleich bleibt</h2>
+<p>Speicherklar rechnet über die ganze Laufzeit mit einem festen Strompreis. Standard sind 33 ct/kWh, du kannst den Wert im Rechner ändern. Eine jährliche Steigerung ist nicht eingebaut. Das ist Absicht.</p>
+<p>Niemand weiß, was Strom in 15 Jahren kostet. Er kann teurer werden, er kann auch günstiger werden. Je höher die angenommene Steigerung, desto größer fällt der empfohlene Speicher aus. Mit einer Prognose stünde also eine Zahl in der Rechnung, die ich nicht belegen kann. Deshalb steht dort der Preis von heute.</p>
+<p>Dazu kommt: Die Alterung des Speichers ist ebenfalls nicht eingerechnet, und sie wirkt in die andere Richtung. Nur steigende Preise einzubauen würde den Speicher einseitig besser rechnen.</p>
+<p>Willst du trotzdem mit einer Preisentwicklung rechnen, trag im Rechner den Preis ein, den du im Schnitt der Laufzeit erwartest. Für die beste Größe und die Bilanz ist das dieselbe Rechnung wie eine jährliche Änderung. Im Standard-Beispiel sieht das so aus:</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Strompreis im Schnitt</th><th>Entspricht pro Jahr</th><th>Beste Speichergröße</th></tr></thead>
+<tbody>
+<tr><td>30 ct</td><td class="num">−1,4 %</td><td class="num">5 kWh</td></tr>
+<tr class="hl"><td>33 ct (Standard)</td><td class="num">0 %</td><td class="num">6 kWh</td></tr>
+<tr><td>36 ct</td><td class="num">+1,2 %</td><td class="num">6 kWh</td></tr>
+<tr><td>40 ct</td><td class="num">+2,7 %</td><td class="num">7 kWh</td></tr>
+<tr><td>45 ct</td><td class="num">+4,3 %</td><td class="num">8 kWh</td></tr>
+</tbody></table></div>
+<p class="note">Standard-Beispiel: Ruhrgebiet, 9 kWp Süd, 35°, 4.500 kWh Verbrauch, Speicher 500 €/kWh, Einspeisung 7,70 ct, 15 Jahre. Gerechnet mit <code>src/sim.js</code> am 12.11.2026. Mittlere Spalte: gleichmäßige Änderung pro Jahr ab 33 ct im ersten Jahr, die über 15 Jahre auf diesen Durchschnitt führt.</p>
+<p>Sieben Cent mehr im Schnitt verschieben die beste Größe um eine Stufe. Ein Unterschied bleibt: Steigt der Preis erst nach und nach, ist der Speicher etwas später bezahlt als bei einem von Anfang an höheren Preis, weil die ersten Jahre günstiger sind.</p>
 
 <h2>Quellen</h2>
 <ul>
