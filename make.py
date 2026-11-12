@@ -162,6 +162,53 @@ posts["post3-eeg-reform"] = [
   frame(f'<h1>Beide Szenarien <em>für dein Haus.</em></h1><p>Im Rechner zwischen EEG heute und Reform umschalten. Link in der Bio.</p><div><span class="cta">speicherklar.de</span></div><p class="src">Beispiel: Ruhrgebiet, 9 kWp Süd 35°, 4.500 kWh/Jahr, Speicher 500 €/kWh, Strom {D["price"]} ct. Reform laut Kabinettsentwurf vom 29.07.2026, Stand November 2026.</p>', 7, T, tp, dark=True),
 ]
 
+# ---------- Post 5: Faustformel Speichergröße (9 Slides), Ableger zum Artikel stromspeicher-groesse-berechnen ----------
+import subprocess
+_js = r"""
+const S=require(process.argv[1]);
+const b={region:"4",tilt:35,ev:0,evTime:"eve",bat:6,bprice:500,life:15,price:%s,feed:7.7,feedLimit:0};
+const e=(cons,kwp)=>S.evaluate({...b,cons,roofs:[{kwp,tilt:35,aspect:0}]});
+const at=(r,c)=>r.sweep[c-1];
+const out={};
+for(const kwp of [6,9,12]){const r=e(4500,kwp);out["k"+kwp]={best:r.best.cap,bestNet:Math.round(r.best.net),rule:kwp,ruleNet:Math.round(at(r,kwp).net)};}
+const r=e(4500,9);
+out.std={best:[r.best.cap,Math.round(r.best.net)],v1:[5,Math.round(at(r,5).net)],v15:[7,Math.round(at(r,7).net)],kwp:[9,Math.round(at(r,9).net)]};
+out.big={aut6:Math.round(at(r,6).r.autarky*100),aut10:Math.round(at(r,10).r.autarky*100),save:Math.round(at(r,10).save-at(r,6).save),cost:at(r,10).cost-at(r,6).cost,net:Math.round(at(r,6).net-at(r,10).net)};
+console.log(JSON.stringify(out));
+"""
+_price = float(__import__("re").search(r'id="price"[^>]*value="([^"]+)"', (SITE / "src/body.html").read_text()).group(1))
+F = json.loads(subprocess.run(["node", "-e", _js % _price, str(SITE / "src/sim.js")], capture_output=True, text=True, check=True).stdout)
+def hbars(rows, lo=0, hi=3000):
+    """Waagerechte Balken: rows = [(Beschriftung, Wert, Farbe, fett)]."""
+    W, rh, lw = 820, 92, 0
+    s = f'<svg width="{W}" height="{len(rows)*rh}" viewBox="0 0 {W} {len(rows)*rh}" font-family="Source Sans 3">'
+    for i, (lab, v, col, bold) in enumerate(rows):
+        y = i * rh
+        w = (W - 190) * (v - lo) / (hi - lo)
+        s += (f'<text x="0" y="{y+30}" font-size="30" fill="#15212B" font-weight="{700 if bold else 400}">{lab}</text>'
+              f'<rect x="0" y="{y+44}" width="{max(4,w)}" height="34" rx="4" fill="{col}"/>'
+              f'<text x="{w+16}" y="{y+72}" font-family="JetBrains Mono" font-size="28" font-weight="700" fill="#15212B">+{fmt(v)} €</text>')
+    return s + "</svg>"
+T = 9; tp = "Speichergröße"
+k6, k9, k12, st, bg = F["k6"], F["k9"], F["k12"], F["std"], F["big"]
+loss12 = k12["bestNet"] - k12["ruleNet"]
+posts["post5-faustformel"] = [
+  frame('<h1>1 kWh je kWp? <em>Lieber nicht.</em></h1><p class="promise">Welche Faustformel für die Speichergröße wirklich passt. Hab’s durchgerechnet.</p>', 1, T, tp),
+  frame(f'<h2>Diese Faustregel kostet hier</h2>{wheels(loss12)}<p>Euro in 15 Jahren. 4.500 kWh Verbrauch, 12&nbsp;kWp auf dem Dach. Die Regel sagt {k12["rule"]}&nbsp;kWh Speicher, am meisten bleibt bei {k12["best"]} kWh.</p>', 2, T, tp),
+  frame('<h2>Drei Faustformeln kursieren</h2>' + summary(["1 kWh je 1.000 kWh Verbrauch", "1,5 kWh je 1.000 kWh Verbrauch", "1 kWh je kWp Anlagenleistung"]) + '<p class="muted">Ich hab alle drei gegen eine Jahressimulation in 5-Minuten-Schritten gerechnet.</p>', 3, T, tp),
+  frame(f'<h2>Im Normalfall liegen alle nah dran</h2><p class="muted" style="font-size:32px">4.500 kWh, 9 kWp Süd. Bilanz nach 15 Jahren</p>'
+        + hbars([(f"Beste Größe: {st['best'][0]} kWh", st["best"][1], "#E39A0B", True), (f"1 kWh je 1.000 kWh: {st['v1'][0]} kWh", st["v1"][1], "#B9C3CB", False),
+                 (f"1,5 kWh je 1.000 kWh: {st['v15'][0]} kWh", st["v15"][1], "#B9C3CB", False), (f"1 kWh je kWp: {st['kwp'][0]} kWh", st["kwp"][1], "#B9C3CB", False)]), 4, T, tp),
+  frame('<h2>Je größer das Dach, desto teurer</h2><p class="muted" style="font-size:32px">4.500 kWh Verbrauch. Bilanz nach 15 Jahren</p>'
+        + hbars([(f"6 kWp: beste Größe {k6['best']} kWh", k6["bestNet"], "#E39A0B", True), (f"6 kWp: Regel {k6['rule']} kWh", k6["ruleNet"], "#B9C3CB", False),
+                 (f"9 kWp: beste Größe {k9['best']} kWh", k9["bestNet"], "#E39A0B", True), (f"9 kWp: Regel {k9['rule']} kWh", k9["ruleNet"], "#B9C3CB", False),
+                 (f"12 kWp: beste Größe {k12['best']} kWh", k12["bestNet"], "#E39A0B", True), (f"12 kWp: Regel {k12['rule']} kWh", k12["ruleNet"], "#B9C3CB", False)]), 5, T, tp),
+  frame(f'<h2>Der Abend zählt, nicht das Dach</h2><p>Der Speicher spart nur mit Strom, den du abends und nachts brauchst. Bei 4.500&nbsp;kWh bleibt die beste Größe {k9["best"]}&nbsp;kWh, mit 9 und mit 12&nbsp;kWp.</p>', 6, T, tp),
+  frame(f'<h2>Größer sieht nur besser aus</h2><div class="pair"><div class="card"><div class="k">Autarkie, 10 statt 6 kWh</div><div class="v" style="font-size:72px;white-space:nowrap">{bg["aut6"]}&nbsp;→ {bg["aut10"]}&nbsp;%</div><div class="d">klingt nach viel</div></div><div class="card"><div class="k">Bilanz nach 15 Jahren</div><div class="v" style="color:var(--neg)">−{fmt(bg["net"])} €</div><div class="d">gegenüber 6 kWh</div></div></div><p>{bg["save"]} € mehr Ersparnis im Jahr, aber {fmt(bg["cost"])} € mehr Kaufpreis.</p>', 7, T, tp),
+  frame('<h2>Kurz gesagt</h2>' + summary(["Rechne mit deinem Verbrauch, nicht mit kWp.", "Rund 1 kWh je 1.000 kWh passt meist.", "E-Auto lädt abends? Eher größer.", "Ost-West-Dach? Eher kleiner."]), 8, T, tp),
+  frame(f'<h1>Wie viel kWh <em>für deinen Verbrauch?</em></h1><p>Der Rechner probiert 1 bis 15 kWh durch. Kostenlos, ohne Anmeldung. Link in der Bio.</p><div><span class="cta">speicherklar.de</span></div><p class="src">Beispiel: Ruhrgebiet, Süd 35°, 4.500 kWh/Jahr, Speicher 500 €/kWh, Strom {de(_price).rstrip("0").rstrip(",")} ct, Einspeisung 7,70 ct, 15 Jahre. Sonnendaten PVGIS (EU-Kommission), eigene Simulation.</p>', 9, T, tp, dark=True),
+]
+
 PROFILE = f"""<div style="width:1080px;height:1080px;background:#15212B;display:flex;align-items:center;justify-content:center">
 <svg width="620" height="620" viewBox="0 0 26 26"><rect x="5.6" y="4.4" width="14.8" height="19" rx="2.6" fill="none" stroke="#E6ECF1" stroke-width="1.7"/><rect x="10" y="1.7" width="6" height="2.6" rx="0.9" fill="#E6ECF1"/><rect x="8.2" y="13.6" width="9.6" height="7.4" rx="1" fill="#E39A0B"/><rect x="8.2" y="9.4" width="9.6" height="2.8" rx="1" fill="#E39A0B" opacity=".45"/></svg></div>"""
 
