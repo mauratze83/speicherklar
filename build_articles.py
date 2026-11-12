@@ -152,7 +152,7 @@ def page(title, desc, canonical, main, extra_head="", prefix="../", active="ratg
 <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{html.escape(title)}</title><meta name="description" content="{html.escape(desc)}">
 {meta}
-<link rel="icon" href="{FAV}">{head_meta(None if robots else og_image, html.escape(title))}{analytics()}<style>{base}{DOC}</style>{extra_head}</head>
+{head_meta(None if robots else og_image, html.escape(title))}{analytics()}<style>{base}{DOC}</style>{extra_head}</head>
 <body>
 {header(prefix, active)}
 <main class="wrap page">{main}</main>

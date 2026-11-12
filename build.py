@@ -32,7 +32,6 @@ head = f"""<!doctype html>
 <meta property="og:type" content="website">
 <meta property="og:locale" content="de_DE">
 <meta name="theme-color" content="#EDF0F2">
-<link rel="icon" href="{FAVICON}">
 {head_meta("img/og/start.png", "Speicherklar: Lohnt sich dein Stromspeicher? Verkäufer rechnen mit Juli, wir rechnen mit November.")}
 {analytics()}
 <style>
@@ -70,7 +69,6 @@ pro_head = f"""<!doctype html>
 <meta property="og:type" content="website">
 <meta property="og:locale" content="de_DE">
 <meta name="theme-color" content="#EDF0F2">
-<link rel="icon" href="{FAVICON}">
 {head_meta("img/og/pro.png", "Speicherklar Pro: Die zweite Rechnung zu deinem Angebot. Bevor du unterschreibst.")}
 {analytics()}
 <style>

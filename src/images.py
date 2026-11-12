@@ -75,9 +75,14 @@ def build(articles):
     for a in articles:
         want(OG / f"{a['slug']}.png", card_html("Ratgeber", a["title"], kz=a.get("kennzahl")), 1200, 630)
     for name, s, i in (("apple-touch-icon.png", 180, 112), ("icon-192.png", 192, 120), ("icon-512.png", 512, 320),
-                       ("icon-maskable-512.png", 512, 250), ("favicon-32.png", 32, 26)):
+                       ("icon-maskable-512.png", 512, 250), ("favicon-32.png", 32, 26),
+                       ("favicon-48.png", 48, 38), ("favicon-96.png", 96, 72)):
         want(IMG / name, ICON.format(s=s, i=i), s, s)
+    # Google zeigt im Suchergebnis nur Icons mit Vielfachen von 48 px und braucht eine eigene Datei (kein data:-Link).
+    # Dunkle Kachel, damit das Icon in hellen und dunklen Suchergebnissen sichtbar ist.
+    (ROOT / "favicon.svg").write_text(FAVICON_SVG)
     if not jobs:
+        _ico()
         return 0
     from playwright.sync_api import sync_playwright
     with sync_playwright() as pw:
@@ -93,4 +98,23 @@ def build(articles):
     # Apple sucht das Icon zusätzlich im Hauptordner
     (ROOT / "apple-touch-icon.png").write_bytes((IMG / "apple-touch-icon.png").read_bytes())
     sigf.write_text(json.dumps(sig, indent=1, sort_keys=True))
+    _ico()
     return len(jobs)
+
+FAVICON_SVG = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect width="48" height="48" rx="10" fill="#15212B"/>'
+               '<g transform="translate(5.3 5.3) scale(1.44)"><rect x="5.6" y="4.4" width="14.8" height="19" rx="2.6" fill="none" stroke="#E6ECF1" stroke-width="1.7"/>'
+               '<rect x="10" y="1.7" width="6" height="2.6" rx="0.9" fill="#E6ECF1"/><rect x="8.2" y="13.6" width="9.6" height="7.4" rx="1" fill="#E39A0B"/>'
+               '<rect x="8.2" y="9.4" width="9.6" height="2.8" rx="1" fill="#E39A0B" opacity=".45"/></g></svg>\n')
+
+def _ico():
+    """/favicon.ico aus den PNGs (32 und 48 px), als ICO mit eingebetteten PNGs, ohne Zusatzbibliothek."""
+    import struct
+    pngs = [(s, (IMG / f"favicon-{s}.png").read_bytes()) for s in (32, 48)]
+    head = struct.pack("<HHH", 0, 1, len(pngs))
+    off, dirs = 6 + 16 * len(pngs), b""
+    for s, data in pngs:
+        dirs += struct.pack("<BBBBHHII", s, s, 0, 0, 1, 32, len(data), off); off += len(data)
+    out = head + dirs + b"".join(d for _, d in pngs)
+    p = ROOT / "favicon.ico"
+    if not p.exists() or p.read_bytes() != out:
+        p.write_bytes(out)
