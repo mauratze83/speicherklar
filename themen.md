@@ -6,7 +6,7 @@ Erledigt:
 - 2026-11 post3-eeg-reform: EEG-Reform, Speicher rechnet sich schneller
 - 2026-11 post4 speicherklar-nachruesten: Speicher nachrüsten, Einspeisevergütung entscheidet (inkl. Ende der Vergütung nach 20 Jahren)
 - 2026-11 reel-pro-pitch: Reel, Elevator Pitch Rechner und Pro
-- 2026-11 post5-faustformel: „1 kWh je kWp? Lieber nicht.“ Faustformeln gegen Simulation (wochen/2026-11-16)
+- 2026-11 post5-faustformel: „1 kWh je kWp? Lieber nicht.“ Faustformeln gegen Simulation (wochen/2026-11-16, captions-post5.md)
 
 Nächste freie Post-Nummer: post6.
 
