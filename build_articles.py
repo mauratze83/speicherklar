@@ -31,7 +31,7 @@ main.page{padding-block:36px 40px}
 .doc .lead{font-size:21px;line-height:1.5;margin:0 0 8px;color:var(--ink)}
 .doc .meta,.doc .note{font-size:14px;color:var(--muted)}
 .doc .tablewrap{overflow-x:auto;margin:16px 0}
-.doc table{border-collapse:collapse;width:100%;min-width:520px;font-size:16px}
+.doc table{border-collapse:collapse;width:100%;min-width:520px;font-size:16px}.doc table.fit{min-width:0}
 .doc th,.doc td{text-align:left;padding:9px 12px 9px 0;border-bottom:1px solid var(--line);vertical-align:top}
 .doc th{font-family:var(--f-mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:500}
 .doc td.num{font-family:var(--f-mono);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
@@ -227,7 +227,7 @@ for a in ARTICLES:
 
 items = "".join(f'<li><a href="{a["slug"]}.html">{sp(a)}<b>{a["title"]}</b><span>{a["desc"]}</span></a></li>' for a in NEWEST)
 (out / "index.html").write_text(page("Ratgeber Stromspeicher | Speicherklar", "Artikel rund um Stromspeicher und PV-Anlagen, mit Zahlen aus der Jahressimulation statt aus dem Prospekt. Mit Angebots-Check für PV-Anlage und Speicher.", "https://speicherklar.de/ratgeber/",
-    f'<div class="doc"><div class="eyebrow">Ratgeber</div><h1>Stromspeicher, ehrlich gerechnet</h1><p class="lead">Fragen rund um PV-Anlage und Speicher, beantwortet mit Zahlen aus unserer Jahressimulation.</p></div><ul class="rlist">{items}</ul>{CTA.replace("{slug}", "uebersicht")}', ld_tags(crumbs(("Ratgeber", RATGEBER_URL))), og_image="img/og/ratgeber.png", og_type="website"))
+    f'<div class="doc"><div class="eyebrow">Ratgeber</div><h1>Stromspeicher, ehrlich gerechnet</h1><p class="lead">Fragen rund um PV-Anlage und Stromspeicher (auch Batteriespeicher, PV-Speicher oder Solarspeicher genannt), beantwortet mit Zahlen aus unserer Jahressimulation.</p></div><ul class="rlist">{items}</ul>{CTA.replace("{slug}", "uebersicht")}', ld_tags(crumbs(("Ratgeber", RATGEBER_URL))), og_image="img/og/ratgeber.png", og_type="website"))
 
 # Über mich
 ABOUT_URL = "https://speicherklar.de/ueber-mich.html"

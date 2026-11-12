@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stromspeicher-Größe berechnen: Wie viel kWh brauche ich? | Speicherklar</title><meta name="description" content="Faustregel: 1 kWh Speicher je 1.000 kWh Verbrauch. Die Regel „1 kWh je kWp“ kostet bei großen Anlagen über 1.000 €. Tabelle für 3.000 bis 6.000 kWh.">
+<link rel="canonical" href="https://speicherklar.de/ratgeber/stromspeicher-groesse-berechnen.html"><meta property="og:title" content="Stromspeicher-Größe berechnen: Wie viel kWh brauche ich? | Speicherklar"><meta property="og:description" content="Faustregel: 1 kWh Speicher je 1.000 kWh Verbrauch. Die Regel „1 kWh je kWp“ kostet bei großen Anlagen über 1.000 €. Tabelle für 3.000 bis 6.000 kWh."><meta property="og:url" content="https://speicherklar.de/ratgeber/stromspeicher-groesse-berechnen.html"><meta property="og:type" content="article"><meta property="og:locale" content="de_DE">
+<link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/img/favicon-96.png" sizes="96x96" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><meta name="apple-mobile-web-app-title" content="Speicherklar"><meta property="og:site_name" content="Speicherklar"><meta property="og:image" content="https://speicherklar.de/img/og/stromspeicher-groesse-berechnen.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Stromspeicher-Größe berechnen: Wie viel kWh brauche ich? | Speicherklar"><meta name="twitter:card" content="summary_large_image"><script defer src="https://cloud.umami.is/script.js" data-website-id="f4570047-b7d7-42e7-944e-a06941b94082" data-domains="speicherklar.de"></script><style>@font-face{font-family:"Archivo";src:url(../fonts/archivo-var.woff2) format("woff2");font-weight:100 900;font-stretch:62% 125%;font-display:swap}
+@font-face{font-family:"Source Sans 3";src:url(../fonts/source-sans-3-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Source Sans 3";src:url(../fonts/source-sans-3-latin-600-normal.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Source Sans 3";src:url(../fonts/source-sans-3-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"JetBrains Mono";src:url(../fonts/jetbrains-mono-latin-500-normal.woff2) format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"JetBrains Mono";src:url(../fonts/jetbrains-mono-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+/* Layout: ein Werkzeug als Bühne. Kurze These oben, darunter Eingaben | Ergebnis im Zählerkasten, dann offene Annahmen, dann Pro-Vorschau. */
+:root{
+  --bg:#EDF0F2; --surface:#FFFFFF; --ink:#15212B; --muted:#56666F; --line:#CBD3DA;
+  --sun:#E39A0B; --sun-ink:#8A5A00; --sun-soft:#FBEFD6;
+  --meter:#1B1F23; --meter-digit:#F3F1EA; --meter-red:#C9302C;
+  --pos:#2E7D5B; --neg:#B4412F; --track:#DCE2E7;
+  --c-charge:#9FD3B8; --c-exp:#F6D99A; --c-imp:#AEB9C2; --sky:#DCE8F0; --cloud:#C3CDD5; --house:#FFFFFF;
+  --bar-bg:#15212B; --bar-ink:#EDF0F2; --bar-accent:#F2B33D; --btn-ink:#15212B;
+  --ease-out:cubic-bezier(0.23, 1, 0.32, 1); --ease-in-out:cubic-bezier(0.77, 0, 0.175, 1);
+  --f-display:"Archivo", "Arial Narrow", system-ui, sans-serif;
+  --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F161C; --surface:#17212A; --ink:#E6ECF1; --muted:#97A7B3; --line:#2A3742;
+  --sun:#F2B33D; --sun-ink:#F2B33D; --sun-soft:#2E2614;
+  --meter:#06090C; --meter-digit:#E9E6DC; --meter-red:#D9443F;
+  --pos:#5CC596; --neg:#E5735E; --track:#26323C;
+  --c-charge:#2F6B52; --c-exp:#6B5523; --c-imp:#4B5966; --sky:#17232D; --cloud:#3A4855; --house:#1E2A35;
+  --bar-bg:#E6ECF1; --bar-ink:#0F161C; --bar-accent:#8A5A00;
+  color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0F161C; --surface:#17212A; --ink:#E6ECF1; --muted:#97A7B3; --line:#2A3742;
+  --sun:#F2B33D; --sun-ink:#F2B33D; --sun-soft:#2E2614;
+  --meter:#06090C; --meter-digit:#E9E6DC; --meter-red:#D9443F;
+  --pos:#5CC596; --neg:#E5735E; --track:#26323C;
+  --c-charge:#2F6B52; --c-exp:#6B5523; --c-imp:#4B5966; --sky:#17232D; --cloud:#3A4855; --house:#1E2A35;
+  --bar-bg:#E6ECF1; --bar-ink:#0F161C; --bar-accent:#8A5A00;
+  color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55;margin:0}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--sun-ink)}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+
+html{scroll-padding-top:76px;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+header.top{position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line);background:var(--bg)}
+@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){header.top{background:color-mix(in srgb,var(--bg) 80%,transparent);-webkit-backdrop-filter:saturate(1.4) blur(14px);backdrop-filter:saturate(1.4) blur(14px)}}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px;flex-wrap:wrap}
+.brand{color:var(--ink);text-decoration:none;font-family:var(--f-display);font-weight:800;font-stretch:118%;font-size:21px;letter-spacing:.01em;display:flex;align-items:center;gap:10px}
+.brand svg{flex:none}
+nav{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:15px}
+nav a{color:var(--muted);text-decoration:none}
+nav a:hover{color:var(--ink)}
+nav a[aria-current]{color:var(--ink);font-weight:600}
+.menu-btn{display:none}
+@media (max-width:720px){
+  header.top.js .menu-btn{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;margin:-6px -10px -6px 0;padding:0;border:0;border-radius:8px;background:none;color:var(--ink);cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .menu-btn path{stroke:currentColor;stroke-width:2;stroke-linecap:round;transform-origin:11px 11px;transition:transform 200ms var(--ease-out),opacity 150ms ease}
+  header.top.open .menu-btn .l1{transform:translateY(5px) rotate(45deg)}
+  header.top.open .menu-btn .l2{opacity:0}
+  header.top.open .menu-btn .l3{transform:translateY(-5px) rotate(-45deg)}
+  header.top.js nav{display:none;flex-basis:100%;flex-direction:column;gap:0;font-size:17px;margin-top:4px;border-top:1px solid var(--line)}
+  header.top.js.open nav{display:flex}
+  header.top.js nav a{display:block;padding:12px 2px;border-bottom:1px solid var(--line)}
+  header.top.js nav a:last-child{border-bottom:0}
+}
+@media (max-width:720px) and (prefers-reduced-motion:reduce){.menu-btn path{transition:none}}
+
+.hero{padding-block:44px 22px}
+.eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sun-ink)}
+h1{font-family:var(--f-display);font-weight:800;font-stretch:112%;font-size:clamp(34px,5.6vw,60px);line-height:1.02;letter-spacing:-.01em;margin:10px 0 14px;max-width:16ch;text-wrap:balance}
+h1 em{font-style:normal;font-stretch:72%;font-weight:700;color:var(--sun-ink)}
+.lede{max-width:60ch;color:var(--muted);font-size:19px;margin:0}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
+.facts span{border:1px solid var(--line);border-radius:999px;padding:4px 11px;white-space:nowrap}
+.facts b{color:var(--ink);font-weight:700}
+
+.tool{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:20px;padding-block:18px 40px}
+@media (max-width:860px){.tool{grid-template-columns:minmax(0,1fr)}}
+.panel{min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px}
+.panel h2{font-family:var(--f-display);font-stretch:105%;font-size:20px;margin:0 0 4px}
+.panel .sub{color:var(--muted);font-size:14.5px;margin:0 0 18px}
+fieldset{min-width:0;min-inline-size:0;border:0;padding:0;margin:0 0 18px;display:grid;gap:16px}
+legend{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding:0}
+.field{display:grid;gap:4px}
+.field .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.field label{font-weight:600;font-size:15.5px}
+.field output{font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.field .hint{font-size:13px;color:var(--muted)}
+input[type=range]{width:100%;accent-color:var(--sun);height:26px;margin:0}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{font:inherit;font-size:14px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.seg button{transition:transform 160ms var(--ease-out),background-color 150ms ease,color 150ms ease,border-color 150ms ease;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.seg button:active{transform:scale(0.97)}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.field.big label{font-size:17px}
+.field.big output{font-size:16px;font-weight:700;color:var(--sun-ink)}
+
+.result{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;align-content:start}
+.verdict{font-family:var(--f-display);font-stretch:100%;font-weight:700;font-size:clamp(21px,2.6vw,27px);line-height:1.2;margin:0;text-wrap:balance}
+.verdict .ok{color:var(--pos)} .verdict .no{color:var(--neg)}
+
+.meterbox{background:var(--meter);border-radius:8px;padding:16px 18px;color:var(--meter-digit);display:grid;gap:10px}
+.meterbox .cap{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.7}
+.wheels{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.wheel{font-family:var(--f-mono);font-weight:700;font-size:clamp(26px,4vw,36px);width:1.05em;height:calc(1.25em + 4px);overflow:hidden;text-align:center;background:linear-gradient(#000 0,#2a2f35 12%,#15191d 50%,#2a2f35 88%,#000 100%);border-radius:3px;padding:2px 0;line-height:1.25;color:var(--meter-digit)}
+.wheel .strip{display:block;transition:transform 160ms var(--ease-out);will-change:transform}
+.wheels.roll .strip{transition-duration:900ms}
+.wheels.roll .wheel:nth-child(2) .strip{transition-delay:60ms}.wheels.roll .wheel:nth-child(3) .strip{transition-delay:120ms}.wheels.roll .wheel:nth-child(4) .strip{transition-delay:180ms}.wheels.roll .wheel:nth-child(5) .strip{transition-delay:240ms}
+.wheel .strip span{display:block;height:1.25em;line-height:1.25;padding-top:2px}
+.wheels .unit{font-family:var(--f-mono);font-size:15px;margin-left:8px;opacity:.85}
+.meterbox .foot{font-size:13.5px;opacity:.75}
+
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:520px){.kpis{grid-template-columns:1fr}}
+.kpi{border-top:2px solid var(--ink);padding-top:8px}
+.kpi .k{font-size:13.5px;color:var(--muted)}
+.kpi .v{font-family:var(--f-display);font-weight:800;font-stretch:90%;font-size:30px;font-variant-numeric:tabular-nums;line-height:1.1}
+.kpi .d{font-size:13px;color:var(--muted)}
+
+.bars{display:grid;gap:12px}
+.bar .lbl{display:flex;justify-content:space-between;font-size:14px;gap:10px}
+.bar .lbl span:last-child{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.track{height:12px;background:var(--track);border-radius:6px;position:relative;overflow:hidden}
+.track i{position:absolute;inset:0;border-radius:6px;transform-origin:left center;transform:scaleX(0);transition:transform 240ms var(--ease-out)}
+.track i.base{background:var(--line)}
+.track i.with{background:var(--sun)}
+.legend{display:flex;gap:16px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.legend .l1::before{background:var(--line)} .legend .l2::before{background:var(--sun)}
+
+.sweep h3{font-size:15.5px;margin:0 0 2px}
+.sweep p{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.sweep p.sweepsum{color:var(--ink)}
+.chartwrap{overflow-x:auto}
+.chartwrap svg{display:block;width:100%;min-width:420px;height:auto}
+.chartwrap text{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
+
+section.how{padding-block:44px 24px;border-top:1px solid var(--line)}
+section.how.band{background:var(--surface);padding-block:48px 40px;border-bottom:1px solid var(--line)}
+section.how.band + section.how{border-top:0}
+section h2.sec{font-family:var(--f-display);font-stretch:110%;font-weight:800;font-size:clamp(24px,3vw,32px);margin:0 0 6px;text-wrap:balance}
+.how .intro{color:var(--muted);max-width:62ch;margin:0 0 18px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px;min-width:560px}
+th,td{text-align:left;padding:10px 12px 10px 0;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500}
+td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td small{color:var(--muted)}
+
+section.pro{padding-block:36px 44px}
+.procard{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:26px;position:relative}
+@media (max-width:760px){.procard{grid-template-columns:1fr}}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;background:var(--sun-soft);color:var(--sun-ink);padding:3px 8px;border-radius:4px}
+.procard ul{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:10px}
+.procard li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px}
+.procard li svg{margin-top:4px}
+.price{font-family:var(--f-display);font-weight:800;font-stretch:95%;font-size:52px;line-height:1}
+.price small{font-family:var(--f-body);font-weight:400;font-size:16px;color:var(--muted)}
+.pricebox{display:grid;gap:12px;align-content:start;border-left:1px solid var(--line);padding-left:26px}
+@media (max-width:760px){.pricebox{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:20px}}
+.btn{font:inherit;font-weight:700;font-size:16px;background:var(--ink);color:var(--surface);border:0;border-radius:8px;padding:12px 18px;cursor:not-allowed;opacity:.55}
+.pricebox p{margin:0;font-size:14.5px;color:var(--muted)}
+
+footer{border-top:1px solid var(--line);color:var(--muted);font-size:13.5px}
+footer .wrap{padding-block:22px 34px;display:grid;gap:6px}
+
+.rlist{list-style:none;padding:0;margin:0 0 12px;display:flex;flex-wrap:wrap;gap:14px}
+.rlist li{flex:1 1 300px;min-width:0;display:flex}
+.rlist li>a{flex:1;min-width:0;align-content:start}
+.rlist a{transition:transform 200ms var(--ease-out),border-color 150ms ease;display:grid;gap:6px;height:100%;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;color:var(--ink);text-decoration:none}
+.rlist b{font-family:var(--f-display);font-stretch:105%;font-size:19px;line-height:1.2}
+.rlist span{font-size:15px;color:var(--muted)}
+
+@media (hover:hover) and (pointer:fine){
+  .rlist a:hover{transform:translateY(-2px);border-color:var(--sun)}
+  nav a{transition:color 150ms ease}
+}
+/* Seitenaufbau beim ersten Laden, gestaffelt */
+.txt{font:inherit;font-family:var(--f-mono);font-size:16px;width:8ch;padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+.flabel{font-weight:600;font-size:15.5px}
+.field output.warn{color:var(--neg)}
+.field output{white-space:normal;text-align:right;min-width:0}
+.field .row{min-width:0}
+.yield{margin:8px 0 0;font-size:14.5px;color:var(--muted)}
+@keyframes sk-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+/* h1 bleibt sofort sichtbar (LCP), der Rechner ebenfalls: das Werkzeug wartet nicht */
+.hero .eyebrow,.hero .lede,.hero .facts,.hero .hero-cta{animation:sk-rise 420ms var(--ease-out) both}
+.hero .lede{animation-delay:60ms}.hero .facts{animation-delay:120ms}
+/* Bereiche weiter unten blenden einmal ein (nur wenn JS läuft) */
+html.js .reveal{opacity:0;transform:translateY(12px);transition:opacity 350ms var(--ease-out),transform 350ms var(--ease-out)}
+html.js .reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  .hero .eyebrow,.hero .lede,.hero .facts,.hero .hero-cta{animation:none}
+  .wheel .strip{transition:opacity 150ms ease}
+  .track i{transition:transform 150ms linear}
+  html.js .reveal{transform:none;transition:opacity 300ms ease}
+  .seg button:active{transform:none}
+  .rlist a:hover{transform:none}
+}
+
+.wait{display:grid;gap:8px}
+.wait label{font-weight:700;font-size:15.5px}
+.wait-row{display:flex;gap:8px;flex-wrap:wrap}
+.wait-row input{flex:1 1 180px;min-width:0;font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.wait-row input:focus-visible{outline:3px solid var(--sun);outline-offset:1px}
+.btn.btn-on{cursor:pointer;opacity:1;flex:0 0 auto;transition:transform 160ms var(--ease-out),opacity 150ms ease;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.btn.btn-on:active{transform:scale(0.97)}
+.btn.btn-on[disabled]{opacity:.6;cursor:default}
+.btn.btn-on.busy{cursor:progress}
+.wait .wait-note{font-size:13px}
+.wait-msg{font-size:14.5px;font-weight:600;margin:0}
+.wait-msg:empty{display:none}
+.wait-msg.ok{color:var(--pos)} .wait-msg.err{color:var(--neg)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+@media (prefers-reduced-motion:reduce){.btn.btn-on:active{transform:none}}
+
+/* Diagramme (Rechner und Artikel) */
+.area.l-direct{fill:var(--sun)} .area.l-dis{fill:var(--pos)} .area.l-imp{fill:var(--c-imp)}
+.area.l-charge{fill:var(--c-charge)} .area.l-exp{fill:var(--c-exp)}
+.lline{fill:none;stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
+svg .grid{stroke:var(--line);stroke-width:1;stroke-dasharray:2 3} svg .grid.zero{stroke-dasharray:none}
+svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
+.clegend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted);margin-top:6px}
+.clegend span{display:inline-flex;align-items:center;gap:6px}
+.sw{display:inline-block;width:11px;height:11px;border-radius:2px}
+.sw.l-direct{background:var(--sun)} .sw.l-dis{background:var(--pos)} .sw.l-imp{background:var(--c-imp)}
+.sw.l-charge{background:var(--c-charge)} .sw.l-exp{background:var(--c-exp)}
+.sw.l-load{height:2px;width:14px;background:var(--ink);border-radius:0}
+.sline{fill:none;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+.sline.s0,.sw.sl.s0{stroke:var(--ink);background:var(--ink)} .sline.s1,.sw.sl.s1{stroke:var(--sun);background:var(--sun)}
+.sline.s2,.sw.sl.s2{stroke:var(--pos);background:var(--pos)} .sline.s3,.sw.sl.s3{stroke:var(--neg);background:var(--neg)}
+.sw.sl{height:3px;width:16px;border-radius:2px}
+.sdot.s0{fill:var(--ink)} .sdot.s1{fill:var(--sun)} .sdot.s2{fill:var(--pos)} .sdot.s3{fill:var(--neg)}
+.slabel{font-family:var(--f-mono);font-size:11px;font-weight:700} .slabel.s0{fill:var(--ink)} .slabel.s1{fill:var(--sun-ink)} .slabel.s2{fill:var(--pos)} .slabel.s3{fill:var(--neg)}
+.spark{display:block;width:120px;height:36px} .spark .sp-pos{fill:var(--sun)} .spark .sp-neg{fill:var(--neg);opacity:.7}
+
+/* Tageskurve im Rechner */
+.daybox h3{font-size:15.5px;margin:0}
+.dayhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.daysum{font-size:14px;color:var(--muted);margin:0 0 8px;min-height:2.6em}
+.daysum b{color:var(--ink)}
+#daychart{display:block;width:100%;min-width:0;height:auto}
+.daybox .chartwrap{overflow:visible}
+
+/* Hausgrafik im Seitenkopf */
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);grid-template-areas:"head scene" "body scene";column-gap:28px;align-items:center}
+.hero-head{grid-area:head;align-self:end}.hero-body{grid-area:body;align-self:start;display:flex;flex-direction:column}.hero-grid .scene{grid-area:scene}
+.hero-cta{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:18px}
+@media (max-width:900px){
+  .hero{padding-block:24px 18px}
+  .hero-grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "scene" "body";row-gap:6px}
+  .scene{max-width:480px}
+  .hero-cta{order:-1;margin:10px 0 16px}
+  .hero-cta .btn{flex:1 1 auto;text-align:center}
+  .hero h1{margin-bottom:10px}
+  .hero .lede{font-size:17.5px}
+}
+.scene{margin:0;display:grid;gap:10px;animation:sk-rise 420ms var(--ease-out) 160ms both}
+.scene-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.scene-cap{font-size:13px;color:var(--muted)}
+.scene svg{display:block;width:100%;height:auto;overflow:visible}
+.scene .sky{fill:var(--sky)}
+.scene .ground{stroke:var(--line);stroke-width:2}
+.scene .sun{transition:transform 900ms var(--ease-in-out)}
+.scene .sun-core{fill:var(--sun)} .scene .sun-glow{fill:var(--sun);opacity:.18;transition:opacity 900ms var(--ease-in-out)}
+.scene[data-season="nov"] .sun-glow{opacity:.06}
+.scene .cloud{fill:var(--cloud);opacity:0;transition:opacity 700ms var(--ease-out),transform 900ms var(--ease-out)}
+.scene .cloud:nth-child(1){transform:translateX(-14px)} .scene .cloud:nth-child(2){transform:translateX(10px)} .scene .cloud:nth-child(3){transform:translateX(16px)}
+.scene[data-season="nov"] .cloud{opacity:.95;transform:none}
+.scene .wall{fill:var(--house);stroke:var(--ink);stroke-width:2}
+.scene .roof{fill:var(--house);stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
+.scene .panel{fill:var(--meter)} .scene .panel-line{stroke:var(--sun);stroke-width:1.2}
+.scene .window{fill:var(--sky);stroke:var(--ink);stroke-width:1.5} .scene .door{fill:none;stroke:var(--ink);stroke-width:1.5}
+.scene .bat{fill:var(--house);stroke:var(--ink);stroke-width:2} .scene .bat-cap{fill:var(--ink)} .scene .bolt{fill:var(--pos)}
+.scene .pylon path{fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round}
+.scene .slabel2{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
+.scene .flow{fill:none;stroke-linecap:round;transition:stroke-width 700ms var(--ease-out),opacity 500ms ease}
+.scene .f-direct{stroke:var(--sun)} .scene .f-exp{stroke:var(--c-exp)} .scene .f-charge{stroke:var(--c-charge)}
+.scene .f-dis{stroke:var(--pos)} .scene .f-imp{stroke:var(--c-imp)}
+.scene .flow.dots{stroke:var(--surface);stroke-dasharray:1 14;stroke-width:3;opacity:.9;transition:none}
+.scene-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.scene-stats div{border-top:2px solid var(--ink);padding-top:6px;display:grid}
+.scene-stats .k{font-size:13px;color:var(--muted)}
+.scene-stats b{font-family:var(--f-display);font-weight:800;font-stretch:90%;font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
+.scene figcaption{font-size:12.5px;color:var(--muted)}
+.scene.no-trans,.scene.no-trans *{transition:none!important}
+.scene.wait{animation-play-state:paused}
+@media (prefers-reduced-motion:reduce){.scene{animation:none}.scene .sun,.scene .cloud,.scene .flow{transition:opacity 200ms ease}}
+
+/* Kernzahl auf Ratgeber-Karten */
+.rlist .kz{font-style:normal;display:grid;gap:2px;padding-bottom:8px;margin-bottom:2px;border-bottom:1px solid var(--line)}
+.rlist .kz em{font-style:normal;font-family:var(--f-display);font-weight:800;font-stretch:78%;font-size:28px;line-height:1.1;color:var(--sun-ink);font-variant-numeric:tabular-nums}
+.rlist .kz small{font-size:14px;line-height:1.35;color:var(--muted)}
+
+/* Übergang zum Angebots-Check */
+.procta{display:flex;align-items:center;justify-content:space-between;gap:12px 18px;flex-wrap:wrap;border:1px solid var(--sun);background:var(--sun-soft);border-radius:8px;padding:14px 16px}
+.procta p{margin:0;font-size:15px;flex:1 1 260px}
+a.btn{text-decoration:none;display:inline-block}
+.btn.btn-sun{background:var(--sun);color:var(--btn-ink);font-family:var(--f-display);font-stretch:105%;font-size:17px;padding:14px 26px;border-radius:10px}
+.hero-pro{margin:12px 0 0;max-width:60ch;font-size:16px;color:var(--ink)}
+.hero-pro a{font-weight:600}
+.intro-note{margin:0;font-size:14px;color:var(--muted)}
+#pro-buy{justify-self:start}
+.how .code-note{margin-top:16px}
+.usp-band{padding:6px 0 26px}
+.usp-card{border-block:1px solid var(--line);padding:20px 0}
+.usp-band h2{font-family:var(--f-display);font-weight:700;font-size:1.25rem;letter-spacing:-.01em;margin:0 0 12px}
+.usp{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px 24px}
+.usp li{padding-left:18px;position:relative;font-size:.97rem;line-height:1.45}
+.usp li::before{content:"";position:absolute;left:0;top:.5em;width:8px;height:8px;border-radius:50%;background:var(--sun)}
+.usp-why{margin:12px 0 0;font-size:.92rem;color:var(--muted)}
+@media (max-width:720px){.usp{grid-template-columns:1fr}.usp-card{padding:16px 0}}
+
+/* Neuester Artikel als breite Karte */
+.rlist li.feat{flex:2 1 520px}
+.rlist li.feat>a{border-color:var(--sun)}
+.rlist li.feat .kz em{font-size:clamp(34px,4.6vw,52px);line-height:1}
+@media (min-width:620px){
+  .rlist li.feat>a{grid-template-columns:minmax(0,auto) minmax(0,1.4fr);column-gap:28px;align-content:center;padding:24px}
+  .rlist li.feat .kz{grid-row:1/span 2;align-self:center;border-bottom:0;padding:0 28px 0 0;margin:0;border-right:1px solid var(--line);max-width:300px}
+  .rlist li.feat b{font-size:23px;align-self:end}
+  .rlist li.feat span{align-self:start}
+}
+
+/* Speichergröße: Tasten neben dem Regler */
+.stepper{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;gap:8px;align-items:center}
+.stepbtn{width:44px;height:44px;padding:0;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:700 22px/1 var(--f-mono);cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:transform 160ms var(--ease-out)}
+.stepbtn:active{transform:scale(0.95)}
+@media (prefers-reduced-motion:reduce){.stepbtn:active{transform:none}}
+
+/* Balkendiagramm: beste Größe farbig, deine Wahl umrandet */
+.chartwrap text.best{fill:var(--sun-ink);font-weight:700}
+.sweep .legend{margin-top:6px}
+.legend .lbest::before{background:var(--sun)} .legend .lpick::before{background:var(--c-imp);outline:1.5px solid var(--ink);outline-offset:1px}
+
+/* Ergebnisleiste am Handy: läuft mit, solange die Eingaben im Bild sind und das Ergebnis nicht */
+.rbar{display:none}
+@media (max-width:860px){
+  .rbar{position:fixed;z-index:15;left:max(10px,env(safe-area-inset-left,0px));right:max(10px,env(safe-area-inset-right,0px));bottom:max(10px,env(safe-area-inset-bottom,0px));
+    display:flex;align-items:center;gap:12px;padding:10px 10px 10px 16px;border-radius:14px;background:var(--bar-bg);color:var(--bar-ink);text-decoration:none;
+    box-shadow:0 10px 30px -8px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity 200ms var(--ease-out),transform 200ms var(--ease-out),visibility 0s linear 200ms;-webkit-tap-highlight-color:transparent}
+  .rbar.show{opacity:1;visibility:visible;transform:none;transition-delay:0s}
+  .rbar-txt{flex:1;min-width:0;display:grid;gap:1px}
+  .rbar-cap{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.7}
+  .rbar b{font-family:var(--f-display);font-weight:800;font-size:18px;line-height:1.2;font-variant-numeric:tabular-nums}
+  .rbar-sub{font-size:13px;line-height:1.3}
+  .rbar-sub i{font-style:normal;font-weight:700;color:var(--bar-accent)}
+  .rbar-go{flex:none;width:44px;height:44px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--bar-ink) 14%,transparent)}
+  .rbar-go svg{display:block}
+}
+@media (max-width:860px) and (prefers-reduced-motion:reduce){.rbar{transform:none;transition:opacity 150ms ease,visibility 0s linear 150ms}}
+@media print{.rbar{display:none!important}}
+
+.about{display:grid;grid-template-columns:minmax(0,1fr) 340px;column-gap:56px;align-items:start}
+.about-text{grid-column:1;grid-row:1}.about-body{grid-column:1;grid-row:2}
+.about-photo{grid-column:2;grid-row:1/span 2;margin:8px 0 0;position:sticky;top:88px}
+.about-photo img{display:block;width:100%;height:auto;border-radius:18px;box-shadow:0 1px 0 var(--line),0 18px 40px -24px rgba(0,0,0,.35);background:var(--meter)}
+html.js .about-photo img{opacity:0;transform:translateY(10px) scale(.985);transition:opacity .6s var(--ease-out),transform .6s var(--ease-out)}
+html.js .about-photo.in img{opacity:1;transform:none}
+@media (max-width:760px){.about{grid-template-columns:minmax(0,1fr)}.about-photo{grid-column:1;grid-row:2;position:static;max-width:300px;margin:6px 0 4px}.about-body{grid-row:3}}
+@media (prefers-reduced-motion:reduce){html.js .about-photo img{opacity:1;transform:none;transition:none}}
+main.page{padding-block:36px 40px}
+.doc{max-width:760px;font-size:18px;line-height:1.65}
+.doc .eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sun-ink)}
+.doc h1{max-width:none;hyphens:auto;overflow-wrap:break-word;font-family:var(--f-display);font-weight:800;font-stretch:110%;font-size:clamp(32px,5vw,48px);line-height:1.05;margin:10px 0 14px;text-wrap:balance}
+.doc h2{hyphens:auto;overflow-wrap:break-word;font-family:var(--f-display);font-weight:800;font-stretch:105%;font-size:25px;line-height:1.2;margin:36px 0 8px;text-wrap:balance}
+.doc p,.doc li{max-width:68ch;overflow-wrap:break-word}
+.doc .lead{font-size:21px;line-height:1.5;margin:0 0 8px;color:var(--ink)}
+.doc .meta,.doc .note{font-size:14px;color:var(--muted)}
+.doc .tablewrap{overflow-x:auto;margin:16px 0}
+.doc table{border-collapse:collapse;width:100%;min-width:520px;font-size:16px}.doc table.fit{min-width:0}
+.doc th,.doc td{text-align:left;padding:9px 12px 9px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.doc th{font-family:var(--f-mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.doc td.num{font-family:var(--f-mono);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.doc tr.hl td{background:var(--sun-soft);font-weight:700}
+.doc tr.hl td:first-child{box-shadow:inset 4px 0 0 var(--sun);padding-left:12px}
+.art{display:grid;grid-template-columns:minmax(0,760px) minmax(0,1fr);column-gap:48px;align-items:start}
+.kbox{position:sticky;top:88px;margin-top:8px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:grid;gap:14px}
+.kbox .cap{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.kbox .kmeter{background:var(--meter);color:var(--meter-digit);border-radius:8px;padding:14px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;font-family:var(--f-mono);font-weight:700;font-size:17px}
+.kbox .kmeter .wheel{font-size:30px}
+.kbox .kmeter .dg{display:inline-flex;gap:3px}
+.kbox p{margin:0;font-size:15.5px;line-height:1.45}
+.kbox .btn{opacity:1;cursor:pointer;text-align:center}
+.kbox small{font-size:13px;color:var(--muted);line-height:1.4}
+@media (max-width:1020px){.art{grid-template-columns:minmax(0,1fr)}.kbox{display:none}}
+.hbars{display:grid;gap:10px;margin:4px 0 2px}
+.hbar{display:grid;grid-template-columns:minmax(64px,auto) minmax(0,1fr) auto;gap:12px;align-items:center;font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums}
+.hbar .hl{color:var(--muted);line-height:1.2} .hbar .hl small{display:block;font-size:11px}
+.hbar .ht{height:24px;display:block}
+.hbar .ht i{display:block;height:100%;border-radius:0 4px 4px 0;background:var(--c-imp);transform-origin:left center}
+.hbar .hv{font-weight:700;white-space:nowrap}
+.hbar.best .hl,.hbar.best .hv{color:var(--sun-ink);font-weight:700} .hbar.best .ht i{background:var(--sun)}
+.hbar.mark .hl{color:var(--ink)} .hbar.mark .ht i{outline:1.5px solid var(--ink);outline-offset:2px}
+html.js .chart .hbar .ht i{transform:scaleX(0);transition:transform 700ms var(--ease-out)}
+html.js .chart.in .hbar .ht i{transform:none}
+html.js .chart .hbar:nth-child(2) .ht i{transition-delay:50ms}html.js .chart .hbar:nth-child(3) .ht i{transition-delay:100ms}html.js .chart .hbar:nth-child(4) .ht i{transition-delay:150ms}html.js .chart .hbar:nth-child(5) .ht i{transition-delay:200ms}html.js .chart .hbar:nth-child(n+6) .ht i{transition-delay:250ms}
+@media (prefers-reduced-motion:reduce){html.js .chart .hbar .ht i{transform:none;transition:none}}
+.doc details{border-bottom:1px solid var(--line);padding:12px 0} .doc summary{font-weight:600;cursor:pointer}
+.ask{border:1px dashed var(--line);border-radius:10px;padding:20px 22px;margin:32px 0 8px;display:grid;gap:8px;max-width:760px}
+.ask b{font-family:var(--f-display);font-stretch:105%;font-size:19px}
+.ask span{font-size:16px;color:var(--muted);line-height:1.5}
+.ask .btn.ghost{display:inline-block;justify-self:start;opacity:1;cursor:pointer;text-decoration:none;background:transparent;color:var(--ink);border:1.5px solid var(--ink);padding:10px 16px;transition:transform 160ms var(--ease-out),background-color 150ms ease,color 150ms ease}
+@media (hover:hover) and (pointer:fine){.ask .btn.ghost:hover{background:var(--ink);color:var(--surface)}}
+.ask .btn.ghost:active{transform:scale(0.97)}
+@media (prefers-reduced-motion:reduce){.ask .btn.ghost:active{transform:none}}
+.cta{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px;margin:32px 0;display:grid;gap:10px;max-width:760px}
+.cta b{font-family:var(--f-display);font-stretch:105%;font-size:21px}
+.cta .btn{display:inline-block;justify-self:start;opacity:1;cursor:pointer;text-decoration:none}
+.cta .cta-pro{border-top:1px solid var(--line);padding-top:12px;margin-top:4px;font-size:15px}
+.page .rlist{margin:8px 0 0}
+.chart{margin:28px 0;max-width:760px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 18px 14px}
+.chart figcaption{display:grid;gap:2px;margin-bottom:10px}
+.chart figcaption b{font-family:var(--f-display);font-stretch:105%;font-size:18px;line-height:1.25}
+.chart figcaption span{font-size:14px;color:var(--muted);line-height:1.45}
+.chart .c-wide svg,.chart .c-narrow svg{display:block;width:100%;height:auto}
+.chart .c-narrow{display:none}
+@media (max-width:560px){.chart .c-wide{display:none}.chart .c-narrow{display:block}}
+.chart svg .ax{font-size:12px} .chart .slabel{font-size:12px}
+.cpanels{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px}
+.cpanel svg{display:block;width:100%;height:auto}
+.ctitle{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+html.js .chart .sline{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1100ms var(--ease-in-out)}
+html.js .chart .sdot,html.js .chart .slabel{opacity:0;transition:opacity 300ms var(--ease-out) 900ms}
+html.js .chart .cpanel svg{clip-path:inset(0 100% 0 0);transition:clip-path 1000ms var(--ease-in-out)}
+html.js .chart.in .sline{stroke-dashoffset:0} html.js .chart.in .sdot,html.js .chart.in .slabel{opacity:1}
+html.js .chart.in .cpanel svg{clip-path:inset(0 0 0 0)}
+@media (prefers-reduced-motion:reduce){html.js .chart .sline{stroke-dasharray:none;transition:none} html.js .chart .sdot,html.js .chart .slabel{opacity:1;transition:none} html.js .chart .cpanel svg{clip-path:none;transition:none}}
+</style><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Stromspeicher-Größe berechnen: Wie viel kWh brauche ich?", "description": "Faustregel: 1 kWh Speicher je 1.000 kWh Verbrauch. Die Regel „1 kWh je kWp“ kostet bei großen Anlagen über 1.000 €. Tabelle für 3.000 bis 6.000 kWh.", "datePublished": "2026-11-12", "dateModified": "2026-11-12", "inLanguage": "de", "author": {"@type": "Person", "name": "Manuel Maurer", "url": "https://speicherklar.de/ueber-mich.html"}, "publisher": {"@type": "Organization", "@id": "https://speicherklar.de/#org", "name": "Speicherklar", "url": "https://speicherklar.de/", "logo": {"@type": "ImageObject", "url": "https://speicherklar.de/img/icon-512.png"}}, "isBasedOn": "https://speicherklar.de/methodik.html", "image": "https://speicherklar.de/img/og/stromspeicher-groesse-berechnen.png", "mainEntityOfPage": "https://speicherklar.de/ratgeber/stromspeicher-groesse-berechnen.html"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Wie viel kWh Speicher brauche ich bei 10 kWp?", "acceptedAnswer": {"@type": "Answer", "text": "Das hängt vom Verbrauch ab, nicht von den 10 kWp. Im Beispiel mit Süddach: 5 kWh bei 3.000 kWh, 6 kWh bei 4.500 kWh und 8 kWh bei 6.000 kWh Jahresverbrauch."}}, {"@type": "Question", "name": "Gilt die Faustformel für brutto oder nutzbare Kapazität?", "acceptedAnswer": {"@type": "Answer", "text": "Für die nutzbare Kapazität. Die Bruttokapazität im Datenblatt liegt meist etwas höher. Steht im Angebot nur eine Zahl, frag nach."}}, {"@type": "Question", "name": "Ist ein etwas zu großer Speicher schlimm?", "acceptedAnswer": {"@type": "Answer", "text": "Im Standard-Beispiel (4.500 kWh, 9 kWp) kostet 1 kWh mehr oder weniger rund 60 €. Teuer wird es erst, wenn der Speicher deutlich größer ist, als der Verbrauch am Abend und in der Nacht hergibt."}}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Speicherklar", "item": "https://speicherklar.de/"}, {"@type": "ListItem", "position": 2, "name": "Ratgeber", "item": "https://speicherklar.de/ratgeber/"}, {"@type": "ListItem", "position": 3, "name": "Stromspeicher-Größe berechnen: Wie viel kWh brauche ich?", "item": "https://speicherklar.de/ratgeber/stromspeicher-groesse-berechnen.html"}]}</script></head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../" aria-label="Speicherklar, zur Startseite">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="5" y="4" width="16" height="20" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><rect x="10" y="1.5" width="6" height="3" rx="1" fill="currentColor"/><rect x="8" y="14" width="10" height="7" rx="1" fill="var(--sun)"/></svg>
+      Speicherklar
+    </a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="hauptmenu" aria-label="Menü öffnen"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path class="l1" d="M3 6h16"/><path class="l2" d="M3 11h16"/><path class="l3" d="M3 16h16"/></svg></button>
+    <nav id="hauptmenu" aria-label="Seitenbereiche"><a href="../#rechner">Rechner</a><a href="../ratgeber/" aria-current="page">Ratgeber</a><a href="../#annahmen">Annahmen</a><a href="../pro/">Speicherklar Pro</a><a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">Instagram</a></nav>
+  </div>
+</header>
+<script>(function(){var h=document.querySelector('header.top');if(!h)return;var b=h.querySelector('.menu-btn'),n=h.querySelector('nav');h.classList.add('js');
+function set(o){h.classList.toggle('open',o);b.setAttribute('aria-expanded',o);b.setAttribute('aria-label',o?'Menü schließen':'Menü öffnen');}
+b.addEventListener('click',function(){set(!h.classList.contains('open'))});
+n.addEventListener('click',function(e){if(e.target.closest('a'))set(false)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&h.classList.contains('open')){set(false);b.focus()}});
+document.addEventListener('click',function(e){if(h.classList.contains('open')&&!h.contains(e.target))set(false)});
+matchMedia('(min-width:721px)').addEventListener('change',function(m){if(m.matches)set(false)});})();</script>
+<main class="wrap page"><div class="art"><article class="doc"><div class="eyebrow">Ratgeber</div><h1>Stromspeicher-Größe berechnen: Wie viel kWh brauche ich?</h1><p class="lead">Rechne mit deinem Verbrauch, nicht mit der Anlagengröße. Rund 1 kWh nutzbarer Speicher je 1.000 kWh Jahresverbrauch liegt fast immer nah an der wirtschaftlichsten Größe. Die oft genannte Regel „1 kWh je kWp“ führt bei großen Anlagen zu Speichern, die sich kaum noch rechnen.</p><p class="meta">Veröffentlicht am <time datetime="2026-11-12">12.11.2026</time> · Von <a href="../ueber-mich.html">Manuel Maurer</a> · <a href="#annahmen">Annahmen</a> · <a href="../methodik.html">Rechenweg</a></p>
+
+<p>Ob du Stromspeicher, Batteriespeicher, PV-Speicher oder Solarspeicher liest: Gemeint ist dasselbe, eine Batterie im Haus, die Solarstrom vom Mittag für den Abend aufhebt. Für ihre Größe kursieren drei Faustformeln. Ich habe alle drei gegen eine Jahressimulation in 5-Minuten-Schritten gerechnet.</p><figure class="chart"><figcaption><b>Gewinn nach 15 Jahren je Speichergröße und Verbrauch</b><span>9 kWp Süd, 35°, Speicher 500 €/kWh, Strom 33 ct/kWh, Einspeisung 7,7 ct, 15 Jahre. Der Punkt markiert die wirtschaftlichste Größe.</span></figcaption><div class="c-wide"><svg viewBox="0 0 640 300" role="img" aria-label="Gewinn nach Lebensdauer je Speichergröße"><line class="grid" x1="80" x2="626" y1="250.0" y2="250.0"/><text class="ax" x="72" y="254.0" text-anchor="end">−1.000 €</text><line class="grid zero" x1="80" x2="626" y1="205.2" y2="205.2"/><text class="ax" x="72" y="209.2" text-anchor="end">0 €</text><line class="grid" x1="80" x2="626" y1="160.4" y2="160.4"/><text class="ax" x="72" y="164.4" text-anchor="end">+1.000 €</text><line class="grid" x1="80" x2="626" y1="115.6" y2="115.6"/><text class="ax" x="72" y="119.6" text-anchor="end">+2.000 €</text><line class="grid" x1="80" x2="626" y1="70.8" y2="70.8"/><text class="ax" x="72" y="74.8" text-anchor="end">+3.000 €</text><line class="grid" x1="80" x2="626" y1="26.0" y2="26.0"/><text class="ax" x="72" y="30.0" text-anchor="end">+4.000 €</text><text class="ax" x="80.0" y="270" text-anchor="middle">1</text><text class="ax" x="129.6" y="270" text-anchor="middle">2</text><text class="ax" x="179.3" y="270" text-anchor="middle">3</text><text class="ax" x="228.9" y="270" text-anchor="middle">4</text><text class="ax" x="278.5" y="270" text-anchor="middle">5</text><text class="ax" x="328.2" y="270" text-anchor="middle">6</text><text class="ax" x="377.8" y="270" text-anchor="middle">7</text><text class="ax" x="427.5" y="270" text-anchor="middle">8</text><text class="ax" x="477.1" y="270" text-anchor="middle">9</text><text class="ax" x="526.7" y="270" text-anchor="middle">10</text><text class="ax" x="576.4" y="270" text-anchor="middle">11</text><text class="ax" x="626.0" y="270" text-anchor="middle">12</text><text class="ax" x="626" y="294" text-anchor="end">Speichergröße in kWh</text><path class="sline s0" pathLength="1" d="M80.0,188.5L129.6,155.0L179.3,134.2L228.9,125.2L278.5,125.8L328.2,133.4L377.8,146.6L427.5,162.9L477.1,180.6L526.7,199.3L576.4,218.4L626.0,238.1"/><path class="sline s1" pathLength="1" d="M80.0,183.5L129.6,145.2L179.3,115.6L228.9,95.3L278.5,84.5L328.2,81.6L377.8,84.2L427.5,91.2L477.1,101.7L526.7,115.7L576.4,132.1L626.0,149.1"/><path class="sline s2" pathLength="1" d="M80.0,179.4L129.6,137.6L179.3,105.7L228.9,81.0L278.5,63.6L328.2,53.6L377.8,49.9L427.5,51.2L477.1,57.2L526.7,66.1L576.4,79.8L626.0,95.4"/><circle class="sdot s0" cx="228.9" cy="125.2" r="5"/><text class="slabel s0" x="228.9" y="114.2" text-anchor="middle">4 kWh</text><circle class="sdot s1" cx="328.2" cy="81.6" r="5"/><text class="slabel s1" x="328.2" y="70.6" text-anchor="middle">6 kWh</text><circle class="sdot s2" cx="377.8" cy="49.9" r="5"/><text class="slabel s2" x="377.8" y="38.9" text-anchor="middle">7 kWh</text></svg></div><div class="c-narrow"><svg viewBox="0 0 380 280" role="img" aria-label="Gewinn nach Lebensdauer je Speichergröße"><line class="grid" x1="80" x2="366" y1="230.0" y2="230.0"/><text class="ax" x="72" y="234.0" text-anchor="end">−1.000 €</text><line class="grid zero" x1="80" x2="366" y1="189.2" y2="189.2"/><text class="ax" x="72" y="193.2" text-anchor="end">0 €</text><line class="grid" x1="80" x2="366" y1="148.4" y2="148.4"/><text class="ax" x="72" y="152.4" text-anchor="end">+1.000 €</text><line class="grid" x1="80" x2="366" y1="107.6" y2="107.6"/><text class="ax" x="72" y="111.6" text-anchor="end">+2.000 €</text><line class="grid" x1="80" x2="366" y1="66.8" y2="66.8"/><text class="ax" x="72" y="70.8" text-anchor="end">+3.000 €</text><line class="grid" x1="80" x2="366" y1="26.0" y2="26.0"/><text class="ax" x="72" y="30.0" text-anchor="end">+4.000 €</text><text class="ax" x="80.0" y="250" text-anchor="middle">1</text><text class="ax" x="132.0" y="250" text-anchor="middle">3</text><text class="ax" x="184.0" y="250" text-anchor="middle">5</text><text class="ax" x="236.0" y="250" text-anchor="middle">7</text><text class="ax" x="288.0" y="250" text-anchor="middle">9</text><text class="ax" x="340.0" y="250" text-anchor="middle">11</text><text class="ax" x="366.0" y="250" text-anchor="middle">12</text><text class="ax" x="366" y="274" text-anchor="end">Speichergröße in kWh</text><path class="sline s0" pathLength="1" d="M80.0,174.0L106.0,143.5L132.0,124.6L158.0,116.4L184.0,116.9L210.0,123.8L236.0,135.8L262.0,150.6L288.0,166.8L314.0,183.9L340.0,201.2L366.0,219.2"/><path class="sline s1" pathLength="1" d="M80.0,169.4L106.0,134.6L132.0,107.6L158.0,89.1L184.0,79.2L210.0,76.7L236.0,79.0L262.0,85.4L288.0,95.0L314.0,107.7L340.0,122.7L366.0,138.1"/><path class="sline s2" pathLength="1" d="M80.0,165.7L106.0,127.6L132.0,98.5L158.0,76.1L184.0,60.3L210.0,51.1L236.0,47.7L262.0,48.9L288.0,54.4L314.0,62.6L340.0,75.0L366.0,89.2"/><circle class="sdot s0" cx="158.0" cy="116.4" r="5"/><text class="slabel s0" x="158.0" y="105.4" text-anchor="middle">4 kWh</text><circle class="sdot s1" cx="210.0" cy="76.7" r="5"/><text class="slabel s1" x="210.0" y="98.7" text-anchor="middle">6 kWh</text><circle class="sdot s2" cx="236.0" cy="47.7" r="5"/><text class="slabel s2" x="236.0" y="36.7" text-anchor="middle">7 kWh</text></svg></div><div class="clegend"><span><i class="sw sl s0"></i>3.000 kWh Verbrauch</span><span><i class="sw sl s1"></i>4.500 kWh</span><span><i class="sw sl s2"></i>6.000 kWh</span></div></figure>
+
+<h2>Drei Faustformeln im Test</h2>
+<ul>
+<li><b>1 kWh je 1.000 kWh Jahresverbrauch</b></li>
+<li><b>1,5 kWh je 1.000 kWh Jahresverbrauch</b></li>
+<li><b>1 kWh je kWp Anlagenleistung</b></li>
+</ul>
+<p>Für den typischen Haushalt mit 4.500 kWh und 9 kWp Süd ergibt sich:</p>
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>Regel</th><th>Speichergröße</th><th>Bilanz nach 15 Jahren</th></tr></thead>
+<tbody>
+<tr class="hl"><td>Simulation (beste Größe)</td><td class="num">6 kWh</td><td class="num">+2.758 €</td></tr>
+<tr><td>1 kWh je 1.000 kWh</td><td class="num">5 kWh</td><td class="num">+2.695 €</td></tr>
+<tr><td>1,5 kWh je 1.000 kWh</td><td class="num">7 kWh</td><td class="num">+2.701 €</td></tr>
+<tr><td>1 kWh je kWp</td><td class="num">9 kWh</td><td class="num">+2.310 €</td></tr>
+</tbody></table></div>
+<p>Die beiden Verbrauchs-Regeln liegen nur rund 60 € neben dem besten Wert. Die kWp-Regel verschenkt schon hier rund 450 €.</p>
+
+<h2>Wo die kWp-Regel richtig teuer wird</h2>
+<p>Je größer die Anlage im Verhältnis zum Verbrauch, desto weiter liegt „1 kWh je kWp“ daneben. Die Tabelle zeigt die Bilanz nach 15 Jahren für neun Kombinationen:</p>
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>Verbrauch, Anlage</th><th>Beste Größe</th><th>Regel 1 kWh je 1.000 kWh</th><th>Regel 1 kWh je kWp</th></tr></thead>
+<tbody>
+<tr><td>3.000 kWh<br>6 kWp</td><td class="num">4 kWh<br>+1.607 €</td><td class="num">3 kWh<br>+1.488 €</td><td class="num">6 kWh<br>+1.325 €</td></tr>
+<tr><td>3.000 kWh<br>9 kWp</td><td class="num">4 kWh<br>+1.785 €</td><td class="num">3 kWh<br>+1.584 €</td><td class="num">9 kWh<br>+548 €</td></tr>
+<tr><td>3.000 kWh<br>12 kWp</td><td class="num">5 kWh<br>+1.828 €</td><td class="num">3 kWh<br>+1.596 €</td><td class="num">12 kWh<br>−742 €</td></tr>
+<tr><td>4.500 kWh<br>6 kWp</td><td class="num">5 kWh<br>+2.247 €</td><td class="num">5 kWh<br>+2.247 €</td><td class="num">6 kWh<br>+2.199 €</td></tr>
+<tr class="hl"><td>4.500 kWh<br>9 kWp</td><td class="num">6 kWh<br>+2.758 €</td><td class="num">5 kWh<br>+2.695 €</td><td class="num">9 kWh<br>+2.310 €</td></tr>
+<tr><td>4.500 kWh<br>12 kWp</td><td class="num">6 kWh<br>+2.952 €</td><td class="num">5 kWh<br>+2.828 €</td><td class="num">12 kWh<br>+1.577 €</td></tr>
+<tr><td>6.000 kWh<br>6 kWp</td><td class="num">6 kWh<br>+2.639 €</td><td class="num">6 kWh<br>+2.639 €</td><td class="num">6 kWh<br>+2.639 €</td></tr>
+<tr><td>6.000 kWh<br>9 kWp</td><td class="num">7 kWh<br>+3.467 €</td><td class="num">6 kWh<br>+3.384 €</td><td class="num">9 kWh<br>+3.304 €</td></tr>
+<tr><td>6.000 kWh<br>12 kWp</td><td class="num">8 kWh<br>+3.908 €</td><td class="num">6 kWh<br>+3.711 €</td><td class="num">12 kWh<br>+3.225 €</td></tr>
+</tbody></table></div>
+<p>Die Verbrauchs-Regel liegt höchstens rund 230 € neben dem besten Wert. Die kWp-Regel kostet bei 4.500 kWh und 12 kWp rund 1.380 €. Bei 3.000 kWh und 12 kWp holt der 12-kWh-Speicher seine Kosten in 15 Jahren gar nicht rein.</p>
+
+<h2>Warum die Anlagengröße kaum zählt</h2>
+<p>Ein Speicher lohnt sich nur mit dem Strom, den du abends und nachts verbrauchst. Der hängt an deinem Haushalt, nicht am Dach. Im Sommer liefert schon eine mittelgroße Anlage mehr, als das Haus abends und nachts braucht. Eine größere Anlage füllt den Speicher nur früher am Tag, und im Winter reicht der Strom vom Dach trotzdem nicht. Bei 4.500 kWh Verbrauch ist die beste Größe deshalb mit 9 kWp und mit 12 kWp dieselbe: 6 kWh.</p>
+
+<h2>Warum größer trotzdem verlockend aussieht</h2>
+<p>Mit 10 statt 6 kWh steigt die Autarkie im Beispiel von 74 auf 81 %. Das klingt nach viel. In Euro sind es 82 € Ersparnis mehr pro Jahr, dafür kostet der Speicher 2.000 € mehr. Nach 15 Jahren bleiben mit 10 kWh rund 760 € weniger übrig als mit 6 kWh. Wer ein Angebot mit großem Speicher hat, findet die Rechnung dazu unter <a href="pv-angebot-pruefen.html">PV-Angebot prüfen</a>.</p>
+
+<h2>Wann die Faustformel nicht passt</h2>
+<ul>
+<li><b>E-Auto, das abends lädt:</b> Mit 2.500 kWh fürs Auto zusätzlich lohnen sich im Beispiel 10 kWh. Lädt das Auto meist tagsüber, bleiben es 6 kWh.</li>
+<li><b>Ost-West-Dach:</b> Die Anlage liefert morgens und abends selbst Strom, im Beispiel reichen 4 kWh. Mehr dazu im Artikel <a href="ost-west-dach-speicher.html">Ost-West-Dach</a>.</li>
+<li><b>Speicherpreis:</b> Bei 400 €/kWh lohnen sich 7 kWh, bei 700 €/kWh nur 5 kWh.</li>
+<li><b>Wärmepumpe:</b> Ihr Verbrauch fällt vor allem im Winter an, wenn die Anlage wenig liefert. Das Lastprofil bildet der kostenlose Rechner nicht ab. Rechne den Wärmepumpen-Strom deshalb nicht einfach in die Faustformel ein.</li>
+</ul>
+<p>Was das Modell außerdem nicht abbildet: Notstrom, Verschattung, Alterung des Speichers und dynamische Stromtarife.</p>
+<div class="cta"><b>Rechne dein eigenes Haus durch</b><span>Postleitzahl, Dachausrichtung und Verbrauch eingeben. Der kostenlose Rechner zeigt dir die wirtschaftlichste Speichergröße, auch für das Szenario EEG-Reform 2027.</span><a class="btn" href="../#rechner" data-umami-event="artikel-zum-rechner" data-umami-event-artikel="stromspeicher-groesse-berechnen">Zum Rechner</a><span class="cta-pro">Du hast schon ein Angebot? <a href="../pro/" data-umami-event="artikel-zu-pro" data-umami-event-artikel="stromspeicher-groesse-berechnen">Speicherklar Pro</a> prüft Speicher und PV-Anlage zusammen und zeigt die beste Kombination für dein Dach. Die Einordnung ist kostenlos.</span></div><h2>Häufige Fragen</h2><details><summary>Wie viel kWh Speicher brauche ich bei 10 kWp?</summary><p>Das hängt vom Verbrauch ab, nicht von den 10 kWp. Im Beispiel mit Süddach: 5 kWh bei 3.000 kWh, 6 kWh bei 4.500 kWh und 8 kWh bei 6.000 kWh Jahresverbrauch.</p></details><details><summary>Gilt die Faustformel für brutto oder nutzbare Kapazität?</summary><p>Für die nutzbare Kapazität. Die Bruttokapazität im Datenblatt liegt meist etwas höher. Steht im Angebot nur eine Zahl, frag nach.</p></details><details><summary>Ist ein etwas zu großer Speicher schlimm?</summary><p>Im Standard-Beispiel (4.500 kWh, 9 kWp) kostet 1 kWh mehr oder weniger rund 60 €. Teuer wird es erst, wenn der Speicher deutlich größer ist, als der Verbrauch am Abend und in der Nacht hergibt.</p></details><div class="ask"><b>Noch eine Frage offen?</b><span>Schreib sie mir. Ich antworte dir per Mail, und was öfter gefragt wird, ergänze ich hier im Artikel, ohne deinen Namen.</span><a class="btn ghost" href="mailto:kontakt@speicherklar.de?subject=Frage%20zu%3A%20Stromspeicher-Gr%C3%B6%C3%9Fe%20berechnen%3A%20Wie%20viel%20kWh%20brauche%20ich%3F&amp;body=Hallo%20Manuel%2C%0A%0Ameine%20Frage%20zum%20Artikel%20https%3A//speicherklar.de/ratgeber/stromspeicher-groesse-berechnen.html%3A%0A%0A" data-umami-event="frage-mail">Frage per Mail stellen</a></div><h2>Weiterlesen</h2><ul class="rlist"><li><a href="speichergroesse-4500-kwh.html"><i class="kz"><em>5–7 kWh</em><small>rechnen sich bei Süddach am besten</small></i><b>Welche Speichergröße bei 4.500 kWh Verbrauch?</b><span>Bei 4.500 kWh Jahresverbrauch rechnet sich meist ein Speicher mit 5 bis 7 kWh. Die Zahlen für 6, 9 und 12 kWp und warum größer nicht besser ist.</span></a></li><li><a href="stromspeicher-lohnt-sich-2027.html"><i class="kz"><em>+2.758 €</em><small>Gewinn nach 15 Jahren mit 6 kWh, heute gerechnet</small></i><b>Lohnt sich ein Stromspeicher 2027?</b><span>Mit Zahlen statt Prospekt: Wann sich ein Stromspeicher für eine neue PV-Anlage rechnet, was die EEG-Reform ändert und welche Größe am meisten bringt.</span></a></li><li><a href="pv-angebot-pruefen.html"><i class="kz"><em>6 statt 10 kWh</em><small>Speichergröße, die im Beispiel am meisten bringt</small></i><b>PV-Angebot prüfen: Ist der Speicher zu groß?</b><span>Im Beispiel bringt ein 6-kWh-Speicher in 15 Jahren rund 580 € mehr als die angebotenen 10 kWh. So prüfst du dein PV-Angebot, bevor du unterschreibst.</span></a></li></ul><p class="note" id="annahmen" style="margin-top:28px">Alle Beispiele: Standort Ruhrgebiet (PLZ 4…), Dachneigung 35°, Speicherpreis 500 €/kWh inkl. Einbau, Strompreis 33 ct/kWh, Einspeisevergütung 7,70 ct/kWh, 15 Jahre Lebensdauer, wenn nicht anders angegeben. Gerechnet mit dem Speicherklar-Rechner: Jahressimulation in 5-Minuten-Schritten mit Sonnendaten aus PVGIS 2014–2023.</p></article><aside class="kbox" aria-label="Kurz gesagt"><span class="cap">Kurz gesagt</span><div class="kmeter" role="img" aria-label="1 kWh"><span class="dg"><span class="wheel">1</span></span> kWh</div><p>Speicher je 1.000 kWh Jahresverbrauch trifft meist die beste Größe.</p><a class="btn btn-on" href="../#rechner" data-umami-event="artikel-zum-rechner" data-umami-event-artikel="stromspeicher-groesse-berechnen">Mit deinen Zahlen rechnen</a><small>Kostenlos und ohne Anmeldung.</small></aside></div></main>
+<footer>
+  <div class="wrap">
+    <span>Speicherklar ist eine Schätzung, keine Anlagen- oder Finanzberatung. Für eine Kaufentscheidung hol dir Angebote von Fachbetrieben.</span>
+    <span>Unabhängig: kein Geld von Herstellern oder Installateuren, keine Werbung. Der Rechenweg ist <a href="../methodik.html">offen</a>.</span>
+    <span>Sonnendaten: PVGIS © Europäische Union, 2001–2026.</span>
+    <span><a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">Instagram @speicherklar</a> · <a href="../methodik.html">Methodik</a> · <a href="../ueber-mich.html">Über mich</a> · <a href="../impressum.html">Impressum</a> · <a href="../datenschutz.html">Datenschutz</a></span>
+  </div>
+</footer>
+<script>try{if("IntersectionObserver" in window){document.documentElement.classList.add("js");var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});},{threshold:0.35});document.querySelectorAll(".chart,.about-photo").forEach(function(c){io.observe(c);});}}catch(e){}</script>
+</body></html>

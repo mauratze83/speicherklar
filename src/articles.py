@@ -280,4 +280,72 @@ ARTICLES = [
  ("Woran erkenne ich, ob das Angebot brutto oder nutzbar angibt?", "Am Datenblatt des Speichers. Dort stehen beide Werte. Im Angebot fehlt die Angabe oft."),
 ],
 },
+{
+"slug": "stromspeicher-groesse-berechnen",
+"kennzahl": {"v": "1 kWh", "t": "Speicher je 1.000 kWh Jahresverbrauch trifft meist die beste Größe"},
+"chart": {"kind": "sweep", "title": "Gewinn nach 15 Jahren je Speichergröße und Verbrauch", "caption": "9 kWp Süd, 35°, Speicher 500 €/kWh, Strom 33 ct/kWh, Einspeisung 7,7 ct, 15 Jahre. Der Punkt markiert die wirtschaftlichste Größe.",
+  "series": [{"label": "3.000 kWh Verbrauch", "p": {"cons": 3000}}, {"label": "4.500 kWh", "p": {}}, {"label": "6.000 kWh", "p": {"cons": 6000}}]},
+"title": "Stromspeicher-Größe berechnen: Wie viel kWh brauche ich?",
+"h1": "Stromspeicher-Größe berechnen: Wie viel kWh brauche ich?",
+"desc": "Faustregel: 1 kWh Speicher je 1.000 kWh Verbrauch. Die Regel „1 kWh je kWp“ kostet bei großen Anlagen über 1.000 €. Tabelle für 3.000 bis 6.000 kWh.",
+"date": "2026-11-12",
+"lead": "Rechne mit deinem Verbrauch, nicht mit der Anlagengröße. Rund 1 kWh nutzbarer Speicher je 1.000 kWh Jahresverbrauch liegt fast immer nah an der wirtschaftlichsten Größe. Die oft genannte Regel „1 kWh je kWp“ führt bei großen Anlagen zu Speichern, die sich kaum noch rechnen.",
+"body": """
+<p>Ob du Stromspeicher, Batteriespeicher, PV-Speicher oder Solarspeicher liest: Gemeint ist dasselbe, eine Batterie im Haus, die Solarstrom vom Mittag für den Abend aufhebt. Für ihre Größe kursieren drei Faustformeln. Ich habe alle drei gegen eine Jahressimulation in 5-Minuten-Schritten gerechnet.</p>
+
+<h2>Drei Faustformeln im Test</h2>
+<ul>
+<li><b>1 kWh je 1.000 kWh Jahresverbrauch</b></li>
+<li><b>1,5 kWh je 1.000 kWh Jahresverbrauch</b></li>
+<li><b>1 kWh je kWp Anlagenleistung</b></li>
+</ul>
+<p>Für den typischen Haushalt mit 4.500 kWh und 9 kWp Süd ergibt sich:</p>
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>Regel</th><th>Speichergröße</th><th>Bilanz nach 15 Jahren</th></tr></thead>
+<tbody>
+<tr class="hl"><td>Simulation (beste Größe)</td><td class="num">6 kWh</td><td class="num">+2.758 €</td></tr>
+<tr><td>1 kWh je 1.000 kWh</td><td class="num">5 kWh</td><td class="num">+2.695 €</td></tr>
+<tr><td>1,5 kWh je 1.000 kWh</td><td class="num">7 kWh</td><td class="num">+2.701 €</td></tr>
+<tr><td>1 kWh je kWp</td><td class="num">9 kWh</td><td class="num">+2.310 €</td></tr>
+</tbody></table></div>
+<p>Die beiden Verbrauchs-Regeln liegen nur rund 60 € neben dem besten Wert. Die kWp-Regel verschenkt schon hier rund 450 €.</p>
+
+<h2>Wo die kWp-Regel richtig teuer wird</h2>
+<p>Je größer die Anlage im Verhältnis zum Verbrauch, desto weiter liegt „1 kWh je kWp“ daneben. Die Tabelle zeigt die Bilanz nach 15 Jahren für neun Kombinationen:</p>
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>Verbrauch, Anlage</th><th>Beste Größe</th><th>Regel 1 kWh je 1.000 kWh</th><th>Regel 1 kWh je kWp</th></tr></thead>
+<tbody>
+<tr><td>3.000 kWh<br>6 kWp</td><td class="num">4 kWh<br>+1.607 €</td><td class="num">3 kWh<br>+1.488 €</td><td class="num">6 kWh<br>+1.325 €</td></tr>
+<tr><td>3.000 kWh<br>9 kWp</td><td class="num">4 kWh<br>+1.785 €</td><td class="num">3 kWh<br>+1.584 €</td><td class="num">9 kWh<br>+548 €</td></tr>
+<tr><td>3.000 kWh<br>12 kWp</td><td class="num">5 kWh<br>+1.828 €</td><td class="num">3 kWh<br>+1.596 €</td><td class="num">12 kWh<br>−742 €</td></tr>
+<tr><td>4.500 kWh<br>6 kWp</td><td class="num">5 kWh<br>+2.247 €</td><td class="num">5 kWh<br>+2.247 €</td><td class="num">6 kWh<br>+2.199 €</td></tr>
+<tr class="hl"><td>4.500 kWh<br>9 kWp</td><td class="num">6 kWh<br>+2.758 €</td><td class="num">5 kWh<br>+2.695 €</td><td class="num">9 kWh<br>+2.310 €</td></tr>
+<tr><td>4.500 kWh<br>12 kWp</td><td class="num">6 kWh<br>+2.952 €</td><td class="num">5 kWh<br>+2.828 €</td><td class="num">12 kWh<br>+1.577 €</td></tr>
+<tr><td>6.000 kWh<br>6 kWp</td><td class="num">6 kWh<br>+2.639 €</td><td class="num">6 kWh<br>+2.639 €</td><td class="num">6 kWh<br>+2.639 €</td></tr>
+<tr><td>6.000 kWh<br>9 kWp</td><td class="num">7 kWh<br>+3.467 €</td><td class="num">6 kWh<br>+3.384 €</td><td class="num">9 kWh<br>+3.304 €</td></tr>
+<tr><td>6.000 kWh<br>12 kWp</td><td class="num">8 kWh<br>+3.908 €</td><td class="num">6 kWh<br>+3.711 €</td><td class="num">12 kWh<br>+3.225 €</td></tr>
+</tbody></table></div>
+<p>Die Verbrauchs-Regel liegt höchstens rund 230 € neben dem besten Wert. Die kWp-Regel kostet bei 4.500 kWh und 12 kWp rund 1.380 €. Bei 3.000 kWh und 12 kWp holt der 12-kWh-Speicher seine Kosten in 15 Jahren gar nicht rein.</p>
+
+<h2>Warum die Anlagengröße kaum zählt</h2>
+<p>Ein Speicher lohnt sich nur mit dem Strom, den du abends und nachts verbrauchst. Der hängt an deinem Haushalt, nicht am Dach. Im Sommer liefert schon eine mittelgroße Anlage mehr, als das Haus abends und nachts braucht. Eine größere Anlage füllt den Speicher nur früher am Tag, und im Winter reicht der Strom vom Dach trotzdem nicht. Bei 4.500 kWh Verbrauch ist die beste Größe deshalb mit 9 kWp und mit 12 kWp dieselbe: 6 kWh.</p>
+
+<h2>Warum größer trotzdem verlockend aussieht</h2>
+<p>Mit 10 statt 6 kWh steigt die Autarkie im Beispiel von 74 auf 81 %. Das klingt nach viel. In Euro sind es 82 € Ersparnis mehr pro Jahr, dafür kostet der Speicher 2.000 € mehr. Nach 15 Jahren bleiben mit 10 kWh rund 760 € weniger übrig als mit 6 kWh. Wer ein Angebot mit großem Speicher hat, findet die Rechnung dazu unter <a href="pv-angebot-pruefen.html">PV-Angebot prüfen</a>.</p>
+
+<h2>Wann die Faustformel nicht passt</h2>
+<ul>
+<li><b>E-Auto, das abends lädt:</b> Mit 2.500 kWh fürs Auto zusätzlich lohnen sich im Beispiel 10 kWh. Lädt das Auto meist tagsüber, bleiben es 6 kWh.</li>
+<li><b>Ost-West-Dach:</b> Die Anlage liefert morgens und abends selbst Strom, im Beispiel reichen 4 kWh. Mehr dazu im Artikel <a href="ost-west-dach-speicher.html">Ost-West-Dach</a>.</li>
+<li><b>Speicherpreis:</b> Bei 400 €/kWh lohnen sich 7 kWh, bei 700 €/kWh nur 5 kWh.</li>
+<li><b>Wärmepumpe:</b> Ihr Verbrauch fällt vor allem im Winter an, wenn die Anlage wenig liefert. Das Lastprofil bildet der kostenlose Rechner nicht ab. Rechne den Wärmepumpen-Strom deshalb nicht einfach in die Faustformel ein.</li>
+</ul>
+<p>Was das Modell außerdem nicht abbildet: Notstrom, Verschattung, Alterung des Speichers und dynamische Stromtarife.</p>
+""",
+"faq": [
+ ("Wie viel kWh Speicher brauche ich bei 10 kWp?", "Das hängt vom Verbrauch ab, nicht von den 10 kWp. Im Beispiel mit Süddach: 5 kWh bei 3.000 kWh, 6 kWh bei 4.500 kWh und 8 kWh bei 6.000 kWh Jahresverbrauch."),
+ ("Gilt die Faustformel für brutto oder nutzbare Kapazität?", "Für die nutzbare Kapazität. Die Bruttokapazität im Datenblatt liegt meist etwas höher. Steht im Angebot nur eine Zahl, frag nach."),
+ ("Ist ein etwas zu großer Speicher schlimm?", "Im Standard-Beispiel (4.500 kWh, 9 kWp) kostet 1 kWh mehr oder weniger rund 60 €. Teuer wird es erst, wenn der Speicher deutlich größer ist, als der Verbrauch am Abend und in der Nacht hergibt."),
+],
+},
 ]

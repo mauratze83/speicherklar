@@ -21,6 +21,7 @@ Nicht im Modell: Wärmepumpen-Lastprofil (nur in Speicherklar Pro), Notstrom, Ve
 - [Ost-West-Dach: Braucht es einen Speicher?](https://speicherklar.de/ratgeber/ost-west-dach-speicher.html): Eine Ost-West-Anlage liefert morgens und abends Strom. Deshalb reicht meist ein kleinerer Speicher als bei Süd. Die Zahlen im Vergleich.
 - [Stromspeicher nachrüsten: Lohnt sich das?](https://speicherklar.de/ratgeber/stromspeicher-nachruesten.html): Ob sich ein Speicher für deine bestehende PV-Anlage lohnt, entscheidet vor allem deine Einspeisevergütung. Ab etwa 12 ct wird es knapp, bei 20 ct nie.
 - [PV-Angebot prüfen: Ist der Speicher zu groß?](https://speicherklar.de/ratgeber/pv-angebot-pruefen.html): Im Beispiel bringt ein 6-kWh-Speicher in 15 Jahren rund 580 € mehr als die angebotenen 10 kWh. So prüfst du dein PV-Angebot, bevor du unterschreibst.
+- [Stromspeicher-Größe berechnen: Wie viel kWh brauche ich?](https://speicherklar.de/ratgeber/stromspeicher-groesse-berechnen.html): Faustregel: 1 kWh Speicher je 1.000 kWh Verbrauch. Die Regel „1 kWh je kWp“ kostet bei großen Anlagen über 1.000 €. Tabelle für 3.000 bis 6.000 kWh.
 
 ## Optional
 
