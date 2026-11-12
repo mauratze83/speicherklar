@@ -3,12 +3,15 @@
 <main>
   <section class="hero">
     <div class="wrap hero-grid">
-      <div class="hero-text">
+      <div class="hero-head">
       <div class="eyebrow">Für alle, die eine PV-Anlage planen</div>
       <h1>Verkäufer rechnen mit Juli. <em>Wir rechnen mit November.</em></h1>
-      <p class="lede">Du planst eine Solaranlage und fragst dich, ob ein Speicher dazugehört und wie groß er sein sollte? Gib Standort, Dach und Verbrauch ein. Der Rechner spielt ein ganzes Jahr in 5-Minuten-Schritten durch, mit Sonnendaten der EU-Kommission für deine Region, trüben Wochen und Abendspitzen.</p>
+      </div>
+      <div class="hero-body">
+      <p class="lede">Lohnt sich ein Speicher, und wie groß sollte er sein? Der Rechner spielt ein ganzes Jahr in 5-Minuten-Schritten durch, mit Sonnendaten der EU-Kommission für deine Region, trüben Wochen und Abendspitzen.</p>
+      <div class="hero-cta"><a class="btn btn-on btn-sun" href="#rechner">Jetzt rechnen</a></div>
       <p class="hero-pro">Du hast schon ein Angebot? <a href="pro/">Speicherklar Pro</a> prüft Speicher und PV-Anlage zusammen und zeigt die beste Kombination für dein Dach.</p>
-      <div class="facts"><span><b>kostenlos</b> · ohne Anmeldung</span><span>Sonnendaten <b>PVGIS 2014–2023</b></span><span>mit Szenario <b>EEG-Reform 2027</b></span></div>
+      <div class="facts"><span><b>kostenlos</b></span><span>ohne Anmeldung</span><span>Sonnendaten <b>PVGIS 2014–2023</b></span><span>mit Szenario <b>EEG-Reform 2027</b></span></div>
       </div>
       <figure class="scene" id="scene" data-season="jul">
         <div class="scene-top">
@@ -120,7 +123,11 @@
       <fieldset>
         <legend>Speicher</legend>
         <div class="field big"><div class="row"><label for="bat">Speichergröße (nutzbar)</label><output for="bat" id="o-bat"></output></div>
-          <input type="range" id="bat" min="1" max="15" step="1" value="8"></div>
+          <div class="stepper">
+            <button type="button" class="stepbtn" id="bat-minus" aria-label="Speicher 1 kWh kleiner">−</button>
+            <input type="range" id="bat" min="1" max="15" step="1" value="8">
+            <button type="button" class="stepbtn" id="bat-plus" aria-label="Speicher 1 kWh größer">+</button>
+          </div></div>
         <div class="field"><div class="row"><label for="bprice">Preis inkl. Einbau</label><output for="bprice" id="o-bprice"></output></div>
           <input type="range" id="bprice" min="250" max="1000" step="25" value="500">
           <span class="hint">Marktspanne laut Verbraucherzentrale: 300–700 €/kWh. Mit der PV-Anlage zusammen gekauft eher günstiger.</span></div>
@@ -143,7 +150,7 @@
       </fieldset>
     </form>
 
-    <div class="panel result" aria-live="polite">
+    <div class="panel result" id="ergebnis" aria-live="polite">
       <div>
         <p class="verdict" id="verdict">Rechne…</p>
         <p class="yield" id="yield"></p>
@@ -184,8 +191,9 @@
 
       <div class="sweep">
         <h3>Welche Größe rechnet sich am besten?</h3>
-        <p>Gewinn oder Verlust über die Lebensdauer, für jede Größe von 1 bis 15 kWh. Deine Wahl ist umrandet.</p>
+        <p>Gewinn oder Verlust über die Lebensdauer, für jede Größe von 1 bis 15 kWh.</p>
         <div class="chartwrap"><svg id="chart" viewBox="0 0 560 210" role="img" aria-label="Bilanz je Speichergröße"></svg></div>
+        <div class="legend"><span class="lbest">beste Größe</span><span class="lpick">deine Wahl</span></div>
       </div>
 
       <div class="procta">
@@ -195,7 +203,7 @@
     </div>
   </div>
 
-  <section class="how" id="annahmen">
+  <section class="how band" id="annahmen">
     <div class="wrap reveal">
       <h2 class="sec">So rechnet Speicherklar</h2>
       <p class="intro">Keine Blackbox. Jede Annahme steht hier, mit Quelle. Was dein Solarteur anders rechnet, kannst du hier nachprüfen.</p>
@@ -256,5 +264,10 @@
     </div>
   </section>
 </main>
+
+<a class="rbar" id="rbar" href="#ergebnis" aria-hidden="true" tabindex="-1">
+  <span class="rbar-txt"><span class="rbar-cap">Dein Ergebnis</span><b id="rbar-main">–</b><span class="rbar-sub" id="rbar-sub"></span></span>
+  <span class="rbar-go"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v13M4.5 10.5L10 16l5.5-5.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+</a>
 
 <!--FOOTER-->

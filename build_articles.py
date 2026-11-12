@@ -16,7 +16,7 @@ BASE = (ROOT / "src/fonts.css").read_text() + (ROOT / "src/style.css").read_text
 DOC = """
 .about{display:grid;grid-template-columns:minmax(0,1fr) 340px;column-gap:56px;align-items:start}
 .about-text{grid-column:1;grid-row:1}.about-body{grid-column:1;grid-row:2}
-.about-photo{grid-column:2;grid-row:1/span 2;margin:8px 0 0;position:sticky;top:24px}
+.about-photo{grid-column:2;grid-row:1/span 2;margin:8px 0 0;position:sticky;top:88px}
 .about-photo img{display:block;width:100%;height:auto;border-radius:18px;box-shadow:0 1px 0 var(--line),0 18px 40px -24px rgba(0,0,0,.35);background:var(--meter)}
 html.js .about-photo img{opacity:0;transform:translateY(10px) scale(.985);transition:opacity .6s var(--ease-out),transform .6s var(--ease-out)}
 html.js .about-photo.in img{opacity:1;transform:none}
@@ -35,7 +35,30 @@ main.page{padding-block:36px 40px}
 .doc th,.doc td{text-align:left;padding:9px 12px 9px 0;border-bottom:1px solid var(--line);vertical-align:top}
 .doc th{font-family:var(--f-mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:500}
 .doc td.num{font-family:var(--f-mono);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-.doc tr.hl td{background:var(--sun-soft)}
+.doc tr.hl td{background:var(--sun-soft);font-weight:700}
+.doc tr.hl td:first-child{box-shadow:inset 4px 0 0 var(--sun);padding-left:12px}
+.art{display:grid;grid-template-columns:minmax(0,760px) minmax(0,1fr);column-gap:48px;align-items:start}
+.kbox{position:sticky;top:88px;margin-top:8px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:grid;gap:14px}
+.kbox .cap{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.kbox .kmeter{background:var(--meter);color:var(--meter-digit);border-radius:8px;padding:14px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;font-family:var(--f-mono);font-weight:700;font-size:17px}
+.kbox .kmeter .wheel{font-size:30px}
+.kbox .kmeter .dg{display:inline-flex;gap:3px}
+.kbox p{margin:0;font-size:15.5px;line-height:1.45}
+.kbox .btn{opacity:1;cursor:pointer;text-align:center}
+.kbox small{font-size:13px;color:var(--muted);line-height:1.4}
+@media (max-width:1020px){.art{grid-template-columns:minmax(0,1fr)}.kbox{display:none}}
+.hbars{display:grid;gap:10px;margin:4px 0 2px}
+.hbar{display:grid;grid-template-columns:minmax(64px,auto) minmax(0,1fr) auto;gap:12px;align-items:center;font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums}
+.hbar .hl{color:var(--muted);line-height:1.2} .hbar .hl small{display:block;font-size:11px}
+.hbar .ht{height:24px;display:block}
+.hbar .ht i{display:block;height:100%;border-radius:0 4px 4px 0;background:var(--c-imp);transform-origin:left center}
+.hbar .hv{font-weight:700;white-space:nowrap}
+.hbar.best .hl,.hbar.best .hv{color:var(--sun-ink);font-weight:700} .hbar.best .ht i{background:var(--sun)}
+.hbar.mark .hl{color:var(--ink)} .hbar.mark .ht i{outline:1.5px solid var(--ink);outline-offset:2px}
+html.js .chart .hbar .ht i{transform:scaleX(0);transition:transform 700ms var(--ease-out)}
+html.js .chart.in .hbar .ht i{transform:none}
+html.js .chart .hbar:nth-child(2) .ht i{transition-delay:50ms}html.js .chart .hbar:nth-child(3) .ht i{transition-delay:100ms}html.js .chart .hbar:nth-child(4) .ht i{transition-delay:150ms}html.js .chart .hbar:nth-child(5) .ht i{transition-delay:200ms}html.js .chart .hbar:nth-child(n+6) .ht i{transition-delay:250ms}
+@media (prefers-reduced-motion:reduce){html.js .chart .hbar .ht i{transform:none;transition:none}}
 .doc details{border-bottom:1px solid var(--line);padding:12px 0} .doc summary{font-weight:600;cursor:pointer}
 .ask{border:1px dashed var(--line);border-radius:10px;padding:20px 22px;margin:32px 0 8px;display:grid;gap:8px;max-width:760px}
 .ask b{font-family:var(--f-display);font-stretch:105%;font-size:19px}
@@ -83,11 +106,43 @@ def figure(slug):
 
 ARTICLES_BY = {a["slug"]: a for a in ARTICLES}
 
+def _eur(v):
+    return ("+" if v > 0 else "−" if v < 0 else "") + f"{abs(v):,}".replace(",", ".") + " €"
+
+def bars(a):
+    """Waagerechte Balken (Feld "bars": title, caption, rows [[Name, Wert, Zusatz?]], best = Name der besten Zeile, mark = Name der Zeile aus dem Angebot)."""
+    b = a.get("bars")
+    if not b: return ""
+    top = max(v for _, v, *_ in b["rows"]) or 1
+    rows = ""
+    for name, v, *extra in b["rows"]:
+        cls = " best" if name == b.get("best") else " mark" if name == b.get("mark") else ""
+        sub = f"<small>{html.escape(extra[0])}</small>" if extra else ""
+        rows += (f'<div class="hbar{cls}"><span class="hl">{html.escape(name)}{sub}</span>'
+                 f'<span class="ht"><i style="width:{max(1, round(v / top * 100, 1))}%"></i></span><span class="hv">{_eur(v)}</span></div>')
+    alt = html.escape(b["title"] + ": " + ", ".join(f"{n} {_eur(v)}" for n, v, *_ in b["rows"]))
+    return (f'<figure class="chart"><figcaption><b>{html.escape(b["title"])}</b><span>{html.escape(b.get("caption", ""))}</span></figcaption>'
+            f'<div class="hbars" role="img" aria-label="{alt}">{rows}</div></figure>')
+
+def kbox(a):
+    """Mitlaufende Karte neben dem Artikel: Kernzahl im Zählerkasten und der Weg zum Rechner."""
+    k = a.get("kennzahl")
+    if not k: return ""
+    parts = re.split(r"(\d+)", k["v"])
+    meter = "".join(('<span class="dg">' + "".join(f'<span class="wheel">{d}</span>' for d in t) + "</span>") if t.isdigit() else html.escape(t) for t in parts if t)
+    return (f'<aside class="kbox" aria-label="Kurz gesagt"><span class="cap">Kurz gesagt</span><div class="kmeter" role="img" aria-label="{html.escape(k["v"])}">{meter}</div>'
+            f'<p>{html.escape(k["t"][:1].upper() + k["t"][1:])}.</p>'
+            f'<a class="btn btn-on" href="../#rechner" data-umami-event="artikel-zum-rechner" data-umami-event-artikel="{a["slug"]}">Mit deinen Zahlen rechnen</a>'
+            f'<small>Kostenlos und ohne Anmeldung.</small></aside>')
+
 def _with_figure(a):
     body, fig = a["body"], figure(a["slug"])
     if not fig: return body
     i = body.find("</p>")
     return body[:i + 4] + fig + body[i + 4:] if i >= 0 else fig + body
+
+def _body(a):
+    return _with_figure(a).replace("<!--BARS-->", bars(a))
 
 
 def page(title, desc, canonical, main, extra_head="", prefix="../", active="ratgeber", robots=False, og_image=None, og_type="article"):
@@ -157,8 +212,8 @@ for a in ARTICLES:
           {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": x}} for q, x in a["faq"]]},
           crumbs(("Ratgeber", RATGEBER_URL), (a["title"], url))]
     head = ld_tags(*ld)
-    main = f"""<article class="doc"><div class="eyebrow">Ratgeber</div><h1>{a['h1']}</h1><p class="lead">{a['lead']}</p><p class="meta">Stand: {STAND}</p>
-{_with_figure(a)}{CTA.replace("{slug}", a["slug"])}<h2>Häufige Fragen</h2>{faq_html}{ask(a)}{more(a)}<p class="note" style="margin-top:28px">{BEISPIEL}</p></article>"""
+    main = f"""<div class="art"><article class="doc"><div class="eyebrow">Ratgeber</div><h1>{a['h1']}</h1><p class="lead">{a['lead']}</p><p class="meta">Stand: {STAND}</p>
+{_body(a)}{CTA.replace("{slug}", a["slug"])}<h2>Häufige Fragen</h2>{faq_html}{ask(a)}{more(a)}<p class="note" style="margin-top:28px">{BEISPIEL}</p></article>{kbox(a)}</div>"""
     (out / f"{a['slug']}.html").write_text(page(f"{a['title']} | Speicherklar", a["desc"], url, main, head, og_image=f"img/og/{a['slug']}.png"))
 
 items = "".join(f'<li><a href="{a["slug"]}.html">{sp(a)}<b>{a["title"]}</b><span>{a["desc"]}</span></a></li>' for a in NEWEST)
@@ -199,7 +254,8 @@ for f in ("impressum", "datenschutz"):
     (ROOT / f"{f}.html").write_text(page(f"{title} – Speicherklar", title, "", f'<div class="doc">{body}</div>', prefix="./", active=None, robots=True))
 
 # Ratgeber-Liste für die Startseite
-(ROOT / "src/ratgeber-teaser.html").write_text("".join(f'<li><a href="ratgeber/{a["slug"]}.html">{sp(a)}<b>{a["title"]}</b><span>{a["desc"]}</span></a></li>' for a in NEWEST[:6]))
+_FEAT = ' class="feat"'
+(ROOT / "src/ratgeber-teaser.html").write_text("".join(f'<li{_FEAT if i == 0 else ""}><a href="ratgeber/{a["slug"]}.html">{sp(a)}<b>{a["title"]}</b><span>{a["desc"]}</span></a></li>' for i, a in enumerate(NEWEST[:6])))
 print("Artikel:", len(ARTICLES))
 for slug, g in CHARTS.items():
     for f in g.get("facts", []): print(f"  Grafik {slug}: {f['label']} -> beste Größe {f['best']} kWh, {f['net']:+} €")

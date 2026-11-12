@@ -115,6 +115,30 @@ a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
 .wait-msg.ok{color:var(--pos)}
 .report .lic{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin:10px 0 0}
 .result>.mykey,.result>.keybox{margin-top:14px}
-.pro-hero .sample{font-size:16px;margin-top:14px}
-
 .pro-hero .lede + .lede{margin-top:10px}
+.pro-hero .hero-cta a:not(.btn){font-weight:600}
+
+/* Kopf: links der Text, rechts die Einordnung des Musterangebots vor einer Seite des Berichts */
+.pro-hero-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:40px;align-items:center}
+.peek{margin:0;display:grid;animation:sk-rise 420ms var(--ease-out) 160ms both}
+.peek-sheet{grid-area:1/1;justify-self:end;width:72%;margin-top:0;align-self:start;background:#FFFFFF;color:#15212B;border:1px solid #CBD3DA;border-radius:8px;padding:20px 20px 90px;display:grid;gap:9px;text-decoration:none;
+  transform:rotate(2.5deg);transform-origin:top right;box-shadow:0 18px 40px -18px rgba(0,0,0,.45);transition:transform 220ms var(--ease-out)}
+.peek-sheet b{font-family:var(--f-display);font-stretch:105%;font-weight:800;font-size:16px;line-height:1.2;margin-top:8px}
+.peek-meta{display:flex;justify-content:space-between;gap:10px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#56666F}
+.peek-sheet .pl{display:block;height:8px;border-radius:4px;background:#DCE2E7}
+.pl.w60{width:60%}.pl.w70{width:70%}.pl.w80{width:80%}.pl.w90{width:90%}
+.peek-card{grid-area:1/1;justify-self:start;align-self:end;width:80%;margin-top:196px;position:relative;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:12px;box-shadow:0 18px 40px -16px rgba(0,0,0,.4)}
+.peek-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.peek-head b{font-family:var(--f-display);font-stretch:105%;font-size:18px}
+.peek-card .amps{gap:8px}
+.peek-card .amp{padding:9px 12px}
+.peek-card .amp .v{font-size:19px}
+.peek-note{margin:0;font-size:12.5px;color:var(--muted);line-height:1.4}
+@media (hover:hover) and (pointer:fine){.peek-sheet:hover{transform:rotate(1deg) translateY(-4px)}}
+@media (max-width:900px){
+  .pro-hero-grid{grid-template-columns:minmax(0,1fr);gap:26px}
+  .peek{max-width:460px}
+  .pro-hero .hero-cta{order:0;margin:18px 0 0}
+}
+@media (max-width:520px){.peek-sheet{width:80%}.peek-card{width:90%;margin-top:204px}}
+@media (prefers-reduced-motion:reduce){.peek{animation:none}.peek-sheet{transition:none}}

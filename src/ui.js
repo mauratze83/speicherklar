@@ -84,7 +84,7 @@
   function euro(v){return (v<0?"−":"")+nf0.format(Math.abs(v))+" €";}
 
   function chart(res,p){
-    var W=560,H=210,pl=50,pr=8,pt=12,pb=28,iw=W-pl-pr,ih=H-pt-pb;
+    var W=560,H=210,pl=50,pr=8,pt=20,pb=28,iw=W-pl-pr,ih=H-pt-pb;
     var vals=res.sweep.map(function(s){return s.net;});
     var max=Math.max(0,Math.max.apply(null,vals)),min=Math.min(0,Math.min.apply(null,vals));
     var span=max-min||1;
@@ -98,8 +98,10 @@
     }
     res.sweep.forEach(function(s,i){
       var x=pl+i*bw+bw*0.18,w=bw*0.64,y0=y(0),y1=y(s.net);
-      var col=s.net>=0?"var(--pos)":"var(--neg)",hgt=Math.max(1,Math.abs(y1-y0));
-      svg+='<rect x="'+x+'" y="'+Math.min(y0,y1)+'" width="'+w+'" height="'+hgt+'" fill="'+col+'" rx="2" opacity="'+(s.cap===p.bat?1:0.55)+'"/>';
+      var isBest=s.cap===res.best.cap&&res.best.net>0;
+      var col=s.net<0?"var(--neg)":isBest?"var(--sun)":"var(--c-imp)",hgt=Math.max(1,Math.abs(y1-y0));
+      svg+='<rect x="'+x+'" y="'+Math.min(y0,y1)+'" width="'+w+'" height="'+hgt+'" fill="'+col+'" rx="2"'+(s.net<0?' opacity="0.75"':'')+'/>';
+      if(isBest)svg+='<text class="best" x="'+Math.min(W-pr-30,Math.max(pl+30,x+w/2))+'" y="'+Math.max(10,y1-(s.cap===p.bat?8:5))+'" text-anchor="middle">+'+nf0.format(s.net)+' €</text>';
       if(s.cap===p.bat)svg+='<rect x="'+(x-3)+'" y="'+(Math.min(y0,y1)-3)+'" width="'+(w+6)+'" height="'+(hgt+6)+'" fill="none" stroke="var(--ink)" stroke-width="1.5" rx="3"/>';
       svg+='<text x="'+(x+w/2)+'" y="'+(H-10)+'" text-anchor="middle">'+s.cap+'</text>';
     });
@@ -188,6 +190,9 @@
     else if(res.best.net>0)v+=' Das ist auch die wirtschaftlichste Größe.';
     $("verdict").innerHTML=v;
     chart(res,p);
+    var okNet=c.net>=0&&isFinite(c.payback);
+    $("rbar-main").textContent=p.bat+" kWh · "+(okNet?"bezahlt nach "+nf1.format(c.payback)+" J.":"rechnet sich nicht");
+    $("rbar-sub").innerHTML=(c.net>=0?"+":"")+euro(c.net)+" nach "+p.life+" Jahren"+(res.best.net>0?" · <i>"+(res.best.cap===p.bat?"wirtschaftlichste Größe":"am meisten bleibt bei "+res.best.cap+" kWh")+"</i>":"");
     dayState.days=daySeries(res.gen,res.load,p.bat,res.fc);drawDay();
     // Übergabe an den Angebots-Check im Hash (wird nicht an einen Server gesendet)
     var q={plz:$("plz").value.replace(/\D/g,""),kwp:$("pv").value,aspect:state.aspect,tilt:$("tilt").value,cons:p.cons,ev:p.ev,evt:p.evTime,bat:p.bat,price:p.price,eeg:state.eeg,feed:p.feed,life:p.life};
@@ -208,6 +213,23 @@
   var used=false;function markUsed(){if(!used){used=true;track("rechner-genutzt");}}
   $("inputs").addEventListener("change",markUsed);
   Array.prototype.forEach.call(document.querySelectorAll("#inputs .seg button"),function(b){b.addEventListener("click",markUsed);});
+
+  // Tasten − und + neben dem Regler für die Speichergröße
+  function stepBat(d){var el=$("bat"),v=Math.max(+el.min,Math.min(+el.max,+el.value+d));if(v===+el.value)return;el.value=v;
+    el.dispatchEvent(new Event("input",{bubbles:true}));el.dispatchEvent(new Event("change",{bubbles:true}));}
+  $("bat-minus").addEventListener("click",function(){stepBat(-1);});
+  $("bat-plus").addEventListener("click",function(){stepBat(1);});
+
+  // Ergebnisleiste am Handy: sichtbar, solange die Eingaben im Bild sind und das Ergebnis nicht
+  (function(){
+    var bar=$("rbar");if(!bar||!("IntersectionObserver" in window))return;
+    var inForm=false,inRes=false;
+    function upd(){var on=inForm&&!inRes;bar.classList.toggle("show",on);bar.setAttribute("aria-hidden",String(!on));bar.tabIndex=on?0:-1;}
+    try{
+      new IntersectionObserver(function(es){inForm=es[0].isIntersecting;upd();},{rootMargin:"-30% 0px -30% 0px"}).observe($("inputs"));
+      new IntersectionObserver(function(es){inRes=es[0].isIntersecting;upd();},{rootMargin:"0px 0px -120px 0px"}).observe($("ergebnis"));
+    }catch(e){}
+  })();
 
   var pending=null;
   $("inputs").addEventListener("input",function(){if(pending)cancelAnimationFrame(pending);pending=requestAnimationFrame(render);});

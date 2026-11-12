@@ -221,6 +221,8 @@ ARTICLES = [
 {
 "slug": "pv-angebot-pruefen",
 "kennzahl": {"v": "6 statt 10 kWh", "t": "Speichergröße, die im Beispiel am meisten bringt"},
+"bars": {"title": "Bilanz nach 15 Jahren je Speichergröße", "caption": "Angebot: 10 kWh für 6.500 €. Am meisten bleibt bei 6 kWh übrig.",
+         "rows": [["4 kWh", 744], ["5 kWh", 970], ["6 kWh", 1078], ["7 kWh", 1066], ["8 kWh", 954], ["10 kWh", 497, "Angebot"]], "best": "6 kWh", "mark": "10 kWh"},
 "title": "PV-Angebot prüfen: Ist der Speicher zu groß?",
 "h1": "PV-Angebot prüfen: Ist der Speicher zu groß?",
 "desc": "Im Beispiel bringt ein 6-kWh-Speicher in 15 Jahren rund 580 € mehr als die angebotenen 10 kWh. So prüfst du dein PV-Angebot, bevor du unterschreibst.",
@@ -234,6 +236,7 @@ ARTICLES = [
 <p>Das ist kein Vorwurf an den Installateur. Viele Systeme gibt es nur in festen Stufen, und manche Haushalte planen später ein E-Auto. Du solltest nur wissen, welche Größe für deinen Verbrauch reicht.</p>
 
 <h2>Beispielrechnung: 10 kWh im Angebot</h2>
+<!--BARS-->
 <div class="tablewrap"><table>
 <thead><tr><th>Speicher</th><th>Ersparnis/Jahr</th><th>Kosten</th><th>Bilanz nach 15 Jahren</th></tr></thead>
 <tbody>
