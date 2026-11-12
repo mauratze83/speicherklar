@@ -1460,8 +1460,11 @@ var PRO = (function () {
   }
   function setupBuy() {
     // ?vorab=1 schaltet den Kauf vor dem Starttermin frei (nur intern zum Testen, nirgends verlinkt)
+    // ?vorab=0 nimmt den gemerkten Vorab-Zugang in diesem Browser wieder weg
+    if (/[?&]vorab=0/.test(location.search)) store("sk-pro-vorab", null);
     var vorab = /[?&]vorab=1/.test(location.search) || load("sk-pro-vorab");
     if (/[?&]vorab=1/.test(location.search)) store("sk-pro-vorab", true);
+    var early = vorab && C.publicFrom && today() < C.publicFrom;
     var open = C.api && (!C.publicFrom || today() >= C.publicFrom || vorab);
     var intro = C.introUntil && today() <= C.introUntil;
     var price = intro ? C.price : C.regularPrice;
@@ -1483,6 +1486,7 @@ var PRO = (function () {
         });
       });
       note.push("Bezahlung über Stripe. Nach dem Kauf ist der Bericht sofort freigeschaltet, die Rechnung kommt per Mail.");
+      if (early) note.push('<strong>Vorab-Zugang aktiv:</strong> Nur dieser Browser kann vor dem ' + dateDe(C.publicFrom) + ' kaufen. Abschalten mit <a href="?vorab=0">?vorab=0</a>.');
     } else {
       btn.removeAttribute("href"); btn.classList.remove("btn-on"); btn.setAttribute("aria-disabled", "true");
       btn.textContent = C.publicFrom ? "Kauf ab " + dateDe(C.publicFrom) : "Kauf startet bald";

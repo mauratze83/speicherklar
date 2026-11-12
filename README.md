@@ -25,4 +25,4 @@ Kostenloser Speicher-Rechner für geplante PV-Anlagen – https://speicherklar.d
 - Lokal testen: `python3 -m http.server`, dann `localhost:8000/pro/` (Einordnung ohne Freischaltung). Den vollständigen Bericht prüft `python3 scripts/musterbericht.py` (beantwortet die Lizenzprüfung nur im Testbrowser); auf speicherklar.de mit einem Freischlüssel.
 - Freischaltung: ein gespeicherter Schlüssel wird bei jedem Aufruf der Pro-Seite beim Worker gegengeprüft (`/validate`); ohne Verbindung bleibt Pro bis zum gespeicherten Ablaufdatum freigeschaltet.
 - `pro/musterbericht.pdf` – Musterbericht, erzeugt mit `python3 scripts/musterbericht.py` nach `build.py`; neu erzeugen, wenn sich `pro.js`, `pro-ui.js` oder `sim.js` ändern
-- Kauf vor dem Starttermin (`publicFrom`) nur intern zum Testen: `https://speicherklar.de/pro/?vorab=1`
+- Kauf vor dem Starttermin (`publicFrom`) nur intern zum Testen: `https://speicherklar.de/pro/?vorab=1`. Der Browser merkt sich das und zeigt dann „Vorab-Zugang aktiv“; `?vorab=0` nimmt es wieder weg.
