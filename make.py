@@ -209,6 +209,44 @@ posts["post5-faustformel"] = [
   frame(f'<h1>Wie viel kWh <em>für deinen Verbrauch?</em></h1><p>Der Rechner probiert 1 bis 15 kWh durch. Kostenlos, ohne Anmeldung. Link in der Bio.</p><div><span class="cta">speicherklar.de</span></div><p class="src">Beispiel: Ruhrgebiet, Süd 35°, 4.500 kWh/Jahr, Speicher 500 €/kWh, Strom {de(_price).rstrip("0").rstrip(",")} ct, Einspeisung 7,70 ct, 15 Jahre. Sonnendaten PVGIS (EU-Kommission), eigene Simulation.</p>', 9, T, tp, dark=True),
 ]
 
+# ---------- Post 6: Stromsteuer bleibt (9 Slides), Stand 13.11.2026 ----------
+_js6 = r"""
+const S=require(process.argv[1]);const P=%s;const cut=(2.05-0.1)*1.19;
+const b={region:"4",roofs:[{kwp:9,tilt:35,aspect:0}],cons:4500,ev:0,evTime:"eve",bat:6,bprice:500,life:15,feed:7.7,feedLimit:0};
+const a=S.evaluate({...b,price:P}),c=S.evaluate({...b,price:P-cut});
+const s=r=>r.sweep[a.best.cap-1];
+console.log(JSON.stringify({cut:cut,pc:P-cut,best:a.best.cap,bestCut:c.best.cap,
+ bill0:4500*cut/100,billPV:a.base.grid*cut/100,billBat:s(a).r.grid*cut/100,
+ pay:s(a).payback,payCut:s(c).payback,net:s(a).net,netCut:s(c).net,save:s(a).save,saveCut:s(c).save}));
+"""
+G = json.loads(subprocess.run(["node", "-e", _js6 % _price, str(SITE / "src/sim.js")], capture_output=True, text=True, check=True).stdout)
+d1 = lambda v: f"{v:.1f}".replace(".", ",")
+d2 = lambda v: f"{v:.2f}".replace(".", ",")
+def ebars(rows, hi):
+    W, rh = 820, 92
+    s = f'<svg width="{W}" height="{len(rows)*rh}" viewBox="0 0 {W} {len(rows)*rh}" font-family="Source Sans 3">'
+    for i, (lab, v, col, bold) in enumerate(rows):
+        y = i * rh; w = (W - 190) * v / hi
+        s += (f'<text x="0" y="{y+30}" font-size="30" fill="#15212B" font-weight="{700 if bold else 400}">{lab}</text>'
+              f'<rect x="0" y="{y+44}" width="{max(4,w)}" height="34" rx="4" fill="{col}"/>'
+              f'<text x="{w+16}" y="{y+72}" font-family="JetBrains Mono" font-size="28" font-weight="700" fill="#15212B">{round(v)} €</text>')
+    return s + "</svg>"
+T = 9; tp = "Stromsteuer"
+pr = de(_price).rstrip("0").rstrip(",")
+posts["post6-stromsteuer"] = [
+  frame('<h1>Stromsteuer bleibt. <em>Was heißt das für den Speicher?</em></h1><p class="promise">Was eine Senkung gebracht hätte. Hab’s durchgerechnet.</p>', 1, T, tp),
+  frame(f'<h2>So viel hätte die Senkung gespart</h2>{wheels(round(G["bill0"]))}<p>Euro im Jahr, bei 4.500&nbsp;kWh Verbrauch ohne PV-Anlage. Für Haushalte bleibt die Steuer aber vorerst, wie sie ist.</p>', 2, T, tp),
+  frame('<h2>Was entschieden ist</h2>' + summary(["Für Haushalte bleibt es bei 2,05&nbsp;ct je kWh.", "Die Senkung aufs EU-Minimum von 0,1&nbsp;ct fehlt im Haushalt 2027."]) + '<p class="muted" style="font-size:34px">Stand 13.11.2026. Noch nicht endgültig: Koalitionsausschuss am 17.11., Bundestag 24. bis 27.11.</p>', 3, T, tp),
+  frame(f'<h2>Strom wäre {d2(G["cut"])} ct billiger</h2><div class="pair"><div class="card"><div class="k">Steuer bleibt</div><div class="v">{pr} ct</div><div class="d">je kWh, Beispielpreis</div></div><div class="card"><div class="k">mit Senkung</div><div class="v">{d1(G["pc"])} ct</div><div class="d">je kWh</div></div></div><p>1,95 ct weniger Steuer, dazu fällt die Umsatzsteuer darauf weg.</p>', 4, T, tp),
+  frame(f'<h2>Mit PV merkst du’s weniger</h2><p class="muted" style="font-size:32px">Ersparnis durch die Senkung, Euro im Jahr</p>'
+        + ebars([("ohne PV-Anlage", G["bill0"], "#B9C3CB", False), ("9 kWp, ohne Speicher", G["billPV"], "#B9C3CB", False), (f"9 kWp, {G['best']} kWh Speicher", G["billBat"], "#E39A0B", True)], G["bill0"])
+        + '<p>Wer weniger Netzstrom kauft, zahlt auch weniger Stromsteuer.</p>', 5, T, tp),
+  frame(f'<h2>Der Speicher rechnet sich schneller</h2><div class="pair"><div class="card"><div class="k">Steuer bleibt</div><div class="v" style="color:var(--pos)">{d1(G["pay"])} J.</div><div class="d">bis {G["best"]} kWh bezahlt sind</div></div><div class="card"><div class="k">mit Senkung</div><div class="v">{d1(G["payCut"])} J.</div><div class="d">bis {G["best"]} kWh bezahlt sind</div></div></div><p>Jede kWh aus dem Speicher ersetzt Netzstrom. Je teurer der, desto mehr spart sie.</p>', 6, T, tp),
+  frame(f'<h2>Die beste Größe bleibt gleich</h2><p>{G["best"]}&nbsp;kWh sind in beiden Fällen die beste Größe. Nach 15 Jahren bleiben {fmt(round(G["net"]))} € statt {fmt(round(G["netCut"]))} € übrig.</p><p class="muted">Für deine Planung ändert die Entscheidung also wenig. Wär die Steuer gesunken, hätte sich der Speicher etwas später bezahlt.</p>', 7, T, tp),
+  frame('<h2>Kurz gesagt</h2>' + summary(["Die Stromsteuer bleibt vorerst bei 2,05&nbsp;ct.", f"Eine Senkung hätte Strom um {d2(G['cut'])}&nbsp;ct billiger gemacht.", f"Der Speicher bezahlt sich so in {d1(G['pay'])} statt {d1(G['payCut'])}&nbsp;Jahren.", "An der passenden Größe ändert das&nbsp;nichts."]), 8, T, tp),
+  frame(f'<h1>Rechne mit <em>deinem Strompreis.</em></h1><p>Im Rechner den Strompreis verschieben und sehen, was sich ändert. Kostenlos, ohne Anmeldung. Link in der Bio.</p><div><span class="cta">speicherklar.de</span></div><p class="src">Beispiel: Ruhrgebiet, 9 kWp Süd 35°, 4.500 kWh/Jahr, Speicher 500 €/kWh, Strom {pr} ct, Einspeisung 7,70 ct, 15 Jahre. Stromsteuer: § 3 StromStG, EU-Minimum 0,1 ct (Richtlinie 2003/96/EG). Stand 13.11.2026.</p>', 9, T, tp, dark=True),
+]
+
 PROFILE = f"""<div style="width:1080px;height:1080px;background:#15212B;display:flex;align-items:center;justify-content:center">
 <svg width="620" height="620" viewBox="0 0 26 26"><rect x="5.6" y="4.4" width="14.8" height="19" rx="2.6" fill="none" stroke="#E6ECF1" stroke-width="1.7"/><rect x="10" y="1.7" width="6" height="2.6" rx="0.9" fill="#E6ECF1"/><rect x="8.2" y="13.6" width="9.6" height="7.4" rx="1" fill="#E39A0B"/><rect x="8.2" y="9.4" width="9.6" height="2.8" rx="1" fill="#E39A0B" opacity=".45"/></svg></div>"""
 
