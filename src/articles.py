@@ -30,7 +30,7 @@ ARTICLES = [
 <h2>Um wie viel wäre Strom billiger geworden?</h2>
 <p>Die Senkung von 2,05 auf 0,1 ct macht 1,95 ct netto. Mit der Umsatzsteuer, die darauf wegfällt, sind es 2,32 ct je kWh. Aus 33 ct im Beispiel wären also 30,68 ct geworden.</p>
 <p>Wie viel das im Jahr ausmacht, hängt davon ab, wie viel Strom du noch aus dem Netz kaufst:</p>
-<div class="tablewrap"><table>
+<div class="tablewrap"><table class="fit">
 <thead><tr><th>Haushalt mit 4.500 kWh</th><th>Strom aus dem Netz</th><th>Ersparnis durch Senkung/Jahr</th></tr></thead>
 <tbody>
 <tr><td>ohne PV-Anlage</td><td class="num">4.500 kWh</td><td class="num">104 €</td></tr>
@@ -41,13 +41,14 @@ ARTICLES = [
 
 <h2>Was das für den Speicher heißt</h2>
 <p>Ein Speicher spart Geld, weil er Netzstrom ersetzt. Je teurer der Netzstrom, desto mehr ist jede gespeicherte kWh wert. Bleibt die Steuer, bleibt der Speicher also etwas wertvoller:</p>
-<div class="tablewrap"><table>
-<thead><tr><th>Speicher</th><th>Ersparnis/Jahr<br>Steuer bleibt</th><th>Ersparnis/Jahr<br>mit Senkung</th><th>Amortisation<br>Steuer bleibt</th><th>Amortisation<br>mit Senkung</th><th>Bilanz 15 Jahre<br>Steuer bleibt</th><th>Bilanz 15 Jahre<br>mit Senkung</th></tr></thead>
+<p>In jeder Zelle oben: Steuer bleibt. Unten: mit Senkung.</p>
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>Speicher</th><th>Ersparnis pro Jahr</th><th>bezahlt nach</th><th>Bilanz 15 J.</th></tr></thead>
 <tbody>
-<tr><td>4 kWh</td><td class="num">297 €</td><td class="num">267 €</td><td class="num">6,7 J.</td><td class="num">7,5 J.</td><td class="num">+2.454 €</td><td class="num">+2.001 €</td></tr>
-<tr class="hl"><td>6 kWh</td><td class="num">384 €</td><td class="num">345 €</td><td class="num">7,8 J.</td><td class="num">8,7 J.</td><td class="num">+2.758 €</td><td class="num">+2.181 €</td></tr>
-<tr><td>8 kWh</td><td class="num">436 €</td><td class="num">393 €</td><td class="num">9,2 J.</td><td class="num">10,2 J.</td><td class="num">+2.544 €</td><td class="num">+1.891 €</td></tr>
-<tr><td>10 kWh</td><td class="num">466 €</td><td class="num">420 €</td><td class="num">10,7 J.</td><td class="num">11,9 J.</td><td class="num">+1.997 €</td><td class="num">+1.301 €</td></tr>
+<tr><td>4 kWh</td><td class="num">297 €<br>267 €</td><td class="num">6,7 J.<br>7,5 J.</td><td class="num">+2.454 €<br>+2.001 €</td></tr>
+<tr class="hl"><td>6 kWh</td><td class="num">384 €<br>345 €</td><td class="num">7,8 J.<br>8,7 J.</td><td class="num">+2.758 €<br>+2.181 €</td></tr>
+<tr><td>8 kWh</td><td class="num">436 €<br>393 €</td><td class="num">9,2 J.<br>10,2 J.</td><td class="num">+2.544 €<br>+1.891 €</td></tr>
+<tr><td>10 kWh</td><td class="num">466 €<br>420 €</td><td class="num">10,7 J.<br>11,9 J.</td><td class="num">+1.997 €<br>+1.301 €</td></tr>
 </tbody></table></div>
 <p>Die beste Größe ist in beiden Fällen 6 kWh. Der Unterschied liegt bei knapp 40 € Ersparnis im Jahr. Wer gerade eine PV-Anlage plant, muss wegen der Stromsteuer also nicht umplanen.</p>
 <p>Mit E-Auto sieht es ähnlich aus. Lädt es 2.500 kWh im Jahr abends zu Hause, sind 10 kWh die beste Größe, wenn die Steuer bleibt, und 9 kWh mit Senkung. Der 10-kWh-Speicher bezahlt sich dann in 8,3 statt 9,2 Jahren.</p>
