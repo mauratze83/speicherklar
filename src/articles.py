@@ -11,6 +11,62 @@ CHART_BASE = {"region": "4", "roofs": [{"kwp": 9, "tilt": 35, "aspect": 0}], "co
 
 ARTICLES = [
 {
+"slug": "stromsteuer-stromspeicher",
+"kennzahl": {"v": "2,32 ct", "t": "pro kWh hätte die Senkung der Stromsteuer Strom billiger gemacht"},
+"chart": {"kind": "sweep", "title": "Gewinn nach 15 Jahren: Stromsteuer bleibt oder sinkt", "caption": "9 kWp Süd, 35°, 4.500 kWh Verbrauch, Speicher 500 €/kWh, Einspeisung 7,7 ct, 15 Jahre. Strom 33 ct heute, 30,68 ct mit Senkung aufs EU-Minimum.",
+  "series": [{"label": "Steuer bleibt (33 ct)", "p": {}}, {"label": "Steuer gesenkt (30,68 ct)", "p": {"price": 30.68}}]},
+"title": "Stromsteuer bleibt: Was heißt das für deinen Stromspeicher?",
+"h1": "Stromsteuer bleibt: Was heißt das für deinen Stromspeicher?",
+"desc": "Die Stromsteuer für Haushalte sinkt 2027 vorerst nicht. Eine Senkung hätte Strom um 2,32 ct billiger gemacht. Für den Speicher ändert sich wenig.",
+"date": "2026-11-13",
+"lead": "Kurze Antwort: Für deine Planung ändert sich fast nichts. Die beste Speichergröße bleibt gleich. Weil Netzstrom teurer bleibt, rechnet sich der Speicher sogar knapp ein Jahr schneller, als er es mit Senkung getan hätte.",
+"body": """
+<p>Union und SPD hatten versprochen, die Stromsteuer für alle aufs europäische Mindestmaß zu senken. Für Haushalte kommt das 2027 vorerst nicht. Ich hab durchgerechnet, was die Senkung gebracht hätte und was das für einen Stromspeicher heißt. Beispiel wie immer: 9 kWp auf einem Süddach im Ruhrgebiet, 4.500 kWh Verbrauch im Jahr.</p>
+
+<h2>Was entschieden ist (Stand 13.11.2026)</h2>
+<p>Die Stromsteuer beträgt laut § 3 Stromsteuergesetz 20,50 € je Megawattstunde, also 2,05 ct je kWh. Darauf kommen 19 % Umsatzsteuer. Das EU-Minimum für Haushalte liegt bei 0,1 ct je kWh (Energiesteuerrichtlinie 2003/96/EG).</p>
+<p>Nach der Bereinigungssitzung des Haushaltsausschusses sind die rund 5,4 Milliarden Euro für eine Senkung für alle nicht im Haushalt 2027 enthalten (t-online, 13.11.2026; Deutschlandfunk, 12.11.2026). <b>Endgültig ist das noch nicht.</b> Am 17.11. trifft sich der Koalitionsausschuss, der Bundestag berät den Haushalt vom 24. bis 27.11. Eine Senkung müsste außerdem im Stromsteuergesetz beschlossen werden. Ich aktualisiere den Artikel, wenn sich etwas ändert.</p>
+
+<h2>Um wie viel wäre Strom billiger geworden?</h2>
+<p>Die Senkung von 2,05 auf 0,1 ct macht 1,95 ct netto. Mit der Umsatzsteuer, die darauf wegfällt, sind es 2,32 ct je kWh. Aus 33 ct im Beispiel wären also 30,68 ct geworden.</p>
+<p>Wie viel das im Jahr ausmacht, hängt davon ab, wie viel Strom du noch aus dem Netz kaufst:</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Haushalt mit 4.500 kWh</th><th>Strom aus dem Netz</th><th>Ersparnis durch Senkung/Jahr</th></tr></thead>
+<tbody>
+<tr><td>ohne PV-Anlage</td><td class="num">4.500 kWh</td><td class="num">104 €</td></tr>
+<tr><td>9 kWp, ohne Speicher</td><td class="num">2.837 kWh</td><td class="num">66 €</td></tr>
+<tr class="hl"><td>9 kWp, 6 kWh Speicher</td><td class="num">1.178 kWh</td><td class="num">27 €</td></tr>
+</tbody></table></div>
+<p>Mit PV-Anlage und Speicher hättest du von der Senkung also am wenigsten gehabt. Du kaufst einfach kaum noch Netzstrom.</p>
+
+<h2>Was das für den Speicher heißt</h2>
+<p>Ein Speicher spart Geld, weil er Netzstrom ersetzt. Je teurer der Netzstrom, desto mehr ist jede gespeicherte kWh wert. Bleibt die Steuer, bleibt der Speicher also etwas wertvoller:</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Speicher</th><th>Ersparnis/Jahr<br>Steuer bleibt</th><th>Ersparnis/Jahr<br>mit Senkung</th><th>Amortisation<br>Steuer bleibt</th><th>Amortisation<br>mit Senkung</th><th>Bilanz 15 Jahre<br>Steuer bleibt</th><th>Bilanz 15 Jahre<br>mit Senkung</th></tr></thead>
+<tbody>
+<tr><td>4 kWh</td><td class="num">297 €</td><td class="num">267 €</td><td class="num">6,7 J.</td><td class="num">7,5 J.</td><td class="num">+2.454 €</td><td class="num">+2.001 €</td></tr>
+<tr class="hl"><td>6 kWh</td><td class="num">384 €</td><td class="num">345 €</td><td class="num">7,8 J.</td><td class="num">8,7 J.</td><td class="num">+2.758 €</td><td class="num">+2.181 €</td></tr>
+<tr><td>8 kWh</td><td class="num">436 €</td><td class="num">393 €</td><td class="num">9,2 J.</td><td class="num">10,2 J.</td><td class="num">+2.544 €</td><td class="num">+1.891 €</td></tr>
+<tr><td>10 kWh</td><td class="num">466 €</td><td class="num">420 €</td><td class="num">10,7 J.</td><td class="num">11,9 J.</td><td class="num">+1.997 €</td><td class="num">+1.301 €</td></tr>
+</tbody></table></div>
+<p>Die beste Größe ist in beiden Fällen 6 kWh. Der Unterschied liegt bei knapp 40 € Ersparnis im Jahr. Wer gerade eine PV-Anlage plant, muss wegen der Stromsteuer also nicht umplanen.</p>
+<p>Mit E-Auto sieht es ähnlich aus. Lädt es 2.500 kWh im Jahr abends zu Hause, sind 10 kWh die beste Größe, wenn die Steuer bleibt, und 9 kWh mit Senkung. Der 10-kWh-Speicher bezahlt sich dann in 8,3 statt 9,2 Jahren.</p>
+
+<h2>Wann du anders rechnen solltest</h2>
+<ul>
+<li>Die Senkung kommt doch noch. Dann stell im Rechner den Strompreis rund 2,3 ct niedriger ein. Am Ergebnis für die Größe ändert sich wenig, die Amortisation wird knapp ein Jahr länger.</li>
+<li>Dein Strompreis liegt deutlich über oder unter 33 ct. Dann zählt dein eigener Preis mehr als die Steuer.</li>
+<li>Du hast eine Wärmepumpe oder einen dynamischen Tarif. Beides bildet der Rechner nicht genau ab: Er kennt kein Lastprofil einer Wärmepumpe und rechnet mit festem Strompreis.</li>
+</ul>
+<p>Ob der Versorger eine Senkung voll weitergegeben hätte, ist offen. Die Rechnung geht davon aus.</p>
+""",
+"faq": [
+ ("Wie hoch ist die Stromsteuer für Haushalte?", "2,05 ct je kWh laut § 3 Stromsteuergesetz, plus 19 % Umsatzsteuer. Das sind rund 2,44 ct je kWh auf deiner Rechnung."),
+ ("Wird die Stromsteuer 2027 gesenkt?", "Für Haushalte vorerst nicht: Im Haushalt 2027 ist das Geld dafür nicht eingeplant (Stand 13.11.2026). Endgültig ist das nicht, Koalitionsausschuss und Bundestag beraten noch im November."),
+ ("Lohnt sich ein Stromspeicher trotzdem?", "Ja, eher etwas mehr. Im Beispiel bezahlt sich ein 6-kWh-Speicher in 7,8 Jahren. Mit Senkung wären es 8,7 Jahre gewesen. Die beste Größe bleibt gleich."),
+],
+},
+{
 "slug": "stromspeicher-lohnt-sich-2027",
 "kennzahl": {"v": "+2.758 €", "t": "Gewinn nach 15 Jahren mit 6 kWh, heute gerechnet"},
 "chart": {"kind": "sweep", "title": "Gewinn nach 15 Jahren je Speichergröße", "caption": "9 kWp Süd, 4.500 kWh Verbrauch, Speicher 500 €/kWh, Strom 33 ct/kWh. Der Punkt markiert die wirtschaftlichste Größe.",
