@@ -64,4 +64,5 @@ Reihenfolge: Quelle ändern → Tests → `build_articles.py` (falls nötig) →
 - Sprache in Code-Kommentaren, Commits und UI: Deutsch. Commit-Nachricht beschreibt das Ergebnis, z. B. „Artikel Größe berechnen: Mehr-Ersparnis genau gerundet“.
 - Keine Frameworks, keine Build-Tools außer Python 3 und Node; keine externen CDNs oder Google Fonts (Schriften liegen in `fonts/`).
 - Datenschutz: keine Cookies, keine Inhalte von fremden Servern, Reichweite nur über die cookielose Messung mit Umami (`src/chrome.py`); neue externe Dienste nur nach Rückfrage und mit Anpassung in `src/legal/datenschutz.html`.
+- Leerzeichen zwischen nebeneinanderstehenden Inline-Elementen (`<span>`, `<b>`, `<a>`, `<small>`, `<em>`), auch wenn CSS sie optisch trennt (Kapseln, Legenden, Karten). Google nimmt Seitentext fürs Snippet und klebt sonst Wörter zusammen („kostenlosohne Anmeldung“). In Flex/Grid ändert das Leerzeichen die Darstellung nicht. Ausnahme: Ziffern der Zählerrollen (`.dg .wheel`) bleiben ohne Leerzeichen.
 - Vor jedem Commit: Tests grün, Build gelaufen, Diff durchgesehen.

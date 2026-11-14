@@ -62,7 +62,7 @@ var DRAW = (function () {
   }
 
   function legend() {
-    return '<div class="clegend">' + LAYERS.map(function (L) { return '<span><i class="sw ' + L.cls + '"></i>' + L.label + "</span>"; }).join("") +
+    return '<div class="clegend">' + LAYERS.map(function (L) { return '<span><i class="sw ' + L.cls + '"></i>' + L.label + "</span>"; }).join(" ") + " " +
       '<span><i class="sw l-load"></i>Verbrauch</span></div>';
   }
 
@@ -129,7 +129,7 @@ var DRAW = (function () {
     return '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Gewinn nach Lebensdauer je Speichergröße">' + s + "</svg>";
   }
   function sweepChart(series) {
-    var leg = '<div class="clegend">' + series.map(function (se, k) { return '<span><i class="sw sl s' + k + '"></i>' + se.label + "</span>"; }).join("") + "</div>";
+    var leg = '<div class="clegend">' + series.map(function (se, k) { return '<span><i class="sw sl s' + k + '"></i>' + se.label + "</span>"; }).join(" ") + "</div>";
     return '<div class="c-wide">' + sweepSvg(series, 640) + '</div><div class="c-narrow">' + sweepSvg(series, 380) + "</div>" + leg;
   }
 

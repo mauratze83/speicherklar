@@ -104,7 +104,7 @@ CHARTS = json.loads(subprocess.run(["node", str(ROOT / "src/charts.js")], input=
 def figure(slug):
     c = ARTICLES_BY[slug].get("chart"); g = CHARTS.get(slug)
     if not c or not g: return ""
-    return f'<figure class="chart"><figcaption><b>{html.escape(c["title"])}</b><span>{html.escape(c.get("caption", ""))}</span></figcaption>{g["html"]}</figure>'
+    return f'<figure class="chart"><figcaption><b>{html.escape(c["title"])}</b> <span>{html.escape(c.get("caption", ""))}</span></figcaption>{g["html"]}</figure>'
 
 ARTICLES_BY = {a["slug"]: a for a in ARTICLES}
 
@@ -119,11 +119,11 @@ def bars(a):
     rows = ""
     for name, v, *extra in b["rows"]:
         cls = " best" if name == b.get("best") else " mark" if name == b.get("mark") else ""
-        sub = f"<small>{html.escape(extra[0])}</small>" if extra else ""
-        rows += (f'<div class="hbar{cls}"><span class="hl">{html.escape(name)}{sub}</span>'
-                 f'<span class="ht"><i style="width:{max(1, round(v / top * 100, 1))}%"></i></span><span class="hv">{_eur(v)}</span></div>')
+        sub = f" <small>{html.escape(extra[0])}</small>" if extra else ""
+        rows += (f'<div class="hbar{cls}"><span class="hl">{html.escape(name)}{sub}</span> '
+                 f'<span class="ht"><i style="width:{max(1, round(v / top * 100, 1))}%"></i></span> <span class="hv">{_eur(v)}</span></div>\n')
     alt = html.escape(b["title"] + ": " + ", ".join(f"{n} {_eur(v)}" for n, v, *_ in b["rows"]))
-    return (f'<figure class="chart"><figcaption><b>{html.escape(b["title"])}</b><span>{html.escape(b.get("caption", ""))}</span></figcaption>'
+    return (f'<figure class="chart"><figcaption><b>{html.escape(b["title"])}</b> <span>{html.escape(b.get("caption", ""))}</span></figcaption>'
             f'<div class="hbars" role="img" aria-label="{alt}">{rows}</div></figure>')
 
 def kbox(a):
@@ -132,9 +132,9 @@ def kbox(a):
     if not k: return ""
     parts = re.split(r"(\d+)", k["v"])
     meter = "".join(('<span class="dg">' + "".join(f'<span class="wheel">{d}</span>' for d in t) + "</span>") if t.isdigit() else html.escape(t) for t in parts if t)
-    return (f'<aside class="kbox" aria-label="Kurz gesagt"><span class="cap">Kurz gesagt</span><div class="kmeter" role="img" aria-label="{html.escape(k["v"])}">{meter}</div>'
+    return (f'<aside class="kbox" aria-label="Kurz gesagt"><span class="cap">Kurz gesagt</span> <div class="kmeter" role="img" aria-label="{html.escape(k["v"])}">{meter}</div>'
             f'<p>{html.escape(k["t"][:1].upper() + k["t"][1:])}.</p>'
-            f'<a class="btn btn-on" href="../#rechner" data-umami-event="artikel-zum-rechner" data-umami-event-artikel="{a["slug"]}">Mit deinen Zahlen rechnen</a>'
+            f'<a class="btn btn-on" href="../#rechner" data-umami-event="artikel-zum-rechner" data-umami-event-artikel="{a["slug"]}">Mit deinen Zahlen rechnen</a> '
             f'<small>Kostenlos und ohne Anmeldung.</small></aside>')
 
 def _with_figure(a):
@@ -169,16 +169,16 @@ def ask(a):
     den mailto-Link erst nach dem Senden öffnen, und Safari blockiert das Öffnen des Mailprogramms dann."""
     subj = quote(f"Frage zu: {a['title']}")
     body = quote(f"Hallo Manuel,\n\nmeine Frage zum Artikel https://speicherklar.de/ratgeber/{a['slug']}.html:\n\n")
-    return (f'<div class="ask"><b>Noch eine Frage offen?</b><span>Schreib sie mir. Ich antworte dir per Mail, und was öfter gefragt wird, ergänze ich hier im Artikel, ohne deinen Namen.</span>'
-            f'<a class="btn ghost" href="mailto:kontakt@speicherklar.de?subject={subj}&amp;body={body}" onclick="try{{window.umami&amp;&amp;umami.track(\'frage-mail\')}}catch(e){{}}">Frage per Mail stellen</a>'
+    return (f'<div class="ask"><b>Noch eine Frage offen?</b> <span>Schreib sie mir. Ich antworte dir per Mail, und was öfter gefragt wird, ergänze ich hier im Artikel, ohne deinen Namen.</span> '
+            f'<a class="btn ghost" href="mailto:kontakt@speicherklar.de?subject={subj}&amp;body={body}" onclick="try{{window.umami&amp;&amp;umami.track(\'frage-mail\')}}catch(e){{}}">Frage per Mail stellen</a> '
             f'<small class="ask-addr">Öffnet sich kein Mailprogramm? Schreib an <a href="mailto:kontakt@speicherklar.de">kontakt@speicherklar.de</a>.</small></div>')
 
-CTA = """<div class="cta"><b>Rechne dein eigenes Haus durch</b><span>Postleitzahl, Dachausrichtung und Verbrauch eingeben. Der kostenlose Rechner zeigt dir die wirtschaftlichste Speichergröße, auch für das Szenario EEG-Reform 2027.</span><a class="btn" href="../#rechner" data-umami-event="artikel-zum-rechner" data-umami-event-artikel="{slug}">Zum Rechner</a><span class="cta-pro">Du hast schon ein Angebot? <a href="../pro/" data-umami-event="artikel-zu-pro" data-umami-event-artikel="{slug}">Speicherklar Pro</a> prüft Speicher und PV-Anlage zusammen und zeigt die beste Kombination für dein Dach. Die Einordnung ist kostenlos.</span></div>"""
+CTA = """<div class="cta"><b>Rechne dein eigenes Haus durch</b> <span>Postleitzahl, Dachausrichtung und Verbrauch eingeben. Der kostenlose Rechner zeigt dir die wirtschaftlichste Speichergröße, auch für das Szenario EEG-Reform 2027.</span> <a class="btn" href="../#rechner" data-umami-event="artikel-zum-rechner" data-umami-event-artikel="{slug}">Zum Rechner</a> <span class="cta-pro">Du hast schon ein Angebot? <a href="../pro/" data-umami-event="artikel-zu-pro" data-umami-event-artikel="{slug}">Speicherklar Pro</a> prüft Speicher und PV-Anlage zusammen und zeigt die beste Kombination für dein Dach. Die Einordnung ist kostenlos.</span></div>"""
 
 # Kernzahl auf den Ratgeber-Karten (Feld "kennzahl": {"v": Wert, "t": kurzer Zusatz}); Zahlen müssen im Artikel stehen
 def sp(a):
     k = a.get("kennzahl")
-    return f'<i class="kz"><em>{k["v"]}</em><small>{k["t"]}</small></i>' if k else ""
+    return f'<i class="kz"><em>{k["v"]}</em> <small>{k["t"]}</small></i> ' if k else ""
 
 # Neueste zuerst (gleiches Datum: später eingetragen = neuer). Gilt für Übersicht und Startseite.
 NEWEST = [a for _, a in sorted(enumerate(ARTICLES), key=lambda x: (x[1]["date"], x[0]), reverse=True)]
@@ -199,7 +199,7 @@ def related(a, n=3):
 def more(a):
     r = related(a)
     if not r: return ""
-    li = "".join(f'<li><a href="{b["slug"]}.html">{sp(b)}<b>{b["title"]}</b><span>{b["desc"]}</span></a></li>' for b in r)
+    li = "\n".join(f'<li><a href="{b["slug"]}.html">{sp(b)}<b>{b["title"]}</b> <span>{b["desc"]}</span></a></li>' for b in r)
     return f'<h2>Weiterlesen</h2><ul class="rlist">{li}</ul>'
 
 out = ROOT / "ratgeber"; out.mkdir(exist_ok=True)
@@ -230,7 +230,7 @@ for a in ARTICLES:
 {_body(a)}{CTA.replace("{slug}", a["slug"])}<h2>Häufige Fragen</h2>{faq_html}{ask(a)}{more(a)}<p class="note" id="annahmen" style="margin-top:28px">{BEISPIEL}</p></article>{kbox(a)}</div>"""
     (out / f"{a['slug']}.html").write_text(page(f"{a['title']} | Speicherklar", a["desc"], url, main, head, og_image=f"img/og/{a['slug']}.png"))
 
-items = "".join(f'<li><a href="{a["slug"]}.html">{sp(a)}<b>{a["title"]}</b><span>{a["desc"]}</span></a></li>' for a in NEWEST)
+items = "\n".join(f'<li><a href="{a["slug"]}.html">{sp(a)}<b>{a["title"]}</b> <span>{a["desc"]}</span></a></li>' for a in NEWEST)
 (out / "index.html").write_text(page("Ratgeber Stromspeicher | Speicherklar", "Artikel rund um Stromspeicher und PV-Anlagen, mit Zahlen aus der Jahressimulation statt aus dem Prospekt. Mit Angebots-Check für PV-Anlage und Speicher.", "https://speicherklar.de/ratgeber/",
     f'<div class="doc"><div class="eyebrow">Ratgeber</div><h1>Stromspeicher, ehrlich gerechnet</h1><p class="lead">Fragen rund um PV-Anlage und Stromspeicher (auch Batteriespeicher, PV-Speicher oder Solarspeicher genannt), beantwortet mit Zahlen aus unserer Jahressimulation.</p></div><ul class="rlist">{items}</ul>{CTA.replace("{slug}", "uebersicht")}', ld_tags(crumbs(("Ratgeber", RATGEBER_URL))), og_image="img/og/ratgeber.png", og_type="website"))
 
@@ -269,7 +269,7 @@ for f in ("impressum", "datenschutz"):
 
 # Ratgeber-Liste für die Startseite
 _FEAT = ' class="feat"'
-(ROOT / "src/ratgeber-teaser.html").write_text("".join(f'<li{_FEAT if i == 0 else ""}><a href="ratgeber/{a["slug"]}.html">{sp(a)}<b>{a["title"]}</b><span>{a["desc"]}</span></a></li>' for i, a in enumerate(NEWEST[:6])))
+(ROOT / "src/ratgeber-teaser.html").write_text("\n".join(f'<li{_FEAT if i == 0 else ""}><a href="ratgeber/{a["slug"]}.html">{sp(a)}<b>{a["title"]}</b> <span>{a["desc"]}</span></a></li>' for i, a in enumerate(NEWEST[:6])))
 print("Artikel:", len(ARTICLES))
 for slug, g in CHARTS.items():
     for f in g.get("facts", []): print(f"  Grafik {slug}: {f['label']} -> beste Größe {f['best']} kWh, {f['net']:+} €")
