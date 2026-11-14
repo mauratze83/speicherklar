@@ -5,24 +5,24 @@
  "slides": [
   {
    "dark": true,
-   "text": "Zehn Kilowattstunden Speicher im Angebot?",
+   "text": "[[10 kWh|Zehn Kilowattstunden]] Speicher im Angebot?",
    "html": "<div class=\"hook\"><div class=\"tag\">Dein Stromspeicher-Angebot</div><h1>10&nbsp;kWh im Angebot?</h1></div>"
   },
   {
    "dark": true,
-   "text": "Sechs hätten gereicht.",
+   "text": "[[6|Sechs]] hätten gereicht.",
    "html": "<div class=\"hook\"><div class=\"tag\">Dein Stromspeicher-Angebot</div><h1>10&nbsp;kWh im Angebot?<br><em>6 hätten gereicht.</em></h1></div>"
   },
   {
-   "text": "Ich hab's durchgerechnet. Haus im Ruhrgebiet, neun kWp, viertausendfünfhundert Kilowattstunden Verbrauch.",
+   "text": "Ich hab's durchgerechnet. Haus im Ruhrgebiet, [[9|neun]] kWp, [[4.500 kWh|viertausendfünfhundert Kilowattstunden]] Verbrauch.",
    "html": "<div class=\"tag\">Hab's durchgerechnet</div><h2>Haus im Ruhrgebiet</h2><div class=\"card\"><div class=\"k\">PV-Anlage</div><div class=\"v\">9 kWp Süd</div><div class=\"k\" style=\"margin-top:22px\">Verbrauch</div><div class=\"v\">4.500 kWh</div><div class=\"k\" style=\"margin-top:22px\">Speicher im Angebot</div><div class=\"v\">10 kWh · 6.500 €</div></div>"
   },
   {
-   "text": "Mit sechs statt zehn zahlst du rund achtzehnhundert Euro weniger.",
+   "text": "Mit [[6|sechs]] statt [[10|zehn]] zahlst du rund [[1.800 €|achtzehnhundert Euro]] weniger.",
    "html": "<div class=\"tag\">Gleiches Haus, zwei Speicher</div><div class=\"pair\"><div class=\"card\"><div class=\"k\">10 kWh</div><div class=\"v\">6.500 €</div><div class=\"d\">Anschaffung</div></div><div class=\"card best\"><div class=\"k\">6 kWh</div><div class=\"v\">4.680 €</div><div class=\"d\">Anschaffung</div></div></div><h2>Rund <span class=\"hl\">1.800 € weniger</span> bezahlen.</h2>"
   },
   {
-   "text": "Und nach fünfzehn Jahren bleiben dir rund sechshundertsiebzig Euro mehr.",
+   "text": "Und nach [[15|fünfzehn]] Jahren bleiben dir rund [[670 €|sechshundertsiebzig Euro]] mehr.",
    "html": "<div class=\"tag\">Nach 15 Jahren</div>{{wheels:670}}<h2>Euro mehr übrig mit 6&nbsp;kWh.</h2><p class=\"muted\">Bleiben nach 15 Jahren: 1.219 € mit 6 kWh, 553 € mit 10 kWh.</p>"
   },
   {
@@ -39,7 +39,7 @@
   },
   {
    "dark": true,
-   "text": "Neunundvierzig Euro bis einunddreißigsten Januar, danach neunundachtzig. Link in der Bio.",
+   "text": "[[49 €|Neunundvierzig Euro]] bis [[31. Januar|einunddreißigsten Januar]], danach [[89 €|neunundachtzig]]. Link in der Bio.",
    "html": "<div class=\"tag\">Prüf dein Angebot, bevor du unterschreibst</div><h1 style=\"font-size:116px\">Speicherklar Pro</h1><div class=\"price\">49 €</div><p>bis 31.01.2027, danach 89 €. Einmalig, kein Abo.</p><div><span class=\"cta\">Link in der Bio</span></div><p class=\"src\">Beispiel: Ruhrgebiet, 9 kWp Süd, 35°, 4.500 kWh, Strom 33 ct, Einspeisung 7,70 ct, 15 Jahre. Angebot 10 kWh für 6.500 €, kleinere Größen mit 30 % Fixanteil. Gerechnet mit Speicherklar Pro, Modellstand 14.11.2026.</p>"
   }
  ],

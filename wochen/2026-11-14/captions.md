@@ -1,6 +1,7 @@
 # Reel: 10 kWh im Angebot? 6 hätten gereicht. (Pilot, 14.11.2026)
 
-Datei: reel1-angebot-6-statt-10.mp4 (1080×1920, 34 s, Voice-over mit deiner ElevenLabs-Stimme)
+Datei: reel1-angebot-6-statt-10.mp4 (1080×1920, 9:16, 30 fps, 34 s, Voice-over mit deiner ElevenLabs-Stimme, Untertitel eingebrannt)
+Untertitel zusätzlich als reel1-angebot-6-statt-10.srt (nur falls du sie in der App statt eingebrannt willst; dann automatische Untertitel in Instagram aus lassen, sonst doppelt)
 Titelbild: reel1-angebot-6-statt-10-titelbild.png (beim Hochladen unter „Titelbild bearbeiten“ → „Aus Galerie hinzufügen“)
 
 ## Caption
@@ -23,4 +24,4 @@ Beispiel: Ruhrgebiet, 9 kWp Süd, 35°, 4.500 kWh, Strom 33 ct, Einspeisung 7,70
 
 ## Hinweis
 
-In der Business Suite als Reel hochladen, Format 9:16 passt. Bio-Link bis 30.11. bleibt der Vorab-Link.
+In der Business Suite als Reel hochladen, Format 9:16 passt. Beim Titelbild nichts verschieben oder zoomen: Es ist so gebaut, dass Text und Logo im 3:4-Ausschnitt des Profilrasters stehen. In der App „Profilbild-Vorschau“ prüfen, nicht zuschneiden. Instagram-eigene automatische Untertitel aus lassen. Bio-Link bis 30.11. bleibt der Vorab-Link.

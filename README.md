@@ -16,3 +16,11 @@ Dieser Branch wird von GitHub Pages nicht veröffentlicht. Er enthält den Bildg
 - Länge 30–35 s (rund 75–85 gesprochene Wörter, `tempo` 1.05). Ein Satz = eine Slide, 7–9 Slides.
 - Beispiel: `reels/reel1-angebot-6-statt-10.json` (Pilot vom 14.11.2026).
 - Fertige Reels kommen mit in `wochen/JJJJ-MM-TT/` (MP4 + Abschnitt in captions.md).
+
+### Untertitel und Titelbild (seit 14.11.2026)
+- Untertitel werden immer eingebrannt (faster-whisper liefert Wort-Zeitpunkte, `pip install --break-system-packages faster-whisper`). Abschalten nur auf Wunsch mit `"untertitel": false` in der Spec.
+- Im `text` einer Slide `[[4.500 kWh|viertausendfünfhundert Kilowattstunden]]` schreiben: links Untertitel, rechts gesprochen. An ElevenLabs geht nur der gesprochene Teil.
+- Untertitel-Zeile mittig bei y 1530 (unter dem Slide-Inhalt, über der Instagram-Leiste), Zahlen in Bernstein. Zusätzlich `out/<name>.srt`.
+- Schnitte sitzen jetzt kurz vor dem ersten Wort der nächsten Slide (aus den Wort-Zeitpunkten).
+- Titelbild wird eigens gerendert: Inhalt mittig im 3:4-Ausschnitt des Rasters, Hook im 1:1-Ausschnitt.
+- Video mit 6 Mbit/s konstant, Ton AAC 48 kHz: Instagram komprimiert sehr kleine Dateien sonst sichtbar nach.
