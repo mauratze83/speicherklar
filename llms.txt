@@ -16,6 +16,7 @@ Nicht im Modell: Wärmepumpen-Lastprofil (nur in Speicherklar Pro), Notstrom, Ve
 
 ## Ratgeber
 
+- [Wie genau ist ein Stromspeicher-Rechner? Mein Test mit echten Messdaten](https://speicherklar.de/ratgeber/stromspeicher-rechner-test-echte-daten.html): Ich habe meinen Rechner gegen fünf Jahre Messwerte meiner PV-Anlage und 30 gemessene Häuser geprüft. Ergebnis: auf 1–2 Punkte genau, nach zwei Korrekturen.
 - [Stromsteuer bleibt: Was heißt das für deinen Stromspeicher?](https://speicherklar.de/ratgeber/stromsteuer-stromspeicher.html): Die Stromsteuer für Haushalte sinkt 2027 vorerst nicht. Eine Senkung hätte Strom um 2,32 ct billiger gemacht. Für den Speicher ändert sich wenig.
 - [Lohnt sich ein Stromspeicher 2027?](https://speicherklar.de/ratgeber/stromspeicher-lohnt-sich-2027.html): Mit Zahlen statt Prospekt: Wann sich ein Stromspeicher für eine neue PV-Anlage rechnet, was die EEG-Reform ändert und welche Größe am meisten bringt.
 - [Welche Speichergröße bei 4.500 kWh Verbrauch?](https://speicherklar.de/ratgeber/speichergroesse-4500-kwh.html): Bei 4.500 kWh Jahresverbrauch rechnet sich meist ein Speicher mit 5 bis 7 kWh. Die Zahlen für 6, 9 und 12 kWp und warum größer nicht besser ist.

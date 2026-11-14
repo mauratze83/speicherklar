@@ -111,18 +111,23 @@ ARTICLES_BY = {a["slug"]: a for a in ARTICLES}
 def _eur(v):
     return ("+" if v > 0 else "−" if v < 0 else "") + f"{abs(v):,}".replace(",", ".") + " €"
 
+def _val(v, unit):
+    """Balkenwert: ohne Einheit als Euro mit Vorzeichen, sonst Zahl mit Einheit (z. B. "kWh")."""
+    return _eur(v) if not unit else f"{v:,}".replace(",", ".") + " " + unit
+
 def bars(a):
-    """Waagerechte Balken (Feld "bars": title, caption, rows [[Name, Wert, Zusatz?]], best = Name der besten Zeile, mark = Name der Zeile aus dem Angebot)."""
+    """Waagerechte Balken (Feld "bars": title, caption, rows [[Name, Wert, Zusatz?]], best = Name der besten Zeile, mark = Name der Zeile aus dem Angebot, unit = Einheit statt €)."""
     b = a.get("bars")
     if not b: return ""
     top = max(v for _, v, *_ in b["rows"]) or 1
+    unit = b.get("unit")
     rows = ""
     for name, v, *extra in b["rows"]:
         cls = " best" if name == b.get("best") else " mark" if name == b.get("mark") else ""
         sub = f" <small>{html.escape(extra[0])}</small>" if extra else ""
         rows += (f'<div class="hbar{cls}"><span class="hl">{html.escape(name)}{sub}</span> '
-                 f'<span class="ht"><i style="width:{max(1, round(v / top * 100, 1))}%"></i></span> <span class="hv">{_eur(v)}</span></div>\n')
-    alt = html.escape(b["title"] + ": " + ", ".join(f"{n} {_eur(v)}" for n, v, *_ in b["rows"]))
+                 f'<span class="ht"><i style="width:{max(1, round(v / top * 100, 1))}%"></i></span> <span class="hv">{_val(v, unit)}</span></div>\n')
+    alt = html.escape(b["title"] + ": " + ", ".join(f"{n} {_val(v, unit)}" for n, v, *_ in b["rows"]))
     return (f'<figure class="chart"><figcaption><b>{html.escape(b["title"])}</b> <span>{html.escape(b.get("caption", ""))}</span></figcaption>'
             f'<div class="hbars" role="img" aria-label="{alt}">{rows}</div></figure>')
 

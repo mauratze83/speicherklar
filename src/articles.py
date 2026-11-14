@@ -11,6 +11,111 @@ CHART_BASE = {"region": "4", "roofs": [{"kwp": 9, "tilt": 35, "aspect": 0}], "co
 
 ARTICLES = [
 {
+"slug": "stromspeicher-rechner-test-echte-daten",
+"kennzahl": {"v": "1–2 Punkte", "t": "trifft der Rechner die Autarkie echter Häuser mit Speicher"},
+"related": ["stromspeicher-groesse-berechnen", "ost-west-dach-speicher", "pv-angebot-pruefen"],
+"bars": {"title": "Was der 10-kWh-Speicher an meiner Anlage im Jahr spart", "caption": "Netzstrom, den der Speicher ersetzt. Gemessen gegen drei Stände des Rechners.", "unit": "kWh",
+         "rows": [["Gemessen", 1860], ["Rechner vorher", 2819, "Wärmepumpe mit Haushaltsspitzen"], ["Nach erster Korrektur", 1146, "Wetter zu wechselhaft"], ["Rechner heute", 1735]], "best": "Rechner heute", "mark": "Gemessen"},
+"title": "Wie genau ist ein Stromspeicher-Rechner? Mein Test mit echten Messdaten",
+"h1": "Wie genau ist ein Stromspeicher-Rechner? Mein Test mit echten Messdaten",
+"desc": "Ich habe meinen Rechner gegen fünf Jahre Messwerte meiner PV-Anlage und 30 gemessene Häuser geprüft. Ergebnis: auf 1–2 Punkte genau, nach zwei Korrekturen.",
+"date": "2026-11-14",
+"lead": "Mit Speicher trifft der Speicherklar-Rechner die Autarkie echter Häuser heute auf 1–2 Prozentpunkte. Auf dem Weg dahin habe ich zwei Fehler gefunden, die ich hier offen zeige, mit allen Zahlen.",
+"body": """
+<p>Jeder Rechner ist ein Modell. Ob er stimmt, sieht man erst, wenn man ihn gegen echte Messwerte hält. Genau das habe ich gemacht, mit meiner eigenen PV-Anlage und mit einem öffentlichen Datensatz von 30 Einfamilienhäusern. Hier steht, wie ich vorgegangen bin, was herauskam und was ich deshalb am Rechner geändert habe.</p>
+
+<h2>Das Setup: meine Anlage</h2>
+<ul>
+<li><b>PV-Anlage:</b> 34 Module mit je 380 Wp, also 12,92 kWp, auf einem Ost-West-Dach mit 45° Neigung in Krefeld. 14 Module zeigen nach Osten (5,32 kWp), 20 nach Westen (7,60 kWp).</li>
+<li><b>Speicher:</b> 10 kWh nutzbar.</li>
+<li><b>Verbrauch:</b> ein einziger Zähler für Haushalt, Erdwärmepumpe, Pool mit eigener Wärmepumpe und E-Auto. Das macht rund 19.000 kWh im Jahr, gut viermal so viel wie das Standard-Beispiel im Rechner.</li>
+<li><b>Verschattung:</b> Bäume nehmen der Anlage morgens und vor allem abends Licht.</li>
+<li><b>Daten:</b> der Export meines Speichers mit 5-Minuten-Werten für Erzeugung, Verbrauch, Netz und Speicher, rund 1.800 Tage seit Oktober 2021.</li>
+</ul>
+<p>Für den Test habe ich das letzte volle Jahr genommen, den 26.10.2025 bis 25.10.2026. An 336 Tagen sind die Daten lückenlos. Die Energiebilanz geht auf: Erzeugung, Netzbezug und Entladen ergeben genau Verbrauch, Einspeisung und Laden.</p>
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>Gemessen an 336 Tagen</th><th>Wert</th></tr></thead>
+<tbody>
+<tr><td>Erzeugung</td><td class="num">9.405 kWh</td></tr>
+<tr><td>Verbrauch</td><td class="num">17.610 kWh</td></tr>
+<tr><td>Netzbezug</td><td class="num">9.493 kWh</td></tr>
+<tr><td>Einspeisung</td><td class="num">1.149 kWh</td></tr>
+<tr class="hl"><td>Autarkie</td><td class="num">46,1 %</td></tr>
+<tr><td>Eigenverbrauch der Erzeugung</td><td class="num">87,8 %</td></tr>
+</tbody></table></div>
+<p>Mein Haus ist kein typischer Fall. Gerade deshalb ist es ein guter Test: Wo ein Rechner nur für den Durchschnitt passt, fällt es hier auf.</p>
+
+<h2>Test 1: Rechnet der Speicher richtig?</h2>
+<p>Zuerst habe ich nur das Speichermodell geprüft. Dafür bekommt es meine echte Erzeugung und meinen echten Verbrauch in 5-Minuten-Schritten. Es muss dann nur noch entscheiden, wann der Speicher lädt und entlädt.</p>
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>336 Tage</th><th>Gemessen</th><th>Rechner</th></tr></thead>
+<tbody>
+<tr class="hl"><td>Netzbezug</td><td class="num">9.493 kWh</td><td class="num">9.716 kWh</td></tr>
+<tr><td>Einspeisung</td><td class="num">1.149 kWh</td><td class="num">1.052 kWh</td></tr>
+<tr><td>Autarkie</td><td class="num">46,1 %</td><td class="num">44,8 %</td></tr>
+</tbody></table></div>
+<p>Der Netzbezug liegt 2,3 % daneben, und zwar in die vorsichtige Richtung. Mein Speicher ist dabei anders gebaut als der im Rechner: Er verliert weniger (94 % statt 88 % Wirkungsgrad je Zyklus), lädt aber langsamer (rund 2,5 statt 5 kW). Beides gleicht sich fast aus. Der Speicher-Teil stimmt also.</p>
+
+<h2>Test 2: Stimmt der Ertrag?</h2>
+<p>Für meine Anlage rechnet Speicherklar mit 9.764 kWh im Jahr. Gemessen habe ich in den vier vollen Jahren:</p>
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>Jahr</th><th>Erzeugung gemessen</th></tr></thead>
+<tbody>
+<tr><td>2022</td><td class="num">10.334 kWh</td></tr>
+<tr><td>2023</td><td class="num">10.034 kWh</td></tr>
+<tr><td>2024</td><td class="num">9.027 kWh</td></tr>
+<tr><td>2025</td><td class="num">9.993 kWh</td></tr>
+</tbody></table></div>
+<p>Der Rechner liegt mitten in dieser Spanne. 2024 war ein schwaches Sonnenjahr, der Rechner nimmt ein Mittel aus zehn Jahren. Im Tagesverlauf sieht man die Bäume: Im Juni liefert meine Anlage zwischen 19 und 21 Uhr nur 3,7 % ihres Tagesertrags, der Rechner erwartet 8,1 %. Dafür ist es mittags etwas mehr. Verschattung kennt der Rechner nicht, das steht auch in den Annahmen.</p>
+
+<h2>Test 3: Die ganze Rechnung, und zwei Fehler</h2>
+<p>Dann der eigentliche Test: Der Rechner bekommt nur, was du auch eingibst, also Anlage, Speicher und Verbrauch. Profil und Wetter erzeugt er selbst. Die Frage ist, wie viel Netzstrom der Speicher im Jahr ersetzt. Gemessen sind es bei mir 1.860 kWh.</p>
+<!--BARS-->
+<p><b>Fehler 1, die Wärmepumpe.</b> Der Rechner hat den ganzen Verbrauch mit den kurzen Spitzen eines Haushalts gerechnet: Wasserkocher an, Herd an, dann wieder fast nichts. Im Rechner lagen 62 % aller 5-Minuten-Werte unter dem halben Mittel ihrer Stunde, in meinem Haus sind es 12 %. Wärmepumpe und Pool laufen lange und gleichmäßig. Mein Haus braucht dadurch viel mehr Solarstrom direkt, und der Speicher hat weniger zu tun. Der alte Rechner zeigte 2.819 kWh, also die Hälfte zu viel.</p>
+<p>Seit dem 14.11.2026 trägst du die Wärmepumpe im Rechner getrennt ein. Sie läuft dort ohne Spitzen, und wie sie sich auf Monate und Stunden verteilt, habe ich an echten Häusern abgelesen (unten mehr). Das E-Auto behält die Spitzen, weil eine Wallbox mehr Leistung zieht, als ein Speicher abgibt.</p>
+<p><b>Fehler 2, das Wetter.</b> Danach lag der Rechner plötzlich zu niedrig, bei 1.146 kWh. Der Grund: Er hat jeden Tag einzeln ausgewürfelt, und im Sommer viel zu wechselhaft. Ich habe die Stundenwerte von PVGIS für alle zehn Regionen des Rechners nachgeprüft, 2014 bis 2023. Die trübsten 5 % der Julitage bringen dort 41 % eines durchschnittlichen Tages. Im Rechner waren es 11 %. Dafür fehlten Wolken mitten am Tag. Bei normalen Haushalten hob sich das zufällig auf, bei meinem großen Verbrauch nicht: An ganz trüben Tagen wird der Speicher nicht voll, an überhellen Tagen läuft er über.</p>
+<p>Jetzt nimmt der Rechner den Wechsel von Sonne und Wolken Stunde für Stunde aus einem echten Jahr (2020), umgerechnet auf die Monatssummen deines Gebiets. Mit jedem der zehn Jahre bleibt die beste Größe im Standard-Beispiel bei 6 kWh, ich habe 2020 genommen, weil es in der Mitte liegt. Ergebnis für mein Haus: 1.735 kWh, gemessen 1.860 kWh.</p>
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>Mein Haus, 10 kWh</th><th>Autarkie ohne Speicher</th><th>mit Speicher</th></tr></thead>
+<tbody>
+<tr><td>Gemessen</td><td class="num">35,3 %</td><td class="num">45,0 %</td></tr>
+<tr><td>Rechner vorher</td><td class="num">22,4 %</td><td class="num">37,2 %</td></tr>
+<tr class="hl"><td>Rechner heute</td><td class="num">33,1 %</td><td class="num">42,1 %</td></tr>
+</tbody></table></div>
+<p class="note">Gemessen: ein volles Jahr, 29 Lückentage aus dem Vorjahr ergänzt; „ohne Speicher“ gerechnet aus den gemessenen 5-Minuten-Werten. Im Rechner: 4.500 kWh als Haushaltsstrom angenommen, der Rest als gleichmäßiger Verbrauch nach meinen echten Monatswerten. Die Lücke bei der Autarkie kommt vor allem vom Ertrag: Mit dem Wetterjahr rechnet der Rechner etwas weniger, als meine Anlage im Prüfjahr erzeugt hat.</p>
+
+<h2>Gegenprobe an 30 fremden Häusern</h2>
+<p>Ein Haus kann Zufall sein. Deshalb habe ich den Rechner zusätzlich an einem öffentlichen Datensatz geprüft. Das Institut für Solarenergieforschung Hameln hat bei rund 40 Einfamilienhäusern Haushaltsstrom und Wärmepumpe getrennt gemessen, minutengenau (Datensatz WPuQ, frei verfügbar). 30 Häuser haben ein lückenloses Jahr 2019. Ich habe ihren echten Verbrauch mit dem echten Wetter 2019 am Ort durchgerechnet und mit dem verglichen, was der Rechner nur aus dem Jahresverbrauch macht. Die Anlagen sind wie im Standard-Beispiel bemessen, 9 kWp je 4.500 kWh Haushaltsstrom.</p>
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>Autarkie, Speicher je 4.500 kWh</th><th>ohne</th><th>4 kWh</th><th>6 kWh</th><th>8 kWh</th><th>10 kWh</th></tr></thead>
+<tbody>
+<tr><td>30 Häuser gemessen</td><td class="num">39 %</td><td class="num">61 %</td><td class="num">69 %</td><td class="num">74 %</td><td class="num">76 %</td></tr>
+<tr class="hl"><td>Rechner</td><td class="num">35 %</td><td class="num">62 %</td><td class="num">70 %</td><td class="num">75 %</td><td class="num">77 %</td></tr>
+<tr><td>dieselben Häuser mit Wärmepumpe</td><td class="num">25 %</td><td class="num">35 %</td><td class="num">39 %</td><td class="num">42 %</td><td class="num">45 %</td></tr>
+<tr><td>Rechner mit Wärmepumpe</td><td class="num">30 %</td><td class="num">39 %</td><td class="num">43 %</td><td class="num">46 %</td><td class="num">48 %</td></tr>
+</tbody></table></div>
+<p>Mit Speicher liegt der Rechner auf 1–2 Punkte genau. Ohne Speicher rechnet er etwas zu wenig Eigenverbrauch, das macht den Speicher eher einen Hauch zu gut. Mit Wärmepumpe liegt die Autarkie rund 4 Punkte zu hoch. Was der Speicher dazubringt, trifft er aber: 19 Punkte im Rechner, 20 Punkte gemessen. Für die Frage nach der Speichergröße zählt genau dieser Zugewinn.</p>
+
+<h2>Was sich für dich ändert</h2>
+<p>Für einen Haushalt ohne Wärmepumpe fast nichts. Im Standard-Beispiel (9 kWp Süd, 4.500 kWh) bleibt 6 kWh die beste Größe, die Bilanz nach 15 Jahren liegt bei 2.899 € statt vorher 2.758 €. Alle Artikel habe ich neu gerechnet. Eine Aussage hat sich dabei gedreht: Bei einem Ost-West-Dach rechnen sich jetzt 5 statt 4 kWh. Den Artikel <a href="ost-west-dach-speicher.html">Ost-West-Dach</a> habe ich angepasst.</p>
+<p>Mit Wärmepumpe trag ihren Stromverbrauch im Rechner getrennt ein, statt ihn zum Haushalt zu zählen. Sonst rechnet der Speicher sich zu gut.</p>
+
+<h2>Wann der Rechner eher danebenliegt</h2>
+<ul>
+<li>Deine Anlage ist verschattet, durch Bäume, Gauben oder Nachbarhäuser.</li>
+<li>Dein Speicher lädt deutlich langsamer als mit der halben Kapazität pro Stunde. Gib die Leistung im Angebots-Check an, wenn du sie kennst.</li>
+<li>Du lädst ein E-Auto gezielt mit Überschuss oder hast einen dynamischen Stromtarif. Beides bildet der Rechner nicht ab.</li>
+<li>Du hast viele große Verbraucher, die gleichmäßig laufen, aber keine Heizungs-Wärmepumpe sind, etwa eine Pool-Wärmepumpe im Sommer.</li>
+</ul>
+<p>Alle Annahmen und der Rechenweg stehen auf der <a href="../methodik.html#eigene-anlage">Methodik-Seite</a>. Der Code liegt offen auf GitHub, jede Änderung ist dort mit Datum nachzulesen.</p>
+""",
+"faq": [
+ ("Wie genau ist der Speicherklar-Rechner?", "Mit Speicher trifft er die Autarkie von 30 gemessenen Einfamilienhäusern auf 1–2 Prozentpunkte. Mit Wärmepumpe liegt die Autarkie rund 4 Punkte zu hoch, den Zugewinn durch den Speicher trifft er."),
+ ("Warum weicht meine echte Autarkie vom Rechner ab?", "Die häufigsten Gründe sind Verschattung, ein Speicher mit wenig Ladeleistung, große gleichmäßige Verbraucher wie Wärmepumpe oder Pool und das Wetter des einzelnen Jahres. Der Rechner nimmt ein mittleres Jahr."),
+ ("Welche Daten hast du für den Test genutzt?", "Die 5-Minuten-Messwerte meines eigenen Speichers von 2021 bis 2026 und den öffentlichen Datensatz WPuQ des Instituts für Solarenergieforschung Hameln mit Minutenwerten von 30 Häusern aus dem Jahr 2019."),
+],
+},
+{
 "slug": "stromsteuer-stromspeicher",
 "kennzahl": {"v": "2,32 ct", "t": "pro kWh hätte die Senkung der Stromsteuer Strom billiger gemacht"},
 "chart": {"kind": "sweep", "title": "Gewinn nach 15 Jahren: Stromsteuer bleibt oder sinkt", "caption": "9 kWp Süd, 35°, 4.500 kWh Verbrauch, Speicher 500 €/kWh, Einspeisung 7,7 ct, 15 Jahre. Strom 33 ct heute, 30,68 ct mit Senkung aufs EU-Minimum.",

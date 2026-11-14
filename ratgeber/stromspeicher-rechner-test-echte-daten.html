@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wie genau ist ein Stromspeicher-Rechner? Mein Test mit echten Messdaten | Speicherklar</title><meta name="description" content="Ich habe meinen Rechner gegen fünf Jahre Messwerte meiner PV-Anlage und 30 gemessene Häuser geprüft. Ergebnis: auf 1–2 Punkte genau, nach zwei Korrekturen.">
+<link rel="canonical" href="https://speicherklar.de/ratgeber/stromspeicher-rechner-test-echte-daten.html"><meta property="og:title" content="Wie genau ist ein Stromspeicher-Rechner? Mein Test mit echten Messdaten | Speicherklar"><meta property="og:description" content="Ich habe meinen Rechner gegen fünf Jahre Messwerte meiner PV-Anlage und 30 gemessene Häuser geprüft. Ergebnis: auf 1–2 Punkte genau, nach zwei Korrekturen."><meta property="og:url" content="https://speicherklar.de/ratgeber/stromspeicher-rechner-test-echte-daten.html"><meta property="og:type" content="article"><meta property="og:locale" content="de_DE">
+<link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/img/favicon-96.png" sizes="96x96" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><meta name="apple-mobile-web-app-title" content="Speicherklar"><meta property="og:site_name" content="Speicherklar"><meta property="og:image" content="https://speicherklar.de/img/og/stromspeicher-rechner-test-echte-daten.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Wie genau ist ein Stromspeicher-Rechner? Mein Test mit echten Messdaten | Speicherklar"><meta name="twitter:card" content="summary_large_image"><script>try{var u=new URL(location.href),q=u.searchParams.get('ich');if(q==='1')localStorage.setItem('umami.disabled','1');else if(q==='0')localStorage.removeItem('umami.disabled');if(q!==null){u.searchParams.delete('ich');history.replaceState(null,'',u.pathname+u.search+u.hash);console.info('Speicherklar: Zählung in diesem Browser '+(q==='1'?'aus':'an'));}}catch(e){}</script><script defer src="https://cloud.umami.is/script.js" data-website-id="f4570047-b7d7-42e7-944e-a06941b94082" data-domains="speicherklar.de"></script><style>@font-face{font-family:"Archivo";src:url(../fonts/archivo-var.woff2) format("woff2");font-weight:100 900;font-stretch:62% 125%;font-display:swap}
+@font-face{font-family:"Source Sans 3";src:url(../fonts/source-sans-3-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Source Sans 3";src:url(../fonts/source-sans-3-latin-600-normal.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Source Sans 3";src:url(../fonts/source-sans-3-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"JetBrains Mono";src:url(../fonts/jetbrains-mono-latin-500-normal.woff2) format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"JetBrains Mono";src:url(../fonts/jetbrains-mono-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+/* Layout: ein Werkzeug als Bühne. Kurze These oben, darunter Eingaben | Ergebnis im Zählerkasten, dann offene Annahmen, dann Pro-Vorschau. */
+:root{
+  --bg:#EDF0F2; --surface:#FFFFFF; --ink:#15212B; --muted:#56666F; --line:#CBD3DA;
+  --sun:#E39A0B; --sun-ink:#8A5A00; --sun-soft:#FBEFD6;
+  --meter:#1B1F23; --meter-digit:#F3F1EA; --meter-red:#C9302C;
+  --pos:#2E7D5B; --neg:#B4412F; --track:#DCE2E7;
+  --c-charge:#9FD3B8; --c-exp:#F6D99A; --c-imp:#AEB9C2; --sky:#DCE8F0; --cloud:#C3CDD5; --house:#FFFFFF;
+  --bar-bg:#15212B; --bar-ink:#EDF0F2; --bar-accent:#F2B33D; --btn-ink:#15212B;
+  --ease-out:cubic-bezier(0.23, 1, 0.32, 1); --ease-in-out:cubic-bezier(0.77, 0, 0.175, 1);
+  --f-display:"Archivo", "Arial Narrow", system-ui, sans-serif;
+  --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F161C; --surface:#17212A; --ink:#E6ECF1; --muted:#97A7B3; --line:#2A3742;
+  --sun:#F2B33D; --sun-ink:#F2B33D; --sun-soft:#2E2614;
+  --meter:#06090C; --meter-digit:#E9E6DC; --meter-red:#D9443F;
+  --pos:#5CC596; --neg:#E5735E; --track:#26323C;
+  --c-charge:#2F6B52; --c-exp:#6B5523; --c-imp:#4B5966; --sky:#17232D; --cloud:#3A4855; --house:#1E2A35;
+  --bar-bg:#E6ECF1; --bar-ink:#0F161C; --bar-accent:#8A5A00;
+  color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0F161C; --surface:#17212A; --ink:#E6ECF1; --muted:#97A7B3; --line:#2A3742;
+  --sun:#F2B33D; --sun-ink:#F2B33D; --sun-soft:#2E2614;
+  --meter:#06090C; --meter-digit:#E9E6DC; --meter-red:#D9443F;
+  --pos:#5CC596; --neg:#E5735E; --track:#26323C;
+  --c-charge:#2F6B52; --c-exp:#6B5523; --c-imp:#4B5966; --sky:#17232D; --cloud:#3A4855; --house:#1E2A35;
+  --bar-bg:#E6ECF1; --bar-ink:#0F161C; --bar-accent:#8A5A00;
+  color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55;margin:0}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--sun-ink)}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+
+html{scroll-padding-top:76px;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+header.top{position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line);background:var(--bg)}
+@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){header.top{background:color-mix(in srgb,var(--bg) 80%,transparent);-webkit-backdrop-filter:saturate(1.4) blur(14px);backdrop-filter:saturate(1.4) blur(14px)}}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px;flex-wrap:wrap}
+.brand{color:var(--ink);text-decoration:none;font-family:var(--f-display);font-weight:800;font-stretch:118%;font-size:21px;letter-spacing:.01em;display:flex;align-items:center;gap:10px}
+.brand svg{flex:none}
+nav{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:15px}
+nav a{color:var(--muted);text-decoration:none}
+nav a:hover{color:var(--ink)}
+nav a[aria-current]{color:var(--ink);font-weight:600}
+.menu-btn{display:none}
+@media (max-width:720px){
+  header.top.js .menu-btn{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;margin:-6px -10px -6px 0;padding:0;border:0;border-radius:8px;background:none;color:var(--ink);cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .menu-btn path{stroke:currentColor;stroke-width:2;stroke-linecap:round;transform-origin:11px 11px;transition:transform 200ms var(--ease-out),opacity 150ms ease}
+  header.top.open .menu-btn .l1{transform:translateY(5px) rotate(45deg)}
+  header.top.open .menu-btn .l2{opacity:0}
+  header.top.open .menu-btn .l3{transform:translateY(-5px) rotate(-45deg)}
+  header.top.js nav{display:none;flex-basis:100%;flex-direction:column;gap:0;font-size:17px;margin-top:4px;border-top:1px solid var(--line)}
+  header.top.js.open nav{display:flex}
+  header.top.js nav a{display:block;padding:12px 2px;border-bottom:1px solid var(--line)}
+  header.top.js nav a:last-child{border-bottom:0}
+}
+@media (max-width:720px) and (prefers-reduced-motion:reduce){.menu-btn path{transition:none}}
+
+.hero{padding-block:44px 22px}
+.eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sun-ink)}
+h1{font-family:var(--f-display);font-weight:800;font-stretch:112%;font-size:clamp(34px,5.6vw,60px);line-height:1.02;letter-spacing:-.01em;margin:10px 0 14px;max-width:16ch;text-wrap:balance}
+h1 em{font-style:normal;font-stretch:72%;font-weight:700;color:var(--sun-ink)}
+.lede{max-width:60ch;color:var(--muted);font-size:19px;margin:0}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
+.facts span{border:1px solid var(--line);border-radius:999px;padding:4px 11px;white-space:nowrap}
+.facts b{color:var(--ink);font-weight:700}
+
+.tool{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:20px;padding-block:18px 40px}
+@media (max-width:860px){.tool{grid-template-columns:minmax(0,1fr)}}
+.panel{min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px}
+.panel h2{font-family:var(--f-display);font-stretch:105%;font-size:20px;margin:0 0 4px}
+.panel .sub{color:var(--muted);font-size:14.5px;margin:0 0 18px}
+fieldset{min-width:0;min-inline-size:0;border:0;padding:0;margin:0 0 18px;display:grid;gap:16px}
+legend{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding:0}
+.field{display:grid;gap:4px}
+.field .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.field label{font-weight:600;font-size:15.5px}
+.field output{font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.field .hint{font-size:13px;color:var(--muted)}
+input[type=range]{width:100%;accent-color:var(--sun);height:26px;margin:0}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{font:inherit;font-size:14px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.seg button{transition:transform 160ms var(--ease-out),background-color 150ms ease,color 150ms ease,border-color 150ms ease;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.seg button:active{transform:scale(0.97)}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.field.big label{font-size:17px}
+.field.big output{font-size:16px;font-weight:700;color:var(--sun-ink)}
+
+.result{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;align-content:start}
+.verdict{font-family:var(--f-display);font-stretch:100%;font-weight:700;font-size:clamp(21px,2.6vw,27px);line-height:1.2;margin:0;text-wrap:balance}
+.verdict .ok{color:var(--pos)} .verdict .no{color:var(--neg)}
+
+.meterbox{background:var(--meter);border-radius:8px;padding:16px 18px;color:var(--meter-digit);display:grid;gap:10px}
+.meterbox .cap{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.7}
+.wheels{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.wheel{font-family:var(--f-mono);font-weight:700;font-size:clamp(26px,4vw,36px);width:1.05em;height:calc(1.25em + 4px);overflow:hidden;text-align:center;background:linear-gradient(#000 0,#2a2f35 12%,#15191d 50%,#2a2f35 88%,#000 100%);border-radius:3px;padding:2px 0;line-height:1.25;color:var(--meter-digit)}
+.wheel .strip{display:block;transition:transform 160ms var(--ease-out);will-change:transform}
+.wheels.roll .strip{transition-duration:900ms}
+.wheels.roll .wheel:nth-child(2) .strip{transition-delay:60ms}.wheels.roll .wheel:nth-child(3) .strip{transition-delay:120ms}.wheels.roll .wheel:nth-child(4) .strip{transition-delay:180ms}.wheels.roll .wheel:nth-child(5) .strip{transition-delay:240ms}
+.wheel .strip span{display:block;height:1.25em;line-height:1.25;padding-top:2px}
+.wheels .unit{font-family:var(--f-mono);font-size:15px;margin-left:8px;opacity:.85}
+.meterbox .foot{font-size:13.5px;opacity:.75}
+
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:520px){.kpis{grid-template-columns:1fr}}
+.kpi{border-top:2px solid var(--ink);padding-top:8px}
+.kpi .k{font-size:13.5px;color:var(--muted)}
+.kpi .v{font-family:var(--f-display);font-weight:800;font-stretch:90%;font-size:30px;font-variant-numeric:tabular-nums;line-height:1.1}
+.kpi .d{font-size:13px;color:var(--muted)}
+
+.bars{display:grid;gap:12px}
+.bar .lbl{display:flex;justify-content:space-between;font-size:14px;gap:10px}
+.bar .lbl span:last-child{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.track{height:12px;background:var(--track);border-radius:6px;position:relative;overflow:hidden}
+.track i{position:absolute;inset:0;border-radius:6px;transform-origin:left center;transform:scaleX(0);transition:transform 240ms var(--ease-out)}
+.track i.base{background:var(--line)}
+.track i.with{background:var(--sun)}
+.legend{display:flex;gap:16px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.legend .l1::before{background:var(--line)} .legend .l2::before{background:var(--sun)}
+
+.sweep h3{font-size:15.5px;margin:0 0 2px}
+.sweep p{font-size:13.5px;color:var(--muted);margin:0 0 8px}
+.sweep p.sweepsum{color:var(--ink)}
+.chartwrap{overflow-x:auto}
+.chartwrap svg{display:block;width:100%;min-width:420px;height:auto}
+.chartwrap text{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
+
+section.how{padding-block:44px 24px;border-top:1px solid var(--line)}
+section.how.band{background:var(--surface);padding-block:48px 40px;border-bottom:1px solid var(--line)}
+section.how.band + section.how{border-top:0}
+section h2.sec{font-family:var(--f-display);font-stretch:110%;font-weight:800;font-size:clamp(24px,3vw,32px);margin:0 0 6px;text-wrap:balance}
+.how .intro{color:var(--muted);max-width:62ch;margin:0 0 18px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px;min-width:560px}
+th,td{text-align:left;padding:10px 12px 10px 0;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500}
+td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td small{color:var(--muted)}
+
+section.pro{padding-block:36px 44px}
+.procard{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:26px;position:relative}
+@media (max-width:760px){.procard{grid-template-columns:1fr}}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;background:var(--sun-soft);color:var(--sun-ink);padding:3px 8px;border-radius:4px}
+.procard ul{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:10px}
+.procard li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px}
+.procard li svg{margin-top:4px}
+.price{font-family:var(--f-display);font-weight:800;font-stretch:95%;font-size:52px;line-height:1}
+.price small{font-family:var(--f-body);font-weight:400;font-size:16px;color:var(--muted)}
+.pricebox{display:grid;gap:12px;align-content:start;border-left:1px solid var(--line);padding-left:26px}
+@media (max-width:760px){.pricebox{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:20px}}
+.btn{font:inherit;font-weight:700;font-size:16px;background:var(--ink);color:var(--surface);border:0;border-radius:8px;padding:12px 18px;cursor:not-allowed;opacity:.55}
+.pricebox p{margin:0;font-size:14.5px;color:var(--muted)}
+
+footer{border-top:1px solid var(--line);color:var(--muted);font-size:13.5px}
+footer .wrap{padding-block:22px 34px;display:grid;gap:6px}
+
+.rlist{list-style:none;padding:0;margin:0 0 12px;display:flex;flex-wrap:wrap;gap:14px}
+.rlist li{flex:1 1 300px;min-width:0;display:flex}
+.rlist li>a{flex:1;min-width:0;align-content:start}
+.rlist a{transition:transform 200ms var(--ease-out),border-color 150ms ease;display:grid;gap:6px;height:100%;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;color:var(--ink);text-decoration:none}
+.rlist b{font-family:var(--f-display);font-stretch:105%;font-size:19px;line-height:1.2}
+.rlist span{font-size:15px;color:var(--muted)}
+
+@media (hover:hover) and (pointer:fine){
+  .rlist a:hover{transform:translateY(-2px);border-color:var(--sun)}
+  nav a{transition:color 150ms ease}
+}
+/* Seitenaufbau beim ersten Laden, gestaffelt */
+.txt{font:inherit;font-family:var(--f-mono);font-size:16px;width:8ch;padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+.flabel{font-weight:600;font-size:15.5px}
+.field output.warn{color:var(--neg)}
+.field output{white-space:normal;text-align:right;min-width:0}
+.field .row{min-width:0}
+.yield{margin:8px 0 0;font-size:14.5px;color:var(--muted)}
+@keyframes sk-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+/* h1 bleibt sofort sichtbar (LCP), der Rechner ebenfalls: das Werkzeug wartet nicht */
+.hero .eyebrow,.hero .lede,.hero .facts,.hero .hero-cta{animation:sk-rise 420ms var(--ease-out) both}
+.hero .lede{animation-delay:60ms}.hero .facts{animation-delay:120ms}
+/* Bereiche weiter unten blenden einmal ein (nur wenn JS läuft) */
+html.js .reveal{opacity:0;transform:translateY(12px);transition:opacity 350ms var(--ease-out),transform 350ms var(--ease-out)}
+html.js .reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  .hero .eyebrow,.hero .lede,.hero .facts,.hero .hero-cta{animation:none}
+  .wheel .strip{transition:opacity 150ms ease}
+  .track i{transition:transform 150ms linear}
+  html.js .reveal{transform:none;transition:opacity 300ms ease}
+  .seg button:active{transform:none}
+  .rlist a:hover{transform:none}
+}
+
+.wait{display:grid;gap:8px}
+.wait label{font-weight:700;font-size:15.5px}
+.wait-row{display:flex;gap:8px;flex-wrap:wrap}
+.wait-row input{flex:1 1 180px;min-width:0;font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.wait-row input:focus-visible{outline:3px solid var(--sun);outline-offset:1px}
+.btn.btn-on{cursor:pointer;opacity:1;flex:0 0 auto;transition:transform 160ms var(--ease-out),opacity 150ms ease;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.btn.btn-on:active{transform:scale(0.97)}
+.btn.btn-on[disabled]{opacity:.6;cursor:default}
+.btn.btn-on.busy{cursor:progress}
+.wait .wait-note{font-size:13px}
+.wait-msg{font-size:14.5px;font-weight:600;margin:0}
+.wait-msg:empty{display:none}
+.wait-msg.ok{color:var(--pos)} .wait-msg.err{color:var(--neg)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+@media (prefers-reduced-motion:reduce){.btn.btn-on:active{transform:none}}
+
+/* Diagramme (Rechner und Artikel) */
+.area.l-direct{fill:var(--sun)} .area.l-dis{fill:var(--pos)} .area.l-imp{fill:var(--c-imp)}
+.area.l-charge{fill:var(--c-charge)} .area.l-exp{fill:var(--c-exp)}
+.lline{fill:none;stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
+svg .grid{stroke:var(--line);stroke-width:1;stroke-dasharray:2 3} svg .grid.zero{stroke-dasharray:none}
+svg .ax{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
+.clegend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted);margin-top:6px}
+.clegend span{display:inline-flex;align-items:center;gap:6px}
+.sw{display:inline-block;width:11px;height:11px;border-radius:2px}
+.sw.l-direct{background:var(--sun)} .sw.l-dis{background:var(--pos)} .sw.l-imp{background:var(--c-imp)}
+.sw.l-charge{background:var(--c-charge)} .sw.l-exp{background:var(--c-exp)}
+.sw.l-load{height:2px;width:14px;background:var(--ink);border-radius:0}
+.sline{fill:none;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+.sline.s0,.sw.sl.s0{stroke:var(--ink);background:var(--ink)} .sline.s1,.sw.sl.s1{stroke:var(--sun);background:var(--sun)}
+.sline.s2,.sw.sl.s2{stroke:var(--pos);background:var(--pos)} .sline.s3,.sw.sl.s3{stroke:var(--neg);background:var(--neg)}
+.sw.sl{height:3px;width:16px;border-radius:2px}
+.sdot.s0{fill:var(--ink)} .sdot.s1{fill:var(--sun)} .sdot.s2{fill:var(--pos)} .sdot.s3{fill:var(--neg)}
+.slabel{font-family:var(--f-mono);font-size:11px;font-weight:700} .slabel.s0{fill:var(--ink)} .slabel.s1{fill:var(--sun-ink)} .slabel.s2{fill:var(--pos)} .slabel.s3{fill:var(--neg)}
+.spark{display:block;width:120px;height:36px} .spark .sp-pos{fill:var(--sun)} .spark .sp-neg{fill:var(--neg);opacity:.7}
+
+/* Tageskurve im Rechner */
+.daybox h3{font-size:15.5px;margin:0}
+.dayhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.daysum{font-size:14px;color:var(--muted);margin:0 0 8px;min-height:2.6em}
+.daysum b{color:var(--ink)}
+#daychart{display:block;width:100%;min-width:0;height:auto}
+.daybox .chartwrap{overflow:visible}
+
+/* Hausgrafik im Seitenkopf */
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);grid-template-areas:"head scene" "body scene";column-gap:28px;align-items:center}
+.hero-head{grid-area:head;align-self:end}.hero-body{grid-area:body;align-self:start;display:flex;flex-direction:column}.hero-grid .scene{grid-area:scene}
+.hero-cta{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:18px}
+@media (max-width:900px){
+  .hero{padding-block:24px 18px}
+  .hero-grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "scene" "body";row-gap:6px}
+  .scene{max-width:480px}
+  .hero-cta{order:-1;margin:10px 0 16px}
+  .hero-cta .btn{flex:1 1 auto;text-align:center}
+  .hero h1{margin-bottom:10px}
+  .hero .lede{font-size:17.5px}
+}
+.scene{margin:0;display:grid;gap:10px;animation:sk-rise 420ms var(--ease-out) 160ms both}
+.scene-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.scene-cap{font-size:13px;color:var(--muted)}
+.scene svg{display:block;width:100%;height:auto;overflow:visible}
+.scene .sky{fill:var(--sky)}
+.scene .ground{stroke:var(--line);stroke-width:2}
+.scene .sun{transition:transform 900ms var(--ease-in-out)}
+.scene .sun-core{fill:var(--sun)} .scene .sun-glow{fill:var(--sun);opacity:.18;transition:opacity 900ms var(--ease-in-out)}
+.scene[data-season="nov"] .sun-glow{opacity:.06}
+.scene .cloud{fill:var(--cloud);opacity:0;transition:opacity 700ms var(--ease-out),transform 900ms var(--ease-out)}
+.scene .cloud:nth-child(1){transform:translateX(-14px)} .scene .cloud:nth-child(2){transform:translateX(10px)} .scene .cloud:nth-child(3){transform:translateX(16px)}
+.scene[data-season="nov"] .cloud{opacity:.95;transform:none}
+.scene .wall{fill:var(--house);stroke:var(--ink);stroke-width:2}
+.scene .roof{fill:var(--house);stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
+.scene .panel{fill:var(--meter)} .scene .panel-line{stroke:var(--sun);stroke-width:1.2}
+.scene .window{fill:var(--sky);stroke:var(--ink);stroke-width:1.5} .scene .door{fill:none;stroke:var(--ink);stroke-width:1.5}
+.scene .bat{fill:var(--house);stroke:var(--ink);stroke-width:2} .scene .bat-cap{fill:var(--ink)} .scene .bolt{fill:var(--pos)}
+.scene .pylon path{fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round}
+.scene .slabel2{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
+.scene .flow{fill:none;stroke-linecap:round;transition:stroke-width 700ms var(--ease-out),opacity 500ms ease}
+.scene .f-direct{stroke:var(--sun)} .scene .f-exp{stroke:var(--c-exp)} .scene .f-charge{stroke:var(--c-charge)}
+.scene .f-dis{stroke:var(--pos)} .scene .f-imp{stroke:var(--c-imp)}
+.scene .flow.dots{stroke:var(--surface);stroke-dasharray:1 14;stroke-width:3;opacity:.9;transition:none}
+.scene-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.scene-stats div{border-top:2px solid var(--ink);padding-top:6px;display:grid}
+.scene-stats .k{font-size:13px;color:var(--muted)}
+.scene-stats b{font-family:var(--f-display);font-weight:800;font-stretch:90%;font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
+.scene figcaption{font-size:12.5px;color:var(--muted)}
+.scene.no-trans,.scene.no-trans *{transition:none!important}
+.scene.wait{animation-play-state:paused}
+@media (prefers-reduced-motion:reduce){.scene{animation:none}.scene .sun,.scene .cloud,.scene .flow{transition:opacity 200ms ease}}
+
+/* Kernzahl auf Ratgeber-Karten */
+.rlist .kz{font-style:normal;display:grid;gap:2px;padding-bottom:8px;margin-bottom:2px;border-bottom:1px solid var(--line)}
+.rlist .kz em{font-style:normal;font-family:var(--f-display);font-weight:800;font-stretch:78%;font-size:28px;line-height:1.1;color:var(--sun-ink);font-variant-numeric:tabular-nums}
+.rlist .kz small{font-size:14px;line-height:1.35;color:var(--muted)}
+
+/* Übergang zum Angebots-Check */
+.procta{display:flex;align-items:center;justify-content:space-between;gap:12px 18px;flex-wrap:wrap;border:1px solid var(--sun);background:var(--sun-soft);border-radius:8px;padding:14px 16px}
+.procta p{margin:0;font-size:15px;flex:1 1 260px}
+a.btn{text-decoration:none;display:inline-block}
+.btn.btn-sun{background:var(--sun);color:var(--btn-ink);font-family:var(--f-display);font-stretch:105%;font-size:17px;padding:14px 26px;border-radius:10px}
+.hero-pro{margin:12px 0 0;max-width:60ch;font-size:16px;color:var(--ink)}
+.hero-pro a{font-weight:600}
+.intro-note{margin:0;font-size:14px;color:var(--muted)}
+#pro-buy{justify-self:start}
+.how .code-note{margin-top:16px}
+.usp-band{padding:6px 0 26px}
+.usp-card{border-block:1px solid var(--line);padding:20px 0}
+.usp-band h2{font-family:var(--f-display);font-weight:700;font-size:1.25rem;letter-spacing:-.01em;margin:0 0 12px}
+.usp{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px 24px}
+.usp li{padding-left:18px;position:relative;font-size:.97rem;line-height:1.45}
+.usp li::before{content:"";position:absolute;left:0;top:.5em;width:8px;height:8px;border-radius:50%;background:var(--sun)}
+.usp-why{margin:12px 0 0;font-size:.92rem;color:var(--muted)}
+@media (max-width:720px){.usp{grid-template-columns:1fr}.usp-card{padding:16px 0}}
+
+/* Neuester Artikel als breite Karte */
+.rlist li.feat{flex:2 1 520px}
+.rlist li.feat>a{border-color:var(--sun)}
+.rlist li.feat .kz em{font-size:clamp(34px,4.6vw,52px);line-height:1}
+@media (min-width:620px){
+  .rlist li.feat>a{grid-template-columns:minmax(0,auto) minmax(0,1.4fr);column-gap:28px;align-content:center;padding:24px}
+  .rlist li.feat .kz{grid-row:1/span 2;align-self:center;border-bottom:0;padding:0 28px 0 0;margin:0;border-right:1px solid var(--line);max-width:300px}
+  .rlist li.feat b{font-size:23px;align-self:end}
+  .rlist li.feat span{align-self:start}
+}
+
+/* Speichergröße: Tasten neben dem Regler */
+.stepper{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;gap:8px;align-items:center}
+.stepbtn{width:44px;height:44px;padding:0;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:700 22px/1 var(--f-mono);cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:transform 160ms var(--ease-out)}
+.stepbtn:active{transform:scale(0.95)}
+@media (prefers-reduced-motion:reduce){.stepbtn:active{transform:none}}
+
+/* Balkendiagramm: beste Größe farbig, deine Wahl umrandet */
+.chartwrap text.best{fill:var(--sun-ink);font-weight:700}
+.sweep .legend{margin-top:6px}
+.legend .lbest::before{background:var(--sun)} .legend .lpick::before{background:var(--c-imp);outline:1.5px solid var(--ink);outline-offset:1px}
+
+/* Ergebnisleiste am Handy: läuft mit, solange die Eingaben im Bild sind und das Ergebnis nicht */
+.rbar{display:none}
+@media (max-width:860px){
+  .rbar{position:fixed;z-index:15;left:max(10px,env(safe-area-inset-left,0px));right:max(10px,env(safe-area-inset-right,0px));bottom:max(10px,env(safe-area-inset-bottom,0px));
+    display:flex;align-items:center;gap:12px;padding:10px 10px 10px 16px;border-radius:14px;background:var(--bar-bg);color:var(--bar-ink);text-decoration:none;
+    box-shadow:0 10px 30px -8px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity 200ms var(--ease-out),transform 200ms var(--ease-out),visibility 0s linear 200ms;-webkit-tap-highlight-color:transparent}
+  .rbar.show{opacity:1;visibility:visible;transform:none;transition-delay:0s}
+  .rbar-txt{flex:1;min-width:0;display:grid;gap:1px}
+  .rbar-cap{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.7}
+  .rbar b{font-family:var(--f-display);font-weight:800;font-size:18px;line-height:1.2;font-variant-numeric:tabular-nums}
+  .rbar-sub{font-size:13px;line-height:1.3}
+  .rbar-sub i{font-style:normal;font-weight:700;color:var(--bar-accent)}
+  .rbar-go{flex:none;width:44px;height:44px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--bar-ink) 14%,transparent)}
+  .rbar-go svg{display:block}
+}
+@media (max-width:860px) and (prefers-reduced-motion:reduce){.rbar{transform:none;transition:opacity 150ms ease,visibility 0s linear 150ms}}
+@media print{.rbar{display:none!important}}
+
+.about{display:grid;grid-template-columns:minmax(0,1fr) 340px;column-gap:56px;align-items:start}
+.about-text{grid-column:1;grid-row:1}.about-body{grid-column:1;grid-row:2}
+.about-photo{grid-column:2;grid-row:1/span 2;margin:8px 0 0;position:sticky;top:88px}
+.about-photo img{display:block;width:100%;height:auto;border-radius:18px;box-shadow:0 1px 0 var(--line),0 18px 40px -24px rgba(0,0,0,.35);background:var(--meter)}
+html.js .about-photo img{opacity:0;transform:translateY(10px) scale(.985);transition:opacity .6s var(--ease-out),transform .6s var(--ease-out)}
+html.js .about-photo.in img{opacity:1;transform:none}
+@media (max-width:760px){.about{grid-template-columns:minmax(0,1fr)}.about-photo{grid-column:1;grid-row:2;position:static;max-width:300px;margin:6px 0 4px}.about-body{grid-row:3}}
+@media (prefers-reduced-motion:reduce){html.js .about-photo img{opacity:1;transform:none;transition:none}}
+main.page{padding-block:36px 40px}
+.doc{max-width:760px;font-size:18px;line-height:1.65}
+.doc .eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sun-ink)}
+.doc h1{max-width:none;hyphens:auto;overflow-wrap:break-word;font-family:var(--f-display);font-weight:800;font-stretch:110%;font-size:clamp(32px,5vw,48px);line-height:1.05;margin:10px 0 14px;text-wrap:balance}
+.doc h2{hyphens:auto;overflow-wrap:break-word;font-family:var(--f-display);font-weight:800;font-stretch:105%;font-size:25px;line-height:1.2;margin:36px 0 8px;text-wrap:balance}
+.doc p,.doc li{max-width:68ch;overflow-wrap:break-word}
+.doc .lead{font-size:21px;line-height:1.5;margin:0 0 8px;color:var(--ink)}
+.doc .meta,.doc .note{font-size:14px;color:var(--muted)}
+.doc .tablewrap{overflow-x:auto;margin:16px 0}
+.doc table{border-collapse:collapse;width:100%;min-width:520px;font-size:16px}.doc table.fit{min-width:0}
+.doc th,.doc td{text-align:left;padding:9px 12px 9px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.doc th{font-family:var(--f-mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.doc td.num{font-family:var(--f-mono);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.doc tr.hl td{background:var(--sun-soft);font-weight:700}
+.doc tr.hl td:first-child{box-shadow:inset 4px 0 0 var(--sun);padding-left:12px}
+.art{display:grid;grid-template-columns:minmax(0,760px) minmax(0,1fr);column-gap:48px;align-items:start}
+.kbox{position:sticky;top:88px;margin-top:8px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:grid;gap:14px}
+.kbox .cap{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.kbox .kmeter{background:var(--meter);color:var(--meter-digit);border-radius:8px;padding:14px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;font-family:var(--f-mono);font-weight:700;font-size:17px}
+.kbox .kmeter .wheel{font-size:30px}
+.kbox .kmeter .dg{display:inline-flex;gap:3px}
+.kbox p{margin:0;font-size:15.5px;line-height:1.45}
+.kbox .btn{opacity:1;cursor:pointer;text-align:center}
+.kbox small{font-size:13px;color:var(--muted);line-height:1.4}
+@media (max-width:1020px){.art{grid-template-columns:minmax(0,1fr)}.kbox{display:none}}
+.hbars{display:grid;gap:10px;margin:4px 0 2px}
+.hbar{display:grid;grid-template-columns:minmax(64px,auto) minmax(0,1fr) auto;gap:12px;align-items:center;font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums}
+.hbar .hl{color:var(--muted);line-height:1.2} .hbar .hl small{display:block;font-size:11px}
+.hbar .ht{height:24px;display:block}
+.hbar .ht i{display:block;height:100%;border-radius:0 4px 4px 0;background:var(--c-imp);transform-origin:left center}
+.hbar .hv{font-weight:700;white-space:nowrap}
+.hbar.best .hl,.hbar.best .hv{color:var(--sun-ink);font-weight:700} .hbar.best .ht i{background:var(--sun)}
+.hbar.mark .hl{color:var(--ink)} .hbar.mark .ht i{outline:1.5px solid var(--ink);outline-offset:2px}
+html.js .chart .hbar .ht i{transform:scaleX(0);transition:transform 700ms var(--ease-out)}
+html.js .chart.in .hbar .ht i{transform:none}
+html.js .chart .hbar:nth-child(2) .ht i{transition-delay:50ms}html.js .chart .hbar:nth-child(3) .ht i{transition-delay:100ms}html.js .chart .hbar:nth-child(4) .ht i{transition-delay:150ms}html.js .chart .hbar:nth-child(5) .ht i{transition-delay:200ms}html.js .chart .hbar:nth-child(n+6) .ht i{transition-delay:250ms}
+@media (prefers-reduced-motion:reduce){html.js .chart .hbar .ht i{transform:none;transition:none}}
+.doc details{border-bottom:1px solid var(--line);padding:12px 0} .doc summary{font-weight:600;cursor:pointer}
+.ask{border:1px dashed var(--line);border-radius:10px;padding:20px 22px;margin:32px 0 8px;display:grid;gap:8px;max-width:760px}
+.ask b{font-family:var(--f-display);font-stretch:105%;font-size:19px}
+.ask span{font-size:16px;color:var(--muted);line-height:1.5}
+.ask .btn.ghost{display:inline-block;justify-self:start;opacity:1;cursor:pointer;text-decoration:none;background:transparent;color:var(--ink);border:1.5px solid var(--ink);padding:10px 16px;transition:transform 160ms var(--ease-out),background-color 150ms ease,color 150ms ease}
+@media (hover:hover) and (pointer:fine){.ask .btn.ghost:hover{background:var(--ink);color:var(--surface)}}
+.ask .btn.ghost:active{transform:scale(0.97)}
+@media (prefers-reduced-motion:reduce){.ask .btn.ghost:active{transform:none}}
+.ask .ask-addr{font-size:14px;color:var(--muted);line-height:1.45}
+.ask .ask-addr a{color:var(--sun-ink)}
+.cta{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px;margin:32px 0;display:grid;gap:10px;max-width:760px}
+.cta b{font-family:var(--f-display);font-stretch:105%;font-size:21px}
+.cta .btn{display:inline-block;justify-self:start;opacity:1;cursor:pointer;text-decoration:none}
+.cta .cta-pro{border-top:1px solid var(--line);padding-top:12px;margin-top:4px;font-size:15px}
+.page .rlist{margin:8px 0 0}
+.chart{margin:28px 0;max-width:760px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 18px 14px}
+.chart figcaption{display:grid;gap:2px;margin-bottom:10px}
+.chart figcaption b{font-family:var(--f-display);font-stretch:105%;font-size:18px;line-height:1.25}
+.chart figcaption span{font-size:14px;color:var(--muted);line-height:1.45}
+.chart .c-wide svg,.chart .c-narrow svg{display:block;width:100%;height:auto}
+.chart .c-narrow{display:none}
+@media (max-width:560px){.chart .c-wide{display:none}.chart .c-narrow{display:block}}
+.chart svg .ax{font-size:12px} .chart .slabel{font-size:12px}
+.cpanels{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px}
+.cpanel svg{display:block;width:100%;height:auto}
+.ctitle{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+html.js .chart .sline{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1100ms var(--ease-in-out)}
+html.js .chart .sdot,html.js .chart .slabel{opacity:0;transition:opacity 300ms var(--ease-out) 900ms}
+html.js .chart .cpanel svg{clip-path:inset(0 100% 0 0);transition:clip-path 1000ms var(--ease-in-out)}
+html.js .chart.in .sline{stroke-dashoffset:0} html.js .chart.in .sdot,html.js .chart.in .slabel{opacity:1}
+html.js .chart.in .cpanel svg{clip-path:inset(0 0 0 0)}
+@media (prefers-reduced-motion:reduce){html.js .chart .sline{stroke-dasharray:none;transition:none} html.js .chart .sdot,html.js .chart .slabel{opacity:1;transition:none} html.js .chart .cpanel svg{clip-path:none;transition:none}}
+</style><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Wie genau ist ein Stromspeicher-Rechner? Mein Test mit echten Messdaten", "description": "Ich habe meinen Rechner gegen fünf Jahre Messwerte meiner PV-Anlage und 30 gemessene Häuser geprüft. Ergebnis: auf 1–2 Punkte genau, nach zwei Korrekturen.", "datePublished": "2026-11-14", "dateModified": "2026-11-14", "inLanguage": "de", "author": {"@type": "Person", "name": "Manuel Maurer", "url": "https://speicherklar.de/ueber-mich.html"}, "publisher": {"@type": "Organization", "@id": "https://speicherklar.de/#org", "name": "Speicherklar", "url": "https://speicherklar.de/", "logo": {"@type": "ImageObject", "url": "https://speicherklar.de/img/icon-512.png"}}, "isBasedOn": "https://speicherklar.de/methodik.html", "image": "https://speicherklar.de/img/og/stromspeicher-rechner-test-echte-daten.png", "mainEntityOfPage": "https://speicherklar.de/ratgeber/stromspeicher-rechner-test-echte-daten.html"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Wie genau ist der Speicherklar-Rechner?", "acceptedAnswer": {"@type": "Answer", "text": "Mit Speicher trifft er die Autarkie von 30 gemessenen Einfamilienhäusern auf 1–2 Prozentpunkte. Mit Wärmepumpe liegt die Autarkie rund 4 Punkte zu hoch, den Zugewinn durch den Speicher trifft er."}}, {"@type": "Question", "name": "Warum weicht meine echte Autarkie vom Rechner ab?", "acceptedAnswer": {"@type": "Answer", "text": "Die häufigsten Gründe sind Verschattung, ein Speicher mit wenig Ladeleistung, große gleichmäßige Verbraucher wie Wärmepumpe oder Pool und das Wetter des einzelnen Jahres. Der Rechner nimmt ein mittleres Jahr."}}, {"@type": "Question", "name": "Welche Daten hast du für den Test genutzt?", "acceptedAnswer": {"@type": "Answer", "text": "Die 5-Minuten-Messwerte meines eigenen Speichers von 2021 bis 2026 und den öffentlichen Datensatz WPuQ des Instituts für Solarenergieforschung Hameln mit Minutenwerten von 30 Häusern aus dem Jahr 2019."}}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Speicherklar", "item": "https://speicherklar.de/"}, {"@type": "ListItem", "position": 2, "name": "Ratgeber", "item": "https://speicherklar.de/ratgeber/"}, {"@type": "ListItem", "position": 3, "name": "Wie genau ist ein Stromspeicher-Rechner? Mein Test mit echten Messdaten", "item": "https://speicherklar.de/ratgeber/stromspeicher-rechner-test-echte-daten.html"}]}</script></head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../" aria-label="Speicherklar, zur Startseite">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="5" y="4" width="16" height="20" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><rect x="10" y="1.5" width="6" height="3" rx="1" fill="currentColor"/><rect x="8" y="14" width="10" height="7" rx="1" fill="var(--sun)"/></svg>
+      Speicherklar
+    </a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="hauptmenu" aria-label="Menü öffnen"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path class="l1" d="M3 6h16"/><path class="l2" d="M3 11h16"/><path class="l3" d="M3 16h16"/></svg></button>
+    <nav id="hauptmenu" aria-label="Seitenbereiche"><a href="../#rechner">Rechner</a><a href="../ratgeber/" aria-current="page">Ratgeber</a><a href="../#annahmen">Annahmen</a><a href="../pro/">Speicherklar Pro</a><a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">Instagram</a></nav>
+  </div>
+</header>
+<script>(function(){var h=document.querySelector('header.top');if(!h)return;var b=h.querySelector('.menu-btn'),n=h.querySelector('nav');h.classList.add('js');
+function set(o){h.classList.toggle('open',o);b.setAttribute('aria-expanded',o);b.setAttribute('aria-label',o?'Menü schließen':'Menü öffnen');}
+b.addEventListener('click',function(){set(!h.classList.contains('open'))});
+n.addEventListener('click',function(e){if(e.target.closest('a'))set(false)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&h.classList.contains('open')){set(false);b.focus()}});
+document.addEventListener('click',function(e){if(h.classList.contains('open')&&!h.contains(e.target))set(false)});
+matchMedia('(min-width:721px)').addEventListener('change',function(m){if(m.matches)set(false)});})();</script>
+<main class="wrap page"><div class="art"><article class="doc"><div class="eyebrow">Ratgeber</div><h1>Wie genau ist ein Stromspeicher-Rechner? Mein Test mit echten Messdaten</h1><p class="lead">Mit Speicher trifft der Speicherklar-Rechner die Autarkie echter Häuser heute auf 1–2 Prozentpunkte. Auf dem Weg dahin habe ich zwei Fehler gefunden, die ich hier offen zeige, mit allen Zahlen.</p><p class="meta">Veröffentlicht am <time datetime="2026-11-14">14.11.2026</time> · Von <a href="../ueber-mich.html">Manuel Maurer</a> · <a href="#annahmen">Annahmen</a> · <a href="../methodik.html">Rechenweg</a></p>
+
+<p>Jeder Rechner ist ein Modell. Ob er stimmt, sieht man erst, wenn man ihn gegen echte Messwerte hält. Genau das habe ich gemacht, mit meiner eigenen PV-Anlage und mit einem öffentlichen Datensatz von 30 Einfamilienhäusern. Hier steht, wie ich vorgegangen bin, was herauskam und was ich deshalb am Rechner geändert habe.</p>
+
+<h2>Das Setup: meine Anlage</h2>
+<ul>
+<li><b>PV-Anlage:</b> 34 Module mit je 380 Wp, also 12,92 kWp, auf einem Ost-West-Dach mit 45° Neigung in Krefeld. 14 Module zeigen nach Osten (5,32 kWp), 20 nach Westen (7,60 kWp).</li>
+<li><b>Speicher:</b> 10 kWh nutzbar.</li>
+<li><b>Verbrauch:</b> ein einziger Zähler für Haushalt, Erdwärmepumpe, Pool mit eigener Wärmepumpe und E-Auto. Das macht rund 19.000 kWh im Jahr, gut viermal so viel wie das Standard-Beispiel im Rechner.</li>
+<li><b>Verschattung:</b> Bäume nehmen der Anlage morgens und vor allem abends Licht.</li>
+<li><b>Daten:</b> der Export meines Speichers mit 5-Minuten-Werten für Erzeugung, Verbrauch, Netz und Speicher, rund 1.800 Tage seit Oktober 2021.</li>
+</ul>
+<p>Für den Test habe ich das letzte volle Jahr genommen, den 26.10.2025 bis 25.10.2026. An 336 Tagen sind die Daten lückenlos. Die Energiebilanz geht auf: Erzeugung, Netzbezug und Entladen ergeben genau Verbrauch, Einspeisung und Laden.</p>
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>Gemessen an 336 Tagen</th><th>Wert</th></tr></thead>
+<tbody>
+<tr><td>Erzeugung</td><td class="num">9.405 kWh</td></tr>
+<tr><td>Verbrauch</td><td class="num">17.610 kWh</td></tr>
+<tr><td>Netzbezug</td><td class="num">9.493 kWh</td></tr>
+<tr><td>Einspeisung</td><td class="num">1.149 kWh</td></tr>
+<tr class="hl"><td>Autarkie</td><td class="num">46,1 %</td></tr>
+<tr><td>Eigenverbrauch der Erzeugung</td><td class="num">87,8 %</td></tr>
+</tbody></table></div>
+<p>Mein Haus ist kein typischer Fall. Gerade deshalb ist es ein guter Test: Wo ein Rechner nur für den Durchschnitt passt, fällt es hier auf.</p>
+
+<h2>Test 1: Rechnet der Speicher richtig?</h2>
+<p>Zuerst habe ich nur das Speichermodell geprüft. Dafür bekommt es meine echte Erzeugung und meinen echten Verbrauch in 5-Minuten-Schritten. Es muss dann nur noch entscheiden, wann der Speicher lädt und entlädt.</p>
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>336 Tage</th><th>Gemessen</th><th>Rechner</th></tr></thead>
+<tbody>
+<tr class="hl"><td>Netzbezug</td><td class="num">9.493 kWh</td><td class="num">9.716 kWh</td></tr>
+<tr><td>Einspeisung</td><td class="num">1.149 kWh</td><td class="num">1.052 kWh</td></tr>
+<tr><td>Autarkie</td><td class="num">46,1 %</td><td class="num">44,8 %</td></tr>
+</tbody></table></div>
+<p>Der Netzbezug liegt 2,3 % daneben, und zwar in die vorsichtige Richtung. Mein Speicher ist dabei anders gebaut als der im Rechner: Er verliert weniger (94 % statt 88 % Wirkungsgrad je Zyklus), lädt aber langsamer (rund 2,5 statt 5 kW). Beides gleicht sich fast aus. Der Speicher-Teil stimmt also.</p>
+
+<h2>Test 2: Stimmt der Ertrag?</h2>
+<p>Für meine Anlage rechnet Speicherklar mit 9.764 kWh im Jahr. Gemessen habe ich in den vier vollen Jahren:</p>
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>Jahr</th><th>Erzeugung gemessen</th></tr></thead>
+<tbody>
+<tr><td>2022</td><td class="num">10.334 kWh</td></tr>
+<tr><td>2023</td><td class="num">10.034 kWh</td></tr>
+<tr><td>2024</td><td class="num">9.027 kWh</td></tr>
+<tr><td>2025</td><td class="num">9.993 kWh</td></tr>
+</tbody></table></div>
+<p>Der Rechner liegt mitten in dieser Spanne. 2024 war ein schwaches Sonnenjahr, der Rechner nimmt ein Mittel aus zehn Jahren. Im Tagesverlauf sieht man die Bäume: Im Juni liefert meine Anlage zwischen 19 und 21 Uhr nur 3,7 % ihres Tagesertrags, der Rechner erwartet 8,1 %. Dafür ist es mittags etwas mehr. Verschattung kennt der Rechner nicht, das steht auch in den Annahmen.</p>
+
+<h2>Test 3: Die ganze Rechnung, und zwei Fehler</h2>
+<p>Dann der eigentliche Test: Der Rechner bekommt nur, was du auch eingibst, also Anlage, Speicher und Verbrauch. Profil und Wetter erzeugt er selbst. Die Frage ist, wie viel Netzstrom der Speicher im Jahr ersetzt. Gemessen sind es bei mir 1.860 kWh.</p>
+<figure class="chart"><figcaption><b>Was der 10-kWh-Speicher an meiner Anlage im Jahr spart</b> <span>Netzstrom, den der Speicher ersetzt. Gemessen gegen drei Stände des Rechners.</span></figcaption><div class="hbars" role="img" aria-label="Was der 10-kWh-Speicher an meiner Anlage im Jahr spart: Gemessen 1.860 kWh, Rechner vorher 2.819 kWh, Nach erster Korrektur 1.146 kWh, Rechner heute 1.735 kWh"><div class="hbar mark"><span class="hl">Gemessen</span> <span class="ht"><i style="width:66.0%"></i></span> <span class="hv">1.860 kWh</span></div>
+<div class="hbar"><span class="hl">Rechner vorher <small>Wärmepumpe mit Haushaltsspitzen</small></span> <span class="ht"><i style="width:100.0%"></i></span> <span class="hv">2.819 kWh</span></div>
+<div class="hbar"><span class="hl">Nach erster Korrektur <small>Wetter zu wechselhaft</small></span> <span class="ht"><i style="width:40.7%"></i></span> <span class="hv">1.146 kWh</span></div>
+<div class="hbar best"><span class="hl">Rechner heute</span> <span class="ht"><i style="width:61.5%"></i></span> <span class="hv">1.735 kWh</span></div>
+</div></figure>
+<p><b>Fehler 1, die Wärmepumpe.</b> Der Rechner hat den ganzen Verbrauch mit den kurzen Spitzen eines Haushalts gerechnet: Wasserkocher an, Herd an, dann wieder fast nichts. Im Rechner lagen 62 % aller 5-Minuten-Werte unter dem halben Mittel ihrer Stunde, in meinem Haus sind es 12 %. Wärmepumpe und Pool laufen lange und gleichmäßig. Mein Haus braucht dadurch viel mehr Solarstrom direkt, und der Speicher hat weniger zu tun. Der alte Rechner zeigte 2.819 kWh, also die Hälfte zu viel.</p>
+<p>Seit dem 14.11.2026 trägst du die Wärmepumpe im Rechner getrennt ein. Sie läuft dort ohne Spitzen, und wie sie sich auf Monate und Stunden verteilt, habe ich an echten Häusern abgelesen (unten mehr). Das E-Auto behält die Spitzen, weil eine Wallbox mehr Leistung zieht, als ein Speicher abgibt.</p>
+<p><b>Fehler 2, das Wetter.</b> Danach lag der Rechner plötzlich zu niedrig, bei 1.146 kWh. Der Grund: Er hat jeden Tag einzeln ausgewürfelt, und im Sommer viel zu wechselhaft. Ich habe die Stundenwerte von PVGIS für alle zehn Regionen des Rechners nachgeprüft, 2014 bis 2023. Die trübsten 5 % der Julitage bringen dort 41 % eines durchschnittlichen Tages. Im Rechner waren es 11 %. Dafür fehlten Wolken mitten am Tag. Bei normalen Haushalten hob sich das zufällig auf, bei meinem großen Verbrauch nicht: An ganz trüben Tagen wird der Speicher nicht voll, an überhellen Tagen läuft er über.</p>
+<p>Jetzt nimmt der Rechner den Wechsel von Sonne und Wolken Stunde für Stunde aus einem echten Jahr (2020), umgerechnet auf die Monatssummen deines Gebiets. Mit jedem der zehn Jahre bleibt die beste Größe im Standard-Beispiel bei 6 kWh, ich habe 2020 genommen, weil es in der Mitte liegt. Ergebnis für mein Haus: 1.735 kWh, gemessen 1.860 kWh.</p>
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>Mein Haus, 10 kWh</th><th>Autarkie ohne Speicher</th><th>mit Speicher</th></tr></thead>
+<tbody>
+<tr><td>Gemessen</td><td class="num">35,3 %</td><td class="num">45,0 %</td></tr>
+<tr><td>Rechner vorher</td><td class="num">22,4 %</td><td class="num">37,2 %</td></tr>
+<tr class="hl"><td>Rechner heute</td><td class="num">33,1 %</td><td class="num">42,1 %</td></tr>
+</tbody></table></div>
+<p class="note">Gemessen: ein volles Jahr, 29 Lückentage aus dem Vorjahr ergänzt; „ohne Speicher“ gerechnet aus den gemessenen 5-Minuten-Werten. Im Rechner: 4.500 kWh als Haushaltsstrom angenommen, der Rest als gleichmäßiger Verbrauch nach meinen echten Monatswerten. Die Lücke bei der Autarkie kommt vor allem vom Ertrag: Mit dem Wetterjahr rechnet der Rechner etwas weniger, als meine Anlage im Prüfjahr erzeugt hat.</p>
+
+<h2>Gegenprobe an 30 fremden Häusern</h2>
+<p>Ein Haus kann Zufall sein. Deshalb habe ich den Rechner zusätzlich an einem öffentlichen Datensatz geprüft. Das Institut für Solarenergieforschung Hameln hat bei rund 40 Einfamilienhäusern Haushaltsstrom und Wärmepumpe getrennt gemessen, minutengenau (Datensatz WPuQ, frei verfügbar). 30 Häuser haben ein lückenloses Jahr 2019. Ich habe ihren echten Verbrauch mit dem echten Wetter 2019 am Ort durchgerechnet und mit dem verglichen, was der Rechner nur aus dem Jahresverbrauch macht. Die Anlagen sind wie im Standard-Beispiel bemessen, 9 kWp je 4.500 kWh Haushaltsstrom.</p>
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>Autarkie, Speicher je 4.500 kWh</th><th>ohne</th><th>4 kWh</th><th>6 kWh</th><th>8 kWh</th><th>10 kWh</th></tr></thead>
+<tbody>
+<tr><td>30 Häuser gemessen</td><td class="num">39 %</td><td class="num">61 %</td><td class="num">69 %</td><td class="num">74 %</td><td class="num">76 %</td></tr>
+<tr class="hl"><td>Rechner</td><td class="num">35 %</td><td class="num">62 %</td><td class="num">70 %</td><td class="num">75 %</td><td class="num">77 %</td></tr>
+<tr><td>dieselben Häuser mit Wärmepumpe</td><td class="num">25 %</td><td class="num">35 %</td><td class="num">39 %</td><td class="num">42 %</td><td class="num">45 %</td></tr>
+<tr><td>Rechner mit Wärmepumpe</td><td class="num">30 %</td><td class="num">39 %</td><td class="num">43 %</td><td class="num">46 %</td><td class="num">48 %</td></tr>
+</tbody></table></div>
+<p>Mit Speicher liegt der Rechner auf 1–2 Punkte genau. Ohne Speicher rechnet er etwas zu wenig Eigenverbrauch, das macht den Speicher eher einen Hauch zu gut. Mit Wärmepumpe liegt die Autarkie rund 4 Punkte zu hoch. Was der Speicher dazubringt, trifft er aber: 19 Punkte im Rechner, 20 Punkte gemessen. Für die Frage nach der Speichergröße zählt genau dieser Zugewinn.</p>
+
+<h2>Was sich für dich ändert</h2>
+<p>Für einen Haushalt ohne Wärmepumpe fast nichts. Im Standard-Beispiel (9 kWp Süd, 4.500 kWh) bleibt 6 kWh die beste Größe, die Bilanz nach 15 Jahren liegt bei 2.899 € statt vorher 2.758 €. Alle Artikel habe ich neu gerechnet. Eine Aussage hat sich dabei gedreht: Bei einem Ost-West-Dach rechnen sich jetzt 5 statt 4 kWh. Den Artikel <a href="ost-west-dach-speicher.html">Ost-West-Dach</a> habe ich angepasst.</p>
+<p>Mit Wärmepumpe trag ihren Stromverbrauch im Rechner getrennt ein, statt ihn zum Haushalt zu zählen. Sonst rechnet der Speicher sich zu gut.</p>
+
+<h2>Wann der Rechner eher danebenliegt</h2>
+<ul>
+<li>Deine Anlage ist verschattet, durch Bäume, Gauben oder Nachbarhäuser.</li>
+<li>Dein Speicher lädt deutlich langsamer als mit der halben Kapazität pro Stunde. Gib die Leistung im Angebots-Check an, wenn du sie kennst.</li>
+<li>Du lädst ein E-Auto gezielt mit Überschuss oder hast einen dynamischen Stromtarif. Beides bildet der Rechner nicht ab.</li>
+<li>Du hast viele große Verbraucher, die gleichmäßig laufen, aber keine Heizungs-Wärmepumpe sind, etwa eine Pool-Wärmepumpe im Sommer.</li>
+</ul>
+<p>Alle Annahmen und der Rechenweg stehen auf der <a href="../methodik.html#eigene-anlage">Methodik-Seite</a>. Der Code liegt offen auf GitHub, jede Änderung ist dort mit Datum nachzulesen.</p>
+<div class="cta"><b>Rechne dein eigenes Haus durch</b> <span>Postleitzahl, Dachausrichtung und Verbrauch eingeben. Der kostenlose Rechner zeigt dir die wirtschaftlichste Speichergröße, auch für das Szenario EEG-Reform 2027.</span> <a class="btn" href="../#rechner" data-umami-event="artikel-zum-rechner" data-umami-event-artikel="stromspeicher-rechner-test-echte-daten">Zum Rechner</a> <span class="cta-pro">Du hast schon ein Angebot? <a href="../pro/" data-umami-event="artikel-zu-pro" data-umami-event-artikel="stromspeicher-rechner-test-echte-daten">Speicherklar Pro</a> prüft Speicher und PV-Anlage zusammen und zeigt die beste Kombination für dein Dach. Die Einordnung ist kostenlos.</span></div><h2>Häufige Fragen</h2><details><summary>Wie genau ist der Speicherklar-Rechner?</summary><p>Mit Speicher trifft er die Autarkie von 30 gemessenen Einfamilienhäusern auf 1–2 Prozentpunkte. Mit Wärmepumpe liegt die Autarkie rund 4 Punkte zu hoch, den Zugewinn durch den Speicher trifft er.</p></details><details><summary>Warum weicht meine echte Autarkie vom Rechner ab?</summary><p>Die häufigsten Gründe sind Verschattung, ein Speicher mit wenig Ladeleistung, große gleichmäßige Verbraucher wie Wärmepumpe oder Pool und das Wetter des einzelnen Jahres. Der Rechner nimmt ein mittleres Jahr.</p></details><details><summary>Welche Daten hast du für den Test genutzt?</summary><p>Die 5-Minuten-Messwerte meines eigenen Speichers von 2021 bis 2026 und den öffentlichen Datensatz WPuQ des Instituts für Solarenergieforschung Hameln mit Minutenwerten von 30 Häusern aus dem Jahr 2019.</p></details><div class="ask"><b>Noch eine Frage offen?</b> <span>Schreib sie mir. Ich antworte dir per Mail, und was öfter gefragt wird, ergänze ich hier im Artikel, ohne deinen Namen.</span> <a class="btn ghost" href="mailto:kontakt@speicherklar.de?subject=Frage%20zu%3A%20Wie%20genau%20ist%20ein%20Stromspeicher-Rechner%3F%20Mein%20Test%20mit%20echten%20Messdaten&amp;body=Hallo%20Manuel%2C%0A%0Ameine%20Frage%20zum%20Artikel%20https%3A//speicherklar.de/ratgeber/stromspeicher-rechner-test-echte-daten.html%3A%0A%0A" onclick="try{window.umami&amp;&amp;umami.track('frage-mail')}catch(e){}">Frage per Mail stellen</a> <small class="ask-addr">Öffnet sich kein Mailprogramm? Schreib an <a href="mailto:kontakt@speicherklar.de">kontakt@speicherklar.de</a>.</small></div><h2>Weiterlesen</h2><ul class="rlist"><li><a href="stromspeicher-groesse-berechnen.html"><i class="kz"><em>1 kWh</em> <small>Speicher je 1.000 kWh Jahresverbrauch trifft meist die beste Größe</small></i> <b>Stromspeicher-Größe berechnen: Wie viel kWh brauche ich?</b> <span>Faustregel: 1 kWh Speicher je 1.000 kWh Verbrauch. Die Regel „1 kWh je kWp“ kostet bei großen Anlagen über 1.000 €. Tabelle für 3.000 bis 6.000 kWh.</span></a></li>
+<li><a href="ost-west-dach-speicher.html"><i class="kz"><em>5 kWh</em> <small>reichen bei Ost-West, bei Süd sind es 6</small></i> <b>Ost-West-Dach: Braucht es einen Speicher?</b> <span>Eine Ost-West-Anlage liefert morgens und abends Strom. Deshalb reicht meist ein kleinerer Speicher als bei Süd. Die Zahlen im Vergleich.</span></a></li>
+<li><a href="pv-angebot-pruefen.html"><i class="kz"><em>6 statt 10 kWh</em> <small>Speichergröße, die im Beispiel am meisten bringt</small></i> <b>PV-Angebot prüfen: Ist der Speicher zu groß?</b> <span>Im Beispiel bringt ein 6-kWh-Speicher in 15 Jahren rund 670 € mehr als die angebotenen 10 kWh. So prüfst du dein PV-Angebot, bevor du unterschreibst.</span></a></li></ul><p class="note" id="annahmen" style="margin-top:28px">Alle Beispiele: Standort Ruhrgebiet (PLZ 4…), Dachneigung 35°, Speicherpreis 500 €/kWh inkl. Einbau, Strompreis 33 ct/kWh, Einspeisevergütung 7,70 ct/kWh, 15 Jahre Lebensdauer, wenn nicht anders angegeben. Gerechnet mit dem Speicherklar-Rechner: Jahressimulation in 5-Minuten-Schritten mit Sonnendaten aus PVGIS 2014–2023 und dem Wetterverlauf eines echten Jahres (2020).</p></article><aside class="kbox" aria-label="Kurz gesagt"><span class="cap">Kurz gesagt</span> <div class="kmeter" role="img" aria-label="1–2 Punkte"><span class="dg"><span class="wheel">1</span></span>–<span class="dg"><span class="wheel">2</span></span> Punkte</div><p>Trifft der Rechner die Autarkie echter Häuser mit Speicher.</p><a class="btn btn-on" href="../#rechner" data-umami-event="artikel-zum-rechner" data-umami-event-artikel="stromspeicher-rechner-test-echte-daten">Mit deinen Zahlen rechnen</a> <small>Kostenlos und ohne Anmeldung.</small></aside></div></main>
+<footer>
+  <div class="wrap">
+    <span>Speicherklar ist eine Schätzung, keine Anlagen- oder Finanzberatung. Für eine Kaufentscheidung hol dir Angebote von Fachbetrieben.</span>
+    <span>Unabhängig: kein Geld von Herstellern oder Installateuren, keine Werbung. Der Rechenweg ist <a href="../methodik.html">offen</a>.</span>
+    <span>Sonnendaten: PVGIS © Europäische Union, 2001–2026.</span>
+    <span><a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">Instagram @speicherklar</a> · <a href="../methodik.html">Methodik</a> · <a href="../ueber-mich.html">Über mich</a> · <a href="../impressum.html">Impressum</a> · <a href="../datenschutz.html">Datenschutz</a></span>
+  </div>
+</footer>
+<script>try{if("IntersectionObserver" in window){document.documentElement.classList.add("js");var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});},{threshold:0.35});document.querySelectorAll(".chart,.about-photo").forEach(function(c){io.observe(c);});}}catch(e){}</script>
+</body></html>
