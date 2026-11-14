@@ -60,6 +60,7 @@ Reihenfolge: Quelle ändern → Tests → `build_articles.py` (falls nötig) →
 - Neue Artikel in `src/articles.py` eintragen (neueste nach Datum), nie als HTML-Datei anlegen.
 - Zielgruppe: Leute, die eine PV-Anlage **erst planen** und wissen wollen, ob und welcher Speicher sich lohnt. Ton: sachlich, du-Form, Zahlen statt Prospekt, unabhängig von Herstellern.
 - `kennzahl` muss wörtlich im Artikel vorkommen; Stand-Angabe (`STAND`) aktuell halten.
+- Balken (`bars`) zeigen Euro mit Vorzeichen; mit `"unit": "kWh"` (oder einer anderen Einheit) eine Zahl mit Einheit. Der Prüf-Artikel `stromspeicher-rechner-test-echte-daten` enthält Messwerte von Manuels Anlage und WPuQ-Ergebnisse: bei Änderungen an `sim.js` die Rechner-Zahlen dort mit neu rechnen.
 - Kein Newsletter-CTA – Kommunikation läuft über Website und Instagram @speicherklar.
 - Für Artikel gibt es den Skill `/sk-artikel`, für Instagram `/sk-instagram`.
 
