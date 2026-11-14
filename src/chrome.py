@@ -10,8 +10,16 @@ IG = "https://www.instagram.com/speicherklar/"
 UMAMI_ID = "f4570047-b7d7-42e7-944e-a06941b94082"
 UMAMI_SRC = "https://cloud.umami.is/script.js"
 
+# Eigene Besuche nicht zählen: einmal speicherklar.de/?ich=1 aufrufen, dann misst Umami in diesem Browser nicht mehr
+# (Umami beachtet den Eintrag umami.disabled im localStorage). ?ich=0 hebt das auf. Der Parameter wird danach
+# aus der Adresse entfernt, damit er nicht versehentlich geteilt wird. Läuft vor dem Umami-Skript (das ist defer).
+OPTOUT_JS = ("<script>try{var u=new URL(location.href),q=u.searchParams.get('ich');"
+             "if(q==='1')localStorage.setItem('umami.disabled','1');else if(q==='0')localStorage.removeItem('umami.disabled');"
+             "if(q!==null){u.searchParams.delete('ich');history.replaceState(null,'',u.pathname+u.search+u.hash);"
+             "console.info('Speicherklar: Zählung in diesem Browser '+(q==='1'?'aus':'an'));}}catch(e){}</script>")
+
 def analytics():
-    return f'<script defer src="{UMAMI_SRC}" data-website-id="{UMAMI_ID}" data-domains="speicherklar.de"></script>' if UMAMI_ID else ""
+    return OPTOUT_JS + f'<script defer src="{UMAMI_SRC}" data-website-id="{UMAMI_ID}" data-domains="speicherklar.de"></script>' if UMAMI_ID else ""
 
 LOGO = ('<svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">'
         '<rect x="5" y="4" width="16" height="20" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/>'

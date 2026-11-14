@@ -9,6 +9,8 @@ Details zu Aufbau, Lizenzen, KV und Freischlüsseln stehen im `README.md`. Diese
 - Rechner und Pro sind live und funktionieren.
 - Der Kauf-Button ist bis `publicFrom` (`2026-12-01` in `src/pro-config.js`) inaktiv („Kauf ab 1.12.2026“). Kaufen geht vorher nur mit `?vorab=1` (wird im Browser gemerkt, `?vorab=0` nimmt es weg) – nur zum internen Testen, **nirgends verlinken**.
 - Preise: 49 € Einführungspreis bis 31.01.2027, danach 89 €, einmalig, 90 Tage Laufzeit ab erster Freischaltung, max. 3 Geräte.
+- Eigene Besuche nicht zählen (seit 14.11.2026): `speicherklar.de/?ich=1` setzt `umami.disabled` im localStorage, `?ich=0` entfernt es; der Parameter verschwindet danach aus der Adresse. Code: `OPTOUT_JS` in `src/chrome.py`, Hinweis in der Datenschutzerklärung (`UMAMI_TEXT` in `build_articles.py`). **Nirgends verlinken.**
+- Messung: Ein wöchentlicher Umsatz-Review (geplante Claude-Aufgabe, sonntags) liest Umami über den Freigabe-Link „Umsatz-Review“ und Stripe über einen eingeschränkten Lese-Schlüssel; Ergebnis im Claude-Projekt unter `claude/umsatz-review.md`. Neue Umami-Ereignisse dort und in der Datenschutzerklärung nachziehen.
 
 ## Goldene Regeln
 
