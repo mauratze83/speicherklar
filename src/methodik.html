@@ -23,7 +23,7 @@
 <ol>
 <li><b>Sonne.</b> Monatsmittel der Einstrahlung 2014–2023 aus PVGIS-SARAH3 der EU-Kommission. Der kostenlose Rechner nutzt 10 Regionen nach der ersten Ziffer der PLZ, der Angebots-Check die zweistelligen PLZ-Gebiete.</li>
 <li><b>Wetter.</b> 365 einzelne Tage, sonnige und trübe wechseln sich ab, oft mehrere trübe am Stück. Daraus entsteht für jede Stunde die Einstrahlung auf dein Dach, nach Sonnenstand, Ausrichtung und Neigung. Anlagenverluste: rund 21 %.</li>
-<li><b>Verbrauch.</b> Standardlastprofil H0 mit Morgen- und Abendspitze, im Winter mehr als im Sommer, dazu kurze Lastspitzen in 5-Minuten-Schritten. E-Auto abends oder tagsüber, Wärmepumpe nur im Angebots-Check.</li>
+<li><b>Verbrauch.</b> Standardlastprofil H0 mit Morgen- und Abendspitze, im Winter mehr als im Sommer, dazu kurze Lastspitzen in 5-Minuten-Schritten. E-Auto abends oder tagsüber. Eine Wärmepumpe läuft vor allem im Winter und gleichmäßig über den Tag, ohne die kurzen Spitzen des Haushalts (seit 14.11.2026, siehe <a href="#eigene-anlage">Prüfung an meiner Anlage</a>).</li>
 <li><b>Speicher.</b> Ein ganzes Jahr in 5-Minuten-Schritten: Überschuss lädt den Speicher, abends entlädt er. 88 % Wirkungsgrad je Zyklus, 25 W Standby, Ladeleistung halbe Kapazität pro Stunde, höchstens 5 kW.</li>
 <li><b>Geld.</b> Jede selbst genutzte kWh spart den Strompreis, jede nicht mehr eingespeiste kostet die Vergütung. Ersparnis mal Lebensdauer minus Speicherpreis ergibt die Bilanz. Das rechnet der Rechner für 1 bis 15 kWh und zeigt die Größe, bei der am meisten übrig bleibt.</li>
 </ol>
@@ -45,6 +45,21 @@
 <p>Der Unterschied kommt vom Speicher selbst. Die HTW nimmt an, dass im Mittel nur 90 % der Kapazität verfügbar sind, weil der Akku altert, und setzt einen Wirkungsgrad von 83,9 % an. Speicherklar rechnet mit voller Kapazität und 88 %. Setzt man die HTW-Werte in Speicherklar ein (letzte Spalte), liegen beide Rechner höchstens einen Prozentpunkt auseinander.</p>
 <p>Was das für dich heißt: Speicherklar ist beim Speicher etwas optimistisch. An der besten Größe ändert das im Beispiel nichts, mit beiden Annahmen sind es 6 kWh. Die Bilanz nach 15 Jahren fällt mit den HTW-Werten aber kleiner aus, im Standard-Beispiel (Ruhrgebiet, 500 €/kWh, 33 ct) rund 2.230 € statt 2.758 €.</p>
 
+<h2 id="eigene-anlage">An meiner eigenen Anlage geprüft</h2>
+<p>Ich habe Speicherklar an meiner eigenen Anlage in Krefeld nachgerechnet: 12,92 kWp Ost-West mit 45° Neigung (14 Module nach Osten, 20 nach Westen), 10 kWh Speicher. Über einen einzigen Zähler laufen Haushalt, Erdwärmepumpe, Pool und E-Auto. Grundlage sind die Messwerte meines Speichers in 5-Minuten-Schritten vom 26.10.2025 bis 25.10.2026, 336 vollständige Tage.</p>
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>Was ich geprüft habe</th><th>Rechner</th><th>Gemessen</th></tr></thead>
+<tbody>
+<tr><td>Speicher, gerechnet mit meinen echten Messwerten: Netzbezug</td><td class="num">9.716 kWh</td><td class="num">9.493 kWh</td></tr>
+<tr><td>dasselbe als Autarkiegrad</td><td class="num">44,8 %</td><td class="num">46,1 %</td></tr>
+<tr><td>Jahresertrag der PV-Anlage</td><td class="num">10.218 kWh</td><td class="num">9.027 bis 10.334 kWh (2022–2025)</td></tr>
+<tr><td>Was der Speicher an Netzstrom spart, mit Wärmepumpe im neuen Verbrauchsmodell und meiner echten PV</td><td class="num">1.882 kWh</td><td class="num">1.860 kWh</td></tr>
+</tbody></table></div>
+<p class="note">Gemessen: SENEC-Speicher, Export aus mein-senec.de. Gerechnet mit <code>src/sim.js</code> am 14.11.2026, Region Ruhrgebiet/Niederrhein. Für den Speicher-Nutzen in der letzten Zeile habe ich ein ganzes Jahr gebildet (29 Lückentage aus dem Vorjahr) und 4.500 kWh als Haushaltsstrom angenommen, den Rest als gleichmäßigen Verbrauch.</p>
+<p>Das Speichermodell trifft meinen echten Netzbezug auf gut 2 %. Der Ertrag liegt im Rahmen meiner Jahre; früh morgens und abends liefert meine Anlage weniger, weil Bäume sie verschatten. Das kennt der Rechner nicht.</p>
+<p>Gefunden habe ich dabei einen Fehler beim Verbrauch: Bis zum 14.11.2026 hat der Rechner den ganzen Verbrauch mit den kurzen Spitzen eines Haushalts gerechnet. Wärmepumpe und Pool laufen aber lange und gleichmäßig. Für mein Haus hat der alte Rechner deshalb fast 2.820 kWh Ersparnis durch den Speicher gezeigt, gemessen sind es rund 1.860 kWh. Seitdem trägst du die Wärmepumpe im kostenlosen Rechner getrennt ein, und sie läuft ohne Spitzen. Haushalte ohne Wärmepumpe rechnen genau wie vorher.</p>
+<p>Mit den Sonnendaten des Rechners statt meiner gemessenen fällt der Nutzen des Speichers bei mir kleiner aus als gemessen. Das prüfe ich gerade weiter und schreibe das Ergebnis hier hin.</p>
+
 <h2>Was die Rechnung nicht abbildet</h2>
 <ul>
 <li>Verschattung durch Bäume, Gauben oder Nachbarhäuser</li>
@@ -53,7 +68,6 @@
 <li>Zinsen</li>
 <li>Dynamische Stromtarife</li>
 <li>Notstrom und Ersatzstrom</li>
-<li>Das Lastprofil einer Wärmepumpe im kostenlosen Rechner (der Angebots-Check rechnet sie mit)</li>
 </ul>
 <p>Speicherklar ist eine Schätzung, keine Anlagenplanung. Für die Kaufentscheidung brauchst du Angebote von Fachbetrieben. Speicherklar hilft dir, sie zu prüfen.</p>
 

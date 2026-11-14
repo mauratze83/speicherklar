@@ -75,10 +75,14 @@ function pvProfile(region,kwp,tilt,aspect){
 }
 
 /* Verbrauch: kWh je Stunde. monthly (optional, 12 Werte) ersetzt die Standard-Saisonkurve */
-/* hp: Wärmepumpe kWh/Jahr, nach Heizmonaten verteilt, über den Tag fast gleichmäßig */
+/* hp: Wärmepumpe kWh/Jahr, nach Heizmonaten verteilt, über den Tag fast gleichmäßig.
+   Der Wärmepumpen-Anteil steht zusätzlich in load.steady: Er läuft lange und gleichmäßig und bekommt
+   in runBattery/daySeries keine Lastspitzen innerhalb der Stunde (geprüft an einer echten Anlage, 14.11.2026).
+   Das E-Auto behält die Spitzen: Eine Wallbox zieht mehr Leistung, als ein Speicher abgibt. */
 var HP_M=[0.16,0.14,0.12,0.08,0.05,0.03,0.03,0.03,0.04,0.08,0.11,0.15],HP_H=[0.9,0.9,0.9,0.9,0.95,1.05,1.15,1.15,1.1,1,0.95,0.9,0.9,0.9,0.95,1,1.05,1.1,1.1,1.05,1,0.95,0.95,0.9];
 function loadProfile(cons,ev,evTime,monthly,hp){
-  var load=new Float64Array(8760),h0sum=H0.reduce(function(a,b){return a+b;},0);
+  var load=new Float64Array(8760),steady=new Float64Array(8760),h0sum=H0.reduce(function(a,b){return a+b;},0);
+  load.steady=steady;
   var evHours=evTime==="day"?[10,11,12,13,14,15]:[18,19,20,21,22],evDaily=(ev||0)/365;
   var mtot=[];
   if(monthly&&monthly.length===12){var ms=monthly.reduce(function(a,b){return a+b;},0);for(var i=0;i<12;i++)mtot.push(cons*monthly[i]/ms);}
@@ -88,16 +92,18 @@ function loadProfile(cons,ev,evTime,monthly,hp){
     for(var d=0;d<MDAYS[m2];d++,day++)for(var h=0;h<24;h++)
       load[idx++]=dl*DAYLOAD[day]*H0[h]/h0sum+(evHours.indexOf(h)>=0?evDaily/evHours.length:0);}
   if(hp>0){var hm=HP_M.reduce(function(a,b){return a+b;},0),hh=HP_H.reduce(function(a,b){return a+b;},0),i2=0;
-    for(var m3=0;m3<12;m3++){var dd=hp*HP_M[m3]/hm/MDAYS[m3];for(var d3=0;d3<MDAYS[m3];d3++)for(var h3=0;h3<24;h3++)load[i2++]+=dd*HP_H[h3]/hh;}}
+    for(var m3=0;m3<12;m3++){var dd=hp*HP_M[m3]/hm/MDAYS[m3];for(var d3=0;d3<MDAYS[m3];d3++)for(var h3=0;h3<24;h3++){var v3=dd*HP_H[h3]/hh;load[i2]+=v3;steady[i2++]=v3;}}}
   return load;
 }
+/* Verbrauch in einem 5-Minuten-Schritt: Haushalt mit Lastspitzen, gleichmäßiger Anteil (Wärmepumpe) ohne */
+function stepLoad(load,h,i){var st=load.steady?load.steady[h]:0;return ((load[h]-st)*QW[i]+st)/STEPS;}
 
 /* Energiefluss mit Speicher. feedCap: max. Einspeiseleistung in kW (Infinity = keine Grenze) */
 function runBattery(gen,load,cap,feedCap,pw){
   var soc=0,eta=Math.sqrt(0.88),pmax=(pw||Math.min(cap*0.5,5))/STEPS,stby=cap>0?0.025/STEPS:0;
   var fcap=(feedCap||Infinity)/STEPS,feed=0,grid=0,curt=0,G=0,Ld=0;
   for(var i=0,n=8760*STEPS;i<n;i++){
-    var h=(i/STEPS)|0,gq=gen[h]/STEPS,lq=load[h]*QW[i]/STEPS;
+    var h=(i/STEPS)|0,gq=gen[h]/STEPS,lq=stepLoad(load,h,i);
     var s=gq-lq-stby;G+=gq;Ld+=lq;
     if(s>=0){var c=cap>0?Math.min(s,pmax,(cap-soc)/eta):0;soc+=c*eta;var ex=s-c,fe=Math.min(ex,fcap);feed+=fe;curt+=ex-fe;}
     else{var need=-s,dis=cap>0?Math.min(need,pmax,soc*eta):0;soc-=dis/eta;grid+=need-dis;}
@@ -114,7 +120,7 @@ function daySeries(gen,load,cap,feedCap,pw){
   for(var m=0;m<12;m++){var o={};K.forEach(function(k){o[k]=new Float64Array(24);});out.push(o);}
   var mOf=new Uint8Array(8760),hh=0;for(var mm=0;mm<12;mm++)for(var d=0;d<MDAYS[mm]*24;d++)mOf[hh++]=mm;
   for(var i=0,n=8760*STEPS;i<n;i++){
-    var h=(i/STEPS)|0,o2=out[mOf[h]],hd=h%24,gq=gen[h]/STEPS,lq=load[h]*QW[i]/STEPS;
+    var h=(i/STEPS)|0,o2=out[mOf[h]],hd=h%24,gq=gen[h]/STEPS,lq=stepLoad(load,h,i);
     o2.gen[hd]+=gq;o2.load[hd]+=lq;o2.direct[hd]+=Math.min(gq,lq);
     var s=gq-lq-stby;
     if(s>=0){var c=cap>0?Math.min(s,pmax,(cap-soc)/eta):0;soc+=c*eta;o2.charge[hd]+=c;var ex=s-c;o2.exp[hd]+=Math.min(ex,fcap);}
@@ -152,4 +158,4 @@ function evaluate(p){
     pvValue:(p.cons+(p.ev||0)+(p.hp||0)-base.grid)*p.price/100+base.feed*p.feed/100};
 }
 
-if(typeof module!=="undefined")module.exports={REGIONS:REGIONS,pvProfile:pvProfile,loadProfile:loadProfile,runBattery:runBattery,daySeries:daySeries,dayProfile:dayProfile,profiles:profiles,evaluate:evaluate};
+if(typeof module!=="undefined")module.exports={REGIONS:REGIONS,pvProfile:pvProfile,loadProfile:loadProfile,runBattery:runBattery,daySeries:daySeries,dayProfile:dayProfile,profiles:profiles,evaluate:evaluate,stepLoad:stepLoad};

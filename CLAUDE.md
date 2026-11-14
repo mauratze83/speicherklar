@@ -10,6 +10,7 @@ Details zu Aufbau, Lizenzen, KV und Freischlüsseln stehen im `README.md`. Diese
 - Der Kauf-Button ist bis `publicFrom` (`2026-12-01` in `src/pro-config.js`) inaktiv („Kauf ab 1.12.2026“). Kaufen geht vorher nur mit `?vorab=1` (wird im Browser gemerkt, `?vorab=0` nimmt es weg) – nur zum internen Testen, **nirgends verlinken**.
 - Preise: 49 € Einführungspreis bis 31.01.2027, danach 89 €, einmalig, 90 Tage Laufzeit ab erster Freischaltung, max. 3 Geräte.
 - Eigene Besuche nicht zählen (seit 14.11.2026): `speicherklar.de/?ich=1` setzt `umami.disabled` im localStorage, `?ich=0` entfernt es; der Parameter verschwindet danach aus der Adresse. Code: `OPTOUT_JS` in `src/chrome.py`, Hinweis in der Datenschutzerklärung (`UMAMI_TEXT` in `build_articles.py`). **Nirgends verlinken.**
+- Verbrauchsmodell (seit 14.11.2026): Die Wärmepumpe (`hp`) steht in `load.steady` und bekommt in `runBattery`/`daySeries` keine Lastspitzen innerhalb der Stunde (`stepLoad` in `src/sim.js`); Haushalt und E-Auto behalten sie. Der kostenlose Rechner hat dafür das Feld „Wärmepumpe pro Jahr“ (`#hp`, wird an Pro übergeben). Ohne Wärmepumpe sind alle Ergebnisse unverändert. Geprüft an Manuels eigener Anlage, Ergebnis im Projekt unter `claude/sim-pruefung-eigene-anlage.md` und auf der Methodik-Seite (`#eigene-anlage`). Offen: Das Tageswetter (`WEATHER`, `SIGMA`) streut im Sommer stärker als gemessen – nicht ohne Entscheidung ändern, betrifft alle Zahlen.
 - Messung: Ein wöchentlicher Umsatz-Review (geplante Claude-Aufgabe, sonntags) liest Umami über den Freigabe-Link „Umsatz-Review“ und Stripe über einen eingeschränkten Lese-Schlüssel; Ergebnis im Claude-Projekt unter `claude/umsatz-review.md`. Neue Umami-Ereignisse dort und in der Datenschutzerklärung nachziehen.
 
 ## Goldene Regeln
@@ -40,7 +41,7 @@ Reihenfolge: Quelle ändern → Tests → `build_articles.py` (falls nötig) →
 | Ende Einführungspreis | `INTRO_UNTIL` (Worker) = `introUntil` (`pro-config.js`) |
 | Laufzeit 90 Tage | `ACCESS_DAYS` (Worker) = `accessDays` (`pro-config.js`) |
 | Verkaufsstart | `publicFrom` in `pro-config.js` |
-| Rechenlogik | `src/sim.js` ↔ `src/pro.js` (Test gleicht beide ab), danach Musterbericht neu |
+| Rechenlogik | `src/sim.js` ↔ `src/pro.js` (Test gleicht beide ab), danach Musterbericht neu; Zahlen der Methodik-Abschnitte HTW-Vergleich, Strompreis und eigene Anlage neu rechnen |
 | Kopf/Fuß, Analytics (Umami) | nur `src/chrome.py` |
 
 ## Wo was liegt

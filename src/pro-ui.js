@@ -138,7 +138,7 @@
     var kwp = +q.kwp || 9, tilt = +q.tilt || 35;
     var roofs = q.aspect === "ow" ? [{ kwp: kwp / 2, aspect: -90, tilt: tilt }, { kwp: kwp / 2, aspect: 90, tilt: tilt }] : [{ kwp: kwp, aspect: +q.aspect || 0, tilt: tilt }];
     history.replaceState(null, "", location.pathname + location.search);
-    return { plz: q.plz || "", roofs: roofs, cons: +q.cons || 4500, ev: +q.ev || 0, evTime: q.evt === "day" ? "day" : "eve", cap: +q.bat || "",
+    return { plz: q.plz || "", roofs: roofs, cons: +q.cons || 4500, ev: +q.ev || 0, hp: +q.hp || 0, evTime: q.evt === "day" ? "day" : "eve", cap: +q.bat || "",
       price: +q.price || 33, eeg: q.eeg === "reform" ? "reform" : "now", feed: q.feed != null ? +q.feed : 7.7, life: +q.life || 15 };
   }
 
@@ -530,7 +530,7 @@
       "<tr><td>Deine Eingaben</td><td>" + kwh(o.cap) + " " + (o.capKind === "brutto" ? "brutto, gerechnet mit " + Math.round(PRO.BRUTTO * 100) + " % nutzbar" : o.capKind === "unklar" ? "(Art nicht angegeben, gerechnet als nutzbar)" : "nutzbar") +
       (o.pow ? ", " + nf1.format(o.pow) + " kW Leistung" : ", Leistung nicht angegeben (gerechnet: halbe Kapazität pro Stunde, höchstens 5 kW)") +
       "; Strompreis " + nf2.format(o.price) + " ct/kWh; " + (o.eeg === "reform" ? "EEG-Reform 2027 (keine Vergütung, Einspeisung höchstens 50 %)" : "Einspeisevergütung " + nf2.format(o.feed) + " ct/kWh") + "; Lebensdauer " + life + " Jahre" + (o.monthly ? "; Verbrauch nach Monaten" : "") + "</td></tr>" +
-      "<tr><td>Rechnung</td><td>Jahressimulation in 5-Minuten-Schritten mit Sonnendaten PVGIS-SARAH3 2014–2023 für " + o.region.area + " (Mittelpunkt " + nf2.format(o.region.lat) + "° N, " + nf2.format(o.region.lon) + "° O), Standardlastprofil H0" + (o.hp ? ", Wärmepumpe nach Heizmonaten verteilt" : "") + ". Speicher mit 88 % Wirkungsgrad je Zyklus und 25 W Standby. Erzeugung im Jahr: " + nf0.format(Math.round(r.gen / 10) * 10) + " kWh, Verbrauch: " + nf0.format(Math.round(r.load / 10) * 10) + " kWh.</td></tr>" +
+      "<tr><td>Rechnung</td><td>Jahressimulation in 5-Minuten-Schritten mit Sonnendaten PVGIS-SARAH3 2014–2023 für " + o.region.area + " (Mittelpunkt " + nf2.format(o.region.lat) + "° N, " + nf2.format(o.region.lon) + "° O), Standardlastprofil H0" + (o.hp ? ", Wärmepumpe nach Heizmonaten verteilt und gleichmäßig über den Tag" : "") + ". Speicher mit 88 % Wirkungsgrad je Zyklus und 25 W Standby. Erzeugung im Jahr: " + nf0.format(Math.round(r.gen / 10) * 10) + " kWh, Verbrauch: " + nf0.format(Math.round(r.load / 10) * 10) + " kWh.</td></tr>" +
       "<tr><td>Ort</td><td>Mittelpunkt des PLZ-Gebiets aus den Postleitzahlen von GeoNames (geonames.org, CC BY 4.0). Innerhalb eines Gebiets ändert sich die Sonneneinstrahlung im Monatsmittel nur wenig.</td></tr>" +
       "<tr><td>PV-Anlage</td><td>Rechenzeitraum " + PRO.PVLIFE + " Jahre. Wert = selbst genutzter Solarstrom zum Strompreis plus Einspeisung zur Vergütung. Größere Anlagen nutzen die zusätzliche Dachfläche, kleinere verkleinern alle Dachflächen gleichmäßig.</td></tr>" +
       "<tr><td>Andere Größen</td><td>" + Math.round(PRO.FIX * 100) + " % des Speicherpreises als fester Anteil. Ladeleistung wie im Angebot, bei kleineren Größen höchstens halbe Kapazität pro Stunde, mindestens 2,5 kW.</td></tr>" +

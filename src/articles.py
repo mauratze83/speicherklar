@@ -19,6 +19,7 @@ ARTICLES = [
 "h1": "Stromsteuer bleibt: Was heißt das für deinen Stromspeicher?",
 "desc": "Die Stromsteuer für Haushalte sinkt 2027 vorerst nicht. Eine Senkung hätte Strom um 2,32 ct billiger gemacht. Für den Speicher ändert sich wenig.",
 "date": "2026-11-13",
+"updated": "2026-11-14",
 "lead": "Kurze Antwort: Für deine Planung ändert sich fast nichts. Die beste Speichergröße bleibt gleich. Weil Netzstrom teurer bleibt, rechnet sich der Speicher sogar knapp ein Jahr schneller, als er es mit Senkung getan hätte.",
 "body": """
 <p>Union und SPD hatten versprochen, die Stromsteuer für alle aufs europäische Mindestmaß zu senken. Für Haushalte kommt das 2027 vorerst nicht. Ich hab durchgerechnet, was die Senkung gebracht hätte und was das für einen Stromspeicher heißt. Beispiel wie immer: 9 kWp auf einem Süddach im Ruhrgebiet, 4.500 kWh Verbrauch im Jahr.</p>
@@ -57,7 +58,8 @@ ARTICLES = [
 <ul>
 <li>Die Senkung kommt doch noch. Dann stell im Rechner den Strompreis rund 2,3 ct niedriger ein. Am Ergebnis für die Größe ändert sich wenig, die Amortisation wird knapp ein Jahr länger.</li>
 <li>Dein Strompreis liegt deutlich über oder unter 33 ct. Dann zählt dein eigener Preis mehr als die Steuer.</li>
-<li>Du hast eine Wärmepumpe oder einen dynamischen Tarif. Beides bildet der Rechner nicht genau ab: Er kennt kein Lastprofil einer Wärmepumpe und rechnet mit festem Strompreis.</li>
+<li>Du hast eine Wärmepumpe. Dann trag ihren Strom im Rechner getrennt ein, sie verschiebt die beste Größe.</li>
+<li>Du hast einen dynamischen Tarif. Den bildet der Rechner nicht ab, er rechnet mit festem Strompreis.</li>
 </ul>
 <p>Ob der Versorger eine Senkung voll weitergegeben hätte, ist offen. Die Rechnung geht davon aus.</p>
 """,
@@ -284,6 +286,7 @@ ARTICLES = [
 "h1": "PV-Angebot prüfen: Ist der Speicher zu groß?",
 "desc": "Im Beispiel bringt ein 6-kWh-Speicher in 15 Jahren rund 580 € mehr als die angebotenen 10 kWh. So prüfst du dein PV-Angebot, bevor du unterschreibst.",
 "date": "2026-11-10",
+"updated": "2026-11-14",
 "lead": "Oft ja. In unserem Beispielhaushalt mit 4.500 kWh Verbrauch steht ein 10-kWh-Speicher im Angebot, am meisten bringt aber einer mit 6 kWh. Der kleinere spart pro Jahr etwas weniger, kostet dafür deutlich weniger.",
 "body": """
 <p>Unser Beispiel: 9 kWp auf einem Süddach mit 35° Neigung im Ruhrgebiet, 4.500 kWh Verbrauch im Jahr, Strompreis 33 ct, Einspeisevergütung 7,70 ct. Im Angebot steht ein Speicher mit 10 kWh nutzbarer Kapazität und 5 kW Leistung. Der Aufpreis für den Speicher beträgt 6.500 €, also 650 €/kWh.</p>
@@ -329,7 +332,7 @@ ARTICLES = [
 </ul>
 
 <h2>Was das Modell nicht abbildet</h2>
-<p>Die Rechnung kennt keine Verschattung, keine Alterung des Speichers und keinen Notstrom. Das Lastprofil einer Wärmepumpe bildet nur der Angebots-Check ab, nicht der kostenlose Rechner.</p>
+<p>Die Rechnung kennt keine Verschattung, keine Alterung des Speichers und keinen Notstrom. Eine Wärmepumpe trägst du im kostenlosen Rechner und im Angebots-Check getrennt ein.</p>
 """,
 "faq": [
  ("Wie groß sollte ein Speicher bei 4.500 kWh sein?", "Im Beispiel mit 9 kWp lohnen sich 5 bis 7 kWh am meisten. Mit E-Auto oder anderer Dachausrichtung kann es anders aussehen."),
@@ -346,6 +349,7 @@ ARTICLES = [
 "h1": "Stromspeicher-Größe berechnen: Wie viel kWh brauche ich?",
 "desc": "Faustregel: 1 kWh Speicher je 1.000 kWh Verbrauch. Die Regel „1 kWh je kWp“ kostet bei großen Anlagen über 1.000 €. Tabelle für 3.000 bis 6.000 kWh.",
 "date": "2026-11-12",
+"updated": "2026-11-14",
 "lead": "Rechne mit deinem Verbrauch, nicht mit der Anlagengröße. Rund 1 kWh nutzbarer Speicher je 1.000 kWh Jahresverbrauch liegt fast immer nah an der wirtschaftlichsten Größe. Die oft genannte Regel „1 kWh je kWp“ führt bei großen Anlagen zu Speichern, die sich kaum noch rechnen.",
 "body": """
 <p>Ob du Stromspeicher, Batteriespeicher, PV-Speicher oder Solarspeicher liest: Gemeint ist dasselbe, eine Batterie im Haus, die Solarstrom vom Mittag für den Abend aufhebt. Für ihre Größe kursieren drei Faustformeln. Ich habe alle drei gegen eine Jahressimulation in 5-Minuten-Schritten gerechnet.</p>
@@ -395,7 +399,7 @@ ARTICLES = [
 <li><b>E-Auto, das abends lädt:</b> Mit 2.500 kWh fürs Auto zusätzlich lohnen sich im Beispiel 10 kWh. Lädt das Auto meist tagsüber, bleiben es 6 kWh.</li>
 <li><b>Ost-West-Dach:</b> Die Anlage liefert morgens und abends selbst Strom, im Beispiel reichen 4 kWh. Mehr dazu im Artikel <a href="ost-west-dach-speicher.html">Ost-West-Dach</a>.</li>
 <li><b>Speicherpreis:</b> Bei 400 €/kWh lohnen sich 7 kWh, bei 700 €/kWh nur 5 kWh.</li>
-<li><b>Wärmepumpe:</b> Ihr Verbrauch fällt vor allem im Winter an, wenn die Anlage wenig liefert. Das Lastprofil bildet der kostenlose Rechner nicht ab. Rechne den Wärmepumpen-Strom deshalb nicht einfach in die Faustformel ein.</li>
+<li><b>Wärmepumpe:</b> Ihr Verbrauch fällt vor allem im Winter an, wenn die Anlage wenig liefert. Mit 3.500 kWh Wärmepumpe zusätzlich lohnen sich im Beispiel 7 kWh statt 6, es bleibt aber weniger übrig: 2.351 € statt 2.758 €. Trag sie im Rechner getrennt ein, statt sie in die Faustformel zu rechnen.</li>
 </ul>
 <p>Was das Modell außerdem nicht abbildet: Notstrom, Verschattung, Alterung des Speichers und dynamische Stromtarife.</p>
 """,

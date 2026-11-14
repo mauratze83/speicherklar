@@ -31,7 +31,7 @@
   }
 
   function read(){
-    return {region:state.region,roofs:roofs(),cons:+$("cons").value,ev:+$("ev").value,evTime:state.evTime,
+    return {region:state.region,roofs:roofs(),cons:+$("cons").value,ev:+$("ev").value,hp:+$("hp").value,evTime:state.evTime,
       bat:+$("bat").value,bprice:+$("bprice").value,life:+$("life").value,price:+$("price").value,
       feed:+$("feed").value,feedLimit:state.eeg==="reform"?0.5:0};
   }
@@ -43,6 +43,7 @@
     $("o-pv").textContent=nf1.format(+$("pv").value)+" kWp";
     $("o-cons").textContent=nf0.format(p.cons)+" kWh";
     $("o-ev").textContent=p.ev?nf0.format(p.ev)+" kWh":"kein E-Auto";
+    $("o-hp").textContent=p.hp?nf0.format(p.hp)+" kWh":"keine";
     $("o-bat").textContent=p.bat+" kWh";
     $("o-bprice").textContent=nf0.format(p.bprice)+" €/kWh";
     $("o-life").textContent=p.life+" Jahre";
@@ -196,7 +197,7 @@
     $("rbar-sub").innerHTML=(c.net>=0?"+":"")+euro(c.net)+" nach "+p.life+" Jahren"+(res.best.net>0?" · <i>"+(res.best.cap===p.bat?"wirtschaftlichste Größe":"am meisten bleibt bei "+res.best.cap+" kWh")+"</i>":"");
     dayState.days=daySeries(res.gen,res.load,p.bat,res.fc);drawDay();
     // Übergabe an den Angebots-Check im Hash (wird nicht an einen Server gesendet)
-    var q={plz:$("plz").value.replace(/\D/g,""),kwp:$("pv").value,aspect:state.aspect,tilt:$("tilt").value,cons:p.cons,ev:p.ev,evt:p.evTime,bat:p.bat,price:p.price,eeg:state.eeg,feed:p.feed,life:p.life};
+    var q={plz:$("plz").value.replace(/\D/g,""),kwp:$("pv").value,aspect:state.aspect,tilt:$("tilt").value,cons:p.cons,ev:p.ev,hp:p.hp,evt:p.evTime,bat:p.bat,price:p.price,eeg:state.eeg,feed:p.feed,life:p.life};
     $("to-pro").href="pro/#"+Object.keys(q).map(function(k){return k+"="+encodeURIComponent(q[k]);}).join("&");
   }
 

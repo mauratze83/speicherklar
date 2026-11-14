@@ -499,7 +499,10 @@ matchMedia('(min-width:721px)').addEventListener('change',function(m){if(m.match
         <legend>Verbrauch</legend>
         <div class="field"><div class="row"><label for="cons">Stromverbrauch pro Jahr</label><output for="cons" id="o-cons"></output></div>
           <input type="range" id="cons" min="1500" max="25000" step="100" value="4500">
-          <span class="hint">Alles außer E-Auto, also auch Wärmepumpe, Klimaanlage oder Pool. Steht auf deiner Jahresabrechnung.</span></div>
+          <span class="hint">Alles außer E-Auto und Heizungs-Wärmepumpe, also auch Klimaanlage oder Pool. Steht auf deiner Jahresabrechnung.</span></div>
+        <div class="field"><div class="row"><label for="hp">Wärmepumpe pro Jahr</label><output for="hp" id="o-hp"></output></div>
+          <input type="range" id="hp" min="0" max="12000" step="100" value="0">
+          <span class="hint">Strom der Heizungs-Wärmepumpe, wenn sie einen eigenen Zähler hat oder geplant ist. Sie läuft vor allem im Winter und gleichmäßig über den Tag.</span></div>
         <div class="field"><div class="row"><label for="ev">E-Auto pro Jahr</label><output for="ev" id="o-ev"></output></div>
           <input type="range" id="ev" min="0" max="5000" step="100" value="0">
           <span class="hint">Faustwert: 15.000 km im Jahr sind rund 2.500 kWh.</span>
@@ -604,7 +607,7 @@ matchMedia('(min-width:721px)').addEventListener('change',function(m){if(m.match
             <tr><td>Sonneneinstrahlung</td><td class="num">Monatsmittel 2014–2023</td><td>PVGIS-SARAH3 der EU-Kommission, je PLZ-Region. Daraus berechnet der Rechner Stunde für Stunde die Einstrahlung auf dein Dach, nach Sonnenstand, Ausrichtung und Neigung. <small>Abweichung zu PVGIS-Jahreserträgen: unter 4 %</small></td></tr>
             <tr><td>Wetter</td><td class="num">365 einzelne Tage</td><td>Sonnige und trübe Tage wechseln sich ab, oft mehrere trübe Tage am Stück. Der Speicher muss also auch Durststrecken überstehen.</td></tr>
             <tr><td>Anlagenverluste</td><td class="num">ca. 21 %</td><td>Wechselrichter, Kabel, Wärme, Verschmutzung, Reflexion bei flachem Lichteinfall</td></tr>
-            <tr><td>Verbrauchsprofil</td><td class="num">Standardlastprofil H0</td><td>Morgen- und Abendspitze, im Winter mehr als im Sommer, kurze Lastspitzen in 5-Minuten-Schritten. Eine Wärmepumpe braucht im Winter deutlich mehr; mit Wärmepumpe ist das Ergebnis für den Speicher daher eher zu gut.</td></tr>
+            <tr><td>Verbrauchsprofil</td><td class="num">Standardlastprofil H0</td><td>Morgen- und Abendspitze, im Winter mehr als im Sommer, kurze Lastspitzen in 5-Minuten-Schritten. Eine Wärmepumpe rechnet der Rechner getrennt: vor allem im Winter und gleichmäßig über den Tag, ohne kurze Spitzen.</td></tr>
             <tr><td>Speicher</td><td class="num">88 % je Zyklus, 25 W Standby</td><td>Ladeleistung: halbe Kapazität pro Stunde, höchstens 5 kW.</td></tr>
             <tr><td>EEG heute</td><td class="num">7,70 ct/kWh</td><td>Neue Anlagen bis 10 kWp, Teileinspeisung, Inbetriebnahme 01.08.2026–31.01.2027 <small>(Bundesnetzagentur)</small></td></tr>
             <tr><td>EEG-Reform 2027</td><td class="num">0 ct, max. 50 %</td><td>Kabinettsentwurf vom 29.07.2026: feste Vergütung entfällt nach Übergangszahlungen, Einspeisung höchstens 50 % der Anlagenleistung. Noch nicht beschlossen <small>(Stand 09.11.2026)</small>.</td></tr>
@@ -752,10 +755,14 @@ function pvProfile(region,kwp,tilt,aspect){
 }
 
 /* Verbrauch: kWh je Stunde. monthly (optional, 12 Werte) ersetzt die Standard-Saisonkurve */
-/* hp: Wärmepumpe kWh/Jahr, nach Heizmonaten verteilt, über den Tag fast gleichmäßig */
+/* hp: Wärmepumpe kWh/Jahr, nach Heizmonaten verteilt, über den Tag fast gleichmäßig.
+   Der Wärmepumpen-Anteil steht zusätzlich in load.steady: Er läuft lange und gleichmäßig und bekommt
+   in runBattery/daySeries keine Lastspitzen innerhalb der Stunde (geprüft an einer echten Anlage, 14.11.2026).
+   Das E-Auto behält die Spitzen: Eine Wallbox zieht mehr Leistung, als ein Speicher abgibt. */
 var HP_M=[0.16,0.14,0.12,0.08,0.05,0.03,0.03,0.03,0.04,0.08,0.11,0.15],HP_H=[0.9,0.9,0.9,0.9,0.95,1.05,1.15,1.15,1.1,1,0.95,0.9,0.9,0.9,0.95,1,1.05,1.1,1.1,1.05,1,0.95,0.95,0.9];
 function loadProfile(cons,ev,evTime,monthly,hp){
-  var load=new Float64Array(8760),h0sum=H0.reduce(function(a,b){return a+b;},0);
+  var load=new Float64Array(8760),steady=new Float64Array(8760),h0sum=H0.reduce(function(a,b){return a+b;},0);
+  load.steady=steady;
   var evHours=evTime==="day"?[10,11,12,13,14,15]:[18,19,20,21,22],evDaily=(ev||0)/365;
   var mtot=[];
   if(monthly&&monthly.length===12){var ms=monthly.reduce(function(a,b){return a+b;},0);for(var i=0;i<12;i++)mtot.push(cons*monthly[i]/ms);}
@@ -765,16 +772,18 @@ function loadProfile(cons,ev,evTime,monthly,hp){
     for(var d=0;d<MDAYS[m2];d++,day++)for(var h=0;h<24;h++)
       load[idx++]=dl*DAYLOAD[day]*H0[h]/h0sum+(evHours.indexOf(h)>=0?evDaily/evHours.length:0);}
   if(hp>0){var hm=HP_M.reduce(function(a,b){return a+b;},0),hh=HP_H.reduce(function(a,b){return a+b;},0),i2=0;
-    for(var m3=0;m3<12;m3++){var dd=hp*HP_M[m3]/hm/MDAYS[m3];for(var d3=0;d3<MDAYS[m3];d3++)for(var h3=0;h3<24;h3++)load[i2++]+=dd*HP_H[h3]/hh;}}
+    for(var m3=0;m3<12;m3++){var dd=hp*HP_M[m3]/hm/MDAYS[m3];for(var d3=0;d3<MDAYS[m3];d3++)for(var h3=0;h3<24;h3++){var v3=dd*HP_H[h3]/hh;load[i2]+=v3;steady[i2++]=v3;}}}
   return load;
 }
+/* Verbrauch in einem 5-Minuten-Schritt: Haushalt mit Lastspitzen, gleichmäßiger Anteil (Wärmepumpe) ohne */
+function stepLoad(load,h,i){var st=load.steady?load.steady[h]:0;return ((load[h]-st)*QW[i]+st)/STEPS;}
 
 /* Energiefluss mit Speicher. feedCap: max. Einspeiseleistung in kW (Infinity = keine Grenze) */
 function runBattery(gen,load,cap,feedCap,pw){
   var soc=0,eta=Math.sqrt(0.88),pmax=(pw||Math.min(cap*0.5,5))/STEPS,stby=cap>0?0.025/STEPS:0;
   var fcap=(feedCap||Infinity)/STEPS,feed=0,grid=0,curt=0,G=0,Ld=0;
   for(var i=0,n=8760*STEPS;i<n;i++){
-    var h=(i/STEPS)|0,gq=gen[h]/STEPS,lq=load[h]*QW[i]/STEPS;
+    var h=(i/STEPS)|0,gq=gen[h]/STEPS,lq=stepLoad(load,h,i);
     var s=gq-lq-stby;G+=gq;Ld+=lq;
     if(s>=0){var c=cap>0?Math.min(s,pmax,(cap-soc)/eta):0;soc+=c*eta;var ex=s-c,fe=Math.min(ex,fcap);feed+=fe;curt+=ex-fe;}
     else{var need=-s,dis=cap>0?Math.min(need,pmax,soc*eta):0;soc-=dis/eta;grid+=need-dis;}
@@ -791,7 +800,7 @@ function daySeries(gen,load,cap,feedCap,pw){
   for(var m=0;m<12;m++){var o={};K.forEach(function(k){o[k]=new Float64Array(24);});out.push(o);}
   var mOf=new Uint8Array(8760),hh=0;for(var mm=0;mm<12;mm++)for(var d=0;d<MDAYS[mm]*24;d++)mOf[hh++]=mm;
   for(var i=0,n=8760*STEPS;i<n;i++){
-    var h=(i/STEPS)|0,o2=out[mOf[h]],hd=h%24,gq=gen[h]/STEPS,lq=load[h]*QW[i]/STEPS;
+    var h=(i/STEPS)|0,o2=out[mOf[h]],hd=h%24,gq=gen[h]/STEPS,lq=stepLoad(load,h,i);
     o2.gen[hd]+=gq;o2.load[hd]+=lq;o2.direct[hd]+=Math.min(gq,lq);
     var s=gq-lq-stby;
     if(s>=0){var c=cap>0?Math.min(s,pmax,(cap-soc)/eta):0;soc+=c*eta;o2.charge[hd]+=c;var ex=s-c;o2.exp[hd]+=Math.min(ex,fcap);}
@@ -1014,7 +1023,7 @@ var DRAW = (function () {
   }
 
   function read(){
-    return {region:state.region,roofs:roofs(),cons:+$("cons").value,ev:+$("ev").value,evTime:state.evTime,
+    return {region:state.region,roofs:roofs(),cons:+$("cons").value,ev:+$("ev").value,hp:+$("hp").value,evTime:state.evTime,
       bat:+$("bat").value,bprice:+$("bprice").value,life:+$("life").value,price:+$("price").value,
       feed:+$("feed").value,feedLimit:state.eeg==="reform"?0.5:0};
   }
@@ -1026,6 +1035,7 @@ var DRAW = (function () {
     $("o-pv").textContent=nf1.format(+$("pv").value)+" kWp";
     $("o-cons").textContent=nf0.format(p.cons)+" kWh";
     $("o-ev").textContent=p.ev?nf0.format(p.ev)+" kWh":"kein E-Auto";
+    $("o-hp").textContent=p.hp?nf0.format(p.hp)+" kWh":"keine";
     $("o-bat").textContent=p.bat+" kWh";
     $("o-bprice").textContent=nf0.format(p.bprice)+" €/kWh";
     $("o-life").textContent=p.life+" Jahre";
@@ -1179,7 +1189,7 @@ var DRAW = (function () {
     $("rbar-sub").innerHTML=(c.net>=0?"+":"")+euro(c.net)+" nach "+p.life+" Jahren"+(res.best.net>0?" · <i>"+(res.best.cap===p.bat?"wirtschaftlichste Größe":"am meisten bleibt bei "+res.best.cap+" kWh")+"</i>":"");
     dayState.days=daySeries(res.gen,res.load,p.bat,res.fc);drawDay();
     // Übergabe an den Angebots-Check im Hash (wird nicht an einen Server gesendet)
-    var q={plz:$("plz").value.replace(/\D/g,""),kwp:$("pv").value,aspect:state.aspect,tilt:$("tilt").value,cons:p.cons,ev:p.ev,evt:p.evTime,bat:p.bat,price:p.price,eeg:state.eeg,feed:p.feed,life:p.life};
+    var q={plz:$("plz").value.replace(/\D/g,""),kwp:$("pv").value,aspect:state.aspect,tilt:$("tilt").value,cons:p.cons,ev:p.ev,hp:p.hp,evt:p.evTime,bat:p.bat,price:p.price,eeg:state.eeg,feed:p.feed,life:p.life};
     $("to-pro").href="pro/#"+Object.keys(q).map(function(k){return k+"="+encodeURIComponent(q[k]);}).join("&");
   }
 
