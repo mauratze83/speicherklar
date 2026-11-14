@@ -1,6 +1,7 @@
 # Reel: 10 kWh im Angebot? 6 hätten gereicht. (Pilot, 14.11.2026)
 
 Datei: reel1-angebot-6-statt-10.mp4 (1080×1920, 34 s, Voice-over mit deiner ElevenLabs-Stimme)
+Titelbild: reel1-angebot-6-statt-10-titelbild.png (beim Hochladen unter „Titelbild bearbeiten“ → „Aus Galerie hinzufügen“)
 
 ## Caption
 

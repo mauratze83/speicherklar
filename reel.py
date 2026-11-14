@@ -6,7 +6,8 @@ Spec (JSON):
    "slides": [{"text": "Satz, der zu dieser Slide gesprochen wird", "dark": false, "html": "<h1>…</h1>"}, …]}
 - "text" aller Slides hintereinander = genau der Text, der an ElevenLabs ging (ohne Tags wie [confident]).
 - Die Schnitte setzt das Skript selbst: erwartete Zeit nach Textlänge, dann auf die nächste Sprechpause geschnappt.
-- Ausgabe: out/<name>.mp4, out/<name>-<n>.png (Slides) und out/<name>-uebersicht.png (zum Prüfen).
+- "cover": Nummer der Slide fürs Titelbild (Standard 1; bei geteiltem Hook die Slide mit dem ganzen Hook).
+- Ausgabe: out/<name>.mp4, out/<name>-titelbild.png, out/<name>-<n>.png (Slides) und out/<name>-uebersicht.png (zum Prüfen).
 
 Bausteine für "html" (CSS unten): .tag (kleine Zeile in Versalien), h1 / h1 em (Bernstein), h2, p, p.muted,
 .card(.best) mit .k/.v/.d, .pair (zwei Karten), .wheels (wheels-Funktion: {{wheels:670}}), .amp (Ampel-Liste,
@@ -110,7 +111,10 @@ def main(spec_path):
     run("ffmpeg", "-nostdin", "-y", "-loglevel", "error", "-i", str(tmp / "video.mp4"), "-i", str(audio), "-map", "0:v", "-map", "1:a",
         "-c:v", "copy", "-c:a", "copy", "-shortest", "-movflags", "+faststart", str(t))
     t.rename(final)
-    # 5. Übersicht zum Prüfen
+    # 5. Titelbild (Slide "cover", Standard 1), Profilraster schneidet mittig auf 3:4 (y 240–1680)
+    import shutil
+    shutil.copy(out / f"{name}-{int(spec.get('cover', 1))}.png", out / f"{name}-titelbild.png")
+    # 6. Übersicht zum Prüfen
     from PIL import Image
     W, H = 270, 480; n = len(slides)
     im = Image.new("RGB", (W * min(n, 5), H * ((n + 4) // 5)), "white")
