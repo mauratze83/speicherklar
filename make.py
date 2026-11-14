@@ -247,6 +247,42 @@ posts["post6-stromsteuer"] = [
   frame(f'<h1>Rechne mit <em>deinem Strompreis.</em></h1><p>Im Rechner den Strompreis verschieben und sehen, was sich ändert. Kostenlos, ohne Anmeldung. Link in der Bio.</p><div><span class="cta">speicherklar.de</span></div><p class="src">Beispiel: Ruhrgebiet, 9 kWp Süd 35°, 4.500 kWh/Jahr, Speicher 500 €/kWh, Strom {pr} ct, Einspeisung 7,70 ct, 15 Jahre. Stromsteuer: § 3 StromStG, EU-Minimum 0,1 ct (Richtlinie 2003/96/EG). Stand 13.11.2026.</p>', 9, T, tp, dark=True),
 ]
 
+# ---------- Post 7: Rechner an echten Häusern geprüft (10 Slides), Ableger zum Artikel stromspeicher-rechner-test-echte-daten ----------
+# Messwerte (eigene Anlage, SENEC-Export, Prüfjahr 26.10.2025–25.10.2026) und WPuQ-Ergebnisse stehen im Projekt unter
+# claude/sim-pruefung-eigene-anlage.md; Ost-West und Standard-Beispiel rechnet sim.js hier live.
+_js7 = r"""
+const S=require(process.argv[1]);const P=%s;
+const b={region:"4",cons:4500,ev:0,evTime:"eve",bat:6,bprice:500,life:15,price:P,feed:7.7,feedLimit:0};
+const s=S.evaluate({...b,roofs:[{kwp:9,tilt:35,aspect:0}]}),o=S.evaluate({...b,roofs:[{kwp:4.5,tilt:35,aspect:-90},{kwp:4.5,tilt:35,aspect:90}]});
+console.log(JSON.stringify({sBest:s.best.cap,sNet:Math.round(s.best.net),oBest:o.best.cap}));
+"""
+K = json.loads(subprocess.run(["node", "-e", _js7 % _price, str(SITE / "src/sim.js")], capture_output=True, text=True, check=True).stdout)
+M = {"gemessen": 1860, "vorher": 2819, "heute": 1735, "netzMess": 9493, "netzSim": 9716, "julAlt": 11, "julMess": 41, "haus10": 76, "sim10": 77}
+def kbars(rows, hi):
+    W, rh = 820, 92
+    s = f'<svg width="{W}" height="{len(rows)*rh}" viewBox="0 0 {W} {len(rows)*rh}" font-family="Source Sans 3">'
+    for i, (lab, v, col, bold) in enumerate(rows):
+        y = i * rh; w = (W - 230) * v / hi
+        s += (f'<text x="0" y="{y+30}" font-size="30" fill="#15212B" font-weight="{700 if bold else 400}">{lab}</text>'
+              f'<rect x="0" y="{y+44}" width="{max(4,w)}" height="34" rx="4" fill="{col}"/>'
+              f'<text x="{w+16}" y="{y+72}" font-family="JetBrains Mono" font-size="28" font-weight="700" fill="#15212B">{fmt(v)} kWh</text>')
+    return s + "</svg>"
+T = 10; tp = "Rechner geprüft"
+posts["post7-rechner-geprueft"] = [
+  frame('<h1>Ich hab meinen Rechner <em>nachgeprüft.</em></h1><p class="promise">An meiner eigenen Anlage und 30 echten Häusern. Zwei Fehler gefunden.</p>', 1, T, tp),
+  frame(f'<h2>So viel Netzstrom ersetzt mein Speicher</h2>{wheels(M["gemessen"])}<p>kWh im Jahr, gemessen. Mein Rechner hatte für dasselbe Haus {fmt(M["vorher"])} kWh ausgegeben. Das war mir zu viel.</p>', 2, T, tp),
+  frame('<h2>Das Setup</h2>' + summary(["12,92 kWp Ost-West, 45° Neigung", "10 kWh Speicher", "Wärmepumpe, Pool und E-Auto an einem Zähler", "Messwerte alle 5 Minuten, seit 2021"]), 3, T, tp),
+  frame(f'<h2>Der Speicher selbst rechnet richtig</h2><div class="pair"><div class="card"><div class="k">Netzbezug gemessen</div><div class="v">{fmt(M["netzMess"])}</div><div class="d">kWh an 336 Tagen</div></div><div class="card"><div class="k">Rechner, mit meinen Daten</div><div class="v">{fmt(M["netzSim"])}</div><div class="d">kWh, 2,3 % daneben</div></div></div><p>Gibt man dem Rechner echte Erzeugung und echten Verbrauch, passt es.</p>', 4, T, tp),
+  frame(f'<h2>Fehler 1: die Wärmepumpe</h2><p class="muted" style="font-size:32px">Netzstrom, den der Speicher im Jahr ersetzt</p>'
+        + kbars([("Gemessen", M["gemessen"], "#15212B", True), ("Rechner vorher", M["vorher"], "#B9C3CB", False), ("Rechner heute", M["heute"], "#E39A0B", True)], M["vorher"])
+        + '<p>Der Rechner kannte nur kurze Haushaltsspitzen. Wärmepumpe und Pool laufen aber gleichmäßig. Jetzt trägst du sie getrennt ein.</p>', 5, T, tp),
+  frame(f'<h2>Fehler 2: das Wetter</h2><div class="pair"><div class="card"><div class="k">Trübste Julitage, Rechner vorher</div><div class="v">{M["julAlt"]} %</div><div class="d">eines normalen Tages</div></div><div class="card"><div class="k">Gemessen (PVGIS, 10 Jahre)</div><div class="v" style="color:var(--pos)">{M["julMess"]} %</div><div class="d">eines normalen Tages</div></div></div><p>Der Sommer war im Rechner viel zu wechselhaft. Jetzt nimmt er Sonne und Wolken aus einem echten Jahr, Stunde für Stunde.</p>', 6, T, tp),
+  frame(f'<h2>Gegenprobe: 30 fremde Häuser</h2><div class="pair"><div class="card"><div class="k">Gemessen</div><div class="v">{M["haus10"]} %</div><div class="d">Autarkie mit 10 kWh</div></div><div class="card"><div class="k">Rechner</div><div class="v" style="color:var(--sun-ink)">{M["sim10"]} %</div><div class="d">Autarkie mit 10 kWh</div></div></div><p>Minutenwerte vom Institut für Solarenergieforschung Hameln. Mit Speicher liegt der Rechner jetzt auf 1–2 Punkte genau.</p>', 7, T, tp),
+  frame(f'<h2>Eine Korrektur an euch</h2><p>Am 09.11. hab ich geschrieben: Bei Ost-West reichen 4&nbsp;kWh. Mit dem geprüften Rechner sind es {K["oBest"]}&nbsp;kWh.</p><p class="muted">Beim Süddach bleibt es bei {K["sBest"]}&nbsp;kWh, nach 15 Jahren bleiben {fmt(K["sNet"])}&nbsp;€ übrig.</p>', 8, T, tp),
+  frame('<h2>Kurz gesagt</h2>' + summary(["Der Speicher-Teil stimmte schon.", "Wärmepumpe und Wetter waren falsch, jetzt behoben.", "30 echte Häuser: 1–2 Punkte genau.", f"Ost-West: {K['oBest']} statt 4 kWh."]), 9, T, tp),
+  frame(f'<h1>Der ganze Test <em>mit allen Zahlen.</em></h1><p>Setup, Messwerte, beide Fehler und die 30 Häuser. Im Artikel auf speicherklar.de. Link in der Bio.</p><div><span class="cta">speicherklar.de</span></div><p class="src">Eigene Messwerte: SENEC-Export, 26.10.2025–25.10.2026. Vergleichshäuser: WPuQ, ISFH 2019, CC BY 4.0. Wetter: PVGIS-SARAH3 (EU-Kommission). Beispiel: Ruhrgebiet, 9 kWp, 35°, 4.500 kWh/Jahr, Speicher 500 €/kWh, Strom {pr} ct, Einspeisung 7,70 ct, 15 Jahre.</p>', 10, T, tp, dark=True),
+]
+
 PROFILE = f"""<div style="width:1080px;height:1080px;background:#15212B;display:flex;align-items:center;justify-content:center">
 <svg width="620" height="620" viewBox="0 0 26 26"><rect x="5.6" y="4.4" width="14.8" height="19" rx="2.6" fill="none" stroke="#E6ECF1" stroke-width="1.7"/><rect x="10" y="1.7" width="6" height="2.6" rx="0.9" fill="#E6ECF1"/><rect x="8.2" y="13.6" width="9.6" height="7.4" rx="1" fill="#E39A0B"/><rect x="8.2" y="9.4" width="9.6" height="2.8" rx="1" fill="#E39A0B" opacity=".45"/></svg></div>"""
 
