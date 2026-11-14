@@ -22,8 +22,8 @@
 <h2>Wie die Rechnung abläuft</h2>
 <ol>
 <li><b>Sonne.</b> Monatsmittel der Einstrahlung 2014–2023 aus PVGIS-SARAH3 der EU-Kommission. Der kostenlose Rechner nutzt 10 Regionen nach der ersten Ziffer der PLZ, der Angebots-Check die zweistelligen PLZ-Gebiete.</li>
-<li><b>Wetter.</b> 365 einzelne Tage, sonnige und trübe wechseln sich ab, oft mehrere trübe am Stück. Daraus entsteht für jede Stunde die Einstrahlung auf dein Dach, nach Sonnenstand, Ausrichtung und Neigung. Anlagenverluste: rund 21 %.</li>
-<li><b>Verbrauch.</b> Standardlastprofil H0 mit Morgen- und Abendspitze, im Winter mehr als im Sommer, dazu kurze Lastspitzen in 5-Minuten-Schritten. E-Auto abends oder tagsüber. Eine Wärmepumpe läuft vor allem im Winter und gleichmäßig über den Tag, ohne die kurzen Spitzen des Haushalts (seit 14.11.2026, siehe <a href="#eigene-anlage">Prüfung an meiner Anlage</a>).</li>
+<li><b>Wetter.</b> Der Wechsel von Sonne und Wolken kommt Stunde für Stunde aus einem echten Jahr (2020, PVGIS, Ruhrgebiet). Die Monatssummen bleiben die deines Gebiets. Daraus entsteht für jede Stunde die Einstrahlung auf dein Dach, nach Sonnenstand, Ausrichtung und Neigung. Anlagenverluste: rund 21 %.</li>
+<li><b>Verbrauch.</b> Standardlastprofil H0 mit Morgen- und Abendspitze, im Winter mehr als im Sommer, dazu kurze Lastspitzen in 5-Minuten-Schritten. E-Auto abends oder tagsüber. Eine Wärmepumpe läuft gleichmäßig über den Tag, ohne die kurzen Spitzen des Haushalts. Wie sie sich auf Monate und Stunden verteilt, habe ich an rund 30 gemessenen Häusern abgelesen (siehe <a href="#eigene-anlage">Prüfung</a>).</li>
 <li><b>Speicher.</b> Ein ganzes Jahr in 5-Minuten-Schritten: Überschuss lädt den Speicher, abends entlädt er. 88 % Wirkungsgrad je Zyklus, 25 W Standby, Ladeleistung halbe Kapazität pro Stunde, höchstens 5 kW.</li>
 <li><b>Geld.</b> Jede selbst genutzte kWh spart den Strompreis, jede nicht mehr eingespeiste kostet die Vergütung. Ersparnis mal Lebensdauer minus Speicherpreis ergibt die Bilanz. Das rechnet der Rechner für 1 bis 15 kWh und zeigt die Größe, bei der am meisten übrig bleibt.</li>
 </ol>
@@ -34,31 +34,47 @@
 <div class="tablewrap"><table>
 <thead><tr><th>Speicher (nutzbar)</th><th>HTW Berlin</th><th>Speicherklar</th><th>Speicherklar mit HTW-Speicherwerten</th></tr></thead>
 <tbody>
-<tr><td>ohne</td><td class="num">36 %</td><td class="num">36 %</td><td class="num">36 %</td></tr>
-<tr><td>4 kWh</td><td class="num">61 %</td><td class="num">65 %</td><td class="num">62 %</td></tr>
-<tr class="hl"><td>6 kWh</td><td class="num">69 %</td><td class="num">72 %</td><td class="num">70 %</td></tr>
-<tr><td>8 kWh</td><td class="num">75 %</td><td class="num">77 %</td><td class="num">75 %</td></tr>
-<tr><td>10 kWh</td><td class="num">77 %</td><td class="num">80 %</td><td class="num">78 %</td></tr>
+<tr><td>ohne</td><td class="num">36 %</td><td class="num">35 %</td><td class="num">35 %</td></tr>
+<tr><td>4 kWh</td><td class="num">61 %</td><td class="num">64 %</td><td class="num">61 %</td></tr>
+<tr class="hl"><td>6 kWh</td><td class="num">69 %</td><td class="num">72 %</td><td class="num">69 %</td></tr>
+<tr><td>8 kWh</td><td class="num">75 %</td><td class="num">76 %</td><td class="num">74 %</td></tr>
+<tr><td>10 kWh</td><td class="num">77 %</td><td class="num">79 %</td><td class="num">77 %</td></tr>
 </tbody></table></div>
-<p class="note">Autarkiegrad: Anteil des Verbrauchs, den PV-Anlage und Speicher decken. HTW-Werte aus dem Unabhängigkeitsrechner, abgerufen am 10.11.2026. Speicherklar gerechnet mit <code>src/sim.js</code> am selben Tag.</p>
-<p>Ohne Speicher liegen beide gleich. Auch der Jahresertrag passt: 1.024 kWh je kWp bei der HTW, 1.035 kWh bei Speicherklar. Mit Speicher rechnet Speicherklar 2 bis 4 Prozentpunkte mehr Autarkie.</p>
+<p class="note">Autarkiegrad: Anteil des Verbrauchs, den PV-Anlage und Speicher decken. HTW-Werte aus dem Unabhängigkeitsrechner, abgerufen am 10.11.2026. Speicherklar gerechnet mit <code>src/sim.js</code> am 14.11.2026.</p>
+<p>Ohne Speicher liegen beide fast gleich. Auch der Jahresertrag passt: 1.024 kWh je kWp bei der HTW, 1.010 kWh bei Speicherklar. Mit Speicher rechnet Speicherklar 1 bis 3 Prozentpunkte mehr Autarkie.</p>
 <p>Der Unterschied kommt vom Speicher selbst. Die HTW nimmt an, dass im Mittel nur 90 % der Kapazität verfügbar sind, weil der Akku altert, und setzt einen Wirkungsgrad von 83,9 % an. Speicherklar rechnet mit voller Kapazität und 88 %. Setzt man die HTW-Werte in Speicherklar ein (letzte Spalte), liegen beide Rechner höchstens einen Prozentpunkt auseinander.</p>
-<p>Was das für dich heißt: Speicherklar ist beim Speicher etwas optimistisch. An der besten Größe ändert das im Beispiel nichts, mit beiden Annahmen sind es 6 kWh. Die Bilanz nach 15 Jahren fällt mit den HTW-Werten aber kleiner aus, im Standard-Beispiel (Ruhrgebiet, 500 €/kWh, 33 ct) rund 2.230 € statt 2.758 €.</p>
+<p>Was das für dich heißt: Speicherklar ist beim Speicher etwas optimistisch. An der besten Größe ändert das im Beispiel nichts, mit beiden Annahmen sind es 6 kWh. Die Bilanz nach 15 Jahren fällt mit den HTW-Werten aber kleiner aus, im Standard-Beispiel (Ruhrgebiet, 500 €/kWh, 33 ct) rund 2.390 € statt 2.899 €.</p>
 
-<h2 id="eigene-anlage">An meiner eigenen Anlage geprüft</h2>
-<p>Ich habe Speicherklar an meiner eigenen Anlage in Krefeld nachgerechnet: 12,92 kWp Ost-West mit 45° Neigung (14 Module nach Osten, 20 nach Westen), 10 kWh Speicher. Über einen einzigen Zähler laufen Haushalt, Erdwärmepumpe, Pool und E-Auto. Grundlage sind die Messwerte meines Speichers in 5-Minuten-Schritten vom 26.10.2025 bis 25.10.2026, 336 vollständige Tage.</p>
+<h2 id="eigene-anlage">Geprüft an echten Häusern</h2>
+<p>Ein Rechner ist nur so gut wie sein Abgleich mit der Wirklichkeit. Deshalb habe ich Speicherklar am 14.11.2026 gegen Messwerte geprüft, statt gegen einen anderen Rechner. Dabei habe ich zwei Fehler gefunden und behoben.</p>
+<h3>30 Einfamilienhäuser mit Minutenwerten</h3>
+<p>Das Institut für Solarenergieforschung Hameln hat ein Jahr lang Haushaltsstrom und Wärmepumpe von rund 40 Einfamilienhäusern gemessen. Ich habe die 30 Häuser mit lückenlosem Jahr 2019 genommen, ihren Verbrauch in Minutenschritten mit dem echten Wetter 2019 am Ort durchgerechnet und mit dem verglichen, was Speicherklar aus dem Jahresverbrauch macht. Die Anlagen sind wie im Standard-Beispiel bemessen: 9 kWp und 0 bis 10 kWh Speicher je 4.500 kWh Haushaltsstrom.</p>
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>Autarkie mit Speicher je 4.500 kWh</th><th>ohne</th><th>4 kWh</th><th>6 kWh</th><th>8 kWh</th><th>10 kWh</th></tr></thead>
+<tbody>
+<tr><td>Gemessene Häuser, nur Haushalt</td><td class="num">39 %</td><td class="num">61 %</td><td class="num">69 %</td><td class="num">74 %</td><td class="num">76 %</td></tr>
+<tr class="hl"><td>Speicherklar</td><td class="num">35 %</td><td class="num">62 %</td><td class="num">70 %</td><td class="num">75 %</td><td class="num">77 %</td></tr>
+<tr><td>Gemessene Häuser mit Wärmepumpe</td><td class="num">25 %</td><td class="num">35 %</td><td class="num">39 %</td><td class="num">42 %</td><td class="num">45 %</td></tr>
+<tr class="hl"><td>Speicherklar mit Wärmepumpe</td><td class="num">30 %</td><td class="num">39 %</td><td class="num">43 %</td><td class="num">46 %</td><td class="num">48 %</td></tr>
+</tbody></table></div>
+<p class="note">Daten: WPuQ, Schlemminger u. a., ISFH 2022, CC BY 4.0. Wetter 2019: PVGIS-SARAH3 für Hameln. Mittel über 30 Häuser, gerechnet mit <code>src/sim.js</code> am 14.11.2026. Mit Wärmepumpe: 3 kWp je 1.000 kWh Haushaltsstrom.</p>
+<p>Mit Speicher trifft Speicherklar die echten Häuser auf ein bis zwei Prozentpunkte. Ohne Speicher rechnet es etwas zu wenig Eigenverbrauch, das macht den Speicher eher etwas zu gut. Mit Wärmepumpe liegt Speicherklar rund 4 Punkte zu hoch, den Zugewinn durch den Speicher trifft es aber (19 gegen 20 Punkte).</p>
+<h3>Meine eigene Anlage</h3>
+<p>Dazu kommt meine Anlage in Krefeld: 12,92 kWp Ost-West mit 45° Neigung (14 Module nach Osten, 20 nach Westen), 10 kWh Speicher. Über einen einzigen Zähler laufen Haushalt, Erdwärmepumpe, Pool und E-Auto, rund 19.000 kWh im Jahr. Grundlage sind die Messwerte meines Speichers in 5-Minuten-Schritten vom 26.10.2025 bis 25.10.2026.</p>
 <div class="tablewrap"><table class="fit">
 <thead><tr><th>Was ich geprüft habe</th><th>Rechner</th><th>Gemessen</th></tr></thead>
 <tbody>
-<tr><td>Speicher, gerechnet mit meinen echten Messwerten: Netzbezug</td><td class="num">9.716 kWh</td><td class="num">9.493 kWh</td></tr>
-<tr><td>dasselbe als Autarkiegrad</td><td class="num">44,8 %</td><td class="num">46,1 %</td></tr>
-<tr><td>Jahresertrag der PV-Anlage</td><td class="num">10.218 kWh</td><td class="num">9.027 bis 10.334 kWh (2022–2025)</td></tr>
-<tr><td>Was der Speicher an Netzstrom spart, mit Wärmepumpe im neuen Verbrauchsmodell und meiner echten PV</td><td class="num">1.882 kWh</td><td class="num">1.860 kWh</td></tr>
+<tr><td>Speicher, gerechnet mit meinen echten Messwerten: Netzbezug an 336 Tagen</td><td class="num">9.716 kWh</td><td class="num">9.493 kWh</td></tr>
+<tr><td>Jahresertrag der PV-Anlage</td><td class="num">9.764 kWh</td><td class="num">9.027 bis 10.334 kWh (2022–2025)</td></tr>
+<tr><td>Was der Speicher im Jahr an Netzstrom spart</td><td class="num">1.735 kWh</td><td class="num">1.860 kWh</td></tr>
 </tbody></table></div>
-<p class="note">Gemessen: SENEC-Speicher, Export aus mein-senec.de. Gerechnet mit <code>src/sim.js</code> am 14.11.2026, Region Ruhrgebiet/Niederrhein. Für den Speicher-Nutzen in der letzten Zeile habe ich ein ganzes Jahr gebildet (29 Lückentage aus dem Vorjahr) und 4.500 kWh als Haushaltsstrom angenommen, den Rest als gleichmäßigen Verbrauch.</p>
-<p>Das Speichermodell trifft meinen echten Netzbezug auf gut 2 %. Der Ertrag liegt im Rahmen meiner Jahre; früh morgens und abends liefert meine Anlage weniger, weil Bäume sie verschatten. Das kennt der Rechner nicht.</p>
-<p>Gefunden habe ich dabei einen Fehler beim Verbrauch: Bis zum 14.11.2026 hat der Rechner den ganzen Verbrauch mit den kurzen Spitzen eines Haushalts gerechnet. Wärmepumpe und Pool laufen aber lange und gleichmäßig. Für mein Haus hat der alte Rechner deshalb fast 2.820 kWh Ersparnis durch den Speicher gezeigt, gemessen sind es rund 1.860 kWh. Seitdem trägst du die Wärmepumpe im kostenlosen Rechner getrennt ein, und sie läuft ohne Spitzen. Haushalte ohne Wärmepumpe rechnen genau wie vorher.</p>
-<p>Mit den Sonnendaten des Rechners statt meiner gemessenen fällt der Nutzen des Speichers bei mir kleiner aus als gemessen. Das prüfe ich gerade weiter und schreibe das Ergebnis hier hin.</p>
+<p class="note">Gemessen: SENEC-Speicher, Export aus mein-senec.de. Für den Speicher-Nutzen habe ich ein ganzes Jahr gebildet (29 Lückentage aus dem Vorjahr) und 4.500 kWh als Haushaltsstrom angenommen, den Rest als gleichmäßigen Verbrauch nach meinen echten Monatswerten. Früh morgens und abends verschatten Bäume die Anlage; das kennt der Rechner nicht.</p>
+<h3>Die zwei Fehler, die ich behoben habe</h3>
+<ul>
+<li><b>Wärmepumpe:</b> Bis zum 14.11.2026 hat der Rechner den ganzen Verbrauch mit den kurzen Spitzen eines Haushalts gerechnet. Wärmepumpe und Pool laufen aber lange und gleichmäßig. Für mein Haus zeigte der alte Rechner 2.819 kWh Ersparnis durch den Speicher statt gemessener 1.860 kWh. Jetzt trägst du die Wärmepumpe getrennt ein, sie läuft ohne Spitzen und nach den gemessenen Monatsanteilen.</li>
+<li><b>Wetter:</b> Vorher hat der Rechner jeden Tag ausgewürfelt. Im Sommer waren die Tage dabei etwa doppelt so wechselhaft wie gemessen, dafür fehlten Wolken innerhalb des Tages. Bei normalen Haushalten hob sich das zufällig auf, bei großem Verbrauch nicht: Für mein Haus kamen nur 1.146 kWh heraus. Jetzt nimmt der Rechner den Wechsel von Sonne und Wolken aus einem echten Jahr. Mit allen zehn Jahren 2014 bis 2023 bleibt die beste Größe im Standard-Beispiel bei 6 kWh.</li>
+</ul>
+<p>Für Haushalte ohne Wärmepumpe ändert sich wenig: Im Standard-Beispiel bleibt 6 kWh die beste Größe, die Bilanz nach 15 Jahren liegt bei 2.899 € statt 2.758 €.</p>
 
 <h2>Was die Rechnung nicht abbildet</h2>
 <ul>
@@ -83,15 +99,16 @@
 <tr class="hl"><td>33 ct (Standard)</td><td class="num">0 %</td><td class="num">6 kWh</td></tr>
 <tr><td>36 ct</td><td class="num">+1,2 %</td><td class="num">6 kWh</td></tr>
 <tr><td>40 ct</td><td class="num">+2,7 %</td><td class="num">7 kWh</td></tr>
-<tr><td>45 ct</td><td class="num">+4,3 %</td><td class="num">8 kWh</td></tr>
+<tr><td>45 ct</td><td class="num">+4,3 %</td><td class="num">7 kWh</td></tr>
 </tbody></table></div>
-<p class="note">Standard-Beispiel: Ruhrgebiet, 9 kWp Süd, 35°, 4.500 kWh Verbrauch, Speicher 500 €/kWh, Einspeisung 7,70 ct, 15 Jahre. Gerechnet mit <code>src/sim.js</code> am 12.11.2026. Mittlere Spalte: gleichmäßige Änderung pro Jahr ab 33 ct im ersten Jahr, die über 15 Jahre auf diesen Durchschnitt führt.</p>
+<p class="note">Standard-Beispiel: Ruhrgebiet, 9 kWp Süd, 35°, 4.500 kWh Verbrauch, Speicher 500 €/kWh, Einspeisung 7,70 ct, 15 Jahre. Gerechnet mit <code>src/sim.js</code> am 14.11.2026. Mittlere Spalte: gleichmäßige Änderung pro Jahr ab 33 ct im ersten Jahr, die über 15 Jahre auf diesen Durchschnitt führt.</p>
 <p>Sieben Cent mehr im Schnitt verschieben die beste Größe um eine Stufe. Ein Unterschied bleibt: Steigt der Preis erst nach und nach, ist der Speicher etwas später bezahlt als bei einem von Anfang an höheren Preis, weil die ersten Jahre günstiger sind.</p>
 
 <h2>Quellen</h2>
 <ul>
-<li><a href="https://joint-research-centre.ec.europa.eu/photovoltaic-geographical-information-system-pvgis_en" target="_blank" rel="noopener">PVGIS</a>, Gemeinsame Forschungsstelle der EU-Kommission: Sonnendaten SARAH3, 2014–2023</li>
+<li><a href="https://joint-research-centre.ec.europa.eu/photovoltaic-geographical-information-system-pvgis_en" target="_blank" rel="noopener">PVGIS</a>, Gemeinsame Forschungsstelle der EU-Kommission: Sonnendaten SARAH3, Monatsmittel 2014–2023 und Stundenwerte 2020</li>
 <li><a href="https://www.bundesnetzagentur.de/DE/Fachthemen/ElektrizitaetundGas/ErneuerbareEnergien/EEG_Foerderung/start.html" target="_blank" rel="noopener">Bundesnetzagentur</a>: Einspeisevergütung nach EEG</li>
+<li><a href="https://zenodo.org/records/5642902" target="_blank" rel="noopener">WPuQ-Datensatz</a>, Institut für Solarenergieforschung Hameln: Haushalts- und Wärmepumpenstrom von Einfamilienhäusern, 2019–2020, CC BY 4.0</li>
 <li><a href="https://solar.htw-berlin.de/faq-unabhaengigkeitsrechner/" target="_blank" rel="noopener">HTW Berlin, FAQ zum Unabhängigkeitsrechner</a>: Annahmen der Vergleichsrechnung</li>
 </ul>
 </article>
