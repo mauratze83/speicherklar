@@ -46,12 +46,12 @@ head = f"""<!doctype html>
 <link rel="canonical" href="https://speicherklar.de/">
 {HOME_LD}
 <meta property="og:title" content="Speicherklar – Passen Speicher und PV-Anlage zu deinem Haus?">
-<meta property="og:description" content="Verkäufer rechnen mit Juli. Wir rechnen mit November. Kostenloser Speicher-Rechner und Angebots-Check für PV-Anlage und Speicher.">
+<meta property="og:description" content="Verkäufer rechnen mit Juli. Ich rechne mit November. Kostenloser Speicher-Rechner und Angebots-Check für PV-Anlage und Speicher.">
 <meta property="og:url" content="https://speicherklar.de/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="de_DE">
 <meta name="theme-color" content="#EDF0F2">
-{head_meta("img/og/start.png", "Speicherklar: Lohnt sich dein Stromspeicher? Verkäufer rechnen mit Juli, wir rechnen mit November.")}
+{head_meta("img/og/start.png", "Speicherklar: Lohnt sich dein Stromspeicher? Verkäufer rechnen mit Juli, ich rechne mit November.")}
 {analytics()}
 <style>
 {(S / "fonts.css").read_text()}{(S / "style.css").read_text()}</style>

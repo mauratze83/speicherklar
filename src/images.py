@@ -67,7 +67,7 @@ def build(articles):
         if sig.get(key) != hsh or not path.exists():
             jobs.append((path, content, w, h)); sig[key] = hsh
     want(OG / "start.png", card_html("PV-Anlage planen", "Lohnt sich dein Stromspeicher?",
-         sub="Verkäufer rechnen mit Juli. <em>Wir rechnen mit November.</em> Jahressimulation für deine Region, Ausrichtung und deinen Verbrauch."), 1200, 630)
+         sub="Verkäufer rechnen mit Juli. <em>Ich rechne mit November.</em> Jahressimulation für deine Region, Ausrichtung und deinen Verbrauch."), 1200, 630)
     want(OG / "ratgeber.png", card_html("Ratgeber", "Stromspeicher, ehrlich gerechnet",
          sub="Fragen rund um PV-Anlage und Speicher, beantwortet mit Zahlen aus der Jahressimulation."), 1200, 630)
     want(OG / "pro.png", card_html("Speicherklar Pro", "Die zweite Rechnung zu deinem Angebot",
