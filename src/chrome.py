@@ -70,7 +70,7 @@ def header(prefix="./", active=None):
 # und /so-gehts/ steht mit noindex und Platzhalter außerhalb der Sitemap.
 # quer: 16:9 (Desktop) · hoch: 9:16 oder 4:5 (Handy hochkant, optional) · bild: Vorschaubild 16:9 (JPG)
 # untertitel: WebVTT, optional · dauer: ISO 8601, z. B. "PT1M15S" · datum: Tag der Veröffentlichung (JJJJ-MM-TT)
-VIDEO = {"quer": "", "hoch": "", "bild": "", "untertitel": "", "dauer": "PT1M15S", "datum": ""}
+VIDEO = {"quer": "video/erklaer-16x9.mp4", "hoch": "video/erklaer-9x16.mp4", "bild": "video/erklaer.jpg", "untertitel": "", "dauer": "PT1M13S", "datum": "2026-11-15"}
 
 def video_live():
     return bool(VIDEO["quer"])

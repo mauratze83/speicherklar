@@ -12,6 +12,7 @@ Nicht im Modell: Wärmepumpen-Lastprofil (nur in Speicherklar Pro), Notstrom, Ve
 
 - [Stromspeicher-Rechner](https://speicherklar.de/): PLZ, Dachausrichtung, Neigung, kWp, Jahresverbrauch und E-Auto eingeben; zeigt Ersparnis, Amortisation, Bilanz und die wirtschaftlichste Speichergröße von 1 bis 15 kWh.
 - [Methodik](https://speicherklar.de/methodik.html): Rechenweg, Annahmen, Quellen, Grenzen und Vergleich mit dem Unabhängigkeitsrechner der HTW Berlin.
+- [So funktioniert Speicherklar](https://speicherklar.de/so-gehts/): Erklärvideo und Überblick über Rechner und Speicherklar Pro.
 - [Speicherklar Pro](https://speicherklar.de/pro/): Angebots-Check für ein konkretes Installateur-Angebot. Erste Einschätzung kostenlos als Ampel (Speichergröße, PV-Größe, Preis je kWh und je kWp), danach ein PDF-Bericht mit der besten Kombination aus PV-Anlage und Speicher.
 
 ## Ratgeber

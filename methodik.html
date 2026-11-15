@@ -608,8 +608,25 @@ matchMedia('(min-width:761px)').addEventListener('change',function(m){if(m.match
 <li><a href="https://solar.htw-berlin.de/faq-unabhaengigkeitsrechner/" target="_blank" rel="noopener">HTW Berlin, FAQ zum Unabhängigkeitsrechner</a>: Annahmen der Vergleichsrechnung</li>
 </ul>
 </article>
-<div class="cta"><b>Rechne dein eigenes Haus durch</b> <span>Postleitzahl, Dachausrichtung und Verbrauch eingeben. Der kostenlose Rechner zeigt dir die wirtschaftlichste Speichergröße, auch für das Szenario EEG-Reform 2027.</span> <a class="btn" href="./#rechner" data-umami-event="artikel-zum-rechner" data-umami-event-artikel="methodik">Zum Rechner</a> <span class="cta-pro">Du hast schon ein Angebot? <a href="./pro/" data-umami-event="artikel-zu-pro" data-umami-event-artikel="methodik">Speicherklar Pro</a> prüft Speicher und PV-Anlage zusammen und zeigt die beste Kombination für dein Dach. Die Einordnung ist kostenlos.</span></div></main>
-<footer>
+<div class="cta"><b>Rechne dein eigenes Haus durch</b> <span>Postleitzahl, Dachausrichtung und Verbrauch eingeben. Der kostenlose Rechner zeigt dir die wirtschaftlichste Speichergröße, auch für das Szenario EEG-Reform 2027.</span> <a class="btn" href="./#rechner" data-umami-event="artikel-zum-rechner" data-umami-event-artikel="methodik">Zum Rechner</a> <span class="cta-pro">Du hast schon ein Angebot? <a href="./pro/" data-umami-event="artikel-zu-pro" data-umami-event-artikel="methodik">Speicherklar Pro</a> prüft Speicher und PV-Anlage zusammen und zeigt die beste Kombination für dein Dach. Die Einordnung ist kostenlos.</span><button type="button" class="vid-open" data-vid-ort="artikel"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M6.5 5.2v5.6L11 8z" fill="currentColor"/></svg> <span>In 75 Sekunden erklärt</span></button></div></main>
+<dialog class="vid-dlg" id="vid-dlg" aria-label="Erklärvideo Speicherklar">
+  <div class="vid-box">
+    <button type="button" class="vid-x" aria-label="Video schließen"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    <video class="vid-player" controls playsinline preload="none" poster="./video/erklaer.jpg" data-quer="./video/erklaer-16x9.mp4" data-hoch="./video/erklaer-9x16.mp4"></video>
+    <div class="vid-foot"><a class="btn btn-on btn-sun vid-cta" href="./#rechner">Rechner starten</a> <a class="vid-more" href="./so-gehts/">Mehr dazu</a></div>
+  </div>
+</dialog>
+<script>(function(){var T=function(n,d){try{window.umami&&umami.track(n,d)}catch(e){}};
+var hoch=matchMedia('(max-width:760px) and (orientation:portrait)');
+function src(v){var s=(hoch.matches&&v.dataset.hoch)||v.dataset.quer;if(v.getAttribute('src')!==s)v.setAttribute('src',s);}
+document.querySelectorAll('video[data-quer]').forEach(function(v){src(v);var done=false;v.addEventListener('ended',function(){if(!done){done=true;T('video-ende',{ort:v.dataset.ort||'seite'})}});});
+var d=document.getElementById('vid-dlg');if(!d||!d.showModal)return;var v=d.querySelector('video'),ort='';
+function zu(){v.pause();d.close();}
+document.addEventListener('click',function(e){var b=e.target.closest('.vid-open');if(!b)return;ort=b.dataset.vidOrt||'';v.dataset.ort=ort;src(v);d.showModal();T('video-open',{ort:ort});try{v.play()}catch(x){}});
+d.querySelector('.vid-x').addEventListener('click',zu);
+d.addEventListener('click',function(e){if(e.target===d)zu()});
+d.addEventListener('close',function(){v.pause()});
+d.querySelector('.vid-cta').addEventListener('click',function(){T('video-cta',{ort:ort})});})();</script><footer>
   <div class="wrap">
     <span>Speicherklar ist eine Schätzung, keine Anlagen- oder Finanzberatung. Für eine Kaufentscheidung hol dir Angebote von Fachbetrieben.</span>
     <span>Unabhängig: kein Geld von Herstellern oder Installateuren, keine Werbung. Der Rechenweg ist <a href="./methodik.html">offen</a>.</span>
