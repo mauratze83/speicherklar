@@ -57,7 +57,7 @@ nav a{color:var(--muted);text-decoration:none}
 nav a:hover{color:var(--ink)}
 nav a[aria-current]{color:var(--ink);font-weight:600}
 .menu-btn{display:none}
-@media (max-width:720px){
+@media (max-width:760px){
   header.top.js .menu-btn{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;margin:-6px -10px -6px 0;padding:0;border:0;border-radius:8px;background:none;color:var(--ink);cursor:pointer;-webkit-tap-highlight-color:transparent}
   .menu-btn path{stroke:currentColor;stroke-width:2;stroke-linecap:round;transform-origin:11px 11px;transition:transform 200ms var(--ease-out),opacity 150ms ease}
   header.top.open .menu-btn .l1{transform:translateY(5px) rotate(45deg)}
@@ -68,7 +68,7 @@ nav a[aria-current]{color:var(--ink);font-weight:600}
   header.top.js nav a{display:block;padding:12px 2px;border-bottom:1px solid var(--line)}
   header.top.js nav a:last-child{border-bottom:0}
 }
-@media (max-width:720px) and (prefers-reduced-motion:reduce){.menu-btn path{transition:none}}
+@media (max-width:760px) and (prefers-reduced-motion:reduce){.menu-btn path{transition:none}}
 
 .hero{padding-block:44px 22px}
 .eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sun-ink)}
@@ -356,6 +356,11 @@ a.btn{text-decoration:none;display:inline-block}
 @media (max-width:860px) and (prefers-reduced-motion:reduce){.rbar{transform:none;transition:opacity 150ms ease,visibility 0s linear 150ms}}
 @media print{.rbar{display:none!important}}
 
+.kwege{list-style:none;padding:0;margin:26px 0 8px;display:grid;gap:12px;max-width:68ch}
+.kwege li{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:grid;gap:2px}
+.kw-label{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.kw-link{font-family:var(--f-display);font-weight:800;font-stretch:105%;font-size:21px;color:var(--ink);text-decoration-color:var(--sun);text-underline-offset:4px;overflow-wrap:anywhere}
+.kw-note{font-size:16px;color:var(--muted)}
 .about{display:grid;grid-template-columns:minmax(0,1fr) 340px;column-gap:56px;align-items:start}
 .about-text{grid-column:1;grid-row:1}.about-body{grid-column:1;grid-row:2}
 .about-photo{grid-column:2;grid-row:1/span 2;margin:8px 0 0;position:sticky;top:88px}
@@ -443,7 +448,7 @@ html.js .chart.in .cpanel svg{clip-path:inset(0 0 0 0)}
       Speicherklar
     </a>
     <button class="menu-btn" type="button" aria-expanded="false" aria-controls="hauptmenu" aria-label="Menü öffnen"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path class="l1" d="M3 6h16"/><path class="l2" d="M3 11h16"/><path class="l3" d="M3 16h16"/></svg></button>
-    <nav id="hauptmenu" aria-label="Seitenbereiche"><a href="../#rechner">Rechner</a><a href="../ratgeber/" aria-current="page">Ratgeber</a><a href="../#annahmen">Annahmen</a><a href="../pro/">Speicherklar Pro</a><a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">Instagram</a></nav>
+    <nav id="hauptmenu" aria-label="Seitenbereiche"><a href="../#rechner">Rechner</a><a href="../ratgeber/" aria-current="page">Ratgeber</a><a href="../#annahmen">Annahmen</a><a href="../pro/">Speicherklar Pro</a><a href="../ueber-mich.html">Über mich</a><a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">Instagram</a></nav>
   </div>
 </header>
 <script>(function(){var h=document.querySelector('header.top');if(!h)return;var b=h.querySelector('.menu-btn'),n=h.querySelector('nav');h.classList.add('js');
@@ -452,7 +457,7 @@ b.addEventListener('click',function(){set(!h.classList.contains('open'))});
 n.addEventListener('click',function(e){if(e.target.closest('a'))set(false)});
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&h.classList.contains('open')){set(false);b.focus()}});
 document.addEventListener('click',function(e){if(h.classList.contains('open')&&!h.contains(e.target))set(false)});
-matchMedia('(min-width:721px)').addEventListener('change',function(m){if(m.matches)set(false)});})();</script>
+matchMedia('(min-width:761px)').addEventListener('change',function(m){if(m.matches)set(false)});})();</script>
 <main class="wrap page"><div class="art"><article class="doc"><div class="eyebrow">Ratgeber</div><h1>Ost-West-Dach: Braucht es einen Speicher?</h1><p class="lead">Ja, aber einen kleineren. Bei einer Ost-West-Anlage rechnet sich meist ein Speicher mit etwa 5 kWh, bei einem Süddach mit gleicher Leistung eher 6 kWh.</p><p class="meta">Aktualisiert am <time datetime="2026-11-14">14.11.2026</time> · Von <a href="../ueber-mich.html">Manuel Maurer</a> · <a href="#annahmen">Annahmen</a> · <a href="../methodik.html">Rechenweg</a></p>
 
 <p>Ost-West-Dächer gelten oft als zweite Wahl. Für den Eigenverbrauch sind sie aber besser als ihr Ruf: Sie liefern morgens und am späten Nachmittag Strom, also dann, wenn im Haus Kaffeemaschine, Herd und Waschmaschine laufen.</p><figure class="chart"><figcaption><b>Gewinn nach 15 Jahren: Süd gegen Ost-West</b> <span>Je 9 kWp, 35° Neigung, 4.500 kWh Verbrauch, Speicher 500 €/kWh, Strom 33 ct/kWh, Einspeisung 7,7 ct.</span></figcaption><div class="c-wide"><svg viewBox="0 0 640 300" role="img" aria-label="Gewinn nach Lebensdauer je Speichergröße"><line class="grid" x1="80" x2="626" y1="250.0" y2="250.0"/><text class="ax" x="72" y="254.0" text-anchor="end">−1.000 €</text><line class="grid zero" x1="80" x2="626" y1="194.0" y2="194.0"/><text class="ax" x="72" y="198.0" text-anchor="end">0 €</text><line class="grid" x1="80" x2="626" y1="138.0" y2="138.0"/><text class="ax" x="72" y="142.0" text-anchor="end">+1.000 €</text><line class="grid" x1="80" x2="626" y1="82.0" y2="82.0"/><text class="ax" x="72" y="86.0" text-anchor="end">+2.000 €</text><line class="grid" x1="80" x2="626" y1="26.0" y2="26.0"/><text class="ax" x="72" y="30.0" text-anchor="end">+3.000 €</text><text class="ax" x="80.0" y="270" text-anchor="middle">1</text><text class="ax" x="129.6" y="270" text-anchor="middle">2</text><text class="ax" x="179.3" y="270" text-anchor="middle">3</text><text class="ax" x="228.9" y="270" text-anchor="middle">4</text><text class="ax" x="278.5" y="270" text-anchor="middle">5</text><text class="ax" x="328.2" y="270" text-anchor="middle">6</text><text class="ax" x="377.8" y="270" text-anchor="middle">7</text><text class="ax" x="427.5" y="270" text-anchor="middle">8</text><text class="ax" x="477.1" y="270" text-anchor="middle">9</text><text class="ax" x="526.7" y="270" text-anchor="middle">10</text><text class="ax" x="576.4" y="270" text-anchor="middle">11</text><text class="ax" x="626.0" y="270" text-anchor="middle">12</text><text class="ax" x="626" y="294" text-anchor="end">Speichergröße in kWh</text><path class="sline s0" pathLength="1" d="M80.0,166.7L129.6,117.3L179.3,78.8L228.9,50.9L278.5,35.5L328.2,31.7L377.8,36.4L427.5,45.8L477.1,60.4L526.7,79.0L576.4,99.4L626.0,121.0"/><path class="sline s1" pathLength="1" d="M80.0,163.3L129.6,115.3L179.3,83.6L228.9,67.9L278.5,65.2L328.2,74.2L377.8,90.3L427.5,110.2L477.1,133.3L526.7,157.5L576.4,182.9L626.0,208.8"/><circle class="sdot s0" cx="328.2" cy="31.7" r="5"/><text class="slabel s0" x="328.2" y="20.7" text-anchor="middle">6 kWh</text><circle class="sdot s1" cx="278.5" cy="65.2" r="5"/><text class="slabel s1" x="278.5" y="54.2" text-anchor="middle">5 kWh</text></svg></div><div class="c-narrow"><svg viewBox="0 0 380 280" role="img" aria-label="Gewinn nach Lebensdauer je Speichergröße"><line class="grid" x1="80" x2="366" y1="230.0" y2="230.0"/><text class="ax" x="72" y="234.0" text-anchor="end">−1.000 €</text><line class="grid zero" x1="80" x2="366" y1="179.0" y2="179.0"/><text class="ax" x="72" y="183.0" text-anchor="end">0 €</text><line class="grid" x1="80" x2="366" y1="128.0" y2="128.0"/><text class="ax" x="72" y="132.0" text-anchor="end">+1.000 €</text><line class="grid" x1="80" x2="366" y1="77.0" y2="77.0"/><text class="ax" x="72" y="81.0" text-anchor="end">+2.000 €</text><line class="grid" x1="80" x2="366" y1="26.0" y2="26.0"/><text class="ax" x="72" y="30.0" text-anchor="end">+3.000 €</text><text class="ax" x="80.0" y="250" text-anchor="middle">1</text><text class="ax" x="132.0" y="250" text-anchor="middle">3</text><text class="ax" x="184.0" y="250" text-anchor="middle">5</text><text class="ax" x="236.0" y="250" text-anchor="middle">7</text><text class="ax" x="288.0" y="250" text-anchor="middle">9</text><text class="ax" x="340.0" y="250" text-anchor="middle">11</text><text class="ax" x="366.0" y="250" text-anchor="middle">12</text><text class="ax" x="366" y="274" text-anchor="end">Speichergröße in kWh</text><path class="sline s0" pathLength="1" d="M80.0,154.2L106.0,109.2L132.0,74.0L158.0,48.6L184.0,34.7L210.0,31.2L236.0,35.4L262.0,44.1L288.0,57.4L314.0,74.3L340.0,92.9L366.0,112.5"/><path class="sline s1" pathLength="1" d="M80.0,151.0L106.0,107.3L132.0,78.4L158.0,64.1L184.0,61.7L210.0,69.9L236.0,84.6L262.0,102.7L288.0,123.7L314.0,145.8L340.0,168.9L366.0,192.5"/><circle class="sdot s0" cx="210.0" cy="31.2" r="5"/><text class="slabel s0" x="210.0" y="20.2" text-anchor="middle">6 kWh</text><circle class="sdot s1" cx="184.0" cy="61.7" r="5"/><text class="slabel s1" x="184.0" y="50.7" text-anchor="middle">5 kWh</text></svg></div><div class="clegend"><span><i class="sw sl s0"></i>Süd</span> <span><i class="sw sl s1"></i>Ost-West</span></div></figure>
@@ -486,7 +491,7 @@ matchMedia('(min-width:721px)').addEventListener('change',function(m){if(m.match
     <span>Speicherklar ist eine Schätzung, keine Anlagen- oder Finanzberatung. Für eine Kaufentscheidung hol dir Angebote von Fachbetrieben.</span>
     <span>Unabhängig: kein Geld von Herstellern oder Installateuren, keine Werbung. Der Rechenweg ist <a href="../methodik.html">offen</a>.</span>
     <span>Sonnendaten: PVGIS © Europäische Union, 2001–2026.</span>
-    <span><a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">Instagram @speicherklar</a> · <a href="../methodik.html">Methodik</a> · <a href="../ueber-mich.html">Über mich</a> · <a href="../impressum.html">Impressum</a> · <a href="../datenschutz.html">Datenschutz</a></span>
+    <span><a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">Instagram @speicherklar</a> · <a href="../methodik.html">Methodik</a> · <a href="../ueber-mich.html">Über mich</a> · <a href="../kontakt.html">Kontakt</a> · <a href="../impressum.html">Impressum</a> · <a href="../datenschutz.html">Datenschutz</a></span>
   </div>
 </footer>
 <script>try{if("IntersectionObserver" in window){document.documentElement.classList.add("js");var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});},{threshold:0.35});document.querySelectorAll(".chart,.about-photo").forEach(function(c){io.observe(c);});}}catch(e){}</script>

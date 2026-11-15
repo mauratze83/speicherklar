@@ -14,6 +14,11 @@ FAV = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 
 # Gleiche Grundstyles wie die Startseite (Farben, Schriften, Kopf, Fuß, Breite), dazu Textseiten-Typografie unter .doc
 BASE = (ROOT / "src/fonts.css").read_text() + (ROOT / "src/style.css").read_text()
 DOC = """
+.kwege{list-style:none;padding:0;margin:26px 0 8px;display:grid;gap:12px;max-width:68ch}
+.kwege li{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:grid;gap:2px}
+.kw-label{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.kw-link{font-family:var(--f-display);font-weight:800;font-stretch:105%;font-size:21px;color:var(--ink);text-decoration-color:var(--sun);text-underline-offset:4px;overflow-wrap:anywhere}
+.kw-note{font-size:16px;color:var(--muted)}
 .about{display:grid;grid-template-columns:minmax(0,1fr) 340px;column-gap:56px;align-items:start}
 .about-text{grid-column:1;grid-row:1}.about-body{grid-column:1;grid-row:2}
 .about-photo{grid-column:2;grid-row:1/span 2;margin:8px 0 0;position:sticky;top:88px}
@@ -245,7 +250,15 @@ ABOUT_HEAD = ('<script type="application/ld+json">{"@context":"https://schema.or
   '"mainEntity":{"@type":"Person","name":"Manuel Maurer","url":"' + ABOUT_URL + '","image":"https://speicherklar.de/img/manuel-960.jpg",'
   '"homeLocation":{"@type":"Place","name":"Krefeld"},"sameAs":["https://www.instagram.com/speicherklar/","https://www.linkedin.com/in/manuel-maurer-36821295/"]}}</script>')
 (ROOT / "ueber-mich.html").write_text(page("Über mich | Speicherklar", "Wer hinter Speicherklar steckt, warum der Rechner ein ganzes Jahr simuliert und womit sich die Seite finanziert.",
-    ABOUT_URL, (ROOT / "src/ueber-mich.html").read_text(), ABOUT_HEAD, prefix="./", active=None, og_image="img/manuel-og.jpg"))
+    ABOUT_URL, (ROOT / "src/ueber-mich.html").read_text(), ABOUT_HEAD, prefix="./", active="ueber", og_image="img/manuel-og.jpg"))
+
+# Kontakt
+KONTAKT_URL = "https://speicherklar.de/kontakt.html"
+KONTAKT_HEAD = ('<script type="application/ld+json">{"@context":"https://schema.org","@type":"ContactPage","url":"' + KONTAKT_URL + '",'
+  '"mainEntity":{"@type":"Organization","name":"Speicherklar","url":"https://speicherklar.de/","email":"kontakt@speicherklar.de",'
+  '"sameAs":["https://www.instagram.com/speicherklar/"]}}</script>')
+(ROOT / "kontakt.html").write_text(page("Kontakt | Speicherklar", "So erreichst du Speicherklar: per Mail an kontakt@speicherklar.de, auf Instagram oder LinkedIn. Fragen zum Rechner, zu Pro oder Fehler gefunden? Schreib mir.",
+    KONTAKT_URL, (ROOT / "src/kontakt.html").read_text(), KONTAKT_HEAD, prefix="./", active="kontakt", og_type="website"))
 
 # Methodik: Rechenweg, öffentlicher Code, Unabhängigkeit, Vergleich mit der HTW Berlin
 METHODIK_URL = "https://speicherklar.de/methodik.html"

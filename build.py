@@ -106,7 +106,7 @@ print("pro/index.html:", len(pro_html), "Zeichen,", len(_areas), "PLZ-Gebiete")
 import hashlib, datetime, re as _re
 ROOT = S.parent
 pages = ["index.html", "ratgeber/index.html"] + sorted(str(p.relative_to(ROOT)) for p in (ROOT / "ratgeber").glob("*.html") if p.name != "index.html") \
-    + ["methodik.html", "ueber-mich.html", "pro/index.html"]
+    + ["methodik.html", "ueber-mich.html", "kontakt.html", "pro/index.html"]
 _df = S / "sitemap-dates.json"
 dates = json.loads(_df.read_text()) if _df.exists() else {}
 today = datetime.date.today().isoformat()
@@ -149,6 +149,7 @@ Nicht im Modell: Wärmepumpen-Lastprofil (nur in Speicherklar Pro), Notstrom, Ve
 ## Optional
 
 - [Über mich]({SITE}ueber-mich.html)
+- [Kontakt]({SITE}kontakt.html)
 - [Quellcode auf GitHub](https://github.com/mauratze83/speicherklar): öffentlich zum Nachlesen, alle Rechte vorbehalten.
 """
 (ROOT / "llms.txt").write_text(llms)

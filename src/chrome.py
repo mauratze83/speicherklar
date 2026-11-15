@@ -37,7 +37,7 @@ b.addEventListener('click',function(){set(!h.classList.contains('open'))});
 n.addEventListener('click',function(e){if(e.target.closest('a'))set(false)});
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&h.classList.contains('open')){set(false);b.focus()}});
 document.addEventListener('click',function(e){if(h.classList.contains('open')&&!h.contains(e.target))set(false)});
-matchMedia('(min-width:721px)').addEventListener('change',function(m){if(m.matches)set(false)});})();</script>"""
+matchMedia('(min-width:761px)').addEventListener('change',function(m){if(m.matches)set(false)});})();</script>"""
 
 
 def header(prefix="./", active=None):
@@ -49,6 +49,7 @@ def header(prefix="./", active=None):
         item(f"{prefix}ratgeber/", "Ratgeber", "ratgeber"),
         item(f"{prefix}#annahmen", "Annahmen"),
         item(f"{prefix}pro/", "Speicherklar Pro", "pro"),
+        item(f"{prefix}ueber-mich.html", "Über mich", "ueber"),
         f'<a href="{IG}" target="_blank" rel="noopener">Instagram</a>',
     ])
     return f"""<header class="top">
@@ -70,7 +71,7 @@ def footer(prefix="./"):
     <span>Speicherklar ist eine Schätzung, keine Anlagen- oder Finanzberatung. Für eine Kaufentscheidung hol dir Angebote von Fachbetrieben.</span>
     <span>Unabhängig: kein Geld von Herstellern oder Installateuren, keine Werbung. Der Rechenweg ist <a href="{prefix}methodik.html">offen</a>.</span>
     <span>Sonnendaten: PVGIS © Europäische Union, 2001–2026.</span>
-    <span><a href="{IG}" target="_blank" rel="noopener">Instagram @speicherklar</a> · <a href="{prefix}methodik.html">Methodik</a> · <a href="{prefix}ueber-mich.html">Über mich</a> · <a href="{prefix}impressum.html">Impressum</a> · <a href="{prefix}datenschutz.html">Datenschutz</a></span>
+    <span><a href="{IG}" target="_blank" rel="noopener">Instagram @speicherklar</a> · <a href="{prefix}methodik.html">Methodik</a> · <a href="{prefix}ueber-mich.html">Über mich</a> · <a href="{prefix}kontakt.html">Kontakt</a> · <a href="{prefix}impressum.html">Impressum</a> · <a href="{prefix}datenschutz.html">Datenschutz</a></span>
   </div>
 </footer>"""
 

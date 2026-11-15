@@ -28,4 +28,5 @@ Nicht im Modell: Wärmepumpen-Lastprofil (nur in Speicherklar Pro), Notstrom, Ve
 ## Optional
 
 - [Über mich](https://speicherklar.de/ueber-mich.html)
+- [Kontakt](https://speicherklar.de/kontakt.html)
 - [Quellcode auf GitHub](https://github.com/mauratze83/speicherklar): öffentlich zum Nachlesen, alle Rechte vorbehalten.
