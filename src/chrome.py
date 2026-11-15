@@ -46,9 +46,9 @@ def header(prefix="./", active=None):
         return f'<a href="{href}"{cur}>{label}</a>'
     nav = "".join([
         item(f"{prefix}#rechner", "Rechner", "rechner"),
+        item(f"{prefix}pro/", "Speicherklar Pro", "pro"),
         item(f"{prefix}ratgeber/", "Ratgeber", "ratgeber"),
         item(f"{prefix}#annahmen", "Annahmen"),
-        item(f"{prefix}pro/", "Speicherklar Pro", "pro"),
         item(f"{prefix}ueber-mich.html", "Über mich", "ueber"),
         f'<a href="{IG}" target="_blank" rel="noopener">Instagram</a>',
     ])
