@@ -65,8 +65,60 @@ def header(prefix="./", active=None):
 {MENU_JS}"""
 
 
+# Erklärvideo (Speicherklar und Speicherklar Pro, ca. 75 s). Dateien liegen selbst gehostet unter video/,
+# kein YouTube und kein fremder Server. Solange "quer" leer ist, gibt es keine Video-Knöpfe und kein Overlay,
+# und /so-gehts/ steht mit noindex und Platzhalter außerhalb der Sitemap.
+# quer: 16:9 (Desktop) · hoch: 9:16 oder 4:5 (Handy hochkant, optional) · bild: Vorschaubild 16:9 (JPG)
+# untertitel: WebVTT, optional · dauer: ISO 8601, z. B. "PT1M15S" · datum: Tag der Veröffentlichung (JJJJ-MM-TT)
+VIDEO = {"quer": "", "hoch": "", "bild": "", "untertitel": "", "dauer": "PT1M15S", "datum": ""}
+
+def video_live():
+    return bool(VIDEO["quer"])
+
+PLAY = ('<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7.25" fill="none" stroke="currentColor" stroke-width="1.5"/>'
+        '<path d="M6.5 5.2v5.6L11 8z" fill="currentColor"/></svg>')
+
+def video_trigger(ort, label="In 75 Sekunden erklärt"):
+    """Knopf, der das Erklärvideo im Overlay öffnet. ort = wo der Knopf steht (für Umami). Leer, solange kein Video da ist."""
+    if not video_live(): return ""
+    return f'<button type="button" class="vid-open" data-vid-ort="{ort}">{PLAY} <span>{label}</span></button>'
+
+def video_tag(prefix, cls="vid-player", preload="none"):
+    """Video-Element mit Quer- und Hochkant-Fassung; die Auswahl trifft VIDEO_JS je nach Bildschirm."""
+    v = VIDEO
+    attrs = f' data-quer="{prefix}{v["quer"]}"' + (f' data-hoch="{prefix}{v["hoch"]}"' if v["hoch"] else "")
+    poster = f' poster="{prefix}{v["bild"]}"' if v["bild"] else ""
+    track = f'<track kind="subtitles" srclang="de" label="Deutsch" src="{prefix}{v["untertitel"]}" default>' if v["untertitel"] else ""
+    return f'<video class="{cls}" controls playsinline preload="{preload}"{poster}{attrs}>{track}</video>'
+
+# Overlay: <dialog> mit Video, darunter die eine Bitte „Rechner starten“. Zählt video-open (mit Ort),
+# video-ende (bis zum Schluss gesehen) und video-cta (Klick auf Rechner starten).
+VIDEO_JS = """<script>(function(){var T=function(n,d){try{window.umami&&umami.track(n,d)}catch(e){}};
+var hoch=matchMedia('(max-width:760px) and (orientation:portrait)');
+function src(v){var s=(hoch.matches&&v.dataset.hoch)||v.dataset.quer;if(v.getAttribute('src')!==s)v.setAttribute('src',s);}
+document.querySelectorAll('video[data-quer]').forEach(function(v){src(v);var done=false;v.addEventListener('ended',function(){if(!done){done=true;T('video-ende',{ort:v.dataset.ort||'seite'})}});});
+var d=document.getElementById('vid-dlg');if(!d||!d.showModal)return;var v=d.querySelector('video'),ort='';
+function zu(){v.pause();d.close();}
+document.addEventListener('click',function(e){var b=e.target.closest('.vid-open');if(!b)return;ort=b.dataset.vidOrt||'';v.dataset.ort=ort;src(v);d.showModal();T('video-open',{ort:ort});try{v.play()}catch(x){}});
+d.querySelector('.vid-x').addEventListener('click',zu);
+d.addEventListener('click',function(e){if(e.target===d)zu()});
+d.addEventListener('close',function(){v.pause()});
+d.querySelector('.vid-cta').addEventListener('click',function(){T('video-cta',{ort:ort})});})();</script>"""
+
+def video_overlay(prefix):
+    if not video_live(): return ""
+    return f"""<dialog class="vid-dlg" id="vid-dlg" aria-label="Erklärvideo Speicherklar">
+  <div class="vid-box">
+    <button type="button" class="vid-x" aria-label="Video schließen"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    {video_tag(prefix)}
+    <div class="vid-foot"><a class="btn btn-on btn-sun vid-cta" href="{prefix}#rechner">Rechner starten</a> <a class="vid-more" href="{prefix}so-gehts/">Mehr dazu</a></div>
+  </div>
+</dialog>
+{VIDEO_JS}"""
+
+
 def footer(prefix="./"):
-    return f"""<footer>
+    return video_overlay(prefix) + f"""<footer>
   <div class="wrap">
     <span>Speicherklar ist eine Schätzung, keine Anlagen- oder Finanzberatung. Für eine Kaufentscheidung hol dir Angebote von Fachbetrieben.</span>
     <span>Unabhängig: kein Geld von Herstellern oder Installateuren, keine Werbung. Der Rechenweg ist <a href="{prefix}methodik.html">offen</a>.</span>

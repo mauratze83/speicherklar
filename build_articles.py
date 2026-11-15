@@ -8,7 +8,7 @@ print("Vorschaubilder/Icons neu:", images.build(ARTICLES))
 import subprocess
 from urllib.parse import quote
 
-from chrome import header, footer, analytics, head_meta
+from chrome import header, footer, analytics, head_meta, video_trigger, video_live, video_tag, VIDEO
 
 FAV = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Crect x='5' y='4' width='16' height='20' rx='2.5' fill='none' stroke='%2315212B' stroke-width='2'/%3E%3Crect x='10' y='1.5' width='6' height='3' rx='1' fill='%2315212B'/%3E%3Crect x='8' y='14' width='10' height='7' rx='1' fill='%23E39A0B'/%3E%3C/svg%3E")
 # Gleiche Grundstyles wie die Startseite (Farben, Schriften, Kopf, Fuß, Breite), dazu Textseiten-Typografie unter .doc
@@ -27,6 +27,25 @@ html.js .about-photo img{opacity:0;transform:translateY(10px) scale(.985);transi
 html.js .about-photo.in img{opacity:1;transform:none}
 @media (max-width:760px){.about{grid-template-columns:minmax(0,1fr)}.about-photo{grid-column:1;grid-row:2;position:static;max-width:300px;margin:6px 0 4px}.about-body{grid-row:3}}
 @media (prefers-reduced-motion:reduce){html.js .about-photo img{opacity:1;transform:none;transition:none}}
+.cta .vid-open{justify-self:start}
+.sg{max-width:1000px}
+.sg-head{max-width:760px}
+.sg .eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sun-ink)}
+.sg h1{font-family:var(--f-display);font-weight:800;font-stretch:110%;font-size:clamp(32px,5vw,52px);line-height:1.05;margin:10px 0 14px;text-wrap:balance;hyphens:auto}
+.sg .lead{font-size:21px;line-height:1.5;margin:0 0 22px}
+.sg-video .vid-player{border-radius:14px}
+.sg-ph{aspect-ratio:16/9;border-radius:14px;background:#15212B;color:#fff;display:grid;place-content:center;justify-items:center;gap:14px;text-align:center;padding:24px}
+.sg-ph b{font-family:var(--f-display);font-weight:800;font-stretch:110%;font-size:clamp(22px,4vw,40px);line-height:1.1}
+.sg-ph span{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:#F2B33D}
+.sg-cta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;margin:20px 0 8px}.sg-cta .facts{margin-top:0}
+.sg-steps{padding-left:1.2em}.sg-steps li{margin:0 0 10px}
+.sg-ex{margin:24px 0;max-width:760px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:12px}
+.sg-meter{background:var(--meter);color:var(--meter-digit);border-radius:8px;padding:16px;display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center;font-family:var(--f-mono);font-weight:700}
+.sg-num{display:inline-flex;align-items:center;gap:8px}.sg-num small{font-size:14px;font-weight:500}
+.sg-meter .dg{display:inline-flex;gap:3px}.sg-plus{font-size:28px}
+.sg-ex figcaption{font-size:14px;color:var(--muted);line-height:1.5}
+.sg-end{background:#15212B;color:#fff;border-radius:14px;padding:26px 24px;margin:36px 0 8px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;max-width:1000px}
+.sg-end b{font-family:var(--f-display);font-weight:800;font-stretch:105%;font-size:clamp(22px,3.4vw,30px);line-height:1.15}
 main.page{padding-block:36px 40px}
 .doc{max-width:760px;font-size:18px;line-height:1.65}
 .doc .eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sun-ink)}
@@ -183,7 +202,7 @@ def ask(a):
             f'<a class="btn ghost" href="mailto:kontakt@speicherklar.de?subject={subj}&amp;body={body}" onclick="try{{window.umami&amp;&amp;umami.track(\'frage-mail\')}}catch(e){{}}">Frage per Mail stellen</a> '
             f'<small class="ask-addr">Öffnet sich kein Mailprogramm? Schreib an <a href="mailto:kontakt@speicherklar.de">kontakt@speicherklar.de</a>.</small></div>')
 
-CTA = """<div class="cta"><b>Rechne dein eigenes Haus durch</b> <span>Postleitzahl, Dachausrichtung und Verbrauch eingeben. Der kostenlose Rechner zeigt dir die wirtschaftlichste Speichergröße, auch für das Szenario EEG-Reform 2027.</span> <a class="btn" href="../#rechner" data-umami-event="artikel-zum-rechner" data-umami-event-artikel="{slug}">Zum Rechner</a> <span class="cta-pro">Du hast schon ein Angebot? <a href="../pro/" data-umami-event="artikel-zu-pro" data-umami-event-artikel="{slug}">Speicherklar Pro</a> prüft Speicher und PV-Anlage zusammen und zeigt die beste Kombination für dein Dach. Die Einordnung ist kostenlos.</span></div>"""
+CTA = """<div class="cta"><b>Rechne dein eigenes Haus durch</b> <span>Postleitzahl, Dachausrichtung und Verbrauch eingeben. Der kostenlose Rechner zeigt dir die wirtschaftlichste Speichergröße, auch für das Szenario EEG-Reform 2027.</span> <a class="btn" href="../#rechner" data-umami-event="artikel-zum-rechner" data-umami-event-artikel="{slug}">Zum Rechner</a> <span class="cta-pro">Du hast schon ein Angebot? <a href="../pro/" data-umami-event="artikel-zu-pro" data-umami-event-artikel="{slug}">Speicherklar Pro</a> prüft Speicher und PV-Anlage zusammen und zeigt die beste Kombination für dein Dach. Die Einordnung ist kostenlos.</span>""" + video_trigger("artikel") + "</div>"
 
 # Kernzahl auf den Ratgeber-Karten (Feld "kennzahl": {"v": Wert, "t": kurzer Zusatz}); Zahlen müssen im Artikel stehen
 def sp(a):
@@ -260,6 +279,43 @@ KONTAKT_HEAD = ('<script type="application/ld+json">{"@context":"https://schema.
 (ROOT / "kontakt.html").write_text(page("Kontakt | Speicherklar", "So erreichst du Speicherklar: per Mail an kontakt@speicherklar.de, auf Instagram oder LinkedIn. Fragen zum Rechner, zu Pro oder Fehler gefunden? Schreib mir.",
     KONTAKT_URL, (ROOT / "src/kontakt.html").read_text(), KONTAKT_HEAD, prefix="./", active="kontakt", og_type="website"))
 
+# So funktioniert Speicherklar: Landingpage mit Erklärvideo (/so-gehts/). Eine Bitte: Rechner starten.
+# Ohne Video (VIDEO["quer"] leer in chrome.py): Platzhalter, noindex, nicht in der Sitemap, nirgends verlinkt.
+SG_URL = "https://speicherklar.de/so-gehts/"
+_cfg = (ROOT / "src/pro-config.js").read_text()
+_cv = lambda k: re.search(k + r'\s*:\s*"?([^",\n/]*)"?', _cfg).group(1).strip()
+import datetime as _dt
+_de2 = lambda d: ".".join(reversed(d.split("-")))
+_intro_end = (_dt.date.fromisoformat(_cv("introUntil")) + _dt.timedelta(days=1)).isoformat()
+SG_FAQ = [
+    ("Was kostet der Rechner?", "Nichts. Ohne Anmeldung, ohne E-Mail, ohne Telefonnummer."),
+    ("Was ist der Unterschied zwischen Rechner und Speicherklar Pro?", "Der Rechner sagt dir, welche Speichergröße zu deinem Haus passt. Speicherklar Pro nimmt dein konkretes Angebot und zeigt dir, welche PV-Anlage und welcher Speicher am besten zusammenpassen, was du bei der passenden Größe sparst und was du deinen Installateur fragen solltest."),
+    ("Ruft mich danach jemand an?", "Nein. Ich gebe keine Daten weiter und arbeite mit keinem Installateur zusammen."),
+    ("Wie genau ist das?", "An 30 gemessenen Häusern lag die Autarkie mit 10 kWh Speicher gemessen bei 76 %, gerechnet bei 77 %. Mit Wärmepumpe rechnet der Rechner die Autarkie rund 4 Punkte zu hoch, den Zugewinn durch den Speicher trifft er."),
+    ("Was rechnet der Rechner nicht?", "Notstrom, Verschattung, Alterung des Speichers und dynamische Stromtarife. Wenn das bei dir eine große Rolle spielt, nimm das Ergebnis als Ausgangspunkt für deine Fragen an den Installateur, nicht als letzte Antwort."),
+    ("Brauche ich schon ein Angebot?", "Für den Rechner nicht. Für den Angebots-Check in Speicherklar Pro ja."),
+]
+_sg_desc = "Stromspeicher-Rechner ohne Anmeldung und Speicherklar Pro: die zweite Rechnung zu deinem PV-Angebot. Keine Provision, kein Abo. Erklärt in 75 Sekunden."
+if video_live():
+    _sg_video = video_tag("../", preload="metadata").replace('<video ', '<video data-ort="so-gehts" ', 1)
+else:
+    _sg_video = '<div class="sg-ph" role="img" aria-label="Platzhalter für das Erklärvideo"><b>Verkäufer rechnen mit Juli.<br>Ich rechne mit November.</b> <span>Video folgt</span></div>'
+_sg = (ROOT / "src/so-gehts.html").read_text()
+for k, v in {"{{VIDEO}}": _sg_video, "{{PRO_PRICE}}": _cv("price"), "{{PRO_REGULAR}}": _cv("regularPrice"), "{{PRO_INTRO_DE}}": _de2(_cv("introUntil")),
+             "{{PRO_INTRO_END}}": _intro_end, "{{PRO_PUBLIC}}": _cv("publicFrom"), "{{PRO_PUBLIC_DE}}": _de2(_cv("publicFrom")), "{{PRO_DAYS}}": _cv("accessDays"),
+             "{{FAQ}}": "".join(f"<details><summary>{html.escape(q)}</summary><p>{html.escape(x)}</p></details>" for q, x in SG_FAQ)}.items():
+    assert k in _sg, k
+    _sg = _sg.replace(k, v)
+_sg_ld = [{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": x}} for q, x in SG_FAQ]},
+          crumbs(("So funktioniert Speicherklar", SG_URL))]
+if video_live():
+    _sg_ld.insert(0, {"@context": "https://schema.org", "@type": "VideoObject", "name": "So funktioniert Speicherklar", "description": _sg_desc,
+        "thumbnailUrl": "https://speicherklar.de/" + (VIDEO["bild"] or "img/og/start.png"), "uploadDate": VIDEO["datum"], "duration": VIDEO["dauer"],
+        "contentUrl": "https://speicherklar.de/" + VIDEO["quer"], "inLanguage": "de"})
+(ROOT / "so-gehts").mkdir(exist_ok=True)
+(ROOT / "so-gehts/index.html").write_text(page("So funktioniert Speicherklar: Rechner und Angebots-Check", _sg_desc, SG_URL, _sg, ld_tags(*_sg_ld),
+    active=None, robots=not video_live(), og_image=VIDEO["bild"] or "img/og/start.png", og_type="website"))
+
 # Methodik: Rechenweg, öffentlicher Code, Unabhängigkeit, Vergleich mit der HTW Berlin
 METHODIK_URL = "https://speicherklar.de/methodik.html"
 (ROOT / "methodik.html").write_text(page("Methodik: So rechnet Speicherklar | Speicherklar",
@@ -271,7 +327,7 @@ METHODIK_URL = "https://speicherklar.de/methodik.html"
 from chrome import UMAMI_ID
 UMAMI_TEXT = """<h2 id="reichweite">7. Reichweitenmessung mit Umami</h2>
 <p>Um zu sehen, wie viele Menschen Speicherklar nutzen und welche Seiten gelesen werden, setze ich Umami Cloud ein, einen Dienst der Umami Software, Inc. (USA). Ich habe als Speicherort die EU gewählt. Weil Umami ein US-Unternehmen ist, können Daten trotzdem in die USA übermittelt werden, etwa für Support oder Sicherheit; dafür gelten die EU-Standardvertragsklauseln, die Teil des Vertrags zur Auftragsverarbeitung sind. Umami setzt keine Cookies und speichert nichts auf deinem Gerät. Nur wenn du eine Adresse mit dem Zusatz <code>?ich=1</code> aufrufst (gedacht für mich als Betreiber), legt die Seite in deinem Browser den Eintrag <code>umami.disabled</code> an; dann zählt Umami deine Besuche nicht mehr. <code>?ich=0</code> entfernt ihn wieder.</p>
-<p>Erfasst werden die aufgerufene Seite, die Seite, von der du kommst, Browser, Betriebssystem, Gerätetyp, Bildschirmgröße, Land und Sprache sowie einige Ereignisse ohne Inhalt: dass der Rechner benutzt wurde, dass der Mail-Link für Fragen angeklickt wurde, dass der Musterbericht geöffnet, ein Angebot geprüft, der Kauf-Knopf geklickt, Speicherklar Pro freigeschaltet oder ein Bericht gespeichert wurde. Den Inhalt einer Mail sieht Umami nicht. Was du in den Rechner oder den Angebots-Check eingibst, wird nicht übertragen. Deine IP-Adresse wird nur kurz für die Übertragung verarbeitet und nicht in den Statistiken gespeichert. Ich sehe nur zusammengefasste Zahlen und kann daraus keine einzelne Person erkennen.</p>
+<p>Erfasst werden die aufgerufene Seite, die Seite, von der du kommst, Browser, Betriebssystem, Gerätetyp, Bildschirmgröße, Land und Sprache sowie einige Ereignisse ohne Inhalt: dass der Rechner benutzt wurde, dass das Erklärvideo geöffnet oder bis zum Ende angesehen wurde, dass der Mail-Link für Fragen angeklickt wurde, dass der Musterbericht geöffnet, ein Angebot geprüft, der Kauf-Knopf geklickt, Speicherklar Pro freigeschaltet oder ein Bericht gespeichert wurde. Den Inhalt einer Mail sieht Umami nicht. Was du in den Rechner oder den Angebots-Check eingibst, wird nicht übertragen. Deine IP-Adresse wird nur kurz für die Übertragung verarbeitet und nicht in den Statistiken gespeichert. Ich sehe nur zusammengefasste Zahlen und kann daraus keine einzelne Person erkennen.</p>
 <p>Rechtsgrundlage ist mein berechtigtes Interesse an einer datensparsamen Auswertung der Nutzung (Art. 6 Abs. 1 lit. f DSGVO, § 25 Abs. 2 Nr. 2 TDDDG). Umami verarbeitet die Daten in meinem Auftrag; es besteht ein Vertrag zur Auftragsverarbeitung nach Art. 28 DSGVO (<a href="https://umami.is/dpa">umami.is/dpa</a>). Die Daten werden nach 6 Monaten gelöscht. Du kannst widersprechen, indem du in deinem Browser Skripte von cloud.umami.is blockierst, oder per Mail an kontakt@speicherklar.de. Mehr in der <a href="https://umami.is/privacy">Datenschutzerklärung von Umami</a>.</p>
 """
 

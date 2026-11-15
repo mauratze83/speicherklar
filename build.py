@@ -2,7 +2,7 @@
 import pathlib, sys, re
 S = pathlib.Path(__file__).parent / "src"
 sys.path.insert(0, str(S))
-from chrome import header, footer, analytics, head_meta
+from chrome import header, footer, analytics, head_meta, video_trigger, video_live
 FAVICON = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Crect x='5' y='4' width='16' height='20' rx='2.5' fill='none' stroke='%2315212B' stroke-width='2'/%3E%3Crect x='10' y='1.5' width='6' height='3' rx='1' fill='%2315212B'/%3E%3Crect x='8' y='14' width='10' height='7' rx='1' fill='%23E39A0B'/%3E%3C/svg%3E")
 sim = (S / "sim.js").read_text().split('if(typeof module!=="undefined")')[0]
 import json
@@ -58,7 +58,7 @@ head = f"""<!doctype html>
 </head>
 <body>
 """
-html = head + prerender((S / "body.html").read_text()).replace("<!--RATGEBER-->", (S / "ratgeber-teaser.html").read_text()).replace("<!--HEADER-->", header("./", "rechner")).replace("<!--FOOTER-->", footer("./")) + "\n<script>\n" + sim + "\n" + (S / "draw.js").read_text().split("if (typeof module")[0] + "\n" + (S / "ui.js").read_text() + "</script>\n</body>\n</html>\n"
+html = head + prerender((S / "body.html").read_text()).replace("<!--RATGEBER-->", (S / "ratgeber-teaser.html").read_text()).replace("<!--VIDEO-->", video_trigger("start")).replace("<!--HEADER-->", header("./", "rechner")).replace("<!--FOOTER-->", footer("./")) + "\n<script>\n" + sim + "\n" + (S / "draw.js").read_text().split("if (typeof module")[0] + "\n" + (S / "ui.js").read_text() + "</script>\n</body>\n</html>\n"
 _cfg = (S / "pro-config.js").read_text()
 _cv = lambda k: re.search(k + r'\s*:\s*"?([^",\n]*)"?', _cfg).group(1)
 PRO_VALUES = {"{{PRO_PUBLIC}}": _cv("publicFrom"), "{{PRO_INTRO}}": _cv("introUntil"), "{{PRO_PRICE}}": _cv("price"), "{{PRO_REGULAR}}": _cv("regularPrice")}
@@ -95,7 +95,7 @@ pro_head = f"""<!doctype html>
 </head>
 <body>
 """
-pro_html = pro_head + (S / "pro-body.html").read_text().replace("<!--HEADER-->", header("../", "pro")).replace("<!--FOOTER-->", footer("../")) + \
+pro_html = pro_head + (S / "pro-body.html").read_text().replace("<!--VIDEO-->", video_trigger("pro")).replace("<!--HEADER-->", header("../", "pro")).replace("<!--FOOTER-->", footer("../")) + \
     "\n<script>\n" + "\n".join([js("sim.js"), plz2_js, js("draw.js"), js("markt.js"), (S / "pro-config.js").read_text(), js("pro.js"), (S / "pro-ui.js").read_text()]) + "</script>\n</body>\n</html>\n"
 (S.parent / "pro").mkdir(exist_ok=True)
 (S.parent / "pro" / "index.html").write_text(pro_html)
@@ -106,7 +106,7 @@ print("pro/index.html:", len(pro_html), "Zeichen,", len(_areas), "PLZ-Gebiete")
 import hashlib, datetime, re as _re
 ROOT = S.parent
 pages = ["index.html", "ratgeber/index.html"] + sorted(str(p.relative_to(ROOT)) for p in (ROOT / "ratgeber").glob("*.html") if p.name != "index.html") \
-    + ["methodik.html", "ueber-mich.html", "kontakt.html", "pro/index.html"]
+    + ["methodik.html", "ueber-mich.html", "kontakt.html", "so-gehts/index.html", "pro/index.html"]
 _df = S / "sitemap-dates.json"
 dates = json.loads(_df.read_text()) if _df.exists() else {}
 today = datetime.date.today().isoformat()
@@ -141,7 +141,7 @@ Nicht im Modell: Wärmepumpen-Lastprofil (nur in Speicherklar Pro), Notstrom, Ve
 
 - [Stromspeicher-Rechner]({SITE}): PLZ, Dachausrichtung, Neigung, kWp, Jahresverbrauch und E-Auto eingeben; zeigt Ersparnis, Amortisation, Bilanz und die wirtschaftlichste Speichergröße von 1 bis 15 kWh.
 - [Methodik]({SITE}methodik.html): Rechenweg, Annahmen, Quellen, Grenzen und Vergleich mit dem Unabhängigkeitsrechner der HTW Berlin.
-- [Speicherklar Pro]({SITE}pro/): Angebots-Check für ein konkretes Installateur-Angebot. Erste Einschätzung kostenlos als Ampel (Speichergröße, PV-Größe, Preis je kWh und je kWp), danach ein PDF-Bericht mit der besten Kombination aus PV-Anlage und Speicher.
+""" + (f"- [So funktioniert Speicherklar]({SITE}so-gehts/): Erklärvideo und Überblick über Rechner und Speicherklar Pro.\n" if video_live() else "") + f"""- [Speicherklar Pro]({SITE}pro/): Angebots-Check für ein konkretes Installateur-Angebot. Erste Einschätzung kostenlos als Ampel (Speichergröße, PV-Größe, Preis je kWh und je kWp), danach ein PDF-Bericht mit der besten Kombination aus PV-Anlage und Speicher.
 
 ## Ratgeber
 
