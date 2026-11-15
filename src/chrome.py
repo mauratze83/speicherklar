@@ -92,19 +92,25 @@ def video_tag(prefix, cls="vid-player", preload="none"):
     track = f'<track kind="subtitles" srclang="de" label="Deutsch" src="{prefix}{v["untertitel"]}" default>' if v["untertitel"] else ""
     return f'<video class="{cls}" controls playsinline preload="{preload}"{poster}{attrs}>{track}</video>'
 
-# Overlay: <dialog> mit Video, darunter die eine Bitte „Rechner starten“. Zählt video-open (mit Ort),
-# video-ende (bis zum Schluss gesehen) und video-cta (Klick auf Rechner starten).
+# Overlay: <dialog> mit Video, darunter die eine Bitte „Rechner starten“. Zählt video-open (Overlay geöffnet, mit Ort),
+# video-start (Wiedergabe läuft, einmal je Seitenaufruf), video-ende (bis zum Schluss gesehen) und video-cta (Klick auf Rechner starten).
 VIDEO_JS = """<script>(function(){var T=function(n,d){try{window.umami&&umami.track(n,d)}catch(e){}};
 var hoch=matchMedia('(max-width:760px) and (orientation:portrait)');
 function src(v){var s=(hoch.matches&&v.dataset.hoch)||v.dataset.quer;if(v.getAttribute('src')!==s)v.setAttribute('src',s);}
-document.querySelectorAll('video[data-quer]').forEach(function(v){src(v);var done=false;v.addEventListener('ended',function(){if(!done){done=true;T('video-ende',{ort:v.dataset.ort||'seite'})}});});
+document.querySelectorAll('video[data-quer]').forEach(function(v){src(v);var st=false,done=false;
+v.addEventListener('playing',function(){if(!st){st=true;T('video-start',{ort:v.dataset.ort||'seite'})}});
+v.addEventListener('ended',function(){if(!done){done=true;T('video-ende',{ort:v.dataset.ort||'seite'})}});});
 var d=document.getElementById('vid-dlg');if(!d||!d.showModal)return;var v=d.querySelector('video'),ort='';
 function zu(){v.pause();d.close();}
 document.addEventListener('click',function(e){var b=e.target.closest('.vid-open');if(!b)return;ort=b.dataset.vidOrt||'';v.dataset.ort=ort;src(v);d.showModal();T('video-open',{ort:ort});try{v.play()}catch(x){}});
 d.querySelector('.vid-x').addEventListener('click',zu);
 d.addEventListener('click',function(e){if(e.target===d)zu()});
 d.addEventListener('close',function(){v.pause()});
-d.querySelector('.vid-cta').addEventListener('click',function(){T('video-cta',{ort:ort})});})();</script>"""
+// „Rechner starten“: Overlay immer schließen. Liegt der Rechner auf derselben Seite (Startseite), selbst hinscrollen,
+// sonst bleibt das modale Fenster offen und es passiert sichtbar nichts (gesehen in Safari auf dem iPhone).
+d.querySelector('.vid-cta').addEventListener('click',function(e){T('video-cta',{ort:ort});var a=this,u=new URL(a.href,location.href);zu();
+if(u.pathname===location.pathname){var t=document.querySelector(u.hash);if(t){e.preventDefault();history.replaceState(null,'',u.hash);setTimeout(function(){t.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',block:'start'})},30);}}});
+d.querySelector('.vid-more').addEventListener('click',function(){zu()});})();</script>"""
 
 def video_overlay(prefix):
     if not video_live(): return ""

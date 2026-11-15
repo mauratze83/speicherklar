@@ -760,14 +760,20 @@ matchMedia('(min-width:841px)').addEventListener('change',function(m){if(m.match
 <script>(function(){var T=function(n,d){try{window.umami&&umami.track(n,d)}catch(e){}};
 var hoch=matchMedia('(max-width:760px) and (orientation:portrait)');
 function src(v){var s=(hoch.matches&&v.dataset.hoch)||v.dataset.quer;if(v.getAttribute('src')!==s)v.setAttribute('src',s);}
-document.querySelectorAll('video[data-quer]').forEach(function(v){src(v);var done=false;v.addEventListener('ended',function(){if(!done){done=true;T('video-ende',{ort:v.dataset.ort||'seite'})}});});
+document.querySelectorAll('video[data-quer]').forEach(function(v){src(v);var st=false,done=false;
+v.addEventListener('playing',function(){if(!st){st=true;T('video-start',{ort:v.dataset.ort||'seite'})}});
+v.addEventListener('ended',function(){if(!done){done=true;T('video-ende',{ort:v.dataset.ort||'seite'})}});});
 var d=document.getElementById('vid-dlg');if(!d||!d.showModal)return;var v=d.querySelector('video'),ort='';
 function zu(){v.pause();d.close();}
 document.addEventListener('click',function(e){var b=e.target.closest('.vid-open');if(!b)return;ort=b.dataset.vidOrt||'';v.dataset.ort=ort;src(v);d.showModal();T('video-open',{ort:ort});try{v.play()}catch(x){}});
 d.querySelector('.vid-x').addEventListener('click',zu);
 d.addEventListener('click',function(e){if(e.target===d)zu()});
 d.addEventListener('close',function(){v.pause()});
-d.querySelector('.vid-cta').addEventListener('click',function(){T('video-cta',{ort:ort})});})();</script><footer>
+// „Rechner starten“: Overlay immer schließen. Liegt der Rechner auf derselben Seite (Startseite), selbst hinscrollen,
+// sonst bleibt das modale Fenster offen und es passiert sichtbar nichts (gesehen in Safari auf dem iPhone).
+d.querySelector('.vid-cta').addEventListener('click',function(e){T('video-cta',{ort:ort});var a=this,u=new URL(a.href,location.href);zu();
+if(u.pathname===location.pathname){var t=document.querySelector(u.hash);if(t){e.preventDefault();history.replaceState(null,'',u.hash);setTimeout(function(){t.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',block:'start'})},30);}}});
+d.querySelector('.vid-more').addEventListener('click',function(){zu()});})();</script><footer>
   <div class="wrap">
     <span>Speicherklar ist eine Schätzung, keine Anlagen- oder Finanzberatung. Für eine Kaufentscheidung hol dir Angebote von Fachbetrieben.</span>
     <span>Unabhängig: kein Geld von Herstellern oder Installateuren, keine Werbung. Der Rechenweg ist <a href="../methodik.html">offen</a>.</span>
