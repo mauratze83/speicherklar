@@ -257,7 +257,10 @@ for a in ARTICLES:
     head = ld_tags(*ld)
     main = f"""<div class="art"><article class="doc"><div class="eyebrow">Ratgeber</div><h1>{a['h1']}</h1><p class="lead">{a['lead']}</p><p class="meta">{datum(a)} · Von <a href="../ueber-mich.html">Manuel Maurer</a> · <a href="#annahmen">Annahmen</a> · <a href="../methodik.html">Rechenweg</a></p>
 {_body(a)}{CTA.replace("{slug}", a["slug"])}<h2>Häufige Fragen</h2>{faq_html}{ask(a)}{more(a)}<p class="note" id="annahmen" style="margin-top:28px">{BEISPIEL}</p></article>{kbox(a)}</div>"""
-    (out / f"{a['slug']}.html").write_text(page(f"{a['title']} | Speicherklar", a["desc"], url, main, head, og_image=f"img/og/{a['slug']}.png"))
+    seo = f"{a.get('seo_title', a['title'])} | Speicherklar"
+    if len(seo) > 60:
+        print(f"WARNUNG: Titel {len(seo)} Zeichen (max. 60), Feld seo_title setzen: {a['slug']}")
+    (out / f"{a['slug']}.html").write_text(page(seo, a["desc"], url, main, head, og_image=f"img/og/{a['slug']}.png"))
 
 items = "\n".join(f'<li><a href="{a["slug"]}.html">{sp(a)}<b>{a["title"]}</b> <span>{a["desc"]}</span></a></li>' for a in NEWEST)
 (out / "index.html").write_text(page("Ratgeber Stromspeicher | Speicherklar", "Artikel rund um Stromspeicher und PV-Anlagen, mit Zahlen aus der Jahressimulation statt aus dem Prospekt. Mit Angebots-Check für PV-Anlage und Speicher.", "https://speicherklar.de/ratgeber/",
