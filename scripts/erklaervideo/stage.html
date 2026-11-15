@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8">
+<link rel="stylesheet" href="fonts.css">
+<style>
+:root{--bg:#EDF0F2;--ink:#15212B;--muted:#56666F;--line:#CBD3DA;--card:#FFFFFF;--sun:#E39A0B;--sun-ink:#8A5A00;--sun-soft:#FBEFD6;--pos:#2E7D5B;--dark:#15212B;--acc:#F2B33D;--meter:#1B1F23;
+--fd:"Archivo","Arial Narrow",sans-serif;--fb:"Source Sans 3",sans-serif;--fm:"JetBrains Mono",monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--bg);font-family:var(--fb);color:var(--ink)}
+body.v{width:1080px;height:1920px}
+#stage{position:relative;width:100%;height:100%;overflow:hidden}
+.scene{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:90px 120px 170px;opacity:0}
+.v .scene{padding:150px 70px 420px;flex-direction:column}
+.dark{background:var(--dark);color:#fff}
+.light{background:var(--bg)}
+.eyebrow{font-family:var(--fm);font-size:26px;letter-spacing:.12em;text-transform:uppercase;color:var(--sun-ink);font-weight:700}
+.dark .eyebrow{color:var(--acc)}
+h1,h2,.big{font-family:var(--fd);font-weight:800;font-stretch:110%;line-height:1.04;letter-spacing:-.01em}
+h1{font-size:104px}h2{font-size:76px}
+.v h1{font-size:96px}.v h2{font-size:72px}
+.amber{color:var(--acc)}.sunink{color:var(--sun-ink)}
+.muted{color:var(--muted)}
+.mono{font-family:var(--fm)}
+/* Szene 1 */
+#s1{flex-direction:column;align-items:flex-start;justify-content:center;gap:56px}
+.v #s1{align-items:flex-start;justify-content:center}
+#s1 .lines h1{font-size:108px}
+body:not(.v) #s1 .lines h1{white-space:nowrap}
+.v #s1 .lines h1{font-size:104px}
+.bars{display:flex;align-items:flex-end;gap:18px;height:300px;width:100%}
+.v .bars{height:320px;gap:12px}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:12px}
+.bar i{display:block;width:100%;background:#3A4651;border-radius:6px 6px 0 0;position:relative;overflow:hidden}
+.bar i b{position:absolute;inset:0;background:var(--acc);opacity:0}
+.bar span{font-family:var(--fm);font-size:22px;color:#8C99A3}
+.v .bar span{font-size:20px}
+.bar.hl span{color:#fff;font-weight:700}
+.src{font-family:var(--fm);font-size:20px;color:#8C99A3}
+/* Karten */
+.card{background:var(--card);border:2px solid var(--line);border-radius:22px;box-shadow:0 30px 60px -40px rgba(21,33,43,.35)}
+.offer{width:760px;padding:44px 48px;display:grid;gap:4px}
+.v .offer{width:940px}
+.offer .head{font-family:var(--fm);font-size:22px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:18px;display:flex;justify-content:space-between}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:20px 0;border-bottom:2px solid var(--line);font-size:38px}
+.row b{font-family:var(--fm);font-size:40px}
+.row.hl{background:var(--sun-soft);margin:0 -24px;padding:20px 24px;border-radius:10px;border-bottom:0;box-shadow:inset 6px 0 0 var(--sun)}
+.row.hl b{color:var(--sun-ink)}
+.s2wrap{display:flex;gap:90px;align-items:center}
+.v .s2wrap{flex-direction:column;gap:70px;align-items:flex-start}
+.q{display:grid;gap:30px;max-width:780px}
+.q h2{font-size:92px}
+.v .q h2{font-size:88px}
+.q p{font-size:40px;line-height:1.3;color:var(--muted)}
+/* Szene 3 */
+.split{display:flex;gap:80px;align-items:center;width:100%}
+.v .split{flex-direction:column;gap:56px;align-items:flex-start}
+.col{display:grid;gap:30px;flex:1}
+.shot{border-radius:18px;overflow:hidden;border:2px solid var(--line);box-shadow:0 40px 80px -40px rgba(21,33,43,.45);background:#fff}
+.shot img{display:block;width:100%}
+.chips{display:flex;flex-wrap:wrap;gap:16px}
+.chip{font-family:var(--fm);font-size:28px;border:2px solid var(--line);background:var(--card);border-radius:999px;padding:12px 24px}
+.chip b{color:var(--ink)}
+.dark .chip{background:transparent;border-color:#3A4651;color:#C8D0D6}
+.stat{display:flex;gap:26px;align-items:baseline}
+.stat .n{font-family:var(--fd);font-weight:800;font-size:120px;line-height:1;color:var(--sun-ink)}
+.stat .t{font-size:40px;line-height:1.2}
+.cmp{display:grid;gap:22px;width:100%}
+.cmpr{display:grid;grid-template-columns:260px 1fr 120px;gap:24px;align-items:center;font-size:34px}
+.v .cmpr{grid-template-columns:230px 1fr 120px}
+.cmpr .tr{height:44px;background:#DDE3E7;border-radius:6px;overflow:hidden}
+.cmpr .tr i{display:block;height:100%;background:#8C99A3;border-radius:6px}
+.cmpr.r .tr i{background:var(--sun)}
+.cmpr b{font-family:var(--fm);font-size:38px;text-align:right}
+.foot{font-family:var(--fm);font-size:20px;color:var(--muted);line-height:1.5}
+/* Szene 4 */
+.legend{display:flex;gap:30px;font-size:34px;align-items:center}
+.dot{display:inline-block;width:30px;height:30px;border-radius:50%;margin-right:12px;vertical-align:-4px}
+.list{display:grid;gap:26px}
+.li{display:flex;gap:22px;align-items:flex-start;font-size:42px;line-height:1.2}
+.li svg{flex:0 0 auto;margin-top:6px}
+.tag{display:inline-block;font-family:var(--fm);font-size:26px;letter-spacing:.06em;text-transform:uppercase;background:var(--sun-soft);color:var(--sun-ink);padding:10px 18px;border-radius:8px;font-weight:700}
+.pages{position:relative;width:680px;height:640px;margin-top:-60px}
+.v .pages{width:900px;height:560px}
+.pages .pg{position:absolute;width:470px;border-radius:8px;box-shadow:0 30px 60px -30px rgba(21,33,43,.5);border:1px solid var(--line);background:#fff}
+.v .pages .pg{width:400px}
+/* Szene 5 */
+.meter{background:var(--meter);border-radius:22px;padding:48px 56px;display:flex;flex-wrap:wrap;gap:40px 80px;align-items:center;color:#F3F1EA}
+.v .meter{flex-direction:column;align-items:flex-start;padding:50px}
+.num{display:flex;align-items:center;gap:22px}
+.num small{font-family:var(--fm);font-size:36px;font-weight:500;line-height:1.25}
+.dg{display:inline-flex;gap:8px}
+.wheel{font-family:var(--fm);font-weight:700;font-size:130px;width:1.05em;height:1.3em;overflow:hidden;text-align:center;background:linear-gradient(#000 0,#2a2f35 12%,#15191d 50%,#2a2f35 88%,#000 100%);border-radius:8px;line-height:1.3;position:relative}
+.wheel .strip{position:absolute;left:0;right:0;top:0}
+.wheel .strip div{height:1.3em}
+.plus{font-family:var(--fm);font-weight:700;font-size:100px}
+.quote{font-family:var(--fd);font-weight:800;font-stretch:110%;font-size:96px;line-height:1.05}
+.v .quote{font-size:88px}
+/* Szene 6 */
+#s6{flex-direction:column;align-items:flex-start;justify-content:center;gap:34px}
+.brand{display:flex;align-items:center;gap:22px;font-family:var(--fd);font-weight:800;font-size:56px}
+.btn{display:inline-block;background:var(--acc);color:var(--ink);font-family:var(--fd);font-weight:800;font-stretch:105%;font-size:48px;padding:28px 54px;border-radius:16px}
+.ctarow{display:flex;gap:36px;align-items:center;flex-wrap:wrap}
+.url{font-family:var(--fm);font-size:38px;color:#C8D0D6}
+.price{font-family:var(--fm);font-size:26px;color:#8C99A3;line-height:1.5}
+/* Untertitel */
+#sub{position:absolute;left:0;right:0;bottom:56px;display:flex;justify-content:center;pointer-events:none;z-index:9}
+.v #sub{bottom:250px;padding:0 60px}
+#sub span{background:rgba(13,20,26,.86);color:#fff;font-family:var(--fb);font-weight:600;font-size:44px;line-height:1.25;padding:14px 28px;border-radius:14px;text-align:center;max-width:1500px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.v #sub span{font-size:50px;max-width:960px}
+#sub span:empty{display:none}
+#logo{position:absolute;top:44px;right:60px;z-index:8;display:flex;align-items:center;gap:14px;font-family:var(--fd);font-weight:800;font-size:34px;opacity:.9}
+.v #logo{top:70px;right:70px}
+.v .formshot{display:none}
+.v #s4a .split{gap:40px}
+</style></head>
+<body>
+<div id="stage">
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="lg" viewBox="0 0 26 26"><rect x="5" y="4" width="16" height="20" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><rect x="10" y="1.5" width="6" height="3" rx="1" fill="currentColor"/><rect x="8" y="14" width="10" height="7" rx="1" fill="#E39A0B"/></symbol>
+<symbol id="ck" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="#E39A0B" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</defs></svg>
+<div id="logo"><svg width="40" height="40"><use href="#lg"/></svg>Speicherklar</div>
+
+<!-- 1: Hook -->
+<section class="scene dark" id="s1" data-from="-1" data-to="3.4">
+  <div class="lines">
+    <h1 data-in="0.0" data-a="up">Verkäufer rechnen mit Juli.</h1>
+    <h1 class="amber" data-in="1.7" data-a="up">Ich rechne mit November.</h1>
+  </div>
+  <div style="width:100%;display:grid;gap:18px" data-in="0.15" data-a="fade">
+    <div class="bars" id="bars"></div>
+    <div class="src">Sonneneinstrahlung je Monat, Ruhrgebiet · Quelle: PVGIS</div>
+  </div>
+</section>
+
+<!-- 2: Angebot -->
+<section class="scene light" id="s2" data-from="3.4" data-to="19.4">
+  <div class="s2wrap">
+    <div class="card offer" data-in="3.55" data-a="up">
+      <div class="head"><span>Angebot</span><span>PV-Anlage mit Speicher</span></div>
+      <div class="row" data-in="6.95" data-a="left"><span>PV-Anlage</span> <b>9 kWp</b></div>
+      <div class="row" data-in="8.45" data-a="left"><span>Stromspeicher</span> <b>10 kWh</b></div>
+      <div class="row" data-in="10.3" data-a="left"><span>Gesamtpreis</span> <b>19.000 €</b></div>
+      <div class="row hl" data-in="11.95" data-a="left"><span>davon Speicher</span> <b>6.500 €</b></div>
+    </div>
+    <div class="q">
+      <h2 data-in="15.3" data-a="up">Ist der Speicher zu groß?</h2>
+      <p data-in="16.65" data-a="up">Fragen kannst du eigentlich nur den, der ihn verkauft.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3a: Rechner -->
+<section class="scene light" id="s3a" data-from="19.4" data-to="27.15">
+  <div class="split">
+    <div class="col" style="flex:0.9">
+      <div class="eyebrow" data-in="19.5" data-a="up">Der kostenlose Rechner</div>
+      <h2 data-in="19.55" data-a="up">Rechne selbst.</h2>
+      <div class="chips">
+        <span class="chip" data-in="21.7" data-a="pop"><b>kostenlos</b></span>
+        <span class="chip" data-in="22.7" data-a="pop">ohne Anmeldung</span>
+        <span class="chip" data-in="24.2" data-a="pop">ein Jahr, Stunde für Stunde</span>
+        <span class="chip" data-in="26.2" data-a="pop">echtes Wetter</span>
+      </div>
+    </div>
+    <div class="shot" style="flex:1.1" data-in="19.8" data-a="up" data-kb="19.8,27.2"><img src="a-ergebnis.png"></div>
+  </div>
+</section>
+
+<!-- 3b: geprüft -->
+<section class="scene light" id="s3b" data-from="27.15" data-to="36.4">
+  <div class="split">
+    <div class="col">
+      <div class="eyebrow" data-in="27.3" data-a="up">Geprüft an echten Häusern</div>
+      <div class="stat" data-in="28.0" data-a="up"><span class="n">30</span><span class="t">gemessene<br>Einfamilienhäuser</span></div>
+      <div class="stat" data-in="30.0" data-a="up"><span class="n">+1</span><span class="t">meine eigene<br>Anlage in Krefeld</span></div>
+    </div>
+    <div class="col">
+      <div class="card" style="padding:44px 48px;display:grid;gap:30px" data-in="32.8" data-a="up">
+        <div class="mono muted" style="font-size:24px;letter-spacing:.08em;text-transform:uppercase">Autarkie mit 10 kWh Speicher</div>
+        <div class="cmp">
+          <div class="cmpr"><span>gemessen</span><span class="tr"><i data-grow="33.0" data-w="76"></i></span><b>76 %</b></div>
+          <div class="cmpr r"><span>Rechner</span><span class="tr"><i data-grow="33.3" data-w="77"></i></span><b>77 %</b></div>
+        </div>
+        <div style="font-family:var(--fd);font-weight:800;font-size:58px;line-height:1.1" data-in="34.6" data-a="up">Trifft auf <span class="sunink">1–2 Punkte</span></div>
+        <div class="foot">30 Häuser, Messdaten WPuQ/ISFH. Mit Wärmepumpe rechnet der Rechner die Autarkie rund 4 Punkte zu hoch.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4a: Pro + Ampel -->
+<section class="scene light" id="s4a" data-from="36.4" data-to="47.65">
+  <div class="split" style="align-items:flex-start">
+    <div class="col" style="flex:0.95">
+      <div class="eyebrow" data-in="36.45" data-a="up">Für dein Angebot</div>
+      <h2 data-in="37.85" data-a="up">Speicherklar Pro</h2>
+      <div class="shot formshot" style="max-height:560px" data-in="39.5" data-a="up" data-kb="39.5,47.7"><img src="c-form.png"></div>
+    </div>
+    <div class="col" style="flex:1.05">
+      <div data-in="43.3" data-a="pop"><span class="tag">Erste Einschätzung · kostenlos</span></div>
+      <div class="shot" data-in="41.4" data-a="up"><img src="c-ampel.png"></div>
+      <div class="legend">
+        <span data-in="45.35" data-a="pop"><i class="dot" style="background:#2E7D5B"></i>grün</span>
+        <span data-in="46.05" data-a="pop"><i class="dot" style="background:#E39A0B"></i>gelb</span>
+        <span data-in="46.95" data-a="pop"><i class="dot" style="background:#C9302C"></i>rot</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4b: Bericht -->
+<section class="scene light" id="s4b" data-from="47.65" data-to="59.1">
+  <div class="split">
+    <div class="pages" data-in="47.8" data-a="up">
+      <img class="pg" src="a-bericht-2.png" style="left:200px;top:40px;transform:rotate(3deg)">
+      <img class="pg" src="a-bericht-1.png" style="left:0;top:0;transform:rotate(-2deg)">
+    </div>
+    <div class="col">
+      <div class="eyebrow" data-in="47.8" data-a="up">Der Bericht als PDF</div>
+      <div class="list">
+        <div class="li" data-in="49.6" data-a="left"><svg width="44" height="44"><use href="#ck"/></svg><span><b>Beste Kombination</b> aus PV-Anlage und Speicher</span></div>
+        <div class="li" data-in="53.85" data-a="left"><svg width="44" height="44"><use href="#ck"/></svg><span><b>Ersparnis</b> bei passender Größe</span></div>
+        <div class="li" data-in="55.9" data-a="left"><svg width="44" height="44"><use href="#ck"/></svg><span><b>Fragen</b> an deinen Installateur</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5a: Beispiel -->
+<section class="scene light" id="s5a" data-from="59.1" data-to="65.75">
+  <div style="display:grid;gap:34px">
+    <div class="eyebrow" data-in="59.2" data-a="up">Das Beispiel-Angebot</div>
+    <div class="meter" data-in="59.3" data-a="up">
+      <div class="num"><span class="dg"><span class="wheel" data-roll="60.3" data-d="6"></span></span> <small>statt<br>10 kWh</small></div>
+      <div class="num" data-in="62.6" data-a="fade"><span class="plus">+</span><span class="dg"><span class="wheel" data-roll="63.9" data-d="6"></span><span class="wheel" data-roll="64.0" data-d="7"></span><span class="wheel" data-roll="64.1" data-d="0"></span></span> <small>€ in<br>15 Jahren</small></div>
+    </div>
+    <div class="foot" data-in="60.3" data-a="fade" style="max-width:1500px">Angebot: 10 kWh Speicher für 6.500 €. 6 kWh ist die wirtschaftlichste Größe. Annahmen: Ruhrgebiet, 9 kWp Süd, 35° Neigung, 4.500 kWh Verbrauch, 33 ct Strompreis, 7,70 ct Einspeisung, 15 Jahre. Rechnung von Speicherklar Pro, Stand 14.11.2026. Bei dir kann es anders ausgehen.</div>
+  </div>
+</section>
+
+<!-- 5b: unabhängig -->
+<section class="scene light" id="s5b" data-from="65.75" data-to="70.1">
+  <div style="display:grid;gap:40px;max-width:1500px">
+    <div class="quote" data-in="65.85" data-a="up">Ich verdiene nichts an deinem Speicher.</div>
+    <div class="quote sunink" data-in="67.9" data-a="up">Weder am großen noch am kleinen.</div>
+    <div class="chips">
+      <span class="chip" data-in="68.3" data-a="pop">keine Provision</span>
+      <span class="chip" data-in="68.6" data-a="pop">keine Werbung</span>
+      <span class="chip" data-in="68.9" data-a="pop">kein Abo</span>
+    </div>
+  </div>
+</section>
+
+<!-- 6: Abschluss -->
+<section class="scene dark" id="s6" data-from="70.1" data-to="999">
+  <div class="brand" data-in="70.1" data-a="up"><svg width="64" height="64" style="color:#fff"><use href="#lg"/></svg>Speicherklar Pro</div>
+  <h1 data-in="71.6" data-a="up">Die zweite Rechnung<br>zu deinem Angebot.</h1>
+  <h1 class="amber" data-in="73.8" data-a="up">Bevor du unterschreibst.</h1>
+  <div class="ctarow" data-in="75.25" data-a="pop"><span class="btn">Rechner starten</span> <span class="url">speicherklar.de</span></div>
+  <div class="price" data-in="75.6" data-a="fade">Rechner und erste Einschätzung kostenlos · Speicherklar Pro 49 € einmalig bis 31.01.2027, danach 89 €</div>
+</section>
+
+<div id="sub"><span></span></div>
+</div>
+<script>
+var OFF=0.4, SUBS=[], H=[22.4,42.8,83.5,125.7,158,167.7,161.6,139.5,99.6,55.9,30,17.6], M="JFMAMJJASOND".split("");
+if(location.hash.indexOf("v")>=0) document.body.classList.add("v");
+var bars=document.getElementById("bars");
+H.forEach(function(h,i){var d=document.createElement("div");d.className="bar";d.innerHTML='<i style="height:'+(h/170*100)+'%"><b></b></i><span>'+M[i]+'</span>';bars.appendChild(d)});
+document.querySelectorAll(".wheel").forEach(function(w){var s='<div class="strip">';for(var k=0;k<20;k++)s+='<div>'+(k%10)+'</div>';w.innerHTML=s+'</div>';});
+var cl=function(x){return x<0?0:x>1?1:x}, eo=function(x){return 1-Math.pow(1-x,3)}, eio=function(x){return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2};
+var WARP=null;
+function toOld(x){if(!WARP)return x;var n=WARP.length;if(x<=WARP[0][0])return x-WARP[0][0]+WARP[0][1];
+  for(var i=1;i<n;i++){if(x<=WARP[i][0]){var a=WARP[i-1],b=WARP[i];return a[1]+(x-a[0])*(b[1]-a[1])/Math.max(1e-6,b[0]-a[0]);}}
+  return x-WARP[n-1][0]+WARP[n-1][1];}
+window.setWarp=function(w){WARP=w};
+function render(T){
+  var an=T-OFF, a=toOld(an);
+  document.querySelectorAll(".scene").forEach(function(s){
+    var f=+s.dataset.from,t=+s.dataset.to,X=0.35;
+    var o=Math.min(cl((a-f)/X+0.5),cl((t-a)/X+0.5));
+    if(f<0) o=cl((t-a)/X+0.5);
+    s.style.opacity=o; s.style.visibility=o>0?"visible":"hidden"; s.style.zIndex=a>=f?2:1;
+  });
+  document.querySelectorAll("[data-in]").forEach(function(e){
+    var p=eo(cl((a-(+e.dataset.in))/0.5)),ty=e.dataset.a||"fade",tr="";
+    if(ty=="up")tr="translateY("+(1-p)*34+"px)";else if(ty=="left")tr="translateX("+(-(1-p)*40)+"px)";else if(ty=="pop")tr="scale("+(0.9+0.1*p)+")";
+    e.style.opacity=p; e.style.transform=tr;
+  });
+  document.querySelectorAll("[data-kb]").forEach(function(e){var r=e.dataset.kb.split(",").map(Number),p=cl((a-r[0])/(r[1]-r[0]));var im=e.querySelector("img");im.style.transform="scale("+(1+0.04*p)+") translateY("+(-p*2)+"%)";im.style.transformOrigin="50% 0";});
+  document.querySelectorAll("[data-grow]").forEach(function(e){var p=eio(cl((a-(+e.dataset.grow))/0.9));e.style.width=(p*e.dataset.w)+"%";});
+  document.querySelectorAll("[data-roll]").forEach(function(w){var p=eio(cl((a-(+w.dataset.roll))/1.0)),d=+w.dataset.d+10;w.firstChild.style.transform="translateY("+(-p*d*1.3)+"em)";});
+  // Szene 1: Juli -> November
+  var bs=bars.children,jul=1-cl((a-1.7)/0.35),nov=cl((a-1.7)/0.35);
+  for(var i=0;i<12;i++){var b=bs[i].querySelector("b");b.style.opacity=i==6?jul:i==10?nov:0;bs[i].classList.toggle("hl",(i==6&&jul>.5)||(i==10&&nov>.5));}
+  var sub="";SUBS.forEach(function(s){if(an>=s.s&&an<s.e)sub=s.t});
+  var sp=document.querySelector("#sub span"); if(sp.textContent!==sub) sp.textContent=sub;
+  document.getElementById("logo").style.opacity=(a>3.4&&a<70.1)?0.9:0;
+}
+window.setSubs=function(s){SUBS=s};
+render(0);
+</script>
+</body></html>
