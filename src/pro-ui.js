@@ -183,7 +183,7 @@
       state.input = o; state.result = PRO.check(o);
       btn.disabled = false; btn.textContent = "Angebot prüfen";
       showTeaser(); track("pro-geprueft");
-      if (state.unlocked) { renderReport(); if (scroll) $("report-wrap").scrollIntoView({ behavior: SCROLL }); }
+      if (state.unlocked) { renderReport(); if (scroll) { $("report-wrap").scrollIntoView({ behavior: SCROLL }); $("report-wrap").focus({ preventScroll: true }); } }
       else if (scroll) $("teaser").scrollIntoView({ behavior: SCROLL, block: "start" });
     }, 30);
   }
@@ -451,7 +451,7 @@
     h += '<div class="amps">' + amps(t, o) + "</div>";
     var cols = same || r.verdict === "nolohn" ? [["Angebot · " + kwh(r.cap), off]] : [["Angebot · " + kwh(r.cap), off], ["Empfehlung · " + kwh(rec.cap), rec]];
     var row = function (label, f, note) { return "<tr><td>" + label + (note ? " <small>" + note + "</small>" : "") + "</td>" + cols.map(function (c) { return '<td class="num">' + f(c[1]) + "</td>"; }).join("") + "</tr>"; };
-    h += '<div class="tablewrap"><table class="rtab"><thead><tr><th></th>' + cols.map(function (c) { return "<th>" + c[0] + "</th>"; }).join("") + "</tr></thead><tbody>" +
+    h += '<div class="tablewrap"><table class="rtab"><thead><tr><th><span class="sr-only">Kennzahl</span></th>' + cols.map(function (c) { return "<th>" + c[0] + "</th>"; }).join("") + "</tr></thead><tbody>" +
       row("Preis Speicher", function (x) { return euro(x.cost) + (x === off && !r.storeEst ? "" : "*"); }) +
       row("Zusätzlich selbst genutzt", function (x) { return nf0.format(x.extra) + " kWh/Jahr"; }) +
       row("Ersparnis pro Jahr", function (x) { return euro(x.save); }) +
@@ -543,7 +543,7 @@
   }
 
   $("print").addEventListener("click", function () { track("pro-pdf"); window.print(); });
-  $("edit").addEventListener("click", function () { $("offer").scrollIntoView({ behavior: SCROLL }); });
+  $("edit").addEventListener("click", function () { $("offer").scrollIntoView({ behavior: SCROLL }); $("f-model").focus({ preventScroll: true }); });
   window.addEventListener("beforeprint", function () { document.title = "Speicherklar Angebots-Check " + (state.input && state.input.model ? state.input.model : ""); });
 
   // ---------- Start ----------

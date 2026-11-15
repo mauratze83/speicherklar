@@ -164,6 +164,13 @@
       :"Im "+name+" wird der Speicher im Schnitt nur zu <b>"+Math.round(socMax*100)+" % voll</b>. Aus dem Netz kommen <b>"+nf1.format(imp)+" kWh am Tag</b>, ein größerer Speicher ändert daran wenig.";
   }
 
+  // Kurze Ansage für Screenreader: erst wenn die Eingabe kurz ruht, nicht beim ersten Laden
+  var srTimer=null,srFirst=true;
+  function announce(t){
+    if(srFirst){srFirst=false;return;}
+    clearTimeout(srTimer);srTimer=setTimeout(function(){$("sr-status").textContent=t;},800);
+  }
+
   function render(){
     var plzOk=regionFromPlz();
     var p=read();outputs(p,plzOk);
@@ -196,6 +203,7 @@
     $("rbar-main").textContent=p.bat+" kWh · "+(okNet?"bezahlt nach "+nf1.format(c.payback)+" J.":"rechnet sich nicht");
     $("rbar-sub").innerHTML=(c.net>=0?"+":"")+euro(c.net)+" nach "+p.life+" Jahren"+(res.best.net>0?" · <i>"+(res.best.cap===p.bat?"wirtschaftlichste Größe":"am meisten bleibt bei "+res.best.cap+" kWh")+"</i>":"");
     dayState.days=daySeries(res.gen,res.load,p.bat,res.fc);drawDay();
+    announce($("verdict").textContent+" Ersparnis "+euro(c.save)+" pro Jahr, Bilanz "+$("k-net").textContent+" nach "+p.life+" Jahren.");
     // Übergabe an den Angebots-Check im Hash (wird nicht an einen Server gesendet)
     var q={plz:$("plz").value.replace(/\D/g,""),kwp:$("pv").value,aspect:state.aspect,tilt:$("tilt").value,cons:p.cons,ev:p.ev,hp:p.hp,evt:p.evTime,bat:p.bat,price:p.price,eeg:state.eeg,feed:p.feed,life:p.life};
     $("to-pro").href="pro/#"+Object.keys(q).map(function(k){return k+"="+encodeURIComponent(q[k]);}).join("&");

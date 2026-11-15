@@ -153,7 +153,8 @@
       </fieldset>
     </form>
 
-    <div class="panel result" id="ergebnis" aria-live="polite">
+    <div class="panel result" id="ergebnis">
+      <p class="sr-only" id="sr-status" role="status"></p>
       <div>
         <p class="verdict" id="verdict">Rechne…</p>
         <p class="yield" id="yield"></p>
@@ -161,7 +162,7 @@
 
       <div class="meterbox">
         <div class="cap">Zusätzlich selbst genutzt durch den Speicher</div>
-        <div class="wheels" id="wheels" aria-label=""></div>
+        <div class="wheels" id="wheels" role="img" aria-label=""></div>
         <div class="foot" id="meterfoot"></div>
       </div>
 

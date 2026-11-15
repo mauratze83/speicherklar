@@ -58,7 +58,7 @@ a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
 .keybox input{flex:1 1 200px;min-width:0;font:inherit;font-family:var(--f-mono);font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
 
 /* Bericht */
-.report-wrap{padding-block:10px 40px;border-top:1px solid var(--line)}
+.report-wrap{padding-block:10px 40px;border-top:1px solid var(--line)} .report-wrap:focus{outline:none}
 .rtools{display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding-block:18px}
 .report{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:clamp(18px,4vw,40px);max-width:860px}
 .rhead h1{font-size:clamp(26px,4vw,38px);max-width:none;margin:8px 0 6px}
@@ -74,6 +74,7 @@ a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
 .rtab td.num,.rtab th{white-space:nowrap}
 .rtab .pos,.report b.pos{color:var(--pos)} .rtab .neg,.report b.neg{color:var(--neg)}
 .rtab tr.hl-off td{background:var(--sun-soft)} .rtab tr.hl-rec td{background:color-mix(in srgb,var(--pos) 12%,transparent)} .rtab tr.hl-base td{font-weight:600}
+.rtab tr.hl-off .pos,.rtab tr.hl-rec .pos{color:var(--pos-ink)} /* dunkleres Grün auf getönter Zeile, Kontrast ≥ 4,5:1 */
 .mtab{max-width:620px}
 .fine{font-size:13px;color:var(--muted)}
 .rchart{display:block;width:100%;height:auto;min-width:420px}
@@ -89,7 +90,7 @@ a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
 .qs li span{color:var(--muted);font-size:15px}
 
 @media print{
-  :root,:root[data-theme]{--bg:#fff;--surface:#fff;--ink:#15212B;--muted:#4A5862;--line:#C5CDD4;--sun:#E39A0B;--sun-ink:#8A5A00;--sun-soft:#FBEFD6;--pos:#2E7D5B;--neg:#B4412F;--track:#E3E8EC;--c-charge:#9FD3B8;--c-exp:#F6D99A;--c-imp:#AEB9C2;color-scheme:light}
+  :root,:root[data-theme]{--bg:#fff;--surface:#fff;--ink:#15212B;--muted:#4A5862;--line:#C5CDD4;--sun:#E39A0B;--sun-ink:#8A5A00;--sun-soft:#FBEFD6;--pos:#2E7D5B;--pos-ink:#276B4E;--neg:#B4412F;--track:#E3E8EC;--c-charge:#9FD3B8;--c-exp:#F6D99A;--c-imp:#AEB9C2;color-scheme:light}
   @page{size:A4;margin:16mm 14mm}
   body{font-size:11pt;background:#fff}
   header.top,footer,.pro-hero,.pro-tool,.rtools{display:none!important}

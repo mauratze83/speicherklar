@@ -41,7 +41,8 @@ def main():
             page.wait_for_selector("#report-wrap:not([hidden]) #report section", timeout=60000)
             page.wait_for_timeout(1500)
             page.emulate_media(media="print")
-            page.pdf(path=str(OUT), format="A4", print_background=True, prefer_css_page_size=True)
+            page.pdf(path=str(OUT), format="A4", print_background=True, prefer_css_page_size=True,
+                     tagged=True, outline=True)  # getaggt: Screenreader lesen Überschriften, Tabellen und Reihenfolge
             b.close()
     finally:
         srv.terminate()

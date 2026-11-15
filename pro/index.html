@@ -26,7 +26,7 @@
   --bg:#EDF0F2; --surface:#FFFFFF; --ink:#15212B; --muted:#56666F; --line:#CBD3DA;
   --sun:#E39A0B; --sun-ink:#8A5A00; --sun-soft:#FBEFD6;
   --meter:#1B1F23; --meter-digit:#F3F1EA; --meter-red:#C9302C;
-  --pos:#2E7D5B; --neg:#B4412F; --track:#DCE2E7;
+  --pos:#2E7D5B; --pos-ink:#276B4E; --neg:#B4412F; --track:#DCE2E7;
   --c-charge:#9FD3B8; --c-exp:#F6D99A; --c-imp:#AEB9C2; --sky:#DCE8F0; --cloud:#C3CDD5; --house:#FFFFFF;
   --bar-bg:#15212B; --bar-ink:#EDF0F2; --bar-accent:#F2B33D; --btn-ink:#15212B;
   --ease-out:cubic-bezier(0.23, 1, 0.32, 1); --ease-in-out:cubic-bezier(0.77, 0, 0.175, 1);
@@ -38,7 +38,7 @@
   --bg:#0F161C; --surface:#17212A; --ink:#E6ECF1; --muted:#97A7B3; --line:#2A3742;
   --sun:#F2B33D; --sun-ink:#F2B33D; --sun-soft:#2E2614;
   --meter:#06090C; --meter-digit:#E9E6DC; --meter-red:#D9443F;
-  --pos:#5CC596; --neg:#E5735E; --track:#26323C;
+  --pos:#5CC596; --pos-ink:#5CC596; --neg:#E5735E; --track:#26323C;
   --c-charge:#2F6B52; --c-exp:#6B5523; --c-imp:#4B5966; --sky:#17232D; --cloud:#3A4855; --house:#1E2A35;
   --bar-bg:#E6ECF1; --bar-ink:#0F161C; --bar-accent:#8A5A00;
   color-scheme:dark }}
@@ -46,7 +46,7 @@
   --bg:#0F161C; --surface:#17212A; --ink:#E6ECF1; --muted:#97A7B3; --line:#2A3742;
   --sun:#F2B33D; --sun-ink:#F2B33D; --sun-soft:#2E2614;
   --meter:#06090C; --meter-digit:#E9E6DC; --meter-red:#D9443F;
-  --pos:#5CC596; --neg:#E5735E; --track:#26323C;
+  --pos:#5CC596; --pos-ink:#5CC596; --neg:#E5735E; --track:#26323C;
   --c-charge:#2F6B52; --c-exp:#6B5523; --c-imp:#4B5966; --sky:#17232D; --cloud:#3A4855; --house:#1E2A35;
   --bar-bg:#E6ECF1; --bar-ink:#0F161C; --bar-accent:#8A5A00;
   color-scheme:dark }
@@ -56,6 +56,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:1
 .wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 a{color:var(--sun-ink)}
 :focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
 html{scroll-padding-top:76px;scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
@@ -427,7 +428,7 @@ a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
 .keybox input{flex:1 1 200px;min-width:0;font:inherit;font-family:var(--f-mono);font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
 
 /* Bericht */
-.report-wrap{padding-block:10px 40px;border-top:1px solid var(--line)}
+.report-wrap{padding-block:10px 40px;border-top:1px solid var(--line)} .report-wrap:focus{outline:none}
 .rtools{display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding-block:18px}
 .report{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:clamp(18px,4vw,40px);max-width:860px}
 .rhead h1{font-size:clamp(26px,4vw,38px);max-width:none;margin:8px 0 6px}
@@ -443,6 +444,7 @@ a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
 .rtab td.num,.rtab th{white-space:nowrap}
 .rtab .pos,.report b.pos{color:var(--pos)} .rtab .neg,.report b.neg{color:var(--neg)}
 .rtab tr.hl-off td{background:var(--sun-soft)} .rtab tr.hl-rec td{background:color-mix(in srgb,var(--pos) 12%,transparent)} .rtab tr.hl-base td{font-weight:600}
+.rtab tr.hl-off .pos,.rtab tr.hl-rec .pos{color:var(--pos-ink)} /* dunkleres Grün auf getönter Zeile, Kontrast ≥ 4,5:1 */
 .mtab{max-width:620px}
 .fine{font-size:13px;color:var(--muted)}
 .rchart{display:block;width:100%;height:auto;min-width:420px}
@@ -458,7 +460,7 @@ a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
 .qs li span{color:var(--muted);font-size:15px}
 
 @media print{
-  :root,:root[data-theme]{--bg:#fff;--surface:#fff;--ink:#15212B;--muted:#4A5862;--line:#C5CDD4;--sun:#E39A0B;--sun-ink:#8A5A00;--sun-soft:#FBEFD6;--pos:#2E7D5B;--neg:#B4412F;--track:#E3E8EC;--c-charge:#9FD3B8;--c-exp:#F6D99A;--c-imp:#AEB9C2;color-scheme:light}
+  :root,:root[data-theme]{--bg:#fff;--surface:#fff;--ink:#15212B;--muted:#4A5862;--line:#C5CDD4;--sun:#E39A0B;--sun-ink:#8A5A00;--sun-soft:#FBEFD6;--pos:#2E7D5B;--pos-ink:#276B4E;--neg:#B4412F;--track:#E3E8EC;--c-charge:#9FD3B8;--c-exp:#F6D99A;--c-imp:#AEB9C2;color-scheme:light}
   @page{size:A4;margin:16mm 14mm}
   body{font-size:11pt;background:#fff}
   header.top,footer,.pro-hero,.pro-tool,.rtools{display:none!important}
@@ -717,7 +719,7 @@ matchMedia('(min-width:721px)').addEventListener('change',function(m){if(m.match
     </div>
   </div>
 
-  <section class="report-wrap" id="report-wrap" hidden>
+  <section class="report-wrap" id="report-wrap" tabindex="-1" aria-label="Dein Bericht" hidden>
     <div class="wrap">
       <div class="rtools">
         <button class="btn btn-on" type="button" id="print">Als PDF speichern</button>
@@ -1467,7 +1469,7 @@ var PRO = (function () {
       state.input = o; state.result = PRO.check(o);
       btn.disabled = false; btn.textContent = "Angebot prüfen";
       showTeaser(); track("pro-geprueft");
-      if (state.unlocked) { renderReport(); if (scroll) $("report-wrap").scrollIntoView({ behavior: SCROLL }); }
+      if (state.unlocked) { renderReport(); if (scroll) { $("report-wrap").scrollIntoView({ behavior: SCROLL }); $("report-wrap").focus({ preventScroll: true }); } }
       else if (scroll) $("teaser").scrollIntoView({ behavior: SCROLL, block: "start" });
     }, 30);
   }
@@ -1735,7 +1737,7 @@ var PRO = (function () {
     h += '<div class="amps">' + amps(t, o) + "</div>";
     var cols = same || r.verdict === "nolohn" ? [["Angebot · " + kwh(r.cap), off]] : [["Angebot · " + kwh(r.cap), off], ["Empfehlung · " + kwh(rec.cap), rec]];
     var row = function (label, f, note) { return "<tr><td>" + label + (note ? " <small>" + note + "</small>" : "") + "</td>" + cols.map(function (c) { return '<td class="num">' + f(c[1]) + "</td>"; }).join("") + "</tr>"; };
-    h += '<div class="tablewrap"><table class="rtab"><thead><tr><th></th>' + cols.map(function (c) { return "<th>" + c[0] + "</th>"; }).join("") + "</tr></thead><tbody>" +
+    h += '<div class="tablewrap"><table class="rtab"><thead><tr><th><span class="sr-only">Kennzahl</span></th>' + cols.map(function (c) { return "<th>" + c[0] + "</th>"; }).join("") + "</tr></thead><tbody>" +
       row("Preis Speicher", function (x) { return euro(x.cost) + (x === off && !r.storeEst ? "" : "*"); }) +
       row("Zusätzlich selbst genutzt", function (x) { return nf0.format(x.extra) + " kWh/Jahr"; }) +
       row("Ersparnis pro Jahr", function (x) { return euro(x.save); }) +
@@ -1827,7 +1829,7 @@ var PRO = (function () {
   }
 
   $("print").addEventListener("click", function () { track("pro-pdf"); window.print(); });
-  $("edit").addEventListener("click", function () { $("offer").scrollIntoView({ behavior: SCROLL }); });
+  $("edit").addEventListener("click", function () { $("offer").scrollIntoView({ behavior: SCROLL }); $("f-model").focus({ preventScroll: true }); });
   window.addEventListener("beforeprint", function () { document.title = "Speicherklar Angebots-Check " + (state.input && state.input.model ? state.input.model : ""); });
 
   // ---------- Start ----------
