@@ -371,6 +371,10 @@ a.btn{text-decoration:none;display:inline-block}
 .vid-foot{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding:14px 16px}
 .vid-more{font-size:15px;color:var(--muted)}
 @media (max-width:760px) and (orientation:portrait){.vid-dlg{max-width:100vw;max-height:100dvh;height:100%;margin:0}.vid-box{height:100%;border-radius:0;display:flex;flex-direction:column;justify-content:center;background:#000}.vid-player{max-height:calc(100dvh - 76px);aspect-ratio:auto}.vid-foot{background:var(--surface)}}
+/* Handy quer und andere niedrige Fenster: Video und Knopfleiste passen zusammen in die Höhe */
+@media (max-height:560px) and (orientation:landscape){.vid-dlg{margin:auto;max-height:100vh;max-height:100dvh;max-width:min(94vw,calc((100vh - 84px)*16/9));max-width:min(94vw,calc((100dvh - 84px)*16/9))}.vid-player{max-height:calc(100dvh - 84px)}.vid-foot{padding:10px 14px}.vid-foot .btn.btn-sun{padding:10px 20px;font-size:16px}.vid-x{top:6px;right:6px}}
+/* Hero zwischen 561 und 900 px (z. B. Handy quer): Knopf nicht auf ganze Breite ziehen, Video-Knopf steht daneben */
+@media (min-width:561px) and (max-width:900px){.hero-cta .btn{flex:0 0 auto}}
 @media (prefers-reduced-motion:reduce){.vid-dlg[open]{animation:none}.vid-open:active{transform:none}}
 
 .kwege{list-style:none;padding:0;margin:26px 0 8px;display:grid;gap:12px;max-width:68ch}
@@ -392,7 +396,7 @@ html.js .about-photo.in img{opacity:1;transform:none}
 .sg .eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sun-ink)}
 .sg h1{font-family:var(--f-display);font-weight:800;font-stretch:110%;font-size:clamp(32px,5vw,52px);line-height:1.05;margin:10px 0 14px;text-wrap:balance;hyphens:auto}
 .sg .lead{font-size:21px;line-height:1.5;margin:0 0 22px}
-.sg-video .vid-player{border-radius:14px}
+.sg-video .vid-player{border-radius:14px;width:min(100%,calc((100vh - 110px)*16/9));width:min(100%,calc((100svh - 110px)*16/9));margin:0 auto}
 .sg-ph{aspect-ratio:16/9;border-radius:14px;background:#15212B;color:#fff;display:grid;place-content:center;justify-items:center;gap:14px;text-align:center;padding:24px}
 .sg-ph b{font-family:var(--f-display);font-weight:800;font-stretch:110%;font-size:clamp(22px,4vw,40px);line-height:1.1}
 .sg-ph span{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:#F2B33D}

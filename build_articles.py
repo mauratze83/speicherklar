@@ -33,7 +33,7 @@ html.js .about-photo.in img{opacity:1;transform:none}
 .sg .eyebrow{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sun-ink)}
 .sg h1{font-family:var(--f-display);font-weight:800;font-stretch:110%;font-size:clamp(32px,5vw,52px);line-height:1.05;margin:10px 0 14px;text-wrap:balance;hyphens:auto}
 .sg .lead{font-size:21px;line-height:1.5;margin:0 0 22px}
-.sg-video .vid-player{border-radius:14px}
+.sg-video .vid-player{border-radius:14px;width:min(100%,calc((100vh - 110px)*16/9));width:min(100%,calc((100svh - 110px)*16/9));margin:0 auto}
 .sg-ph{aspect-ratio:16/9;border-radius:14px;background:#15212B;color:#fff;display:grid;place-content:center;justify-items:center;gap:14px;text-align:center;padding:24px}
 .sg-ph b{font-family:var(--f-display);font-weight:800;font-stretch:110%;font-size:clamp(22px,4vw,40px);line-height:1.1}
 .sg-ph span{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:#F2B33D}
