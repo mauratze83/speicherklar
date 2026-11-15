@@ -13,7 +13,7 @@
   --bg:#EDF0F2; --surface:#FFFFFF; --ink:#15212B; --muted:#56666F; --line:#CBD3DA;
   --sun:#E39A0B; --sun-ink:#8A5A00; --sun-soft:#FBEFD6;
   --meter:#1B1F23; --meter-digit:#F3F1EA; --meter-red:#C9302C;
-  --pos:#2E7D5B; --neg:#B4412F; --track:#DCE2E7;
+  --pos:#2E7D5B; --pos-ink:#276B4E; --neg:#B4412F; --track:#DCE2E7;
   --c-charge:#9FD3B8; --c-exp:#F6D99A; --c-imp:#AEB9C2; --sky:#DCE8F0; --cloud:#C3CDD5; --house:#FFFFFF;
   --bar-bg:#15212B; --bar-ink:#EDF0F2; --bar-accent:#F2B33D; --btn-ink:#15212B;
   --ease-out:cubic-bezier(0.23, 1, 0.32, 1); --ease-in-out:cubic-bezier(0.77, 0, 0.175, 1);
@@ -25,7 +25,7 @@
   --bg:#0F161C; --surface:#17212A; --ink:#E6ECF1; --muted:#97A7B3; --line:#2A3742;
   --sun:#F2B33D; --sun-ink:#F2B33D; --sun-soft:#2E2614;
   --meter:#06090C; --meter-digit:#E9E6DC; --meter-red:#D9443F;
-  --pos:#5CC596; --neg:#E5735E; --track:#26323C;
+  --pos:#5CC596; --pos-ink:#5CC596; --neg:#E5735E; --track:#26323C;
   --c-charge:#2F6B52; --c-exp:#6B5523; --c-imp:#4B5966; --sky:#17232D; --cloud:#3A4855; --house:#1E2A35;
   --bar-bg:#E6ECF1; --bar-ink:#0F161C; --bar-accent:#8A5A00;
   color-scheme:dark }}
@@ -33,7 +33,7 @@
   --bg:#0F161C; --surface:#17212A; --ink:#E6ECF1; --muted:#97A7B3; --line:#2A3742;
   --sun:#F2B33D; --sun-ink:#F2B33D; --sun-soft:#2E2614;
   --meter:#06090C; --meter-digit:#E9E6DC; --meter-red:#D9443F;
-  --pos:#5CC596; --neg:#E5735E; --track:#26323C;
+  --pos:#5CC596; --pos-ink:#5CC596; --neg:#E5735E; --track:#26323C;
   --c-charge:#2F6B52; --c-exp:#6B5523; --c-imp:#4B5966; --sky:#17232D; --cloud:#3A4855; --house:#1E2A35;
   --bar-bg:#E6ECF1; --bar-ink:#0F161C; --bar-accent:#8A5A00;
   color-scheme:dark }
@@ -43,6 +43,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:1
 .wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 a{color:var(--sun-ink)}
 :focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
 html{scroll-padding-top:76px;scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
@@ -433,7 +434,7 @@ html.js .chart .cpanel svg{clip-path:inset(0 100% 0 0);transition:clip-path 1000
 html.js .chart.in .sline{stroke-dashoffset:0} html.js .chart.in .sdot,html.js .chart.in .slabel{opacity:1}
 html.js .chart.in .cpanel svg{clip-path:inset(0 0 0 0)}
 @media (prefers-reduced-motion:reduce){html.js .chart .sline{stroke-dasharray:none;transition:none} html.js .chart .sdot,html.js .chart .slabel{opacity:1;transition:none} html.js .chart .cpanel svg{clip-path:none;transition:none}}
-</style><script type="application/ld+json">{"@context":"https://schema.org","@type":"AboutPage","url":"https://speicherklar.de/ueber-mich.html","mainEntity":{"@type":"Person","name":"Manuel Maurer","url":"https://speicherklar.de/ueber-mich.html","image":"https://speicherklar.de/img/manuel-960.jpg","homeLocation":{"@type":"Place","name":"Krefeld"},"sameAs":["https://www.instagram.com/speicherklar/"]}}</script></head>
+</style><script type="application/ld+json">{"@context":"https://schema.org","@type":"AboutPage","url":"https://speicherklar.de/ueber-mich.html","mainEntity":{"@type":"Person","name":"Manuel Maurer","url":"https://speicherklar.de/ueber-mich.html","image":"https://speicherklar.de/img/manuel-960.jpg","homeLocation":{"@type":"Place","name":"Krefeld"},"sameAs":["https://www.instagram.com/speicherklar/","https://www.linkedin.com/in/manuel-maurer-36821295/"]}}</script></head>
 <body>
 <header class="top">
   <div class="wrap">
@@ -468,12 +469,13 @@ matchMedia('(min-width:721px)').addEventListener('change',function(m){if(m.match
     <p>Ich wohne mit meiner Familie in Krefeld. Auf unserem Dach liegt seit Herbst 2021 eine PV-Anlage mit Batteriespeicher. Dazu kommen ein E-Auto und eine Wärmepumpe.</p>
     <p>Die Daten meiner Anlage sammle ich seit dem ersten Tag, inzwischen sind es mehr als vier Jahre. Dabei sieht man schnell, wie verschieden Sommer und Winter sind. Im Juli ist der Speicher mittags voll. Im November hat er wenig zu tun. Viele Angebote rechnen trotzdem mit dem Sommer.</p>
     <h2>Warum Speicherklar anders rechnet</h2>
-    <p>Beruflich arbeite ich mit Software und Auswertungen. Deshalb nutzt Speicherklar keine Faustregel wie „1 kWh Speicher pro 1.000 kWh Verbrauch“. Der Rechner spielt ein ganzes Jahr in 5-Minuten-Schritten durch, mit Sonnendaten der EU (PVGIS) für deine Region. Alle Annahmen stehen offen auf der <a href="./#annahmen">Startseite</a>.</p>
+    <p>Beruflich bin ich Product Manager bei Vodafone und kümmere mich dort um KI im Voice- und Chatbot. Davor war ich Product Owner für den Chatbot TOBi und den Webshop. Ich arbeite also jeden Tag mit Daten und der Frage, ob etwas im Alltag wirklich funktioniert.</p>
+    <p>Deshalb nutzt Speicherklar keine Faustregel wie „1 kWh Speicher pro 1.000 kWh Verbrauch“. Der Rechner spielt ein ganzes Jahr in 5-Minuten-Schritten durch, mit Sonnendaten der EU (PVGIS) für deine Region. Alle Annahmen stehen offen auf der <a href="./#annahmen">Startseite</a>.</p>
     <h2>Was Speicherklar nicht ist</h2>
-    <p>Ich verkaufe keine Anlagen und keine Speicher. Ich bekomme kein Geld von Herstellern oder Installateuren. Der Rechner bleibt kostenlos. Finanzieren soll sich die Seite über <a href="pro/">Speicherklar Pro</a>, den Angebots-Check für PV-Anlage und Speicher.</p>
+    <p>Speicherklar ist ein privates Projekt und hat mit meinem Arbeitgeber nichts zu tun. Ich verkaufe keine Anlagen und keine Speicher. Ich bekomme kein Geld von Herstellern oder Installateuren. Der Rechner bleibt kostenlos. Finanzieren soll sich die Seite über <a href="pro/">Speicherklar Pro</a>, den Angebots-Check für PV-Anlage und Speicher.</p>
     <p>Ich bin kein Elektriker und kein Energieberater. Speicherklar ersetzt kein Angebot vom Fachbetrieb. Aber es hilft dir, ein Angebot zu prüfen, bevor du unterschreibst.</p>
     <h2>Kontakt</h2>
-    <p>Fragen, Fehler gefunden, Idee für einen Artikel? Schreib mir an <a href="mailto:kontakt@speicherklar.de">kontakt@speicherklar.de</a> oder auf <a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">Instagram @speicherklar</a>.</p>
+    <p>Fragen, Fehler gefunden, Idee für einen Artikel? Schreib mir an <a href="mailto:kontakt@speicherklar.de">kontakt@speicherklar.de</a> oder auf <a href="https://www.instagram.com/speicherklar/" target="_blank" rel="noopener">Instagram @speicherklar</a>. Beruflich findest du mich auf <a href="https://www.linkedin.com/in/manuel-maurer-36821295/" target="_blank" rel="noopener">LinkedIn</a>.</p>
   </div>
 </div>
 </main>

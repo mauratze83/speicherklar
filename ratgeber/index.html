@@ -13,7 +13,7 @@
   --bg:#EDF0F2; --surface:#FFFFFF; --ink:#15212B; --muted:#56666F; --line:#CBD3DA;
   --sun:#E39A0B; --sun-ink:#8A5A00; --sun-soft:#FBEFD6;
   --meter:#1B1F23; --meter-digit:#F3F1EA; --meter-red:#C9302C;
-  --pos:#2E7D5B; --neg:#B4412F; --track:#DCE2E7;
+  --pos:#2E7D5B; --pos-ink:#276B4E; --neg:#B4412F; --track:#DCE2E7;
   --c-charge:#9FD3B8; --c-exp:#F6D99A; --c-imp:#AEB9C2; --sky:#DCE8F0; --cloud:#C3CDD5; --house:#FFFFFF;
   --bar-bg:#15212B; --bar-ink:#EDF0F2; --bar-accent:#F2B33D; --btn-ink:#15212B;
   --ease-out:cubic-bezier(0.23, 1, 0.32, 1); --ease-in-out:cubic-bezier(0.77, 0, 0.175, 1);
@@ -25,7 +25,7 @@
   --bg:#0F161C; --surface:#17212A; --ink:#E6ECF1; --muted:#97A7B3; --line:#2A3742;
   --sun:#F2B33D; --sun-ink:#F2B33D; --sun-soft:#2E2614;
   --meter:#06090C; --meter-digit:#E9E6DC; --meter-red:#D9443F;
-  --pos:#5CC596; --neg:#E5735E; --track:#26323C;
+  --pos:#5CC596; --pos-ink:#5CC596; --neg:#E5735E; --track:#26323C;
   --c-charge:#2F6B52; --c-exp:#6B5523; --c-imp:#4B5966; --sky:#17232D; --cloud:#3A4855; --house:#1E2A35;
   --bar-bg:#E6ECF1; --bar-ink:#0F161C; --bar-accent:#8A5A00;
   color-scheme:dark }}
@@ -33,7 +33,7 @@
   --bg:#0F161C; --surface:#17212A; --ink:#E6ECF1; --muted:#97A7B3; --line:#2A3742;
   --sun:#F2B33D; --sun-ink:#F2B33D; --sun-soft:#2E2614;
   --meter:#06090C; --meter-digit:#E9E6DC; --meter-red:#D9443F;
-  --pos:#5CC596; --neg:#E5735E; --track:#26323C;
+  --pos:#5CC596; --pos-ink:#5CC596; --neg:#E5735E; --track:#26323C;
   --c-charge:#2F6B52; --c-exp:#6B5523; --c-imp:#4B5966; --sky:#17232D; --cloud:#3A4855; --house:#1E2A35;
   --bar-bg:#E6ECF1; --bar-ink:#0F161C; --bar-accent:#8A5A00;
   color-scheme:dark }
@@ -43,6 +43,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:1
 .wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 a{color:var(--sun-ink)}
 :focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
 html{scroll-padding-top:76px;scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
