@@ -37,7 +37,7 @@ b.addEventListener('click',function(){set(!h.classList.contains('open'))});
 n.addEventListener('click',function(e){if(e.target.closest('a'))set(false)});
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&h.classList.contains('open')){set(false);b.focus()}});
 document.addEventListener('click',function(e){if(h.classList.contains('open')&&!h.contains(e.target))set(false)});
-matchMedia('(min-width:761px)').addEventListener('change',function(m){if(m.matches)set(false)});})();</script>"""
+matchMedia('(min-width:841px)').addEventListener('change',function(m){if(m.matches)set(false)});})();</script>"""
 
 
 def header(prefix="./", active=None):
@@ -47,6 +47,7 @@ def header(prefix="./", active=None):
     nav = "".join([
         item(f"{prefix}#rechner", "Rechner", "rechner"),
         item(f"{prefix}pro/", "Speicherklar Pro", "pro"),
+        item(f"{prefix}so-gehts/", "So geht's", "sogehts"),
         item(f"{prefix}ratgeber/", "Ratgeber", "ratgeber"),
         item(f"{prefix}#annahmen", "Annahmen"),
         item(f"{prefix}ueber-mich.html", "Über mich", "ueber"),

@@ -314,7 +314,7 @@ if video_live():
         "contentUrl": "https://speicherklar.de/" + VIDEO["quer"], "inLanguage": "de"})
 (ROOT / "so-gehts").mkdir(exist_ok=True)
 (ROOT / "so-gehts/index.html").write_text(page("So funktioniert Speicherklar: Rechner und Angebots-Check", _sg_desc, SG_URL, _sg, ld_tags(*_sg_ld),
-    active=None, robots=not video_live(), og_image=VIDEO["bild"] or "img/og/start.png", og_type="website"))
+    active="sogehts", robots=not video_live(), og_image=VIDEO["bild"] or "img/og/start.png", og_type="website"))
 
 # Methodik: Rechenweg, öffentlicher Code, Unabhängigkeit, Vergleich mit der HTW Berlin
 METHODIK_URL = "https://speicherklar.de/methodik.html"
