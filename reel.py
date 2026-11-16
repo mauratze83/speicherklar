@@ -1,4 +1,8 @@
-"""Baut ein Reel für @speicherklar (1080x1920, 30 fps) aus Slides + Voice-over.
+"""Baut ein Reel für @speicherklar (Standard 1080x1350 = 4:5, 30 fps) aus Slides + Voice-over.
+
+FORMAT (seit 16.11.2026): Standard ist 4:5 (1080x1350). Die Meta Business Suite nimmt beim Planen über
+"Beitrag erstellen" nur 4:5 bis 16:9 an; 1080x1920 (9:16) wird dort abgelehnt. Mit "format": "9:16" in der
+Spec entsteht die alte Hochkant-Fassung (nur für "Reel erstellen" bzw. direkt in der App).
 
 Aufruf:  SPEICHERKLAR_SITE=<Checkout von main> python3 reel.py reels/<name>.json
 Spec (JSON):
@@ -146,14 +150,26 @@ def srt_t(t):
 def run(*a):
     return subprocess.run(a, check=True, capture_output=True, text=True)
 
+# 4:5 (1080x1350): gleicher Aufbau, Inhalt mit zoom verkleinert, Untertitel unter dem Inhalt
+CSS_45 = """
+body{height:1350px}
+.reel{height:1350px;padding:84px 150px 190px 110px}
+.reel .main{zoom:.82}
+.reel.cover{padding:84px 150px 110px 110px}
+.reel.cover .main{zoom:.92}
+"""
+
 def main(spec_path):
+    global CSS, SUB_Y
     spec = json.loads(pathlib.Path(spec_path).read_text())
+    H = 1920 if spec.get("format") == "9:16" else 1350
+    if H == 1350: CSS = CSS + CSS_45; SUB_Y = 1245
     name, tempo, slides = spec["name"], float(spec.get("tempo", 1.0)), spec["slides"]
     out = HERE / "out"; out.mkdir(exist_ok=True)
     tmp = HERE / "out" / f".{name}"; tmp.mkdir(exist_ok=True)
     # 1. Slides rendern
     with sync_playwright() as pw:
-        b = pw.chromium.launch(); pg = b.new_page(viewport={"width": 1080, "height": 1920})
+        b = pw.chromium.launch(); pg = b.new_page(viewport={"width": 1080, "height": H})
         for i, s in enumerate(slides, 1):
             pg.set_content(f"<html><head><style>{CSS}</style></head><body>{slide(s['html'], s.get('dark', False))}</body></html>")
             pg.evaluate("document.fonts.ready.then(()=>document.fonts.size)"); pg.wait_for_timeout(150)
@@ -225,11 +241,11 @@ def main(spec_path):
                 run("ffmpeg", "-nostdin", "-y", "-loglevel", "error", "-ss", f"{(mine[0]['start']+mine[0]['end'])/2:.2f}", "-i", str(final),
                     "-frames:v", "1", str(tmp / f"check{i+1}.png"))
     from PIL import Image
-    W, H = 270, 480; n = len(slides)
-    im = Image.new("RGB", (W * min(n, 5), H * ((n + 4) // 5)), "white")
+    W, TH = 270, 270 * H // 1080; n = len(slides)
+    im = Image.new("RGB", (W * min(n, 5), TH * ((n + 4) // 5)), "white")
     for i in range(n):
         src = tmp / f"check{i+1}.png"
-        im.paste(Image.open(src if src.exists() else out / f"{name}-{i+1}.png").resize((W, H)), ((i % 5) * W, (i // 5) * H))
+        im.paste(Image.open(src if src.exists() else out / f"{name}-{i+1}.png").resize((W, TH)), ((i % 5) * W, (i // 5) * TH))
     im.save(out / f"{name}-uebersicht.png")
     print(json.dumps({"video": str(final), "dauer_s": round(dur, 1), "untertitel": len(subs), "schnitte_s": [round(c, 2) for c in cuts]}, ensure_ascii=False))
 

@@ -32,7 +32,7 @@ Grafik im Speicherklar-Stil auf hellgrauem Grund: Überschrift „Was darf Speic
 
 # Reels
 
-Beide 1080×1920 (9:16), 30 fps, Voice-over mit deiner ElevenLabs-Stimme (eleven_v4, je 1 Take), Untertitel eingebrannt (SRT liegt zusätzlich unter `ig/out/`, nicht nötig). In der Business Suite als Reel hochladen, 9:16 passt. Titelbild beim Hochladen unter „Titelbild bearbeiten“ → „Aus Galerie hinzufügen“ wählen, nicht verschieben oder zoomen. Instagram-eigene automatische Untertitel aus lassen.
+Beide 1080×1350 (4:5), 30 fps (am 16.11. von 9:16 umgebaut, weil die Business Suite 9:16 ablehnt), Voice-over mit deiner ElevenLabs-Stimme (eleven_v4, je 1 Take), Untertitel eingebrannt (SRT liegt zusätzlich unter `ig/out/`, nicht nötig). In der Business Suite über „Beitrag erstellen“ hochladen, 4:5 wird angenommen. Titelbild beim Hochladen unter „Titelbild bearbeiten“ → „Aus Galerie hinzufügen“ wählen, nicht verschieben oder zoomen. Instagram-eigene automatische Untertitel aus lassen.
 
 ## Reel A: reel2-waermepumpe-8-statt-15 (33 s)
 
