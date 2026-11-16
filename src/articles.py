@@ -185,7 +185,7 @@ ARTICLES = [
 "h1": "Lohnt sich ein Stromspeicher 2027?",
 "desc": "Mit Zahlen statt Prospekt: Wann sich ein Stromspeicher für eine neue PV-Anlage rechnet, was die EEG-Reform ändert und welche Größe am meisten bringt.",
 "date": "2026-11-09",
-"updated": "2026-11-14",
+"updated": "2026-11-16",
 "lead": "Kurze Antwort: Bei den heutigen Preisen meistens ja, wenn der Speicher nicht zu groß ist. Sollte die geplante EEG-Reform kommen, rechnet er sich sogar deutlich schneller.",
 "body": """
 <p>Ob sich ein Speicher lohnt, hängt an vier Zahlen: was er kostet, was dein Netzstrom kostet, was du für eingespeisten Strom bekommst und wie viel Solarstrom er dir zusätzlich nutzbar macht. Wir haben das für ein typisches Einfamilienhaus durchgerechnet: 9 kWp auf einem Süddach, 4.500 kWh Verbrauch im Jahr.</p>
@@ -205,7 +205,7 @@ ARTICLES = [
 <p>Am meisten bleibt bei 6 kWh übrig. Ein 15-kWh-Speicher macht das Haus kaum unabhängiger als einer mit 8 kWh, kostet aber fast doppelt so viel. Er braucht fast die vollen 15 Jahre, bis er seine Kosten wieder reingeholt hat. Übrig bleibt praktisch nichts.</p>
 
 <h2>Was die EEG-Reform ändern würde</h2>
-<p>Das Bundeskabinett hat am 29. Juli 2026 einen Entwurf für ein neues EEG beschlossen. Für neue kleine Dachanlagen soll die feste Einspeisevergütung nach einer Übergangszeit wegfallen. Außerdem darf nur noch höchstens die Hälfte der Anlagenleistung ins Netz. Bundestag und Bundesrat müssen noch zustimmen, Änderungen sind möglich. Stand 9. November 2026: Nach Angaben des Branchenverbands BEE soll der Bundestag in der Woche ab dem 9. November abstimmen, der Bundesrat am 20. November.</p>
+<p>Das Bundeskabinett hat am 29. Juli 2026 einen Entwurf für ein neues EEG beschlossen. Für neue kleine Dachanlagen soll die feste Einspeisevergütung nach einer Übergangszeit wegfallen. Außerdem darf nur noch höchstens die Hälfte der Anlagenleistung ins Netz. Bundestag und Bundesrat müssen noch zustimmen. Stand 16. November 2026: Beschlossen ist noch nichts. Union und SPD wollen die feste Einspeisevergütung für neue Anlagen bis 25 kW nun doch behalten (Reuters, 14.11.2026). Ob die 50-%-Grenze bleibt, ist offen. Wann der Bundestag abstimmt, steht noch nicht fest. Der Rechner zeigt die Reform deshalb weiter so, wie das Kabinett sie geplant hat.</p>
 <p>Für den Speicher ist das eine gute Nachricht. Jede Kilowattstunde, die du selbst nutzt, spart weiter 33 ct. Eine eingespeiste bringt dann nichts mehr. Und Strom, der wegen der 50-%-Grenze gar nicht ins Netz darf, geht verloren, wenn ihn kein Speicher auffängt. Im Beispielhaus wären das rund 560 kWh im Jahr.</p>
 <div class="tablewrap"><table>
 <thead><tr><th>Szenario</th><th>Beste Größe</th><th>Ersparnis/Jahr</th><th>Amortisation</th><th>Bilanz nach 15 Jahren</th></tr></thead>

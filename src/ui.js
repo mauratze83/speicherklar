@@ -50,7 +50,7 @@
     $("o-price").textContent=nf2.format(p.price)+" ct/kWh";
     $("o-feed").textContent=nf2.format(p.feed)+" ct/kWh";
     $("h-eeg").textContent=state.eeg==="reform"
-      ?"Kabinettsentwurf: keine feste Vergütung nach der Übergangszeit, Einspeisung höchstens 50 % der Anlagenleistung. Noch nicht beschlossen."
+      ?"Kabinettsentwurf: keine feste Vergütung nach der Übergangszeit, Einspeisung höchstens 50 % der Anlagenleistung. Noch nicht beschlossen, die Koalition will die Vergütung bis 25 kW inzwischen behalten."
       :"Gilt 20 Jahre ab Inbetriebnahme, für Anlagen ab August 2026 bis 10 kWp.";
   }
 
