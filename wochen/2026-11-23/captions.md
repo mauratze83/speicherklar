@@ -4,13 +4,13 @@
 
 Vorschlag zum Veröffentlichen: Dienstag, 24.11.2026, 18:30 Uhr.
 Hinweis: In der App im Zuschnitt-Schritt auf das Rahmen-Symbol tippen und „Original“ bzw. 4:5 wählen, sonst schneidet Instagram auf ein Quadrat zu.
-Auftakt der zwei neuen Beispielhäuser (Oberbayern und Schleswig-Holstein, Faktenblatt 16.11.2026).
+Standard-Haus aus dem Ruhrgebiet, nur die Region getauscht. Nicht die Profil-Häuser „Haus Oberbayern“ / „Haus Schleswig-Holstein“ aus dem Faktenblatt (die kommen in eigenen Posts).
 
 ### Caption
 
-Gleiches Haus in Oberbayern, im Ruhrgebiet und in Schleswig-Holstein. Der beste Stromspeicher ist überall 6 kWh groß.
+Ein Haus, drei Orte: Ich hab mein Beispielhaus nach Oberbayern und Schleswig-Holstein verschoben. Der beste Stromspeicher bleibt überall 6 kWh groß.
 
-Hab's durchgerechnet: 9 kWp aufs Süddach, 4.500 kWh Verbrauch, nur der Ort wechselt. Klar, im Süden gibt's mehr Sonne. Rund 15 % mehr als im Norden. Nur kommt die fast komplett im Winter dazu. Im Juni erzeugen alle drei Häuser praktisch gleich viel.
+Es ist das bekannte Haus aus dem Ruhrgebiet: 9 kWp aufs Süddach, 4.500 kWh Verbrauch. Dach, Verbrauch und Preise bleiben gleich, nur der Ort wechselt. Klar, im Süden gibt's mehr Sonne. Rund 15 % mehr als im Norden. Nur kommt die fast komplett im Winter dazu. Im Juni erzeugen alle drei Häuser praktisch gleich viel.
 
 Und der Speicher? Im Sommer wird er überall voll, im Dezember nirgends. Deshalb bleibt die passende Speichergröße gleich.
 
@@ -28,7 +28,7 @@ Rechne dein Haus mit deiner Region selbst durch, kostenlos und ohne Anmeldung: h
 
 ### Alt-Text Cover
 
-Grafik im Speicherklar-Stil auf hellgrauem Grund: Überschrift „Gleiches Haus. Drei Orte.“, darunter „Oberbayern, Ruhrgebiet, Schleswig-Holstein. Welcher Speicher passt? Hab’s durchgerechnet.“
+Grafik im Speicherklar-Stil auf hellgrauem Grund: Überschrift „Ein Haus. Drei Orte.“, darunter „Ich hab mein Beispielhaus aus dem Ruhrgebiet nach Oberbayern und Schleswig-Holstein verschoben.“
 
 ### Prüfung
 

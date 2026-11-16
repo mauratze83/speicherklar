@@ -13,7 +13,7 @@ Erledigt:
 - 2026-11-16 reel2-waermepumpe-8-statt-15: Reel A „15 kWh im Angebot? 8 hätten gereicht.“ Angebots-Check mit Wärmepumpe (wochen/2026-11-16)
 - 2026-11-16 reel3-700-euro-pro-kwh: Reel B „700 € pro kWh? Dann kauf kleiner.“ zum Artikel stromspeicher-preis-pro-kwh (wochen/2026-11-16)
 
-- 2026-11-23 post9-drei-orte: „Gleiches Haus. Drei Orte.“ Oberbayern / Ruhrgebiet / Schleswig-Holstein, überall 6 kWh, Plus 3.380 / 2.899 / 2.668 € (wochen/2026-11-23)
+- 2026-11-23 post9-drei-orte: „Ein Haus. Drei Orte.“ Standard-Haus umgezogen nach Oberbayern / Ruhrgebiet / Schleswig-Holstein, überall 6 kWh, Plus 3.380 / 2.899 / 2.668 € (wochen/2026-11-23)
 
 Nächste freie Post-Nummer: post10. Nächste freie Reel-Nummer: reel4.
 

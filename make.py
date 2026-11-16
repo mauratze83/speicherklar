@@ -320,7 +320,7 @@ posts["post8-preis-pro-kwh"] = [
   frame(f'<h1>Ist dein Angebot <em>zu teuer?</em></h1><p>Der Angebots-Check ordnet den Preis je kWh kostenlos ein, als Ampel. Speicherklar Pro findet dazu die passende Größe für PV-Anlage und Speicher. Link in der Bio.</p><div><span class="cta">speicherklar.de</span></div><p class="src">Beispiel: Ruhrgebiet, 9 kWp Süd 35°, 4.500 kWh/Jahr, Strom {pr} ct, Einspeisung 7,70 ct, 15 Jahre, ohne Zinsen und Alterung. Sonnendaten PVGIS (EU-Kommission), eigene Simulation.</p>', 8, T, tp, dark=True),
 ]
 
-# ---------- Post 9: Dasselbe Haus, drei Orte (10 Slides), Auftakt der Beispielhäuser Oberbayern / Schleswig-Holstein (Faktenblatt 16.11.2026) ----------
+# ---------- Post 9: Ein Haus, drei Orte (10 Slides): Standard-Haus Ruhrgebiet nur umgezogen, NICHT die Profil-Häuser Oberbayern/Schleswig-Holstein, Auftakt der Beispielhäuser Oberbayern / Schleswig-Holstein (Faktenblatt 16.11.2026) ----------
 _js9 = r"""
 const S=require(process.argv[1]);const P=%s;
 const b={roofs:[{kwp:9,tilt:35,aspect:0}],cons:4500,ev:0,hp:0,evTime:"eve",bat:6,bprice:500,life:15,price:P,feed:7.7,feedLimit:0};
@@ -342,9 +342,9 @@ def table3(k1, k2, h1, h2, f):
     return f'<div class="card" style="padding:28px 36px"><table style="width:100%;border-collapse:collapse;font-size:38px"><tr><td></td><td {th}>{h1}</td><td {th}>{h2}</td></tr>{rows}</table></div>'
 T = 10; tp = "Drei Orte"
 posts["post9-drei-orte"] = [
-  frame('<h1>Gleiches Haus. <em>Drei Orte.</em></h1><p class="promise">Oberbayern, Ruhrgebiet, Schleswig-Holstein. Welcher Speicher passt? Hab’s durchgerechnet.</p>', 1, T, tp),
+  frame('<h1>Ein Haus. <em>Drei Orte.</em></h1><p class="promise">Ich hab mein Beispielhaus aus dem Ruhrgebiet nach Oberbayern und Schleswig-Holstein verschoben.</p>', 1, T, tp),
   frame(f'<h2>So groß ist der beste Speicher</h2>{wheels(BEST)}<p>kWh. In Oberbayern, im Ruhrgebiet und in Schleswig-Holstein. Überall gleich.</p>', 2, T, tp),
-  frame('<h2>Das Haus</h2>' + summary(["9 kWp, Süddach, 35° Neigung", "4.500 kWh Verbrauch im Jahr", "Speicher 500 € je kWh inkl. Einbau", "Nur der Ort wechselt"]), 3, T, tp),
+  frame('<h2>Mein Standard-Haus, dreimal umgezogen</h2>' + summary(["9 kWp, Süddach, 35° Neigung", "4.500 kWh Verbrauch im Jahr", "Speicher 500 € je kWh inkl. Einbau"]) + '<p>Dach, Verbrauch, Preise: alles gleich. Nur der Ort wechselt.</p>', 3, T, tp),
   frame('<h2>Im Süden gibt’s mehr Sonne</h2><p class="muted" style="font-size:32px">Ertrag je kWp im Jahr</p>'
         + pbars([(n, R[k]["kwh"], "#E39A0B" if k == "4" else "#B9C3CB", k == "4") for k, n in ORTE], R["8"]["kwh"], lambda v: f"{fmt(round(v))} kWh")
         + f'<p>Oberbayern holt rund {round((R["8"]["kwh"]/R["2"]["kwh"]-1)*100)} % mehr raus als Schleswig-Holstein.</p>', 4, T, tp),
@@ -354,7 +354,7 @@ posts["post9-drei-orte"] = [
         + pbars([(f'{n}, bezahlt nach {d1(R[k]["pb"])} J.', R[k]["net"], "#E39A0B" if k == "4" else "#B9C3CB", k == "4") for k, n in ORTE], R["8"]["net"], lambda v: f"+{fmt(round(v))} €")
         + f'<p>{fmt(DIFF)} € Unterschied. Vom gleichen Speicher.</p>', 7, T, tp),
   frame(f'<h2>Die Größe ändert dein Verbrauch</h2><p class="muted" style="font-size:32px">Beste Größe im Ruhrgebiet, sonst gleiches Haus</p>' + summary([f"3.000 kWh im Jahr: {R['4']['c3']} kWh", f"4.500 kWh im Jahr: {BEST} kWh", f"6.000 kWh im Jahr: {R['4']['c6']} kWh"]) + '<p>Der Speicher deckt deinen Abend. Wie viel du abends brauchst, hängt nicht am Wohnort.</p>', 8, T, tp),
-  frame('<h2>Kurz gesagt</h2>' + summary([f"Gleiches Haus: überall {BEST} kWh.", "Süden: mehr Sonne, vor allem im Winter.", f"Der Ort macht {fmt(DIFF)} € Unterschied.", "Die Größe hängt am Verbrauch."]), 9, T, tp),
+  frame('<h2>Kurz gesagt</h2>' + summary([f"Gleiches Haus, drei Orte: überall {BEST} kWh.", "Süden: mehr Sonne, vor allem im Winter.", f"Der Ort macht {fmt(DIFF)} € Unterschied.", "Die Größe hängt am Verbrauch."]), 9, T, tp),
   frame(f'<h1>Rechne dein Haus <em>an deinem Ort.</em></h1><p>Im kostenlosen Rechner auf speicherklar.de wählst du deine Region. Ohne Anmeldung. Link in der Bio.</p><div><span class="cta">speicherklar.de</span></div><p class="src">Beispiel: 9 kWp Süd, 35°, 4.500 kWh/Jahr, Speicher 500 €/kWh, Strom {pr} ct, Einspeisung 7,70 ct, 15 Jahre, ohne Zinsen und Alterung. Regionen im Rechner: München/Oberbayern, Ruhrgebiet/Westfalen, Schleswig-Holstein/Niedersachsen-Nord. Sonnendaten PVGIS (EU-Kommission), eigene Simulation.</p>', 10, T, tp, dark=True),
 ]
 
