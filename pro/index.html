@@ -624,7 +624,7 @@ matchMedia('(min-width:841px)').addEventListener('change',function(m){if(m.match
         <div class="field"><label for="f-total">Gesamtpreis PV-Anlage mit Speicher</label>
           <div class="unitin"><input class="in" type="number" id="f-total" min="0" max="200000" step="1" inputmode="numeric"><span>€</span></div>
           <span class="hint">Brutto, ohne Wallbox und andere Extras.</span></div>
-        <div class="field"><label for="f-store">Davon Speicher <small>(Aufpreis gegenüber ohne Speicher)</small></label>
+        <div class="field"><label for="f-store">Davon Speicher <small>(Aufpreis gegenüber der Anlage ohne Speicher)</small></label>
           <div class="unitin"><input class="in" type="number" id="f-store" min="0" max="100000" step="1" inputmode="numeric"><span>€</span></div>
           <span class="hint">Steht oft als eigene Position im Angebot. Fehlt sie, schätzt der Bericht mit Marktpreisen.</span></div>
       </fieldset>
@@ -729,7 +729,7 @@ matchMedia('(min-width:841px)').addEventListener('change',function(m){if(m.match
         </form>
         <p class="wait-msg" id="keymsg" role="status" aria-live="polite"></p>
         <form id="recform" class="recform" novalidate>
-          <label for="f-recmail">Schlüssel vergessen? Wir schicken ihn noch einmal an die Adresse, mit der du gekauft hast.</label>
+          <label for="f-recmail">Schlüssel vergessen? Ich schicke ihn noch einmal an die Adresse, mit der du gekauft hast.</label>
           <div class="wait-row">
             <input type="email" id="f-recmail" autocomplete="email" inputmode="email" placeholder="deine@email.de">
             <button class="btn btn-on" type="submit" id="recbtn">Schlüssel schicken</button>
@@ -1583,7 +1583,7 @@ var PRO = (function () {
       if (!C.api) return Promise.resolve({ ok: false, msg: "Der Verkauf ist noch nicht gestartet." });
       return api("/validate", { key: key, device: deviceId() }).then(function (j) {
         if (j.ok) return { ok: true, email: j.email || "", until: j.until || "" };
-        if (j.status === 404) return { ok: false, msg: "Diesen Schlüssel kennen wir nicht. Bitte kopier ihn genau so, wie er in der Mail oder nach dem Kauf angezeigt wurde." };
+        if (j.status === 404) return { ok: false, msg: "Diesen Schlüssel kenne ich nicht. Bitte kopier ihn genau so, wie er in der Mail oder nach dem Kauf angezeigt wurde." };
         if (j.status === 409) return { ok: false, msg: "Dieser Schlüssel ist schon auf " + (j.max || 3) + " Geräten aktiv. Wenn du ein Gerät gewechselt hast, schreib an kontakt@speicherklar.de, dann gebe ich ihn wieder frei." };
         if (j.status === 410 && j.error === "expired") return { ok: false, expired: true, until: j.until || "", msg: expiredMsg(j.until) };
         if (j.status === 410) return { ok: false, msg: j.error === "refunded" ? "Dieser Kauf wurde erstattet, der Schlüssel gilt nicht mehr." : j.error === "blocked" ? "Dieser Schlüssel ist gesperrt. Bei Fragen: kontakt@speicherklar.de." : "Zu diesem Schlüssel gibt es keine abgeschlossene Zahlung." };

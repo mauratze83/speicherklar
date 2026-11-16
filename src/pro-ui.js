@@ -253,7 +253,7 @@
       if (!C.api) return Promise.resolve({ ok: false, msg: "Der Verkauf ist noch nicht gestartet." });
       return api("/validate", { key: key, device: deviceId() }).then(function (j) {
         if (j.ok) return { ok: true, email: j.email || "", until: j.until || "" };
-        if (j.status === 404) return { ok: false, msg: "Diesen Schlüssel kennen wir nicht. Bitte kopier ihn genau so, wie er in der Mail oder nach dem Kauf angezeigt wurde." };
+        if (j.status === 404) return { ok: false, msg: "Diesen Schlüssel kenne ich nicht. Bitte kopier ihn genau so, wie er in der Mail oder nach dem Kauf angezeigt wurde." };
         if (j.status === 409) return { ok: false, msg: "Dieser Schlüssel ist schon auf " + (j.max || 3) + " Geräten aktiv. Wenn du ein Gerät gewechselt hast, schreib an kontakt@speicherklar.de, dann gebe ich ihn wieder frei." };
         if (j.status === 410 && j.error === "expired") return { ok: false, expired: true, until: j.until || "", msg: expiredMsg(j.until) };
         if (j.status === 410) return { ok: false, msg: j.error === "refunded" ? "Dieser Kauf wurde erstattet, der Schlüssel gilt nicht mehr." : j.error === "blocked" ? "Dieser Schlüssel ist gesperrt. Bei Fragen: kontakt@speicherklar.de." : "Zu diesem Schlüssel gibt es keine abgeschlossene Zahlung." };

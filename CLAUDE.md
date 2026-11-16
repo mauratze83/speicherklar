@@ -60,7 +60,7 @@ Reihenfolge: Quelle ändern → Tests → `build_articles.py` (falls nötig) →
 ## Ratgeber-Artikel
 
 - Neue Artikel in `src/articles.py` eintragen (neueste nach Datum), nie als HTML-Datei anlegen.
-- Zielgruppe: Leute, die eine PV-Anlage **erst planen** und wissen wollen, ob und welcher Speicher sich lohnt. Ton: sachlich, du-Form, Zahlen statt Prospekt, unabhängig von Herstellern.
+- Zielgruppe: Leute, die eine PV-Anlage **erst planen** und wissen wollen, ob und welcher Speicher sich lohnt. Ton: sachlich, du-Form, Zahlen statt Prospekt, unabhängig von Herstellern. Absender ist immer „ich“ (Manuel), nie „wir“/„unser“ – auf allen Seiten, auch in Formularen und Meldungen (seit 16.11.2026 durchgehend umgestellt; „unser Dach“ in Über mich meint die Familie und bleibt). Das Bezahlprodukt heißt immer „Speicherklar Pro“, auch in Zusammensetzungen („Zugang zu Speicherklar Pro“ statt „Pro-Zugang“). Umgangssprache wie „rauskommen“, „prüf“, „hab’s“ ist gewollt.
 - Suchtitel (`<title>`) = `seo_title` (sonst `title`) + „ | Speicherklar“, höchstens 60 Zeichen (SEO-Tools warnen ab 70). `build_articles.py` meldet „WARNUNG: Titel …“, wenn es länger wird; dann `seo_title` setzen. `title` bleibt für Karten, Brotkrumen und `headline`, die Überschrift kommt aus `h1`.
 - `kennzahl` muss wörtlich im Artikel vorkommen; Stand-Angabe (`STAND`) aktuell halten.
 - Balken (`bars`) zeigen Euro mit Vorzeichen; mit `"unit": "kWh"` (oder einer anderen Einheit) eine Zahl mit Einheit. Der Prüf-Artikel `stromspeicher-rechner-test-echte-daten` enthält Messwerte von Manuels Anlage und WPuQ-Ergebnisse: bei Änderungen an `sim.js` die Rechner-Zahlen dort mit neu rechnen.

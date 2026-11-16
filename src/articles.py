@@ -74,7 +74,7 @@ ARTICLES = [
 <!--BARS-->
 <p><b>Fehler 1, die Wärmepumpe.</b> Der Rechner hat den ganzen Verbrauch mit den kurzen Spitzen eines Haushalts gerechnet: Wasserkocher an, Herd an, dann wieder fast nichts. Im Rechner lagen 62 % aller 5-Minuten-Werte unter dem halben Mittel ihrer Stunde, in meinem Haus sind es 12 %. Wärmepumpe und Pool laufen lange und gleichmäßig. Mein Haus braucht dadurch viel mehr Solarstrom direkt, und der Speicher hat weniger zu tun. Der alte Rechner zeigte 2.819 kWh, also die Hälfte zu viel.</p>
 <p>Seit dem 14.11.2026 trägst du die Wärmepumpe im Rechner getrennt ein. Sie läuft dort ohne Spitzen, und wie sie sich auf Monate und Stunden verteilt, habe ich an echten Häusern abgelesen (unten mehr). Das E-Auto behält die Spitzen, weil eine Wallbox mehr Leistung zieht, als ein Speicher abgibt.</p>
-<p><b>Fehler 2, das Wetter.</b> Danach lag der Rechner plötzlich zu niedrig, bei 1.146 kWh. Der Grund: Er hat jeden Tag einzeln ausgewürfelt, und im Sommer viel zu wechselhaft. Ich habe die Stundenwerte von PVGIS für alle zehn Regionen des Rechners nachgeprüft, 2014 bis 2023. Die trübsten 5 % der Julitage bringen dort 41 % eines durchschnittlichen Tages. Im Rechner waren es 11 %. Dafür fehlten Wolken mitten am Tag. Bei normalen Haushalten hob sich das zufällig auf, bei meinem großen Verbrauch nicht: An ganz trüben Tagen wird der Speicher nicht voll, an überhellen Tagen läuft er über.</p>
+<p><b>Fehler 2, das Wetter.</b> Danach lag der Rechner plötzlich zu niedrig, bei 1.146 kWh. Der Grund: Er hat jeden Tag einzeln ausgewürfelt, und im Sommer viel zu wechselhaft. Ich habe die Stundenwerte von PVGIS für alle zehn Regionen des Rechners nachgeprüft, 2014 bis 2023. Die trübsten 5 % der Julitage bringen dort 41 % eines durchschnittlichen Tages. Im Rechner waren es 11 %. Dafür fehlten Wolken mitten am Tag. Bei normalen Haushalten hob sich das zufällig auf, bei meinem großen Verbrauch nicht: An ganz trüben Tagen wird der Speicher nicht voll, an sehr sonnigen Tagen läuft er über.</p>
 <p>Jetzt nimmt der Rechner den Wechsel von Sonne und Wolken Stunde für Stunde aus einem echten Jahr (2020), umgerechnet auf die Monatssummen deines Gebiets. Mit jedem der zehn Jahre bleibt die beste Größe im Standard-Beispiel bei 6 kWh, ich habe 2020 genommen, weil es in der Mitte liegt. Ergebnis für mein Haus: 1.735 kWh, gemessen 1.860 kWh.</p>
 <div class="tablewrap"><table class="fit">
 <thead><tr><th>Mein Haus, 10 kWh</th><th>Autarkie ohne Speicher</th><th>mit Speicher</th></tr></thead>
@@ -95,7 +95,7 @@ ARTICLES = [
 <tr><td>dieselben Häuser mit Wärmepumpe</td><td class="num">25 %</td><td class="num">35 %</td><td class="num">39 %</td><td class="num">42 %</td><td class="num">45 %</td></tr>
 <tr><td>Rechner mit Wärmepumpe</td><td class="num">30 %</td><td class="num">39 %</td><td class="num">43 %</td><td class="num">46 %</td><td class="num">48 %</td></tr>
 </tbody></table></div>
-<p>Mit Speicher liegt der Rechner auf 1–2 Punkte genau. Ohne Speicher rechnet er etwas zu wenig Eigenverbrauch, das macht den Speicher eher einen Hauch zu gut. Mit Wärmepumpe liegt die Autarkie rund 4 Punkte zu hoch. Was der Speicher dazubringt, trifft er aber: 19 Punkte im Rechner, 20 Punkte gemessen. Für die Frage nach der Speichergröße zählt genau dieser Zugewinn.</p>
+<p>Mit Speicher liegt der Rechner auf 1–2 Punkte genau. Ohne Speicher rechnet er etwas zu wenig Eigenverbrauch, das macht den Speicher eher einen Hauch zu gut. Mit Wärmepumpe liegt die Autarkie rund 4 Punkte zu hoch. Was der Speicher beiträgt, trifft er aber: 19 Punkte im Rechner, 20 Punkte gemessen. Für die Frage nach der Speichergröße zählt genau dieser Zugewinn.</p>
 
 <h2>Was sich für dich ändert</h2>
 <p>Für einen Haushalt ohne Wärmepumpe fast nichts. Im Standard-Beispiel (9 kWp Süd, 4.500 kWh) bleibt 6 kWh die beste Größe, die Bilanz nach 15 Jahren liegt bei 2.899 € statt vorher 2.758 €. Alle Artikel habe ich neu gerechnet. Eine Aussage hat sich dabei gedreht: Bei einem Ost-West-Dach rechnen sich jetzt 5 statt 4 kWh. Den Artikel <a href="ost-west-dach-speicher.html">Ost-West-Dach</a> habe ich angepasst.</p>
@@ -106,7 +106,7 @@ ARTICLES = [
 <li>Deine Anlage ist verschattet, durch Bäume, Gauben oder Nachbarhäuser.</li>
 <li>Dein Speicher lädt deutlich langsamer als mit der halben Kapazität pro Stunde. Gib die Leistung im Angebots-Check an, wenn du sie kennst.</li>
 <li>Du lädst ein E-Auto gezielt mit Überschuss oder hast einen dynamischen Stromtarif. Beides bildet der Rechner nicht ab.</li>
-<li>Du hast viele große Verbraucher, die gleichmäßig laufen, aber keine Heizungs-Wärmepumpe sind, etwa eine Pool-Wärmepumpe im Sommer.</li>
+<li>Du hast viele große Verbraucher, die gleichmäßig laufen, aber keine Heizungs-Wärmepumpen sind, etwa eine Pool-Wärmepumpe im Sommer.</li>
 </ul>
 <p>Alle Annahmen und der Rechenweg stehen auf der <a href="../methodik.html#eigene-anlage">Methodik-Seite</a>. Der Code liegt offen auf GitHub, jede Änderung ist dort mit Datum nachzulesen.</p>
 """,
@@ -188,7 +188,7 @@ ARTICLES = [
 "updated": "2026-11-16",
 "lead": "Kurze Antwort: Bei den heutigen Preisen meistens ja, wenn der Speicher nicht zu groß ist. Sollte die geplante EEG-Reform kommen, rechnet er sich sogar deutlich schneller.",
 "body": """
-<p>Ob sich ein Speicher lohnt, hängt an vier Zahlen: was er kostet, was dein Netzstrom kostet, was du für eingespeisten Strom bekommst und wie viel Solarstrom er dir zusätzlich nutzbar macht. Wir haben das für ein typisches Einfamilienhaus durchgerechnet: 9 kWp auf einem Süddach, 4.500 kWh Verbrauch im Jahr.</p>
+<p>Ob sich ein Speicher lohnt, hängt an vier Zahlen: was er kostet, was dein Netzstrom kostet, was du für eingespeisten Strom bekommst und wie viel Solarstrom er dir zusätzlich nutzbar macht. Ich habe das für ein typisches Einfamilienhaus durchgerechnet: 9 kWp auf einem Süddach, 4.500 kWh Verbrauch im Jahr.</p>
 
 <h2>Das Ergebnis mit den heutigen Regeln</h2>
 <p>Ohne Speicher deckt die Anlage 36 % des Verbrauchs. Mit Speicher steigt das deutlich, aber jede weitere Kilowattstunde Kapazität bringt weniger als die vorherige.</p>
@@ -234,8 +234,8 @@ ARTICLES = [
 <p>Ein E-Auto mit 2.500 kWh im Jahr verschiebt die Rechnung. Lädt es meist abends, nutzt es den Speicher kräftig: Dann darf er größer sein, bis etwa 10 kWh. Lädt es tagsüber direkt vom Dach, reichen 7 kWh. Bevor du einen großen Speicher fürs Auto kaufst, prüf also, ob es nicht einfach tagsüber laden kann.</p>
 """,
 "faq": [
- ("Wie lange hält ein Stromspeicher?", "Hersteller geben meist 10 Jahre Garantie und 6.000 und mehr Ladezyklen an. Wir rechnen mit 15 Jahren Nutzung."),
- ("Gibt es eine Förderung für Stromspeicher?", "Einen bundesweiten Zuschuss gibt es 2026 nicht. Auf Speicher mit einer PV-Anlage fällt aber keine Umsatzsteuer an, und manche Länder und Kommunen fördern eigene Programme."),
+ ("Wie lange hält ein Stromspeicher?", "Hersteller geben meist 10 Jahre Garantie und 6.000 und mehr Ladezyklen an. Ich rechne mit 15 Jahren Nutzung."),
+ ("Gibt es eine Förderung für Stromspeicher?", "Einen bundesweiten Zuschuss gibt es 2026 nicht. Auf Speicher mit einer PV-Anlage fällt aber keine Umsatzsteuer an, und manche Länder und Kommunen haben eigene Förderprogramme."),
  ("Wie groß sollte mein Speicher sein?", "Als grobe Regel rechnen sich etwa 1 bis 1,5 kWh Speicher je 1.000 kWh Jahresverbrauch. Genauer geht es mit dem Rechner, weil Ausrichtung, Verbrauch und Preise viel ausmachen."),
 ],
 },
@@ -251,7 +251,7 @@ ARTICLES = [
 "updated": "2026-11-14",
 "lead": "Bei 4.500 kWh Jahresverbrauch und einem Süddach rechnet sich meist ein Speicher mit 5 bis 7 kWh nutzbarer Kapazität. Mehr macht dich kaum unabhängiger, nur die Rechnung schlechter.",
 "body": """
-<p>4.500 kWh im Jahr ist typisch für eine Familie mit zwei Kindern ohne Wärmepumpe und ohne E-Auto. Viele Angebote kommen in diesem Fall mit 10 kWh Speicher oder mehr. Wir haben nachgerechnet, ab welcher Größe sich das nicht mehr lohnt.</p>
+<p>4.500 kWh im Jahr ist typisch für eine Familie mit zwei Kindern ohne Wärmepumpe und ohne E-Auto. Viele Angebote kommen in diesem Fall mit 10 kWh Speicher oder mehr. Ich habe nachgerechnet, ab welcher Größe sich das nicht mehr lohnt.</p>
 
 <h2>Die beste Größe je Anlagengröße</h2>
 <div class="tablewrap"><table>
@@ -267,7 +267,7 @@ ARTICLES = [
 <p>Mit 8 kWh Speicher deckt das Beispielhaus im Juni seinen Verbrauch fast ganz selbst, im Dezember nur 38 %. Im Dezember erzeugt die Anlage rund 240 kWh, das Haus braucht 450 kWh. Was nicht erzeugt wird, kann auch kein Speicher speichern. Ein größerer Speicher macht nur im Sommer zusätzlichen Überschuss nutzbar, und davon gibt es dann schon genug.</p>
 
 <h2>Die Faustregel</h2>
-<p>Rund 1 bis 1,5 kWh Speicher je 1.000 kWh Jahresverbrauch. Bei 4.500 kWh sind das 4,5 bis 7 kWh. Unsere Simulation landet genau in diesem Bereich.</p>
+<p>Rund 1 bis 1,5 kWh Speicher je 1.000 kWh Jahresverbrauch. Bei 4.500 kWh sind das 4,5 bis 7 kWh. Meine Simulation landet genau in diesem Bereich.</p>
 <p>Etwas größer darf es sein, wenn</p>
 <ul>
 <li>ein E-Auto meist abends oder nachts lädt,</li>
@@ -285,7 +285,7 @@ ARTICLES = [
 <p>(jeweils 9 kWp Süd)</p>
 """,
 "faq": [
- ("Brutto oder netto: welche Speichergröße ist gemeint?", "Wir rechnen immer mit der nutzbaren Kapazität. Manche Angebote nennen die Bruttokapazität, die 5 bis 10 % höher liegt. Frag im Zweifel nach."),
+ ("Brutto oder netto: Welche Speichergröße ist gemeint?", "Ich rechne immer mit der nutzbaren Kapazität. Manche Angebote nennen die Bruttokapazität, die 5 bis 10 % höher liegt. Frag im Zweifel nach."),
  ("Kann ich den Speicher später erweitern?", "Viele Systeme sind modular und lassen sich um weitere Batteriemodule ergänzen. Das ist ein guter Weg, mit 5 bis 6 kWh zu starten und erst bei E-Auto oder Wärmepumpe zu erweitern."),
 ],
 },
@@ -314,7 +314,7 @@ ARTICLES = [
 <tr><td>Amortisation dieser Größe</td><td class="num">7,6 Jahre</td><td class="num">7,8 Jahre</td></tr>
 <tr><td>Amortisation mit 8 kWh</td><td class="num">9,0 Jahre</td><td class="num">10,9 Jahre</td></tr>
 </tbody></table></div>
-<p>Ost-West erzeugt bei gleicher Leistung gut ein Fünftel weniger, verteilt den Strom aber gleichmäßiger über den Tag. Mittags bleibt weniger Überschuss übrig, der in einen Speicher könnte. Deshalb lohnt sich ein großer Speicher hier noch weniger als bei Süd.</p>
+<p>Ost-West erzeugt bei gleicher Leistung gut ein Fünftel weniger, verteilt den Strom aber gleichmäßiger über den Tag. Mittags bleibt weniger Überschuss übrig, der in einen Speicher gehen könnte. Deshalb lohnt sich ein großer Speicher hier noch weniger als bei Süd.</p>
 
 <h2>Der teure Fehler</h2>
 <p>Ein 8-kWh-Speicher an einer Ost-West-Anlage kostet 1.500 € mehr als einer mit 5 kWh, bringt pro Jahr aber nur rund 45 € zusätzlich. Nach 15 Jahren bleiben rund 800 € weniger übrig. Er braucht fast 11 Jahre, bis er sich bezahlt hat. Wenn dir ein Angebot für ein Ost-West-Dach einen großen Speicher vorschlägt, frag nach dem Grund.</p>
@@ -343,7 +343,7 @@ ARTICLES = [
 "lead": "Kurze Antwort: Das hängt vor allem an deiner Einspeisevergütung. Bekommst du unter 8 ct pro kWh, lohnt sich ein kleiner Speicher meist. Bekommst du 20 ct oder mehr, lohnt er sich nicht.",
 "body": """
 <p>Du hast schon eine PV-Anlage und überlegst, einen Speicher dazuzukaufen? Dann ist die Rechnung anders als bei einer neuen Anlage. Der Speicher spart dir Netzstrom, aber jede Kilowattstunde, die er auffängt, speist du nicht mehr ein. Je mehr du fürs Einspeisen bekommst, desto weniger bleibt übrig.</p>
-<p>Unser Beispiel: eine 7-kWp-Anlage auf einem Süddach, 4.500 kWh Verbrauch im Jahr, Strompreis 33 ct. Weil Nachrüsten oft teurer ist als der Kauf zusammen mit der Anlage, rechnen wir hier mit 700 €/kWh statt 500 €/kWh.</p>
+<p>Mein Beispiel: eine 7-kWp-Anlage auf einem Süddach, 4.500 kWh Verbrauch im Jahr, Strompreis 33 ct. Weil Nachrüsten oft teurer ist als der Kauf zusammen mit der Anlage, rechne ich hier mit 700 €/kWh statt 500 €/kWh.</p>
 
 <h2>Deine Einspeisevergütung entscheidet</h2>
 <div class="tablewrap"><table>
@@ -358,7 +358,7 @@ ARTICLES = [
 <p>Deine Vergütung steht auf der Jahresabrechnung deines Netzbetreibers. Sie hängt davon ab, wann deine Anlage in Betrieb ging.</p>
 
 <h2>Wenn die feste Vergütung ausläuft</h2>
-<p>Die EEG-Vergütung gibt es 20 Jahre lang, plus den Rest des Jahres, in dem die Anlage in Betrieb ging. Danach bekommst du für eingespeisten Strom deutlich weniger. Wie viel genau, hängt vom Marktwert und deinem Abnehmer ab. Wir rechnen hier den ungünstigsten Fall mit 0 ct.</p>
+<p>Die EEG-Vergütung gibt es 20 Jahre lang, plus den Rest des Jahres, in dem die Anlage in Betrieb ging. Danach bekommst du für eingespeisten Strom deutlich weniger. Wie viel genau, hängt vom Marktwert und deinem Abnehmer ab. Ich rechne hier den ungünstigsten Fall mit 0 ct.</p>
 <p>Dann sieht es ganz anders aus: Der Speicher rechnet sich in knapp 8 Jahren, auch bei 700 €/kWh. Wenn deine Anlage bald aus der Vergütung fällt, ist das der beste Zeitpunkt für einen Speicher. Prüf aber vorher, ob Module und Wechselrichter noch einige Jahre durchhalten.</p>
 
 <h2>Was der Preis ausmacht</h2>
@@ -398,9 +398,9 @@ ARTICLES = [
 "desc": "Im Beispiel bringt ein 6-kWh-Speicher in 15 Jahren rund 670 € mehr als die angebotenen 10 kWh. So prüfst du dein PV-Angebot, bevor du unterschreibst.",
 "date": "2026-11-10",
 "updated": "2026-11-14",
-"lead": "Oft ja. In unserem Beispielhaushalt mit 4.500 kWh Verbrauch steht ein 10-kWh-Speicher im Angebot, am meisten bringt aber einer mit 6 kWh. Der kleinere spart pro Jahr etwas weniger, kostet dafür deutlich weniger.",
+"lead": "Oft ja. In meinem Beispielhaushalt mit 4.500 kWh Verbrauch steht ein 10-kWh-Speicher im Angebot, am meisten bringt aber einer mit 6 kWh. Der kleinere spart pro Jahr etwas weniger, kostet dafür deutlich weniger.",
 "body": """
-<p>Unser Beispiel: 9 kWp auf einem Süddach mit 35° Neigung im Ruhrgebiet, 4.500 kWh Verbrauch im Jahr, Strompreis 33 ct, Einspeisevergütung 7,70 ct. Im Angebot steht ein Speicher mit 10 kWh nutzbarer Kapazität und 5 kW Leistung. Der Aufpreis für den Speicher beträgt 6.500 €, also 650 €/kWh.</p>
+<p>Mein Beispiel: 9 kWp auf einem Süddach mit 35° Neigung im Ruhrgebiet, 4.500 kWh Verbrauch im Jahr, Strompreis 33 ct, Einspeisevergütung 7,70 ct. Im Angebot steht ein Speicher mit 10 kWh nutzbarer Kapazität und 5 kW Leistung. Der Aufpreis für den Speicher beträgt 6.500 €, also 650 €/kWh.</p>
 
 <h2>Warum Angebote oft größer ausfallen</h2>
 <p>Ein größerer Speicher fängt im Sommer mehr Strom ab. Das sieht im Prospekt gut aus. Im Winter wird er aber selten voll, weil die Anlage dann kaum Überschuss hat. Jede zusätzliche Kilowattstunde Speicher bringt deshalb weniger als die vorherige. Ab einer bestimmten Größe kostet sie mehr, als sie über die Jahre spart.</p>
@@ -418,7 +418,7 @@ ARTICLES = [
 <tr><td>8 kWh</td><td class="num">443 €</td><td class="num">5.590 €</td><td class="num">+1.056 €</td></tr>
 <tr><td>10 kWh (Angebot)</td><td class="num">470 €</td><td class="num">6.500 €</td><td class="num">+553 €</td></tr>
 </tbody></table></div>
-<p>Die Kosten der kleineren Speicher haben wir aus dem Angebot heruntergerechnet. Dabei gilt: Rund 30 % des Preises sinken nicht mit der Größe, etwa Wechselrichter, Montage und Anschluss.</p>
+<p>Die Kosten der kleineren Speicher habe ich aus dem Angebot heruntergerechnet. Dabei gilt: Rund 30 % des Preises sinken nicht mit der Größe, etwa Wechselrichter, Montage und Anschluss.</p>
 <p>Der 10-kWh-Speicher spart nur 77 € pro Jahr mehr als der mit 6 kWh. Dafür kostet er 1.820 € mehr. Über 15 Jahre bleiben beim kleineren Speicher rund 670 € mehr übrig. Zwischen 5 und 7 kWh liegt die Bilanz eng beieinander. Diese Spanne passt zum Beispielhaushalt.</p>
 
 <h2>Diese Angaben brauchst du aus dem Angebot</h2>
@@ -481,7 +481,7 @@ ARTICLES = [
 <tr><td>1,5 kWh je 1.000 kWh</td><td class="num">7 kWh</td><td class="num">+2.815 €</td></tr>
 <tr><td>1 kWh je kWp</td><td class="num">9 kWh</td><td class="num">+2.385 €</td></tr>
 </tbody></table></div>
-<p>Die beiden Verbrauchs-Regeln liegen nur rund 70 bis 80 € neben dem besten Wert. Die kWp-Regel verschenkt schon hier rund 510 €.</p>
+<p>Die beiden Verbrauchs-Regeln liegen nur rund 70 bis 85 € neben dem besten Wert. Die kWp-Regel verschenkt schon hier rund 510 €.</p>
 
 <h2>Wo die kWp-Regel richtig teuer wird</h2>
 <p>Je größer die Anlage im Verhältnis zum Verbrauch, desto weiter liegt „1 kWh je kWp“ daneben. Die Tabelle zeigt die Bilanz nach 15 Jahren für neun Kombinationen:</p>
@@ -533,7 +533,7 @@ ARTICLES = [
 "date": "2026-11-16",
 "lead": "Das hängt an der Größe. Im Beispielhaushalt mit 4.500 kWh macht sich ein 6-kWh-Speicher bis rund 980 € je kWh gerade noch bezahlt, ein 10-kWh-Speicher nur bis rund 700 €. Je teurer die Kilowattstunde Speicher, desto kleiner ist die Größe, bei der am meisten übrig bleibt.",
 "body": """
-<p>Unser Beispiel: 9 kWp auf einem Süddach mit 35° Neigung im Ruhrgebiet, 4.500 kWh Verbrauch im Jahr, Strompreis 33 ct, Einspeisevergütung 7,70 ct, 15 Jahre Lebensdauer. Ich hab's mit dem Speicherklar-Rechner durchgerechnet und nur den Speicherpreis verändert. Gemeint ist immer der Preis je kWh <b>nutzbarer</b> Kapazität, inklusive Einbau.</p>
+<p>Mein Beispiel: 9 kWp auf einem Süddach mit 35° Neigung im Ruhrgebiet, 4.500 kWh Verbrauch im Jahr, Strompreis 33 ct, Einspeisevergütung 7,70 ct, 15 Jahre Lebensdauer. Ich hab's mit dem Speicherklar-Rechner durchgerechnet und nur den Speicherpreis verändert. Gemeint ist immer der Preis je kWh <b>nutzbarer</b> Kapazität, inklusive Einbau.</p>
 
 <h2>Speicherpreis und beste Größe</h2>
 <p>Was ein Stromspeicher einer bestimmten Größe im Jahr spart, hängt nicht von seinem Preis ab. Das gilt für jeden Batteriespeicher, PV-Speicher oder Solarspeicher. Der Preis entscheidet nur, bei welcher Größe nach 15 Jahren am meisten übrig bleibt:</p>
