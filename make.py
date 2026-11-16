@@ -320,6 +320,44 @@ posts["post8-preis-pro-kwh"] = [
   frame(f'<h1>Ist dein Angebot <em>zu teuer?</em></h1><p>Der Angebots-Check ordnet den Preis je kWh kostenlos ein, als Ampel. Speicherklar Pro findet dazu die passende Größe für PV-Anlage und Speicher. Link in der Bio.</p><div><span class="cta">speicherklar.de</span></div><p class="src">Beispiel: Ruhrgebiet, 9 kWp Süd 35°, 4.500 kWh/Jahr, Strom {pr} ct, Einspeisung 7,70 ct, 15 Jahre, ohne Zinsen und Alterung. Sonnendaten PVGIS (EU-Kommission), eigene Simulation.</p>', 8, T, tp, dark=True),
 ]
 
+# ---------- Post 9: Dasselbe Haus, drei Orte (10 Slides), Auftakt der Beispielhäuser Oberbayern / Schleswig-Holstein (Faktenblatt 16.11.2026) ----------
+_js9 = r"""
+const S=require(process.argv[1]);const P=%s;
+const b={roofs:[{kwp:9,tilt:35,aspect:0}],cons:4500,ev:0,hp:0,evTime:"eve",bat:6,bprice:500,life:15,price:P,feed:7.7,feedLimit:0};
+const o={};
+for(const r of ["8","4","2"]){const e=S.evaluate({...b,region:r}),d=S.dayProfile({...b,region:r},6);
+ const g=m=>d[m].gen.reduce((a,x)=>a+x,0);
+ o[r]={kwh:e.base.gen/9,best:e.best.cap,net:e.best.net,pb:e.best.payback,jun:g(5),dez:g(11),socJun:Math.max(...d[5].soc),socDez:Math.max(...d[11].soc),
+   c3:S.evaluate({...b,region:r,cons:3000}).best.cap,c6:S.evaluate({...b,region:r,cons:6000}).best.cap};}
+console.log(JSON.stringify(o));
+"""
+R = json.loads(subprocess.run(["node", "-e", _js9 % _price, str(SITE / "src/sim.js")], capture_output=True, text=True, check=True).stdout)
+ORTE = [("8", "Oberbayern"), ("4", "Ruhrgebiet"), ("2", "Schleswig-Holstein")]
+assert len({R[k]["best"] for k, _ in ORTE}) == 1, "beste Größe nicht mehr überall gleich, Post umschreiben"
+BEST = R["4"]["best"]; DIFF = round(R["8"]["net"]) - round(R["2"]["net"])
+d1 = lambda v: de(round(v, 1))
+def table3(k1, k2, h1, h2, f):
+    th = 'style="text-align:right;font-family:JetBrains Mono;font-size:26px;color:var(--muted);font-weight:500;padding:0 0 10px"'
+    rows = "".join(f'<tr style="border-top:1px solid var(--line)"><td style="padding:14px 0">{n}</td><td style="text-align:right;font-family:Archivo;font-weight:800;font-stretch:90%">{f(R[k][k1])}</td><td style="text-align:right;font-family:Archivo;font-weight:800;font-stretch:90%">{f(R[k][k2])}</td></tr>' for k, n in ORTE)
+    return f'<div class="card" style="padding:28px 36px"><table style="width:100%;border-collapse:collapse;font-size:38px"><tr><td></td><td {th}>{h1}</td><td {th}>{h2}</td></tr>{rows}</table></div>'
+T = 10; tp = "Drei Orte"
+posts["post9-drei-orte"] = [
+  frame('<h1>Gleiches Haus. <em>Drei Orte.</em></h1><p class="promise">Oberbayern, Ruhrgebiet, Schleswig-Holstein. Welcher Speicher passt? Hab’s durchgerechnet.</p>', 1, T, tp),
+  frame(f'<h2>So groß ist der beste Speicher</h2>{wheels(BEST)}<p>kWh. In Oberbayern, im Ruhrgebiet und in Schleswig-Holstein. Überall gleich.</p>', 2, T, tp),
+  frame('<h2>Das Haus</h2>' + summary(["9 kWp, Süddach, 35° Neigung", "4.500 kWh Verbrauch im Jahr", "Speicher 500 € je kWh inkl. Einbau", "Nur der Ort wechselt"]), 3, T, tp),
+  frame('<h2>Im Süden gibt’s mehr Sonne</h2><p class="muted" style="font-size:32px">Ertrag je kWp im Jahr</p>'
+        + pbars([(n, R[k]["kwh"], "#E39A0B" if k == "4" else "#B9C3CB", k == "4") for k, n in ORTE], R["8"]["kwh"], lambda v: f"{fmt(round(v))} kWh")
+        + f'<p>Oberbayern holt rund {round((R["8"]["kwh"]/R["2"]["kwh"]-1)*100)} % mehr raus als Schleswig-Holstein.</p>', 4, T, tp),
+  frame(f'<h2>Aber fast nur im Winter</h2><p class="muted" style="font-size:32px">Erzeugung an einem Durchschnittstag, kWh</p>{table3("jun", "dez", "JUNI", "DEZEMBER", d1)}<p>Im Sommer liegen alle drei gleichauf. Im Dezember erzeugt Oberbayern doppelt so viel wie der Norden.</p>', 5, T, tp),
+  frame(f'<h2>Und der Speicher?</h2><p class="muted" style="font-size:32px">So voll ist der {BEST}-kWh-Speicher am Nachmittag, Durchschnittstag</p>{table3("socJun", "socDez", "JUNI", "DEZEMBER", lambda v: f"{round(v*100)} %")}<p>Im Sommer wird er überall voll, im Winter nirgends. Mehr Sonne im Süden ändert daran nichts.</p>', 6, T, tp),
+  frame('<h2>Der Ort ändert das Plus</h2><p class="muted" style="font-size:32px">Bilanz mit ' + str(BEST) + ' kWh nach 15 Jahren</p>'
+        + pbars([(f'{n}, bezahlt nach {d1(R[k]["pb"])} J.', R[k]["net"], "#E39A0B" if k == "4" else "#B9C3CB", k == "4") for k, n in ORTE], R["8"]["net"], lambda v: f"+{fmt(round(v))} €")
+        + f'<p>{fmt(DIFF)} € Unterschied. Vom gleichen Speicher.</p>', 7, T, tp),
+  frame(f'<h2>Die Größe ändert dein Verbrauch</h2><p class="muted" style="font-size:32px">Beste Größe im Ruhrgebiet, sonst gleiches Haus</p>' + summary([f"3.000 kWh im Jahr: {R['4']['c3']} kWh", f"4.500 kWh im Jahr: {BEST} kWh", f"6.000 kWh im Jahr: {R['4']['c6']} kWh"]) + '<p>Der Speicher deckt deinen Abend. Wie viel du abends brauchst, hängt nicht am Wohnort.</p>', 8, T, tp),
+  frame('<h2>Kurz gesagt</h2>' + summary([f"Gleiches Haus: überall {BEST} kWh.", "Süden: mehr Sonne, vor allem im Winter.", f"Der Ort macht {fmt(DIFF)} € Unterschied.", "Die Größe hängt am Verbrauch."]), 9, T, tp),
+  frame(f'<h1>Rechne dein Haus <em>an deinem Ort.</em></h1><p>Im kostenlosen Rechner auf speicherklar.de wählst du deine Region. Ohne Anmeldung. Link in der Bio.</p><div><span class="cta">speicherklar.de</span></div><p class="src">Beispiel: 9 kWp Süd, 35°, 4.500 kWh/Jahr, Speicher 500 €/kWh, Strom {pr} ct, Einspeisung 7,70 ct, 15 Jahre, ohne Zinsen und Alterung. Regionen im Rechner: München/Oberbayern, Ruhrgebiet/Westfalen, Schleswig-Holstein/Niedersachsen-Nord. Sonnendaten PVGIS (EU-Kommission), eigene Simulation.</p>', 10, T, tp, dark=True),
+]
+
 PROFILE = f"""<div style="width:1080px;height:1080px;background:#15212B;display:flex;align-items:center;justify-content:center">
 <svg width="620" height="620" viewBox="0 0 26 26"><rect x="5.6" y="4.4" width="14.8" height="19" rx="2.6" fill="none" stroke="#E6ECF1" stroke-width="1.7"/><rect x="10" y="1.7" width="6" height="2.6" rx="0.9" fill="#E6ECF1"/><rect x="8.2" y="13.6" width="9.6" height="7.4" rx="1" fill="#E39A0B"/><rect x="8.2" y="9.4" width="9.6" height="2.8" rx="1" fill="#E39A0B" opacity=".45"/></svg></div>"""
 
