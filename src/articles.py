@@ -521,4 +521,76 @@ ARTICLES = [
  ("Ist ein etwas zu großer Speicher schlimm?", "Im Standard-Beispiel (4.500 kWh, 9 kWp) kostet 1 kWh mehr oder weniger rund 70 bis 85 €. Teuer wird es erst, wenn der Speicher deutlich größer ist, als der Verbrauch am Abend und in der Nacht hergibt."),
 ],
 },
+{
+"slug": "stromspeicher-preis-pro-kwh",
+"kennzahl": {"v": "rund 700 €", "t": "je kWh: ab da bringt ein 10-kWh-Speicher im Beispiel nach 15 Jahren nichts mehr"},
+"related": ["pv-angebot-pruefen", "stromspeicher-groesse-berechnen", "stromspeicher-lohnt-sich-2027"],
+"chart": {"kind": "sweep", "title": "Gewinn nach 15 Jahren je Speichergröße und Speicherpreis", "caption": "9 kWp Süd, 35°, 4.500 kWh, Strom 33 ct/kWh, Einspeisung 7,7 ct, 15 Jahre. Der Punkt markiert die wirtschaftlichste Größe.",
+  "series": [{"label": "400 €/kWh", "p": {"bprice": 400}}, {"label": "500 €/kWh", "p": {}}, {"label": "700 €/kWh", "p": {"bprice": 700}}]},
+"title": "Was darf ein Stromspeicher pro kWh kosten?",
+"h1": "Was darf ein Stromspeicher pro kWh kosten?",
+"desc": "Im Beispiel bringt ein 10-kWh-Speicher ab rund 700 € je kWh nach 15 Jahren nichts mehr. Je teurer der Speicher, desto kleiner sollte er sein.",
+"date": "2026-11-16",
+"lead": "Das hängt an der Größe. Im Beispielhaushalt mit 4.500 kWh macht sich ein 6-kWh-Speicher bis rund 980 € je kWh gerade noch bezahlt, ein 10-kWh-Speicher nur bis rund 700 €. Je teurer die Kilowattstunde Speicher, desto kleiner ist die Größe, bei der am meisten übrig bleibt.",
+"body": """
+<p>Unser Beispiel: 9 kWp auf einem Süddach mit 35° Neigung im Ruhrgebiet, 4.500 kWh Verbrauch im Jahr, Strompreis 33 ct, Einspeisevergütung 7,70 ct, 15 Jahre Lebensdauer. Ich hab's mit dem Speicherklar-Rechner durchgerechnet und nur den Speicherpreis verändert. Gemeint ist immer der Preis je kWh <b>nutzbarer</b> Kapazität, inklusive Einbau.</p>
+
+<h2>Speicherpreis und beste Größe</h2>
+<p>Was ein Stromspeicher einer bestimmten Größe im Jahr spart, hängt nicht von seinem Preis ab. Das gilt für jeden Batteriespeicher, PV-Speicher oder Solarspeicher. Der Preis entscheidet nur, bei welcher Größe nach 15 Jahren am meisten übrig bleibt:</p>
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>Preis je kWh</th><th>Beste Größe</th><th>Bezahlt nach</th><th>Bilanz nach 15 Jahren</th></tr></thead>
+<tbody>
+<tr><td>300 €</td><td class="num">8 kWh</td><td class="num">5,4 Jahren</td><td class="num">+4.246 €</td></tr>
+<tr><td>400 €</td><td class="num">7 kWh</td><td class="num">6,7 Jahren</td><td class="num">+3.515 €</td></tr>
+<tr class="hl"><td>500 €</td><td class="num">6 kWh</td><td class="num">7,6 Jahren</td><td class="num">+2.899 €</td></tr>
+<tr><td>600 €</td><td class="num">5 kWh</td><td class="num">8,4 Jahren</td><td class="num">+2.330 €</td></tr>
+<tr><td>700 €</td><td class="num">5 kWh</td><td class="num">9,9 Jahren</td><td class="num">+1.830 €</td></tr>
+<tr><td>800 €</td><td class="num">4 kWh</td><td class="num">10,5 Jahren</td><td class="num">+1.356 €</td></tr>
+<tr><td>1.000 €</td><td class="num">3 kWh</td><td class="num">12,6 Jahren</td><td class="num">+558 €</td></tr>
+</tbody></table></div>
+<p>Ein teurer Speicher ist also nicht gleich ein Fehlkauf. Du solltest dann nur kleiner kaufen. Bei 700 € je kWh bringen 5 kWh nach 15 Jahren noch rund 1.830 €, ein 10-kWh-Speicher zum selben Preis kommt gerade auf +53 €.</p>
+
+<h2>Bis zu welchem Preis rechnet sich welche Größe?</h2>
+<p>Jede Größe hat einen Höchstpreis. Darüber holt der Speicher seine Kosten in 15 Jahren nicht mehr herein. Ohne Zinsen, mit gleichbleibendem Strompreis:</p>
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>Speicher</th><th>Ersparnis pro Jahr</th><th>Höchstpreis je kWh</th></tr></thead>
+<tbody>
+<tr><td>4 kWh</td><td class="num">304 €</td><td class="num">1.139 €</td></tr>
+<tr><td>5 kWh</td><td class="num">355 €</td><td class="num">1.066 €</td></tr>
+<tr class="hl"><td>6 kWh</td><td class="num">393 €</td><td class="num">983 €</td></tr>
+<tr><td>7 kWh</td><td class="num">421 €</td><td class="num">902 €</td></tr>
+<tr><td>8 kWh</td><td class="num">443 €</td><td class="num">831 €</td></tr>
+<tr><td>10 kWh</td><td class="num">470 €</td><td class="num">705 €</td></tr>
+<tr><td>12 kWh</td><td class="num">487 €</td><td class="num">609 €</td></tr>
+</tbody></table></div>
+<p>Der Höchstpreis heißt: Bilanz genau null nach 15 Jahren. Willst du am Ende etwas übrig haben, musst du deutlich darunter bleiben. Für einen 10-kWh-Speicher liegt die Grenze bei rund 700 €, für 12 kWh schon bei rund 610 €.</p>
+<p>Warum große Speicher so schnell an die Grenze kommen, siehst du an den Zyklen. Jede zusätzliche kWh wird seltener voll. Der 6-kWh-Speicher macht im Beispiel rund 283 volle Zyklen im Jahr, der mit 10 kWh nur rund 201. Eine Kilowattstunde aus dem Speicher ist dabei rund 23 ct wert, nicht 33 ct. Ohne Speicher hättest du den Strom für 7,70 ct eingespeist, und ein Teil geht beim Laden und Entladen verloren.</p>
+
+<h2>Wenn der Speicher nur 10 Jahre hält</h2>
+<p>Die Verbraucherzentrale Rheinland-Pfalz nennt für Batteriespeicher eine Lebensdauer zwischen 10 und 15 Jahren (<a href="https://verbraucherzentrale-rlp.de/node/92408" rel="noopener">Faktencheck „Die richtige Speichergröße“</a>, Stand 01/2024). Mit 10 statt 15 Jahren sieht die Rechnung so aus:</p>
+<ul>
+<li>Bei 500 € je kWh lohnen sich 5 kWh am meisten, mit +1.053 €. Der 10-kWh-Speicher landet bei −298 €.</li>
+<li>Bei 700 € je kWh bleiben mit 6 kWh −267 €. Am meisten bringen dann 3 kWh, mit +272 €.</li>
+</ul>
+<p>Wie lange dein Speicher hält, weiß vorher keiner. Ich auch nicht. Die Garantie im Datenblatt gibt einen Anhaltspunkt. Je kürzer du rechnest, desto stärker zählt ein niedriger Preis je kWh.</p>
+
+<h2>So rechnest du den Preis je kWh aus deinem Angebot</h2>
+<p>Teile den Aufpreis für den Speicher durch die nutzbare Kapazität. Ein Beispiel: 6.500 € für 10 kWh nutzbar sind 650 € je kWh. Mehr braucht's dafür nicht. Steht der Speicher nicht als eigene Position im Angebot, frag nach dem Preis derselben Anlage ohne Speicher.</p>
+<p>Kleine Speicher sind je kWh meist teurer, weil Wechselrichter, Montage und Anschluss nicht mit der Größe sinken. Der kostenlose Rechner nimmt einen festen Preis je kWh an. Für ein echtes Angebot ordnet der <a href="../pro/" data-umami-event="artikel-zu-pro" data-umami-event-artikel="stromspeicher-preis-pro-kwh">Angebots-Check</a> den Preis je kWh kostenlos ein, als Ampel: grün, gelb oder rot. Dazu bewertet er die Speichergröße, die Größe der PV-Anlage und deren Preis je kWp. Der Bericht von Speicherklar Pro zeigt dann, welche PV-Anlage und welcher Speicher am besten zusammenpassen. Wie das an einem Angebot mit 10 kWh aussieht, steht unter <a href="pv-angebot-pruefen.html">PV-Angebot prüfen</a>.</p>
+
+<h2>Wann sich ein Speicher eher nicht rechnet</h2>
+<ul>
+<li><b>Großer Speicher zum hohen Preis:</b> Im Beispiel bringen 10 kWh ab rund 700 € je kWh nach 15 Jahren nichts mehr, 12 kWh schon ab rund 610 €.</li>
+<li><b>Sehr hoher Preis je kWh:</b> Bei 1.000 € je kWh bleiben selbst mit der besten Größe (3 kWh) nach 15 Jahren nur rund 560 €.</li>
+<li><b>Kurze Lebensdauer:</b> Hält der Speicher nur 10 Jahre, rutscht ein 6-kWh-Speicher bei 700 € je kWh ins Minus.</li>
+<li><b>Kleiner Verbrauch:</b> Bei 3.000 statt 4.500 kWh im Jahr sinkt der Höchstpreis für 6 kWh von rund 980 € auf rund 770 € je kWh, für 10 kWh auf rund 510 €.</li>
+</ul>
+<p>Was das Modell nicht abbildet: Alterung des Speichers, Notstrom, Verschattung, dynamische Stromtarife, Zinsen und steigende Strompreise. Eine Wärmepumpe trägst du im Rechner getrennt ein. Mit Wärmepumpe rechnet er die Autarkie rund 4 Punkte zu hoch, den Zugewinn durch den Speicher trifft er.</p>
+""",
+"faq": [
+ ("Ab welchem Preis pro kWh lohnt sich ein Stromspeicher nicht mehr?", "Das hängt von der Größe ab. Im Beispiel mit 4.500 kWh und 9 kWp kommt ein 6-kWh-Speicher bis rund 980 € je kWh in 15 Jahren auf null, ein 10-kWh-Speicher nur bis rund 700 €. Ohne Zinsen und Alterung."),
+ ("Lohnt sich ein größerer Speicher, wenn er je kWh günstiger ist?", "Nur bei deutlichem Preisunterschied. Im Beispiel bringen 6 kWh zu 500 € je kWh +2.899 €. Ein 10-kWh-Speicher holt das erst ein, wenn er unter rund 415 € je kWh kostet."),
+ ("Zählt beim Preis je kWh die Brutto- oder die nutzbare Kapazität?", "Rechne mit der nutzbaren Kapazität. Sie steht im Datenblatt und liegt etwas unter der Bruttokapazität. Mit brutto gerechnet sieht der Speicher günstiger aus, als er ist."),
+],
+},
 ]
