@@ -1,0 +1,47 @@
+{
+ "name": "reel2-waermepumpe-8-statt-15",
+ "audio": "reels/vo/reel2-waermepumpe-8-statt-15.mp3",
+ "tempo": 1.05,
+ "slides": [
+  {
+   "dark": true,
+   "text": "[[15 kWh|Fünfzehn Kilowattstunden]] Speicher im Angebot?",
+   "html": "<div class=\"hook\"><div class=\"tag\">Angebot mit Wärmepumpe</div><h1>15&nbsp;kWh im Angebot?</h1></div>"
+  },
+  {
+   "dark": true,
+   "text": "[[8|Acht]] hätten gereicht.",
+   "html": "<div class=\"hook\"><div class=\"tag\">Angebot mit Wärmepumpe</div><h1>15&nbsp;kWh im Angebot?<br><em>8 hätten gereicht.</em></h1></div>"
+  },
+  {
+   "text": "Haus mit Wärmepumpe, [[12|zwölf]] kWp, [[8.000 kWh|achttausend Kilowattstunden]] Verbrauch.",
+   "html": "<div class=\"tag\">Hab's durchgerechnet</div><h2>Haus mit Wärmepumpe im Ruhrgebiet</h2><div class=\"card\"><div class=\"k\">PV-Anlage</div><div class=\"v\">12 kWp Süd</div><div class=\"k\" style=\"margin-top:22px\">Haushalt</div><div class=\"v\">4.000 kWh</div><div class=\"k\" style=\"margin-top:22px\">Wärmepumpe</div><div class=\"v\">4.000 kWh</div></div>"
+  },
+  {
+   "text": "Aus dem Angebot brauchst du nur drei Zahlen.",
+   "html": "<div class=\"tag\">Das tippst du ab</div><h2>Drei Zahlen aus <em>deinem Angebot.</em></h2><div class=\"card\"><div class=\"k\">1 · PV-Anlage</div><div class=\"v\">12 kWp</div><div class=\"k\" style=\"margin-top:22px\">2 · Speicher</div><div class=\"v\">15 kWh</div><div class=\"k\" style=\"margin-top:22px\">3 · Preis Speicher</div><div class=\"v\">8.500 €</div></div>"
+  },
+  {
+   "text": "Mit [[8|acht]] statt [[15|fünfzehn]] bleiben nach [[15|fünfzehn]] Jahren rund [[920 €|neunhundertzwanzig Euro]] mehr.",
+   "html": "<div class=\"tag\">Nach 15 Jahren</div>{{wheels:920}}<h2>Euro mehr übrig mit 8&nbsp;kWh.</h2><p class=\"muted\">Bleiben nach 15 Jahren: 862 € mit 8 kWh, −57 € mit 15 kWh.</p>"
+  },
+  {
+   "text": "Denn die letzten sieben Kilowattstunden sparen nur rund [[120 €|hundertzwanzig Euro]] im Jahr.",
+   "html": "<div class=\"tag\">Warum?</div><h2>Die letzten 7&nbsp;kWh sparen nur <em>rund 120 € im Jahr.</em></h2><p>Und kosten rund 2.800 € mehr.</p>"
+  },
+  {
+   "text": "Genau das prüft Speicherklar Pro. Kostenlos als Ampel: grün, gelb oder rot.",
+   "html": "<div class=\"tag\">Speicherklar Pro · dieses Angebot</div><h2>Erste Einschätzung. <em>Kostenlos.</em></h2><div class=\"amp\"><div><i class=\"y\"></i><span>Speichergröße<small>eher zu groß</small></span></div><div><i class=\"g\"></i><span>PV-Anlage<small>passt, mehr könnte sich lohnen</small></span></div><div><i class=\"g\"></i><span>Speicherpreis je kWh<small>üblich</small></span></div><div><i class=\"g\"></i><span>PV-Preis je kWp<small>üblich</small></span></div></div>"
+  },
+  {
+   "text": "Dann der Bericht: welche PV-Anlage und welcher Speicher am besten zusammenpassen.",
+   "html": "<div class=\"tag\">Der Bericht</div><h2 style=\"font-size:76px\">Welche PV-Anlage und welcher Speicher <em>am besten zusammenpassen.</em></h2><p class=\"promise\">Bevor du unterschreibst.</p>"
+  },
+  {
+   "dark": true,
+   "text": "[[49 €|Neunundvierzig Euro]] bis [[31. Januar|einunddreißigsten Januar]], danach [[89 €|neunundachtzig]]. Link in der Bio.",
+   "html": "<div class=\"tag\">Über Instagram schon jetzt</div><h1 style=\"font-size:116px\">Speicherklar Pro</h1><div class=\"price\">49 €</div><p>bis 31.01.2027, danach 89 €. Einmalig, kein Abo.</p><div><span class=\"cta\">Link in der Bio</span></div><p class=\"src\">Beispiel: Ruhrgebiet, 12 kWp Süd, 35°, Haushalt 4.000 kWh + Wärmepumpe 4.000 kWh, Strom 33 ct, Einspeisung 7,70 ct, 15 Jahre. Angebot 15 kWh für 8.500 € (gesamt 21.500 €), kleinere Größen mit 30 % Fixanteil. Gerechnet mit Speicherklar Pro, Modellstand 14.11.2026.</p>"
+  }
+ ],
+ "cover": 2
+}

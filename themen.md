@@ -10,8 +10,10 @@ Erledigt:
 - 2026-11 post6-stromsteuer: Stromsteuer bleibt (wochen/2026-11-13)
 - 2026-11 post7-rechner-geprueft: Rechner an echten Häusern geprüft
 - 2026-11-16 post8-preis-pro-kwh: „Was darf Speicher pro kWh kosten?“ Höchstpreis je Größe, zum Artikel stromspeicher-preis-pro-kwh (wochen/2026-11-16, captions.md)
+- 2026-11-16 reel2-waermepumpe-8-statt-15: Reel A „15 kWh im Angebot? 8 hätten gereicht.“ Angebots-Check mit Wärmepumpe (wochen/2026-11-16)
+- 2026-11-16 reel3-700-euro-pro-kwh: Reel B „700 € pro kWh? Dann kauf kleiner.“ zum Artikel stromspeicher-preis-pro-kwh (wochen/2026-11-16)
 
-Nächste freie Post-Nummer: post9.
+Nächste freie Post-Nummer: post9. Nächste freie Reel-Nummer: reel4.
 
 Offen (oben zuerst; jede Woche zwei, eins davon passend zum neuen Ratgeber-Artikel):
 - EEG-Update: Koalition will feste Vergütung bis 25 kW behalten (Reuters 14.11.2026, noch nicht beschlossen); erst nach Bundestagsbeschluss, korrigiert post3

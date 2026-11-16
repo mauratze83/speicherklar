@@ -1,0 +1,47 @@
+{
+ "name": "reel3-700-euro-pro-kwh",
+ "audio": "reels/vo/reel3-700-euro-pro-kwh.mp3",
+ "tempo": 1.05,
+ "slides": [
+  {
+   "dark": true,
+   "text": "[[700 €|Siebenhundert Euro]] pro Kilowattstunde Speicher?",
+   "html": "<div class=\"hook\"><div class=\"tag\">Stromspeicher-Preis</div><h1>700&nbsp;€ pro kWh?</h1></div>"
+  },
+  {
+   "dark": true,
+   "text": "Dann kauf kleiner.",
+   "html": "<div class=\"hook\"><div class=\"tag\">Stromspeicher-Preis</div><h1>700&nbsp;€ pro kWh?<br><em>Dann kauf kleiner.</em></h1></div>"
+  },
+  {
+   "text": "Ich hab's durchgerechnet. Haus mit [[9|neun]] kWp und [[4.500 kWh|viertausendfünfhundert Kilowattstunden]] Verbrauch.",
+   "html": "<div class=\"tag\">Hab's durchgerechnet</div><h2>Haus im Ruhrgebiet</h2><div class=\"card\"><div class=\"k\">PV-Anlage</div><div class=\"v\">9 kWp Süd</div><div class=\"k\" style=\"margin-top:22px\">Verbrauch</div><div class=\"v\">4.500 kWh</div><div class=\"k\" style=\"margin-top:22px\">Speicherpreis</div><div class=\"v\">700 € je kWh</div></div>"
+  },
+  {
+   "text": "[[10 kWh|Zehn Kilowattstunden]] für [[7.000 €|siebentausend Euro]] bringen nach [[15|fünfzehn]] Jahren [[53 €|dreiundfünfzig Euro]].",
+   "html": "<div class=\"tag\">10 kWh zu 700 € je kWh</div><div class=\"card\"><div class=\"k\">Preis</div><div class=\"v\">7.000 €</div><div class=\"k\" style=\"margin-top:22px\">Übrig nach 15 Jahren</div><div class=\"v\">+53 €</div></div><h2>Bezahlt nach <em>14,9 Jahren.</em></h2>"
+  },
+  {
+   "text": "[[5 kWh|Fünf Kilowattstunden]] zum selben Preis: rund [[1.830 €|achtzehnhundertdreißig Euro]].",
+   "html": "<div class=\"tag\">5 kWh zu 700 € je kWh</div>{{wheels:1830}}<h2>Euro übrig nach 15 Jahren.</h2><p class=\"muted\">Preis 3.500 €, bezahlt nach 9,9 Jahren.</p>"
+  },
+  {
+   "text": "Denn jede weitere Kilowattstunde wird seltener voll und spart immer weniger.",
+   "html": "<div class=\"tag\">Warum?</div><h2>Jede weitere kWh wird <em>seltener voll.</em></h2><div class=\"pair\"><div class=\"card\"><div class=\"k\">5 kWh</div><div class=\"v\">355 €</div><div class=\"d\">Ersparnis im Jahr</div></div><div class=\"card\"><div class=\"k\">10 kWh</div><div class=\"v\">470 €</div><div class=\"d\">Ersparnis im Jahr</div></div></div><p>Doppelt so groß, nur 115 € mehr im Jahr.</p>"
+  },
+  {
+   "text": "Deinen Preis rechnest du so: Speicherpreis geteilt durch nutzbare Kapazität.",
+   "html": "<div class=\"tag\">Preis je kWh aus dem Angebot</div><h2>Speicherpreis <em>÷</em> nutzbare Kapazität</h2><div class=\"card\"><div class=\"k\">Beispiel</div><div class=\"v\">7.000 € ÷ 10 kWh</div><div class=\"d\">= 700 € je kWh</div></div>"
+  },
+  {
+   "text": "Welche Größe zu deinem Preis passt, zeigt der Rechner auf [[speicherklar.de|Speicherklar punkt de]].",
+   "html": "<div class=\"tag\">Kostenloser Rechner</div><h2>Welche Größe passt zu <em>deinem Preis?</em></h2><p>Speicherpreis eintragen, Ergebnis sofort.</p>"
+  },
+  {
+   "dark": true,
+   "text": "Kostenlos, ohne Anmeldung. Link in der Bio.",
+   "html": "<div class=\"tag\">Stromspeicher-Rechner</div><h1 style=\"font-size:96px\">speicherklar.de</h1><p>Kostenlos, ohne Anmeldung.</p><div><span class=\"cta\">Link in der Bio</span></div><p class=\"src\">Beispiel: Ruhrgebiet, 9 kWp Süd, 35°, 4.500 kWh, Speicher 700 € je kWh nutzbar inkl. Einbau, Strom 33 ct, Einspeisung 7,70 ct, 15 Jahre, ohne Zinsen und Alterung. Gerechnet mit dem Speicherklar-Rechner, Modellstand 14.11.2026.</p>"
+  }
+ ],
+ "cover": 2
+}
