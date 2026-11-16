@@ -593,4 +593,76 @@ ARTICLES = [
  ("Zählt beim Preis je kWh die Brutto- oder die nutzbare Kapazität?", "Rechne mit der nutzbaren Kapazität. Sie steht im Datenblatt und liegt etwas unter der Bruttokapazität. Mit brutto gerechnet sieht der Speicher günstiger aus, als er ist."),
 ],
 },
+{
+"slug": "stromspeicher-region",
+"kennzahl": {"v": "6 kWh", "t": "beste Speichergröße im Beispielhaus, in allen zehn Regionen des Rechners"},
+"related": ["stromspeicher-groesse-berechnen", "ost-west-dach-speicher", "speichergroesse-4500-kwh"],
+"chart": {"kind": "sweep", "title": "Gewinn nach 15 Jahren je Speichergröße: gleiches Haus, drei Regionen", "caption": "9 kWp Süd, 35°, 4.500 kWh, Speicher 500 €/kWh, Strom 33 ct/kWh, Einspeisung 7,7 ct, 15 Jahre. Der Punkt markiert die wirtschaftlichste Größe.",
+  "series": [{"label": "Oberbayern (PLZ 8)", "p": {"region": "8"}}, {"label": "Ruhrgebiet (PLZ 4)", "p": {}}, {"label": "Schleswig-Holstein (PLZ 2)", "p": {"region": "2"}}]},
+"title": "Stromspeicher im Süden oder Norden: Was ändert die Region?",
+"seo_title": "Stromspeicher: Was ändert die Region?",
+"h1": "Stromspeicher im Süden oder Norden: Was ändert die Region?",
+"desc": "Im Süden gibt's mehr Sonne, die beste Speichergröße bleibt aber gleich: im Beispielhaus überall 6 kWh. Die Region ändert nur, wie viel übrig bleibt.",
+"date": "2026-11-19",
+"lead": "Weniger, als du denkst. Ich hab dasselbe Haus durch alle zehn Regionen des Rechners geschickt: Die beste Speichergröße ist überall 6 kWh. Die Region verschiebt nur, wie viel nach 15 Jahren übrig bleibt, im Beispiel zwischen rund 2.670 € und 3.380 €.",
+"body": """
+<p>Das Beispiel ist mein Standard-Haus: 9 kWp auf einem Süddach mit 35° Neigung, 4.500 kWh Verbrauch im Jahr, Speicher 500 € je kWh nutzbar inklusive Einbau, Strompreis 33 ct, Einspeisevergütung 7,70 ct, 15 Jahre. Ich hab nichts daran verändert außer dem Ort. Der Rechner ordnet deinen Ort über die erste Ziffer der Postleitzahl einer von zehn Regionen zu, mit Sonnendaten aus PVGIS.</p>
+
+<h2>Alle zehn Regionen im Vergleich</h2>
+<p>Gleiches Haus, gleicher Stromspeicher, nur die Postleitzahl ändert sich. Die beste Größe ist in allen zehn Regionen 6 kWh.</p>
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>Region</th><th>Ertrag<br>je kWp</th><th>Plus nach 15 J.<br>bezahlt nach</th></tr></thead>
+<tbody>
+<tr><td>PLZ 0: Sachsen, Thüringen-Ost, Sachsen-Anhalt-Süd</td><td class="num">1.064 kWh</td><td class="num">+2.918 €<br>7,6 J.</td></tr>
+<tr><td>PLZ 1: Berlin, Brandenburg, Mecklenburg-Vorpommern</td><td class="num">1.010 kWh</td><td class="num">+2.726 €<br>7,9 J.</td></tr>
+<tr><td>PLZ 2: Schleswig-Holstein, Bremen, Niedersachsen-Nord</td><td class="num">969 kWh</td><td class="num">+2.668 €<br>7,9 J.</td></tr>
+<tr><td>PLZ 3: Hannover, Braunschweig, Magdeburg, Kassel</td><td class="num">992 kWh</td><td class="num">+2.732 €<br>7,9 J.</td></tr>
+<tr class="hl"><td>PLZ 4: Ruhrgebiet, Niederrhein, Münsterland, Westfalen</td><td class="num">1.004 kWh</td><td class="num">+2.899 €<br>7,6 J.</td></tr>
+<tr><td>PLZ 5: Köln, Bonn, Aachen, Koblenz, Trier</td><td class="num">1.013 kWh</td><td class="num">+2.932 €<br>7,6 J.</td></tr>
+<tr><td>PLZ 6: Rhein-Main, Pfalz, Saarland, Mannheim</td><td class="num">1.095 kWh</td><td class="num">+2.947 €<br>7,6 J.</td></tr>
+<tr><td>PLZ 7: Stuttgart, Baden, Bodensee</td><td class="num">1.121 kWh</td><td class="num">+3.283 €<br>7,2 J.</td></tr>
+<tr><td>PLZ 8: München, Augsburg, Allgäu, Oberbayern</td><td class="num">1.115 kWh</td><td class="num">+3.380 €<br>7,1 J.</td></tr>
+<tr><td>PLZ 9: Nürnberg, Würzburg, Franken, Thüringen-Süd</td><td class="num">1.061 kWh</td><td class="num">+2.944 €<br>7,6 J.</td></tr>
+</tbody></table></div>
+<p>Zwischen dem besten und dem schwächsten Ort liegen beim Ertrag rund 16 %. Beim Plus durch den Speicher sind es 712 € in 15 Jahren. Die beste Größe bleibt überall dieselbe.</p>
+
+<h2>Warum die Größe gleich bleibt</h2>
+<p>Die Mehr-Sonne im Süden kommt fast nur im Winter dazu. Im Sommer erzeugen alle Regionen ähnlich viel. Ein Durchschnittstag mit dem Beispielhaus:</p>
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>Region</th><th>Juni<br>kWh am Tag</th><th>Dezember<br>kWh am Tag</th><th>Speicher voll<br>Juni / Dezember</th></tr></thead>
+<tbody>
+<tr><td>Oberbayern (PLZ 8)</td><td class="num">39,3</td><td class="num">12,5</td><td class="num">99 % / 65 %</td></tr>
+<tr><td>Rhein-Main (PLZ 6)</td><td class="num">40,8</td><td class="num">7,7</td><td class="num">99 % / 38 %</td></tr>
+<tr class="hl"><td>Ruhrgebiet (PLZ 4)</td><td class="num">37,7</td><td class="num">7,8</td><td class="num">98 % / 39 %</td></tr>
+<tr><td>Schleswig-Holstein (PLZ 2)</td><td class="num">38,5</td><td class="num">6,0</td><td class="num">99 % / 33 %</td></tr>
+</tbody></table></div>
+<p>„Speicher voll“ heißt: so weit ist der 6-kWh-Speicher am Nachmittag eines Durchschnittstags geladen. Im Juni wird er überall voll. Mehr Sonne bringt dann nichts mehr, der Rest geht ins Netz. Im Dezember wird er nirgends voll, auch nicht in Oberbayern. Wie groß der Speicher sein sollte, entscheidet deshalb dein Verbrauch am Abend und in der Nacht. Und der hängt nicht an der Postleitzahl.</p>
+
+<h2>Mehr Sonne heißt nicht automatisch mehr Plus</h2>
+<p>Rhein-Main erzeugt im Jahr fast so viel wie Oberbayern, 1.095 statt 1.115 kWh je kWp. Beim Speicher bleiben dort aber nur +2.947 €, kaum mehr als im Ruhrgebiet. Der Grund steht in der Tabelle oben: Die Extra-Sonne kommt in Rhein-Main im Sommer, wenn der Speicher eh voll ist. In Oberbayern und am Bodensee scheint sie auch im Winter öfter. Dann füllt sie den Speicher an Tagen, an denen er sonst halb leer bliebe.</p>
+<p>Für die PV-Anlage selbst zählt jede kWh. Für den Batteriespeicher zählt vor allem die Sonne von Oktober bis Februar.</p>
+
+<h2>Was die Größe wirklich verschiebt</h2>
+<p>Statt der Region solltest du dir drei andere Dinge ansehen. Mit dem Beispielhaus gerechnet:</p>
+<ul>
+<li><b>Verbrauch:</b> Bei 3.000 kWh im Jahr ist die beste Größe 4 kWh, im Süden (PLZ 7 und 8) 5 kWh. Bei 6.000 kWh sind es 8 kWh, im Norden und Osten (PLZ 1, 2, 3) 7 kWh.</li>
+<li><b>Dach:</b> Ein Ost-West-Dach mit gleicher Leistung braucht 5 statt 6 kWh, in Schleswig-Holstein 4 kWh. Mehr dazu unter <a href="ost-west-dach-speicher.html">Ost-West-Dach</a>.</li>
+<li><b>Speicherpreis:</b> Je teurer die kWh, desto kleiner die beste Größe. Siehe <a href="stromspeicher-preis-pro-kwh.html">Was darf ein Stromspeicher pro kWh kosten?</a></li>
+</ul>
+<p>Wie du die Größe für deinen Verbrauch abschätzt, steht unter <a href="stromspeicher-groesse-berechnen.html">Stromspeicher-Größe berechnen</a>.</p>
+
+<h2>Wann sich ein Speicher eher nicht rechnet</h2>
+<ul>
+<li><b>Zu groß im Norden:</b> Ein 10-kWh-Speicher bringt in Schleswig-Holstein nach 15 Jahren +1.747 €, also 921 € weniger als 6 kWh. In Oberbayern sind es mit 10 kWh +2.697 €.</li>
+<li><b>Kleiner Verbrauch:</b> Wer wenig Strom braucht, profitiert überall weniger. Das gilt im Süden genauso wie im Norden.</li>
+<li><b>Teurer Speicher:</b> Die Region gleicht einen hohen Preis je kWh nicht aus. Rund 700 € Unterschied zwischen Nord und Süd sind schnell weg, wenn der Speicher 2 kWh zu groß ist oder deutlich mehr als 500 € je kWh kostet.</li>
+</ul>
+<p>Was das Modell nicht abbildet: Verschattung, Alterung des Speichers, Notstrom, dynamische Stromtarife, Zinsen und steigende Strompreise. Der Rechner nimmt für alle Regionen den Stunden-Verlauf eines echten Wetterjahres (2020) und bringt ihn auf die Monatssummen der Region aus PVGIS. Wie oft im Süden Sonne und Wolken innerhalb eines Monats wechseln, bildet er deshalb nur über die Monatssumme ab. Speicherklar Pro rechnet mit genaueren Sonnendaten je PLZ-Gebiet.</p>
+""",
+"faq": [
+ ("Brauche ich in Süddeutschland einen größeren Stromspeicher?", "Nein. Im Beispielhaus mit 9 kWp und 4.500 kWh ist die beste Größe in allen zehn Regionen des Rechners 6 kWh. Die Mehr-Sonne im Süden kommt vor allem im Winter, wenn der Speicher ohnehin nicht voll wird."),
+ ("Lohnt sich ein Stromspeicher in Norddeutschland?", "Im Beispiel ja. In Schleswig-Holstein und Niedersachsen-Nord (PLZ 2) bringen 6 kWh nach 15 Jahren +2.668 €, bezahlt nach 7,9 Jahren. Das sind 712 € weniger als in Oberbayern."),
+ ("Wo lohnt sich ein Stromspeicher am meisten?", "Im Beispiel in Oberbayern und im Allgäu (PLZ 8) mit +3.380 € nach 15 Jahren, knapp vor Stuttgart, Baden und Bodensee (PLZ 7) mit +3.283 €. Dort scheint auch im Winter mehr Sonne, und die füllt den Speicher."),
+],
+},
 ]

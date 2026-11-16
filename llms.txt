@@ -26,6 +26,7 @@ Nicht im Modell: Wärmepumpen-Lastprofil (nur in Speicherklar Pro), Notstrom, Ve
 - [PV-Angebot prüfen: Ist der Speicher zu groß?](https://speicherklar.de/ratgeber/pv-angebot-pruefen.html): Im Beispiel bringt ein 6-kWh-Speicher in 15 Jahren rund 670 € mehr als die angebotenen 10 kWh. So prüfst du dein PV-Angebot, bevor du unterschreibst.
 - [Stromspeicher-Größe berechnen: Wie viel kWh brauche ich?](https://speicherklar.de/ratgeber/stromspeicher-groesse-berechnen.html): Faustregel: 1 kWh Speicher je 1.000 kWh Verbrauch. Die Regel „1 kWh je kWp“ kostet bei großen Anlagen über 1.000 €. Tabelle für 3.000 bis 6.000 kWh.
 - [Was darf ein Stromspeicher pro kWh kosten?](https://speicherklar.de/ratgeber/stromspeicher-preis-pro-kwh.html): Im Beispiel bringt ein 10-kWh-Speicher ab rund 700 € je kWh nach 15 Jahren nichts mehr. Je teurer der Speicher, desto kleiner sollte er sein.
+- [Stromspeicher im Süden oder Norden: Was ändert die Region?](https://speicherklar.de/ratgeber/stromspeicher-region.html): Im Süden gibt's mehr Sonne, die beste Speichergröße bleibt aber gleich: im Beispielhaus überall 6 kWh. Die Region ändert nur, wie viel übrig bleibt.
 
 ## Optional
 
