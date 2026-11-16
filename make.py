@@ -283,6 +283,43 @@ posts["post7-rechner-geprueft"] = [
   frame(f'<h1>Der ganze Test <em>mit allen Zahlen.</em></h1><p>Setup, Messwerte, beide Fehler und die 30 Häuser. Im Artikel auf speicherklar.de. Link in der Bio.</p><div><span class="cta">speicherklar.de</span></div><p class="src">Eigene Messwerte: SENEC-Export, 26.10.2025–25.10.2026. Vergleichshäuser: WPuQ, ISFH 2019, CC BY 4.0. Wetter: PVGIS-SARAH3 (EU-Kommission). Beispiel: Ruhrgebiet, 9 kWp, 35°, 4.500 kWh/Jahr, Speicher 500 €/kWh, Strom {pr} ct, Einspeisung 7,70 ct, 15 Jahre.</p>', 10, T, tp, dark=True),
 ]
 
+# ---------- Post 8: Was darf ein Speicher pro kWh kosten? (8 Slides), Ableger zum Artikel stromspeicher-preis-pro-kwh ----------
+_js8 = r"""
+const S=require(process.argv[1]);const P=%s;
+const b={region:"4",roofs:[{kwp:9,tilt:35,aspect:0}],cons:4500,ev:0,evTime:"eve",bat:6,bprice:500,life:15,price:P,feed:7.7,feedLimit:0};
+const r=S.evaluate(b);const cap={};
+for(const c of [4,6,8,10,12]){const s=r.sweep[c-1];cap[c]={save:s.save,max:s.save*15/c,cyc:s.extraSelf/c};}
+const pr={};for(const bp of [300,500,700,1000]){const q=S.evaluate({...b,bprice:bp});pr[bp]={best:q.best.cap,net:q.best.net,net10:q.sweep[9].net};}
+console.log(JSON.stringify({cap,pr}));
+"""
+Q = json.loads(subprocess.run(["node", "-e", _js8 % _price, str(SITE / "src/sim.js")], capture_output=True, text=True, check=True).stdout)
+QC, QP = Q["cap"], Q["pr"]
+def pbars(rows, hi, unit):
+    W, rh = 820, 92
+    s = f'<svg width="{W}" height="{len(rows)*rh}" viewBox="0 0 {W} {len(rows)*rh}" font-family="Source Sans 3">'
+    for i, (lab, v, col, bold) in enumerate(rows):
+        y = i * rh; w = (W - 230) * v / hi
+        s += (f'<text x="0" y="{y+30}" font-size="30" fill="#15212B" font-weight="{700 if bold else 400}">{lab}</text>'
+              f'<rect x="0" y="{y+44}" width="{max(4,w)}" height="34" rx="4" fill="{col}"/>'
+              f'<text x="{w+16}" y="{y+72}" font-family="JetBrains Mono" font-size="28" font-weight="700" fill="#15212B">{unit(v)}</text>')
+    return s + "</svg>"
+T = 8; tp = "Speicherpreis"
+m10 = round(QC["10"]["max"]); m6 = round(QC["6"]["max"])
+posts["post8-preis-pro-kwh"] = [
+  frame('<h1>Was darf Speicher <em>pro kWh kosten?</em></h1><p class="promise">Jede Größe hat einen Höchstpreis. Hab’s für ein Beispielhaus durchgerechnet.</p>', 1, T, tp),
+  frame(f'<h2>Ab hier bringen 10&nbsp;kWh nichts mehr</h2>{wheels(m10)}<p>Euro je kWh. Kostet ein 10-kWh-Speicher mehr, holt er seine Kosten in 15 Jahren nicht wieder rein.</p>', 2, T, tp),
+  frame('<h2>Jede Größe hat einen Höchstpreis</h2><p class="muted" style="font-size:32px">Preis je kWh, bei dem nach 15 Jahren genau null bleibt</p>'
+        + pbars([(f"{c} kWh Speicher", QC[str(c)]["max"], "#E39A0B" if c == 6 else "#B9C3CB", c == 6) for c in (4, 6, 8, 10, 12)], QC["4"]["max"], lambda v: f"{fmt(round(v))} €")
+        + '<p>Je größer der Speicher, desto weniger darf jede kWh kosten.</p>', 3, T, tp),
+  frame('<h2>Teurer heißt: kleiner kaufen</h2><p class="muted" style="font-size:32px">Beste Größe und Bilanz nach 15 Jahren</p>'
+        + pbars([(f"{fmt(bp)} €/kWh: beste Größe {QP[str(bp)]['best']} kWh", QP[str(bp)]["net"], "#E39A0B" if bp == 500 else "#B9C3CB", bp == 500) for bp in (300, 500, 700, 1000)], QP["300"]["net"], lambda v: f"+{fmt(round(v))} €")
+        + '<p>Ein teurer Speicher ist kein Fehlkauf. Er sollte nur kleiner sein.</p>', 4, T, tp),
+  frame(f'<h2>Warum große Speicher kippen</h2><div class="pair"><div class="card"><div class="k">6 kWh Speicher</div><div class="v">{round(QC["6"]["cyc"])}</div><div class="d">volle Zyklen im Jahr</div></div><div class="card"><div class="k">10 kWh Speicher</div><div class="v" style="color:var(--sun-ink)">{round(QC["10"]["cyc"])}</div><div class="d">volle Zyklen im Jahr</div></div></div><p>Jede zusätzliche kWh wird seltener voll. Sie kostet gleich viel, spart aber weniger.</p>', 5, T, tp),
+  frame('<h2>So rechnest du dein Angebot</h2><p>Aufpreis für den Speicher geteilt durch die <b>nutzbare</b> Kapazität.</p><div class="pair"><div class="card"><div class="k">Aufpreis Speicher</div><div class="v" style="font-size:80px">6.500 €</div><div class="d">10 kWh nutzbar</div></div><div class="card"><div class="k">je kWh</div><div class="v" style="font-size:80px;color:var(--sun-ink)">650 €</div><div class="d">knapp unter der Grenze</div></div></div><p class="muted">Kein eigener Posten im Angebot? Frag nach dem Preis ohne Speicher.</p>', 6, T, tp),
+  frame('<h2>Kurz gesagt</h2>' + summary([f"6 kWh dürfen bis {fmt(m6)}&nbsp;€ je kWh kosten.", f"10 kWh nur bis {m10}&nbsp;€ je kWh.", "Teurer Speicher? Dann kleiner kaufen.", "Immer mit nutzbarer Kapazität rechnen."]), 7, T, tp),
+  frame(f'<h1>Ist dein Angebot <em>zu teuer?</em></h1><p>Der Angebots-Check ordnet den Preis je kWh kostenlos ein, als Ampel. Speicherklar Pro findet dazu die passende Größe für PV-Anlage und Speicher. Link in der Bio.</p><div><span class="cta">speicherklar.de</span></div><p class="src">Beispiel: Ruhrgebiet, 9 kWp Süd 35°, 4.500 kWh/Jahr, Strom {pr} ct, Einspeisung 7,70 ct, 15 Jahre, ohne Zinsen und Alterung. Sonnendaten PVGIS (EU-Kommission), eigene Simulation.</p>', 8, T, tp, dark=True),
+]
+
 PROFILE = f"""<div style="width:1080px;height:1080px;background:#15212B;display:flex;align-items:center;justify-content:center">
 <svg width="620" height="620" viewBox="0 0 26 26"><rect x="5.6" y="4.4" width="14.8" height="19" rx="2.6" fill="none" stroke="#E6ECF1" stroke-width="1.7"/><rect x="10" y="1.7" width="6" height="2.6" rx="0.9" fill="#E6ECF1"/><rect x="8.2" y="13.6" width="9.6" height="7.4" rx="1" fill="#E39A0B"/><rect x="8.2" y="9.4" width="9.6" height="2.8" rx="1" fill="#E39A0B" opacity=".45"/></svg></div>"""
 
