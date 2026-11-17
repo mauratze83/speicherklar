@@ -115,6 +115,17 @@ ERGEBNIS = """# Was der Rechner anzeigt (rechts bzw. unter den Eingaben, Abschni
 - Knopf „Angebot prüfen“: führt zu Speicherklar Pro, die Werte aus dem Rechner werden übernommen.
 Nicht im Modell: Notstrom, Verschattung, Alterung des Speichers, dynamische Stromtarife, die 60-%-Grenze und Stunden mit negativen Preisen aus dem Solarspitzengesetz (im Modus „EEG heute“)."""
 
+# Abläufe nach dem Kauf, wie sie im Worker (worker/index.js) und auf der Pro-Seite (src/pro-ui.js) umgesetzt sind
+NACH_KAUF = """# Nach dem Kauf: Lizenzschlüssel, Freischalten, Geräte, Laufzeit
+- Kaufen: auf {site}pro/ über den Kaufknopf (ab {start} für alle). Bezahlt wird über Stripe. Stripe ist der Verkäufer (Merchant of Record) und schickt Zahlungsbeleg und Rechnung selbst per Mail, getrennt vom Schlüssel.
+- Nach dem Kauf erscheint der Lizenzschlüssel direkt auf der Seite (mit Knopf „Kopieren“) und kommt zusätzlich per Mail an die Adresse, mit der gekauft wurde. Kommt die Mail nicht: Spam-Ordner prüfen.
+- Freischalten auf einem anderen Gerät oder Browser: auf {site}pro/ „Schon gekauft? Lizenzschlüssel eingeben“ öffnen, Schlüssel einfügen, „Freischalten“.
+- Schlüssel weg: auf {site}pro/ unter „Schlüssel vergessen?“ die Kaufadresse eingeben und „Schlüssel schicken“. Der Schlüssel kommt dann noch einmal per Mail an die Adresse, mit der gekauft wurde (aus Datenschutzgründen sagt die Seite nicht, ob es zu einer Adresse einen Kauf gibt).
+- Geräte: Ein Schlüssel schaltet Speicherklar Pro auf bis zu drei Geräten bzw. Browsern frei. Ein Gerät tauschen oder freigeben kann nur Manuel, per Mail.
+- Laufzeit: {tage} Tage ab der ersten Freischaltung, in der Zeit beliebig viele Angebote. Danach ist der Schlüssel abgelaufen und die Seite zeigt einen Hinweis. Fertige PDF-Berichte bleiben beim Käufer. Eine Verlängerung ist kostenlos, per Mail an kontakt@speicherklar.de, am besten von der Mailadresse, mit der gekauft wurde.
+- Den Bericht als PDF speichern: Knopf „Als PDF speichern“ im fertigen Bericht.
+- Für alles, was Manuel selbst erledigen muss (Gerät freigeben, verlängern, Zahlungsproblem, Schlüssel kommt trotz „Schlüssel vergessen?“ nicht an): Mail an kontakt@speicherklar.de, am besten von der Kaufadresse."""
+
 DACH_PRO = "- Dachfläche(n): je Fläche Leistung in kWp, Ausrichtung, Neigung und optional „Höchstens“ (so viel kWp passen maximal aufs Dach). Mit „+ Dachfläche hinzufügen“ trägst du weitere Flächen ein, z. B. Ost und West getrennt.\n- Verbrauch nach Monaten (optional): statt Jahreswert zwölf Monatswerte, z. B. aus dem Zählerportal."
 
 
@@ -148,7 +159,7 @@ def build():
     body = (S / "body.html").read_text()
     pro = (S / "pro-body.html").read_text()
     cfg = (S / "pro-config.js").read_text()
-    cv = lambda k: re.search(k + r'\s*:\s*"?([^",\n]*)"?', cfg).group(1).strip()
+    cv = lambda k: re.search(k + r'\s*:\s*"?([^",\s/]*)"?', cfg).group(1).strip()
     de = lambda d: ".".join(reversed(d.split("-")))
     def abschnitt(h, i):
         a = h.rfind("<", 0, h.find(f'id="{i}"'))
@@ -170,6 +181,11 @@ Preise nie als Streichpreis nennen, sondern „{cv('price')} € bis {de(cv('int
     teile.append("# Eingabefelder im kostenlosen Rechner (Startseite, Abschnitt #rechner)\n" + felder(body.split('id="ergebnis"')[0], UNITS))
     teile.append(ERGEBNIS)
     teile.append("# Annahmen des Rechners (Startseite, Abschnitt #annahmen)\n" + annahmen)
+    # Nach dem Kauf: Schlüssel, Freischalten, Geräte, Laufzeit (Texte von Pro-Seite und Kontaktseite, plus feste Abläufe)
+    kb = pro[pro.rfind("<", 0, pro.find('id="keybox"')):]
+    kb = kb[:kb.find("</details>") + 10] if "</details>" in kb else kb[:4000]
+    kontakt = (S / "kontakt.html").read_text()
+    teile.append(NACH_KAUF.format(tage=cv('accessDays'), start=de(cv('publicFrom')), site=SITE) + "\n\nTexte auf der Pro-Seite:\n" + txt(kb) + "\n\nKontaktseite (" + SITE + "kontakt.html):\n" + txt(kontakt))
     teile.append(f"# Eingabefelder in Speicherklar Pro ({SITE}pro/)\n" + felder(pro.split('id="teaser"')[0], {}).replace(
         "Speicherklar Pro die ersten zwei). Hinweis auf der Seite: „Höchstens“", "Speicherklar Pro die ersten zwei)\n" + DACH_PRO + " Hinweis auf der Seite: „Höchstens“"))
     teile.append(f"# Methodik ({SITE}methodik.html)\n" + txt((S / "methodik.html").read_text()))
