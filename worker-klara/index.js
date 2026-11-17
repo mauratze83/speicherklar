@@ -224,6 +224,8 @@ async function chat(req, env, ctx, body) {
   const payload = {
     model: env.MODEL || "claude-haiku-5-5",
     max_tokens: zahl(env.MAX_TOKENS, 600),
+    // Haiku 5.5 denkt sonst standardmäßig nach; das zählt gegen max_tokens und schneidet Antworten ab
+    thinking: { type: "disabled" },
     stream: true,
     system: [
       { type: "text", text: system(heute), cache_control: { type: "ephemeral" } },
@@ -240,7 +242,7 @@ async function chat(req, env, ctx, body) {
   ctx.waitUntil((async () => {
     const usage = { in: 0, cw: 0, cr: 0, out: 0 };
     const tools = {};
-    let thema = null;
+    let thema = null, stop = null;
     const knoepfe = [];
     try {
       const r = await fetch("https://api.anthropic.com/v1/messages", {
@@ -276,8 +278,9 @@ async function chat(req, env, ctx, body) {
           } else if (d.type === "content_block_delta") {
             if (d.delta?.type === "text_delta") await send({ t: "text", v: d.delta.text });
             else if (d.delta?.type === "input_json_delta" && tools[d.index]) tools[d.index].json += d.delta.partial_json;
-          } else if (d.type === "message_delta" && d.usage) {
-            if (d.usage.output_tokens != null) usage.out = d.usage.output_tokens;
+          } else if (d.type === "message_delta") {
+            if (d.usage?.output_tokens != null) usage.out = d.usage.output_tokens;
+            if (d.delta?.stop_reason) stop = d.delta.stop_reason;
           } else if (d.type === "error") {
             throw new Error("stream");
           }
@@ -290,7 +293,8 @@ async function chat(req, env, ctx, body) {
         if (tl.name === "thema" && THEMEN.includes(a.kategorie)) thema = a.kategorie;
       }
       for (const k of knoepfe) await send({ t: "knopf", ...k });
-      await send({ t: "ende" });
+      if (stop === "max_tokens") console.log("Antwort bei max_tokens abgeschnitten");
+      await send({ t: "ende", stop });
     } catch (e) {
       console.log("Antwort abgebrochen");
       try { await send({ t: "fehler", grund: "api" }); } catch {}

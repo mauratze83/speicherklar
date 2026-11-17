@@ -10,7 +10,7 @@ let fehler = 0, usd = 0;
 for (const f of faelle) {
   const r = await fetch("https://api.anthropic.com/v1/messages", { method: "POST",
     headers: { "x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json" },
-    body: JSON.stringify({ model: process.env.MODEL || "claude-haiku-5-5", max_tokens: 600, tools: TOOLS,
+    body: JSON.stringify({ model: process.env.MODEL || "claude-haiku-5-5", max_tokens: 600, thinking: { type: "disabled" }, tools: TOOLS,
       system: [{ type: "text", text: system(heute), cache_control: { type: "ephemeral" } }, { type: "text", text: kontext(heute, "/", null) }],
       messages: [{ role: "user", content: f.frage }] }) });
   const d = await r.json();
