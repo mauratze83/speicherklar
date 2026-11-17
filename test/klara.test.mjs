@@ -105,6 +105,8 @@ await Promise.all(c1.p);
 assert.equal(ev.filter((x) => x.t === "text").map((x) => x.v).join(""), "Den Jahresverbrauch findest du auf deiner Jahresabrechnung.");
 assert.deepEqual(ev.find((x) => x.t === "knopf"), { t: "knopf", ziel: "rechner", text: "Jetzt rechnen", url: ORIGIN + "/#rechner" });
 assert.equal(ev[ev.length - 1].t, "ende");
+assert.equal(ev[ev.length - 1].stop, "tool_use");
+assert.deepEqual(gesendet.thinking, { type: "disabled" });
 assert.equal(gesendet.model, "claude-haiku-5-5");
 assert.equal(gesendet.system[0].cache_control.type, "ephemeral");
 assert.ok(gesendet.system[1].text.includes("PV-Leistung: 9 kWp"));
