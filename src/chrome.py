@@ -200,7 +200,7 @@ def klara_widget(prefix="./"):
     return f"""<div class="kl" id="kl-root" hidden>
   <button type="button" class="kl-fab" aria-expanded="false" aria-controls="kl-panel">{klara_avatar(40)} <span class="kl-fab-t">Frag Klara</span></button>
   <section class="kl-panel" id="kl-panel" role="dialog" aria-label="Klara, die KI-Assistentin von Speicherklar" hidden>
-    <div class="kl-head">{klara_avatar(36)} <div><b>Klara</b> <span>KI-Hilfe von Speicherklar. Antworten können Fehler enthalten.</span></div> <button type="button" class="kl-neu" aria-label="Gespräch neu starten" title="Gespräch neu starten" hidden>{neu}</button> <button type="button" class="kl-x" aria-label="Chat schließen">{close}</button></div>
+    <div class="kl-head">{klara_avatar(36)} <div><b>Klara</b> <span>KI-Assistentin von Speicherklar. Antworten können Fehler enthalten.</span></div> <button type="button" class="kl-neu" aria-label="Gespräch neu starten" title="Gespräch neu starten" hidden>{neu}</button> <button type="button" class="kl-x" aria-label="Chat schließen">{close}</button></div>
     <div class="kl-log" aria-live="polite"></div>
     <form class="kl-form"><label class="sr-only" for="kl-in">Deine Frage an Klara</label> <textarea id="kl-in" rows="1" maxlength="600" placeholder="Deine Frage …"></textarea> <button type="submit" class="kl-send" aria-label="Frage senden">{send}</button></form>
     <p class="kl-foot">Lieber direkt an Manuel? <a class="kl-mail" href="mailto:kontakt@speicherklar.de">kontakt@speicherklar.de</a> · <a href="{prefix}datenschutz.html#klara">Datenschutz</a></p>
@@ -225,7 +225,7 @@ var DS=R.querySelector('.kl-foot a[href*="datenschutz"]').getAttribute('href'),p
 function esc(s){return s.replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function fmt(t){var o='',li=false;esc(t).split(/\n/).forEach(function(z){z=z.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');var m=z.match(/^\s*[-•]\s+(.*)/);
  if(m){if(!li){o+='<ul>';li=true}o+='<li>'+m[1]+'</li>';return}if(li){o+='</ul>';li=false}if(z.trim())o+='<p>'+z+'</p>'});return o+(li?'</ul>':'')}
-function mailto(){var b='Hallo Manuel,\n\n\n\n';var m=V.filter(function(x){return x.text&&!x.nicht});if(m.length){b+='---\nMein Chat mit Klara (KI-Hilfe):\n';
+function mailto(){var b='Hallo Manuel,\n\n\n\n';var m=V.filter(function(x){return x.text&&!x.nicht});if(m.length){b+='---\nMein Chat mit Klara (KI-Assistentin):\n';
  m.forEach(function(x){b+=(x.rolle==='ich'?'Ich: ':'Klara: ')+x.text+'\n'})}var s='mailto:'+MAIL+'?subject='+encodeURIComponent('Frage an Speicherklar')+'&body=';
  var e=encodeURIComponent(b);if(e.length>1800)e=encodeURIComponent(b.slice(0,1100)+'\n[gekürzt]');return s+e}
 function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
