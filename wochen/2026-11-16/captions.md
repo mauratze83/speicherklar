@@ -2,7 +2,7 @@
 
 ## Karussell: post8-preis-pro-kwh (8 Slides)
 
-Vorschlag zum Veröffentlichen: Freitag, 20.11.2026, 18:30 Uhr.
+Veröffentlicht: 17.11.2026 auf Instagram und Facebook (Vorschlag war Freitag, 20.11.2026, 18:30 Uhr).
 Hinweis: In der App im Zuschnitt-Schritt auf das Rahmen-Symbol tippen und „Original“ bzw. 4:5 wählen, sonst schneidet Instagram auf ein Quadrat zu.
 
 ### Caption

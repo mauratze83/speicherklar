@@ -9,7 +9,7 @@ Erledigt:
 - 2026-11 post5-faustformel: „1 kWh je kWp? Lieber nicht.“ Faustformeln gegen Simulation (wochen/2026-11-16, captions-post5.md)
 - 2026-11 post6-stromsteuer: Stromsteuer bleibt (wochen/2026-11-13)
 - 2026-11 post7-rechner-geprueft: Rechner an echten Häusern geprüft
-- 2026-11-16 post8-preis-pro-kwh: „Was darf Speicher pro kWh kosten?“ Höchstpreis je Größe, zum Artikel stromspeicher-preis-pro-kwh (wochen/2026-11-16, captions.md)
+- 2026-11-16 post8-preis-pro-kwh: „Was darf Speicher pro kWh kosten?“ Höchstpreis je Größe, zum Artikel stromspeicher-preis-pro-kwh (wochen/2026-11-16, captions.md), veröffentlicht 17.11.2026 auf Instagram und Facebook
 - 2026-11-16 reel2-waermepumpe-8-statt-15: Reel A „15 kWh im Angebot? 8 hätten gereicht.“ Angebots-Check mit Wärmepumpe (wochen/2026-11-16)
 - 2026-11-16 reel3-700-euro-pro-kwh: Reel B „700 € pro kWh? Dann kauf kleiner.“ zum Artikel stromspeicher-preis-pro-kwh (wochen/2026-11-16)
 
