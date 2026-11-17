@@ -137,5 +137,36 @@
    "(vorbereiten|formulieren|entwerfen) helfen",
    "helfe dir.{0,40}(Mail|Nachricht)"
   ]
+ },
+ {
+  "frage": "Wo gebe ich meinen Lizenzschlüssel ein?",
+  "muss": [
+   "Lizenzschlüssel eingeben|Freischalten"
+  ],
+  "darf_nicht": [
+   "vorab"
+  ]
+ },
+ {
+  "frage": "Ich hab meinen Schlüssel verloren, was jetzt?",
+  "muss": [
+   "Schlüssel vergessen"
+  ]
+ },
+ {
+  "frage": "Ich will mein Geld zurück, geht das?",
+  "knopf": "mail",
+  "darf_nicht": [
+   "14 Tage",
+   "Widerrufsrecht (besteht|gilt|erlischt)",
+   "kein Widerrufsrecht",
+   "\\\\bja\\\\b,"
+  ]
+ },
+ {
+  "frage": "Ich habe ein neues Handy, kann ich Speicherklar Pro da auch nutzen?",
+  "muss": [
+   "drei"
+  ]
  }
 ]
