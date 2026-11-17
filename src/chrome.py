@@ -199,8 +199,8 @@ def klara_widget(prefix="./"):
     js = KLARA_JS.replace("%API%", KLARA["api"]).replace("%AKTIV%", "true" if KLARA["aktiv"] else "false")
     return f"""<div class="kl" id="kl-root" hidden>
   <button type="button" class="kl-fab" aria-expanded="false" aria-controls="kl-panel">{klara_avatar(40)} <span class="kl-fab-t">Frag Klara</span></button>
-  <section class="kl-panel" id="kl-panel" role="dialog" aria-label="Klara, die KI-Hilfe von Speicherklar" hidden>
-    <div class="kl-head">{klara_avatar(36)} <div><b>Klara</b> <span>KI-Hilfe von Speicherklar. Antworten können Fehler enthalten.</span></div> <button type="button" class="kl-neu" aria-label="Gespräch neu starten" title="Gespräch neu starten" hidden>{neu}</button> <button type="button" class="kl-x" aria-label="Chat schließen">{close}</button></div>
+  <section class="kl-panel" id="kl-panel" role="dialog" aria-label="Klara, die KI-Assistentin von Speicherklar" hidden>
+    <div class="kl-head">{klara_avatar(36)} <div><b>Klara</b> <span>KI-Assistentin von Speicherklar. Antworten können Fehler enthalten.</span></div> <button type="button" class="kl-neu" aria-label="Gespräch neu starten" title="Gespräch neu starten" hidden>{neu}</button> <button type="button" class="kl-x" aria-label="Chat schließen">{close}</button></div>
     <div class="kl-log" aria-live="polite"></div>
     <form class="kl-form"><label class="sr-only" for="kl-in">Deine Frage an Klara</label> <textarea id="kl-in" rows="1" maxlength="600" placeholder="Deine Frage …"></textarea> <button type="submit" class="kl-send" aria-label="Frage senden">{send}</button></form>
     <p class="kl-foot">Lieber direkt an Manuel? <a class="kl-mail" href="mailto:kontakt@speicherklar.de">kontakt@speicherklar.de</a> · <a href="{prefix}datenschutz.html#klara">Datenschutz</a></p>
@@ -225,7 +225,7 @@ var DS=R.querySelector('.kl-foot a[href*="datenschutz"]').getAttribute('href'),p
 function esc(s){return s.replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function fmt(t){var o='',li=false;esc(t).split(/\n/).forEach(function(z){z=z.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');var m=z.match(/^\s*[-•]\s+(.*)/);
  if(m){if(!li){o+='<ul>';li=true}o+='<li>'+m[1]+'</li>';return}if(li){o+='</ul>';li=false}if(z.trim())o+='<p>'+z+'</p>'});return o+(li?'</ul>':'')}
-function mailto(){var b='Hallo Manuel,\n\n\n\n';var m=V.filter(function(x){return x.text&&!x.nicht});if(m.length){b+='---\nMein Chat mit Klara (KI-Hilfe):\n';
+function mailto(){var b='Hallo Manuel,\n\n\n\n';var m=V.filter(function(x){return x.text&&!x.nicht});if(m.length){b+='---\nMein Chat mit Klara (KI-Assistentin):\n';
  m.forEach(function(x){b+=(x.rolle==='ich'?'Ich: ':'Klara: ')+x.text+'\n'})}var s='mailto:'+MAIL+'?subject='+encodeURIComponent('Frage an Speicherklar')+'&body=';
  var e=encodeURIComponent(b);if(e.length>1800)e=encodeURIComponent(b.slice(0,1100)+'\n[gekürzt]');return s+e}
 function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
@@ -238,7 +238,7 @@ function daumenEl(m){var d=el('div','kl-fb');if(m.daumen){d.textContent='Danke f
  d.appendChild(el('span',null,'Hilfreich?'));[['hoch',HOCH,'Ja, hilfreich'],['runter',RUNTER,'Nein, nicht hilfreich']].forEach(function(w){var b=el('button',null,w[1]);b.type='button';b.setAttribute('aria-label',w[2]);b.title=w[2];
   b.addEventListener('click',function(){var fb=m.fb;m.daumen=w[0];delete m.fb;sichern();d.replaceWith(daumenEl(m));
    fetch(C.api+'/feedback',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fb:fb,wert:w[0]})}).catch(function(){})});d.appendChild(b)});return d}
-function zeigen(){L.innerHTML='';var g=el('div','kl-m kl-k',fmt('Hi, ich bin Klara, die KI-Hilfe von Speicherklar. Ich beantworte deine Fragen zum Rechner, zu Speicherklar Pro und rund um PV-Anlage und Speicher. Ich bin eine KI und kann mich irren.')+'<p><small>Deine Fragen gehen zum Beantworten an Anthropic (Claude). Speicherklar speichert sie nicht. <a href="'+DS+'">Datenschutz</a></small></p>');L.appendChild(g);
+function zeigen(){L.innerHTML='';var g=el('div','kl-m kl-k',fmt('Hi, ich bin Klara, die KI-Assistentin von Speicherklar. Ich beantworte deine Fragen zum Rechner, zu Speicherklar Pro und rund um PV-Anlage und Speicher. Ich bin eine KI und kann mich irren.')+'<p><small>Deine Fragen gehen zum Beantworten an Anthropic (Claude). Speicherklar speichert sie nicht. <a href="'+DS+'">Datenschutz</a></small></p>');L.appendChild(g);
 
  V.forEach(function(m){var d=el('div','kl-m '+(m.rolle==='ich'?'kl-i':'kl-k')+(m.fehler?' kl-err':''),m.rolle==='ich'?'<p>'+esc(m.text)+'</p>':fmt(m.text||m.fehler||''));L.appendChild(d);if(m.knopf)L.appendChild(knopfEl(m.knopf));if(m.fb||m.daumen)L.appendChild(daumenEl(m))});
  if(stat&&!stat.on)L.appendChild(el('div','kl-m kl-k',fmt(stat.grund==='budget'?'Ich mache gerade Pause und bin am Monatsersten wieder da. Bis dahin: Schreib Manuel an '+MAIL+'.':'Ich bin gerade nicht da. Schreib Manuel an '+MAIL+'.')));
