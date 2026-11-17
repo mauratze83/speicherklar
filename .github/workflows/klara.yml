@@ -1,0 +1,48 @@
+# Veröffentlicht den Cloudflare Worker für Klara, die KI-Hilfe (worker-klara/).
+# Braucht die GitHub-Secrets CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID und ANTHROPIC_API_KEY.
+# Fehlt eins davon, wird der Lauf übersprungen. Der Bezahl-Worker (worker/) bleibt davon unberührt.
+name: Klara
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["worker-klara/**", ".github/workflows/klara.yml"]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      HAS_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && secrets.ANTHROPIC_API_KEY != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - if: env.HAS_TOKEN != 'true'
+        run: echo "CLOUDFLARE_API_TOKEN oder ANTHROPIC_API_KEY fehlt – Klara wird nicht veröffentlicht."
+      - name: Tests
+        if: env.HAS_TOKEN == 'true'
+        run: node test/klara.test.mjs
+      - name: KV-Speicher anlegen oder finden
+        if: env.HAS_TOKEN == 'true'
+        working-directory: worker-klara
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          find_id() { npx -y wrangler@4 kv namespace list | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const l=JSON.parse(s.slice(s.indexOf("[")));const n=l.find(x=>x.title.endsWith("klara-STATS"));console.log(n?n.id:"")})'; }
+          id=$(find_id)
+          if [ -z "$id" ]; then
+            npx -y wrangler@4 kv namespace create speicherklar-klara-STATS
+            id=$(find_id)
+          fi
+          test -n "$id"
+          sed -i "s/KV_ID_PLATZHALTER/$id/" wrangler.toml
+          echo "KV-Namespace: $id"
+      - if: env.HAS_TOKEN == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4"
+          workingDirectory: worker-klara
+          secrets: |
+            ANTHROPIC_API_KEY
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}

@@ -14,12 +14,13 @@ Details zu Aufbau, Lizenzen, KV und Freischlüsseln stehen im `README.md`. Diese
 - Wetter (seit 14.11.2026): kein gewürfeltes Tageswetter mehr. `WY` in `src/sim.js` enthält die Stundenwerte eines echten Jahres (PVGIS-SARAH3 2020, Region 4: Globalstrahlung/4 und Diffusanteil·250 als Base64, Ortszeit, ohne 29.2.). `pvProfile` übernimmt daraus nur den Verlauf; Monatssummen `H` und mittlerer Diffusanteil `Kd` kommen aus der Region bzw. `plz2.json`. Geprüft an 30 gemessenen Häusern (WPuQ 2019, Minutenwerte) und Manuels Anlage; Ergebnisse auf der Methodik-Seite (`#eigene-anlage`) und im Projekt unter `claude/sim-pruefung-eigene-anlage.md`. Wetterjahr nicht ohne neue Prüfung tauschen: Es verschiebt alle Zahlen.
 - Erklärvideo (seit 15.11.2026 live): `video/erklaer-16x9.mp4`, `video/erklaer-9x16.mp4`, `video/erklaer.jpg` (1:13 Min., Voice-over Manuels ElevenLabs-Stimme, Untertitel eingebrannt, daher keine VTT), eingetragen in `VIDEO` in `src/chrome.py` (selbst gehostet, kein YouTube). Zahlen im Video: 6 statt 10 kWh, rund 670 € (beste Größe, Region 4, `pro.js`); bei Änderungen an `sim.js`/`pro.js` prüfen und das Video ggf. neu erzeugen (Quellen unter `scripts/erklaervideo/`, siehe README dort; Preis-Hinweis am Ende nennt 49 € bis 31.01.2027, ab Februar 2027 neu rendern). Wäre `VIDEO["quer"]` leer, `VIDEO["quer"]` leer ist, gibt es keine Video-Knöpfe und kein Overlay, und `/so-gehts/` (Quelle `src/so-gehts.html`, gebaut in `build_articles.py`) steht mit Platzhalter und `noindex` außerhalb von Sitemap und `llms.txt`. Mit Video: Knopf „In 75 Sekunden erklärt“ (`video_trigger`) im Hero der Startseite (`<!--VIDEO-->` in `body.html`), im Pro-Kopf (`pro-body.html`) und im Rechner-Kasten der Artikel (`CTA`), Overlay `#vid-dlg` aus `footer()` mit der einen Bitte „Rechner starten“; Hochkant-Fassung (`hoch`) am Handy hochkant; bei niedrigen Fenstern im Querformat (max. 560 px hoch) schrumpft das Overlay, damit Video und „Rechner starten“ zusammen passen; im Hero zwischen 561 und 900 px wird „Jetzt rechnen“ nicht auf volle Breite gezogen, der Video-Knopf steht daneben. Umami: `video-open`, `video-start` (Wiedergabe läuft, einmal je Seitenaufruf, auch auf `/so-gehts/`), `video-ende`, `video-cta` (jeweils mit `ort`). „Rechner starten“ im Overlay schließt das Overlay immer; auf der Startseite (Rechner auf derselben Seite) scrollt es selbst zu `#rechner`, sonst bliebe das modale Fenster offen (Fehler in Safari/iPhone, behoben 15.11.2026, getestet mit WebKit und Chromium, hoch und quer). Preise und Termine auf `/so-gehts/` kommen aus `pro-config.js`; „Kaufen ab …“ und der Einführungspreis blenden sich per Datum im Browser selbst aus.
 - Navigation (seit 15.11.2026): Rechner · Speicherklar Pro · So geht's · Ratgeber · Annahmen · Über mich · Instagram (`header()` in `src/chrome.py`). Die sieben Punkte passen ab 818 px in eine Zeile; Burger-Menü deshalb bis 840 px (zwei `@media (max-width:840px)` in `src/style.css` und `min-width:841px` in `MENU_JS`, immer gemeinsam ändern).
+- Klara, die KI-Hilfe (seit 17.11.2026 gebaut, **noch nicht freigegeben**): Chat-Widget aus `src/chrome.py` (`KLARA`, `klara_widget()`, kommt mit `footer()` auf jede Seite), eigener Worker `worker-klara/` (Claude Haiku 5.5 über die Claude API, getrennt vom Bezahl-Worker), Deploy über Workflow „Klara“ (`.github/workflows/klara.yml`, Secret `ANTHROPIC_API_KEY`). Solange `KLARA["aktiv"]` False ist, sehen Klara nur Browser, in denen einmal `?klara=1` aufgerufen wurde (`?klara=0` nimmt es weg) – **nirgends verlinken**; auch der Abschnitt in der Datenschutzerklärung erscheint erst mit `aktiv`. Regeln für Klara: `worker-klara/regeln.js` (keine Empfehlung fürs eigene Haus, keine eigenen Zahlen, Politik nur aus `src/klara-politik.md` mit Stand und Quelle, Weiterleitung an kontakt@speicherklar.de). Ihr Wissen erzeugt `scripts/klara_wissen.py` bei jedem `build.py` aus Artikeln, Methodik, Eingabefeldern, Annahmen, `so-gehts` und `pro-config.js` nach `worker-klara/wissen.js` (generiert, nicht von Hand ändern). Budget: Worker schaltet Klara ab 10 $ im Monat ab (`BUDGET_USD`), Not-Aus KV `cfg:aus` = `1`. Umami: `klara-open`, `klara-frage`, `klara-knopf`, `klara-mail`. Konzept im Projekt unter `claude/chatbot-konzept.md`.
 - Messung: Ein wöchentlicher Umsatz-Review (geplante Claude-Aufgabe, sonntags) liest Umami über den Freigabe-Link „Umsatz-Review“ und Stripe über einen eingeschränkten Lese-Schlüssel; Ergebnis im Claude-Projekt unter `claude/umsatz-review.md`. Neue Umami-Ereignisse dort und in der Datenschutzerklärung nachziehen.
 
 ## Goldene Regeln
 
 1. **Generierte Dateien nie direkt bearbeiten.** `index.html`, `pro/index.html`, `ratgeber/*.html`, `methodik.html`, `ueber-mich.html`, `impressum.html`, `datenschutz.html`, `sitemap.xml`, `img/og/*` entstehen aus `src/`. Immer die Quelle ändern und neu bauen.
-2. **Push auf `main` ist live.** GitHub Pages veröffentlicht sofort; Änderungen unter `worker/` deployen per Workflow „Worker“ direkt den Bezahl-Worker. Worker-Änderungen deshalb nur nach Rückfrage und mit Testplan.
+2. **Push auf `main` ist live.** GitHub Pages veröffentlicht sofort; Änderungen unter `worker/` deployen per Workflow „Worker“ direkt den Bezahl-Worker, Änderungen unter `worker-klara/` (auch das generierte `wissen.js`) per Workflow „Klara“ den Klara-Worker. Worker-Änderungen deshalb nur nach Rückfrage und mit Testplan.
 3. **Keine Geheimnisse im Repo.** Stripe-, Cloudflare-, MailerLite- und Lizenz-Secrets liegen nur in GitHub/Cloudflare. Freischlüssel nur als SHA-256-Hash in `FREE_KEYS`. Keine Klartext-Schlüssel, Mailadressen oder Checkout-IDs von Käufern in Code, Commits oder Logs.
 4. **Zahlen kommen aus dem Simulationskern.** Jede Zahl in Artikeln, auf der Startseite oder in Social-Texten muss mit `src/sim.js` bzw. `src/pro.js` gerechnet sein – nie schätzen oder runden „nach Gefühl“. Annahmen der Beispiele: `BEISPIEL` und `CHART_BASE` in `src/articles.py`.
 5. **Werte, die an mehreren Stellen stehen, immer gemeinsam ändern** (siehe Tabelle unten).
@@ -28,6 +29,8 @@ Details zu Aufbau, Lizenzen, KV und Freischlüsseln stehen im `README.md`. Diese
 
 ```bash
 node test/pro.test.js                 # Pro-Rechnung + Abgleich mit dem kostenlosen Rechner, muss ohne Fehler laufen
+node test/klara.test.mjs              # Klara-Worker ohne echte API (Prompt, Schutz, Budget, Stream), muss ohne Fehler laufen
+ANTHROPIC_API_KEY=… node test/klara-eval.mjs   # Klara gegen die echte API mit test/klara-faelle.json (kostet Cent, Antworten lesen)
 python3 build_articles.py             # nur wenn Artikel, chrome.py, legal/, methodik/über-mich oder Bilder betroffen (braucht Playwright für img/og)
 python3 build.py                      # baut index.html, pro/index.html, sitemap.xml – immer als letzter Schritt
 python3 -m http.server                # lokal prüfen: localhost:8000/ und localhost:8000/pro/
@@ -46,6 +49,9 @@ Reihenfolge: Quelle ändern → Tests → `build_articles.py` (falls nötig) →
 | Verkaufsstart | `publicFrom` in `pro-config.js` |
 | Rechenlogik | `src/sim.js` ↔ `src/pro.js` (Test gleicht beide ab), danach Musterbericht neu; Zahlen der Methodik-Abschnitte HTW-Vergleich, Strompreis und eigene Anlage neu rechnen |
 | Kopf/Fuß, Analytics (Umami) | nur `src/chrome.py` |
+| Klara sichtbar | `KLARA["aktiv"]` in `src/chrome.py` (auch Datenschutz-Abschnitt hängt daran), `KLARA["api"]` = Worker-Adresse |
+| Klara-Budget, Preise, Modell | `BUDGET_USD`, `PREIS_*`, `MODEL` in `worker-klara/wrangler.toml`; Ausgabenlimit in der Claude Console gleich setzen |
+| Politik für Klara | `src/klara-politik.md` (Stand, Status, Quelle, Prüfen bis); bei Änderungen an EEG/Steuern in Artikeln auch hier nachziehen |
 
 ## Wo was liegt
 
@@ -56,6 +62,8 @@ Reihenfolge: Quelle ändern → Tests → `build_articles.py` (falls nötig) →
 - `src/plz2.json` – Sonnendaten je PLZ-Gebiet für Pro; nur über Workflow „Sonnendaten“ (`scripts/pvgis_plz2.py`) erzeugen, nicht von Hand
 - `src/articles.py` – alle Ratgeber-Artikel (slug, title, desc, date, kennzahl, chart, body …); `build_articles.py` baut daraus `ratgeber/`
 - `worker/index.js` – Endpunkte `/checkout`, `/verify`, `/validate`; `worker/wrangler.toml` – Variablen
+- `worker-klara/` – Klara: `index.js` (`/status`, `/start`, `/session`, `/chat`), `regeln.js` (Systemprompt, von Hand), `wissen.js` (generiert), `wrangler.toml`
+- `src/klara-politik.md` – Politik, Steuern, Förderung für Klara; `scripts/klara_wissen.py` – erzeugt `worker-klara/wissen.js`
 
 ## Ratgeber-Artikel
 
