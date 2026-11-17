@@ -1,0 +1,31 @@
+# Cloudflare Worker für Klara, die KI-Hilfe auf speicherklar.de. Getrennt vom Bezahl-Worker (worker/).
+# Deploy über GitHub Actions (.github/workflows/klara.yml), nur von main. Geheimnis ANTHROPIC_API_KEY liegt nur in GitHub/Cloudflare.
+name = "speicherklar-klara"
+main = "index.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+SITE = "https://speicherklar.de"
+ALLOWED_ORIGINS = "https://speicherklar.de,http://localhost:8000,http://localhost:8765"
+MODEL = "claude-haiku-5-5"
+MAX_TOKENS = "600"          # höchstens so viele Tokens je Antwort
+BUDGET_USD = "10"           # ab dieser Summe im laufenden Monat ist Klara aus (10 $ liegen unter 10 €); Console-Limit gleich setzen
+# Preise in $ je Million Tokens, Claude Haiku 5.5, Prompts bis 100.000 Tokens (Anthropic, Okt. 2026). Bei Preisänderung anpassen.
+PREIS_IN = "0.10"
+PREIS_OUT = "0.50"
+PREIS_CACHE_LESEN = "0.01"
+PREIS_CACHE_SCHREIBEN = "0.125"   # 1,25 × Input; vor Livegang in der Preisliste prüfen
+MAX_FRAGEN = "10"           # Fragen je Gespräch
+MAX_PRO_TAG = "40"          # Fragen je IP und Tag
+POW_BITS = "16"             # Schwierigkeit der Rechenaufgabe (16 ≈ 65.000 Versuche, am Handy etwa eine Sekunde)
+
+# Summen je Monat, Tageszähler je IP-Hash, Not-Aus "cfg:aus". Die ID trägt der Workflow beim Veröffentlichen ein.
+[[kv_namespaces]]
+binding = "STATS"
+id = "KV_ID_PLATZHALTER"
+
+# Höchstens 6 Fragen pro Minute je IP-Hash (Cloudflare Rate Limiting)
+[[ratelimits]]
+name = "RL"
+namespace_id = "2611"
+simple = { limit = 6, period = 60 }

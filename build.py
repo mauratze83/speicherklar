@@ -155,3 +155,8 @@ Nicht im Modell: Wärmepumpen-Lastprofil (nur in Speicherklar Pro), Notstrom, Ve
 (ROOT / "llms.txt").write_text(llms)
 (ROOT / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(rows) + "</urlset>\n")
 print("sitemap.xml:", len(rows), "Seiten")
+
+# Klara (KI-Hilfe): Wissen aus den Quellen der Website für den Worker in worker-klara/ erzeugen
+sys.path.insert(0, str(ROOT / "scripts"))
+import klara_wissen
+klara_wissen.build()

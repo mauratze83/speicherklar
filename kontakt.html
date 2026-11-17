@@ -556,7 +556,137 @@ d.addEventListener('close',function(){v.pause()});
 // sonst bleibt das modale Fenster offen und es passiert sichtbar nichts (gesehen in Safari auf dem iPhone).
 d.querySelector('.vid-cta').addEventListener('click',function(e){T('video-cta',{ort:ort});var a=this,u=new URL(a.href,location.href);zu();
 if(u.pathname===location.pathname){var t=document.querySelector(u.hash);if(t){e.preventDefault();history.replaceState(null,'',u.hash);setTimeout(function(){t.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',block:'start'})},30);}}});
-d.querySelector('.vid-more').addEventListener('click',function(){zu()});})();</script><footer>
+d.querySelector('.vid-more').addEventListener('click',function(){zu()});})();</script><div class="kl" id="klara" hidden>
+  <button type="button" class="kl-fab" aria-expanded="false" aria-controls="kl-panel"><svg class="kl-ava" width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="kl-rolle" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000"/><stop offset=".14" stop-color="#2a2f35"/><stop offset=".5" stop-color="#15191d"/><stop offset=".86" stop-color="#2a2f35"/><stop offset="1" stop-color="#000"/></linearGradient></defs><path d="M9 0h22a9 9 0 0 1 9 9v17a9 9 0 0 1-9 9H15.5L6.5 40.5 8.2 34.8A9 9 0 0 1 0 26V9a9 9 0 0 1 9-9z" fill="#15212B"/><rect x="11.5" y="4" width="17" height="26.5" rx="3" fill="url(#kl-rolle)" stroke="#56666F" stroke-width="1"/><path d="M7.5 17.25h3.5M29 17.25h3.5" stroke="#E39A0B" stroke-width="2.4" stroke-linecap="round"/><path d="M16.6 14a3.5 3.5 0 1 1 5.3 3c-1.15.7-1.85 1.35-1.85 2.6v.6" fill="none" stroke="#EDF0F2" stroke-width="2.2" stroke-linecap="round"/><circle cx="20.05" cy="24.3" r="1.45" fill="#EDF0F2"/></svg> <span class="kl-fab-t">Frag Klara</span></button>
+  <section class="kl-panel" id="kl-panel" role="dialog" aria-label="Klara, die KI-Hilfe von Speicherklar" hidden>
+    <div class="kl-head"><svg class="kl-ava" width="36" height="36" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="kl-rolle" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000"/><stop offset=".14" stop-color="#2a2f35"/><stop offset=".5" stop-color="#15191d"/><stop offset=".86" stop-color="#2a2f35"/><stop offset="1" stop-color="#000"/></linearGradient></defs><path d="M9 0h22a9 9 0 0 1 9 9v17a9 9 0 0 1-9 9H15.5L6.5 40.5 8.2 34.8A9 9 0 0 1 0 26V9a9 9 0 0 1 9-9z" fill="#15212B"/><rect x="11.5" y="4" width="17" height="26.5" rx="3" fill="url(#kl-rolle)" stroke="#56666F" stroke-width="1"/><path d="M7.5 17.25h3.5M29 17.25h3.5" stroke="#E39A0B" stroke-width="2.4" stroke-linecap="round"/><path d="M16.6 14a3.5 3.5 0 1 1 5.3 3c-1.15.7-1.85 1.35-1.85 2.6v.6" fill="none" stroke="#EDF0F2" stroke-width="2.2" stroke-linecap="round"/><circle cx="20.05" cy="24.3" r="1.45" fill="#EDF0F2"/></svg> <div><b>Klara</b> <span>KI-Hilfe von Speicherklar. Antworten können Fehler enthalten.</span></div> <button type="button" class="kl-neu" aria-label="Gespräch neu starten" title="Gespräch neu starten" hidden><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M3.2 9a5.8 5.8 0 1 0 1.9-4.3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M4.6 1.8v3.4H8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button> <button type="button" class="kl-x" aria-label="Chat schließen"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>
+    <div class="kl-log" aria-live="polite"></div>
+    <form class="kl-form"><label class="sr-only" for="kl-in">Deine Frage an Klara</label> <textarea id="kl-in" rows="1" maxlength="600" placeholder="Deine Frage …"></textarea> <button type="submit" class="kl-send" aria-label="Frage senden"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2.5 9h11M9.5 4l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></form>
+    <p class="kl-foot">Lieber direkt an Manuel? <a class="kl-mail" href="mailto:kontakt@speicherklar.de">kontakt@speicherklar.de</a> · <a href="./datenschutz.html#klara">Datenschutz</a></p>
+  </section>
+</div>
+<style>
+.kl-fab{position:fixed;z-index:40;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:10px;padding:6px 16px 6px 6px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit;font-weight:700;cursor:pointer;box-shadow:0 6px 24px rgba(10,20,30,.18);transition:transform .15s ease}
+.kl-fab:hover{transform:translateY(-1px)} .kl-fab .kl-ava{display:block}
+.kl-fab[aria-expanded="true"]{display:none}
+body:has(#rbar.show) .kl-fab{bottom:calc(max(10px,env(safe-area-inset-bottom,0px)) + 84px)}
+@media (max-width:560px){.kl-fab{padding:4px;gap:0}.kl-fab .kl-ava{width:36px;height:36px}
+ .kl-fab-t{max-width:0;overflow:hidden;white-space:nowrap;opacity:0;transition:max-width .35s ease,opacity .25s ease,margin .35s ease}
+ .kl-fab.hinweis{padding-right:14px}.kl-fab.hinweis .kl-fab-t{max-width:120px;opacity:1;margin-left:8px}
+ .kl-fab.spaeter{opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .2s ease,transform .2s ease,visibility 0s .2s}
+ .kl-fab{transition:opacity .2s ease,transform .2s ease}}
+.kl-panel{position:fixed;z-index:41;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));width:min(390px,calc(100vw - 32px));height:min(620px,calc(100svh - 110px));display:flex;flex-direction:column;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 60px rgba(10,20,30,.28);overflow:hidden}
+.kl-panel[hidden]{display:none}
+@media (max-width:560px){.kl-panel{left:0;right:0;bottom:0;width:100%;height:min(88svh,calc(100svh - 40px));border-radius:16px 16px 0 0;border-bottom:0}}
+.kl-head{display:flex;align-items:center;gap:10px;padding:12px 12px 12px 14px;border-bottom:1px solid var(--line)}
+.kl-head div{flex:1;min-width:0;display:grid;gap:1px} .kl-head b{font-size:16px}
+.kl-head span{font-size:12.5px;color:var(--muted)}
+.kl-x,.kl-neu{border:0;background:none;color:var(--muted);cursor:pointer;font:inherit}
+.kl-neu{width:40px;height:40px;display:grid;place-items:center;border-radius:999px} .kl-neu:hover{background:var(--bg);color:var(--ink)} .kl-neu[hidden]{display:none}
+.kl-frage{align-self:stretch;display:grid;gap:8px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);font-size:14.5px}
+.kl-frage div{display:flex;gap:8px;flex-wrap:wrap} .kl-frage button{border:1px solid var(--line);border-radius:999px;padding:7px 14px;font:inherit;font-weight:700;cursor:pointer;background:var(--surface);color:var(--ink)} .kl-frage .ja{background:var(--sun);border-color:var(--sun);color:var(--btn-ink)}
+.kl-x{width:40px;height:40px;display:grid;place-items:center;border-radius:999px;flex:none} .kl-x:hover{background:var(--bg);color:var(--ink)}
+.kl-log{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;overscroll-behavior:contain}
+.kl-m{max-width:88%;padding:9px 12px;border-radius:14px;line-height:1.45;font-size:15px;overflow-wrap:anywhere}
+.kl-m p{margin:0} .kl-m small{color:var(--muted);font-size:13px} .kl-m small a{color:inherit} .kl-m p+p,.kl-m ul{margin-top:6px} .kl-m ul{margin-bottom:0;padding-left:18px}
+.kl-k{align-self:flex-start;background:var(--bg);border-bottom-left-radius:4px}
+.kl-i{align-self:flex-end;background:var(--ink);color:var(--bg);border-bottom-right-radius:4px}
+.kl-err{color:var(--muted);font-style:italic}
+.kl-wait::after{content:"…";display:inline-block;animation:kl-p 1s steps(3) infinite;width:1.2em;overflow:hidden;vertical-align:bottom}
+@keyframes kl-p{from{width:0}to{width:1.2em}}
+.kl-btn{align-self:flex-start;display:inline-block;padding:9px 14px;border-radius:999px;background:var(--sun);color:var(--btn-ink);font-weight:700;text-decoration:none;font-size:14.5px}
+.kl-chips{display:flex;flex-wrap:wrap;gap:6px}
+.kl-chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 11px;font:inherit;font-size:13.5px;cursor:pointer;text-align:left}
+.kl-chip:hover{border-color:var(--sun)}
+.kl-form{display:flex;gap:8px;align-items:flex-end;padding:10px 12px 6px;border-top:1px solid var(--line)}
+.kl-form textarea{flex:1;resize:none;max-height:120px;min-height:42px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);font:inherit;font-size:16px;line-height:1.35}
+.kl-form textarea:focus{outline:2px solid var(--sun);outline-offset:0;border-color:transparent}
+.kl-send{flex:none;width:42px;height:42px;border:0;border-radius:12px;background:var(--sun);color:var(--btn-ink);display:grid;place-items:center;cursor:pointer}
+.kl-send:disabled{opacity:.5;cursor:default}
+.kl-foot{margin:0;padding:2px 14px 12px;font-size:12.5px;color:var(--muted)} .kl-foot a{color:inherit}
+@media (prefers-reduced-motion:reduce){.kl-fab,.kl-fab-t{transition:none!important}.kl-wait::after{animation:none;width:auto}}
+</style>
+<script>(function(){var C={api:"https://speicherklar-klara.speicherklar.workers.dev",aktiv:false};
+try{var u=new URL(location.href),q=u.searchParams.get('klara');if(q==='1')localStorage.setItem('klara.test','1');else if(q==='0')localStorage.removeItem('klara.test');
+if(q!==null){u.searchParams.delete('klara');history.replaceState(null,'',u.pathname+u.search+u.hash);}}catch(e){}
+var test=false;try{test=localStorage.getItem('klara.test')==='1'}catch(e){}
+var R=document.getElementById('klara');if(!R||!C.api||!(C.aktiv||test)||!window.fetch||!window.crypto||!crypto.subtle)return;R.hidden=false;
+var T=function(n,d){try{window.umami&&umami.track(n,d)}catch(e){}};
+var S={get:function(k){try{return JSON.parse(sessionStorage.getItem(k))}catch(e){return null}},set:function(k,v){try{sessionStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+var fab=R.querySelector('.kl-fab'),P=R.querySelector('.kl-panel'),L=R.querySelector('.kl-log'),F=R.querySelector('.kl-form'),I=F.querySelector('textarea'),B=F.querySelector('.kl-send'),NEU=R.querySelector('.kl-neu');
+var V=S.get('klara.verlauf')||[],tok=S.get('klara.token'),busy=false,stat=null,MAX=10,MAIL='kontakt@speicherklar.de';
+var DS=R.querySelector('.kl-foot a[href*="datenschutz"]').getAttribute('href'),pfad=location.pathname,ort=/\/pro\//.test(pfad)?'pro':/\/ratgeber\/./.test(pfad)?'artikel':(document.getElementById('inputs')?'start':'seite');
+var CHIPS={start:['Was trage ich beim Stromverbrauch ein?','Was heißt nutzbare Kapazität?','Wie rechnet Speicherklar?'],
+ pro:['Was zeigt die Ampel?','Wo steht der Speicherpreis im Angebot?','Was steht im Bericht?'],
+ artikel:['Wie rechnet Speicherklar?','Was heißt das für mein Haus?','Was ist Speicherklar Pro?'],
+ seite:['Wie rechnet Speicherklar?','Was ist Speicherklar Pro?','Was trage ich beim Stromverbrauch ein?']};
+function esc(s){return s.replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function fmt(t){var o='',li=false;esc(t).split(/\n/).forEach(function(z){z=z.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');var m=z.match(/^\s*[-•]\s+(.*)/);
+ if(m){if(!li){o+='<ul>';li=true}o+='<li>'+m[1]+'</li>';return}if(li){o+='</ul>';li=false}if(z.trim())o+='<p>'+z+'</p>'});return o+(li?'</ul>':'')}
+function mailto(){var b='Hallo Manuel,\n\n\n\n';var m=V.filter(function(x){return x.text&&!x.nicht});if(m.length){b+='---\nMein Chat mit Klara (KI-Hilfe):\n';
+ m.forEach(function(x){b+=(x.rolle==='ich'?'Ich: ':'Klara: ')+x.text+'\n'})}var s='mailto:'+MAIL+'?subject='+encodeURIComponent('Frage an Speicherklar')+'&body=';
+ var e=encodeURIComponent(b);if(e.length>1800)e=encodeURIComponent(b.slice(0,1100)+'\n[gekürzt]');return s+e}
+function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+function knopfEl(k){var a=el('a','kl-btn');a.textContent=k.text;
+ if(k.ziel==='mail'){a.href=mailto();a.addEventListener('click',function(){a.href=mailto();T('klara-mail',{ort:ort})})}
+ else{a.href=k.url;a.addEventListener('click',function(){T('klara-knopf',{ziel:k.ziel,ort:ort});if(new URL(k.url).pathname===pfad)zu(false)})}return a}
+function zeigen(){L.innerHTML='';var g=el('div','kl-m kl-k',fmt('Hi, ich bin Klara, die KI-Hilfe von Speicherklar. Ich bin eine KI und kann mich irren.\n**Frag mich zum Beispiel:**\n- was du in ein Feld einträgst und wo der Wert steht\n- was ein Ergebnis bedeutet und wie Speicherklar rechnet\n- was Speicherklar Pro prüft\nWelche Größe für dein Haus passt, rechnet der Rechner, nicht ich.')+'<p><small>Deine Fragen gehen zum Beantworten an Anthropic (Claude). Speicherklar speichert sie nicht. <a href="'+DS+'">Datenschutz</a></small></p>');L.appendChild(g);
+ if(!V.length){var c=el('div','kl-chips');CHIPS[ort].forEach(function(t){var b=el('button','kl-chip');b.type='button';b.textContent=t;b.addEventListener('click',function(){frage(t)});c.appendChild(b)});L.appendChild(c)}
+ V.forEach(function(m){var d=el('div','kl-m '+(m.rolle==='ich'?'kl-i':'kl-k')+(m.fehler?' kl-err':''),m.rolle==='ich'?'<p>'+esc(m.text)+'</p>':fmt(m.text||m.fehler||''));L.appendChild(d);if(m.knopf)L.appendChild(knopfEl(m.knopf))});
+ if(stat&&!stat.on)L.appendChild(el('div','kl-m kl-k',fmt(stat.grund==='budget'?'Ich mache gerade Pause und bin am Monatsersten wieder da. Bis dahin: Schreib Manuel an '+MAIL+'.':'Ich bin gerade nicht da. Schreib Manuel an '+MAIL+'.')));
+ var n=V.filter(function(m){return m.rolle==='ich'&&!m.nicht}).length;if(n>=MAX)L.appendChild(el('div','kl-m kl-k kl-err',fmt('Für dieses Gespräch sind die Fragen aufgebraucht. Mit dem Pfeil oben („Neu starten“) geht es weiter.')));
+ NEU.hidden=!V.length;var aus=(stat&&!stat.on)||n>=MAX;I.disabled=aus;B.disabled=aus||busy;L.scrollTop=L.scrollHeight;R.querySelector('.kl-mail').href=mailto()}
+function sichern(){S.set('klara.verlauf',V)}
+function werte(){if(ort!=='start')return null;var g=function(i){var e=document.getElementById(i);return e?e.textContent.trim():''};
+ var p=function(i){var e=document.querySelector('#'+i+' [aria-pressed="true"]');return e?e.textContent.trim():''};
+ var plz=(document.getElementById('plz')||{}).value||'';
+ return{region:plz.replace(/\D/g,'').slice(0,1),ausrichtung:p('aspect'),neigung:g('o-tilt'),pv:g('o-pv'),verbrauch:g('o-cons'),waermepumpe:g('o-hp'),eauto:g('o-ev'),laden:+((document.getElementById('ev')||{}).value||0)>0?p('evtime'):'',
+  speicher:g('o-bat'),speicherpreis:g('o-bprice'),lebensdauer:g('o-life'),strompreis:g('o-price'),eeg:p('eeg'),einspeisung:g('o-feed'),
+  urteil:g('verdict'),ersparnis:g('k-save'),amortisation:g('k-pay'),kosten:g('k-cost'),bilanz:g('k-net')+' '+g('k-netd'),autarkie:g('b-aut'),beste:g('sweepsum')}}
+function nb(h){var n=0;for(var i=0;i<h.length;i++){if(h[i]===0){n+=8;continue}n+=Math.clz32(h[i])-24;break}return n}
+async function loesen(a,bits){var e=new TextEncoder();for(var s=0;s<4e6;s+=256){var ps=[];for(var n=s;n<s+256;n++)ps.push(crypto.subtle.digest('SHA-256',e.encode(a+':'+n)));
+ var hs=await Promise.all(ps);for(var j=0;j<hs.length;j++)if(nb(new Uint8Array(hs[j]))>=bits)return String(s+j)}throw new Error('pow')}
+var tokP=null;function token(neu){if(neu)tok=null;if(tok&&tok.exp>Date.now()+60000)return Promise.resolve(tok.t);
+ if(!tokP)tokP=(async function(){var s=await(await fetch(C.api+'/start',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'})).json();
+  var nonce=await loesen(s.aufgabe,s.bits);var r=await fetch(C.api+'/session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({aufgabe:s.aufgabe,nonce:nonce})});
+  if(!r.ok)throw new Error('session');var t=(await r.json()).token,exp=Date.now()+25*60000;try{exp=JSON.parse(atob(t.split('.')[0].replace(/-/g,'+').replace(/_/g,'/'))).exp}catch(e){}
+  tok={t:t,exp:exp};S.set('klara.token',tok);return t})().finally(function(){tokP=null});return tokP}
+var FEHLER={langsam:'Kurz durchatmen: Gerade kommen zu viele Fragen auf einmal. Versuch es gleich noch mal.',lang:'Die Frage ist zu lang. Magst du sie kürzer fassen?',genug:'Für dieses Gespräch sind die Fragen aufgebraucht. Mit dem Pfeil oben („Neu starten“) geht es weiter.',
+ voll:'Ich komme gerade nicht durch. Versuch es gleich noch mal, oder schreib Manuel an '+MAIL+'.',api:'Da ist etwas schiefgegangen. Versuch es noch mal, oder schreib Manuel an '+MAIL+'.'};
+async function frage(text){text=(text||'').trim();if(!text||busy)return;if(text.length>600){text=text.slice(0,600)}busy=true;I.value='';groesse();
+ var q={rolle:'ich',text:text},a={rolle:'klara',text:''};V.push(q);sichern();zeigen();T('klara-frage',{ort:ort});
+ var box=el('div','kl-m kl-k kl-wait');L.appendChild(box);L.scrollTop=L.scrollHeight;
+ function fehlschlag(f){q.nicht=true;a.nicht=true;a.fehler=f;a.text='';V.push(a);sichern()}
+ try{var send=V.filter(function(m){return!m.nicht&&m.text}).map(function(m){return{rolle:m.rolle,text:m.text}});
+  var r,versuch=0;for(;;){var t=await token(versuch>0);r=await fetch(C.api+'/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:t,seite:pfad,werte:werte(),verlauf:send})});
+   if(r.status===401&&versuch===0){versuch++;continue}break}
+  if(!r.ok){var j={};try{j=await r.json()}catch(e){}if(j.error==='pause'){stat={on:false,grund:j.grund};q.nicht=true;sichern()}else fehlschlag(FEHLER[j.error]||FEHLER.api);return}
+  var rd=r.body.getReader(),dec=new TextDecoder(),buf='',ok=false;box.classList.remove('kl-wait');
+  for(;;){var x=await rd.read();if(x.done)break;buf+=dec.decode(x.value,{stream:true});var i;while((i=buf.indexOf('\n\n'))>=0){var line=buf.slice(0,i);buf=buf.slice(i+2);if(line.indexOf('data: ')!==0)continue;
+   var d;try{d=JSON.parse(line.slice(6))}catch(e){continue}
+   if(d.t==='text'){a.text+=d.v;box.innerHTML=fmt(a.text);L.scrollTop=L.scrollHeight}else if(d.t==='knopf'){a.knopf={ziel:d.ziel,text:d.text,url:d.url}}else if(d.t==='ende'){ok=true}else if(d.t==='fehler'){fehlschlag(FEHLER[d.grund]||FEHLER.api);return}}}
+  if(!ok&&!a.text){fehlschlag(FEHLER.api);return}V.push(a);sichern()}
+ catch(e){fehlschlag(FEHLER.api)}finally{busy=false;zeigen();if(!I.disabled)I.focus()}}
+function groesse(){I.style.height='auto';I.style.height=Math.min(I.scrollHeight,120)+'px'}
+async function auf(){P.hidden=false;fab.setAttribute('aria-expanded','true');S.set('klara.offen',1);zeigen();if(matchMedia('(min-width:561px)').matches)I.focus();T('klara-open',{ort:ort});
+ if(!stat){try{stat=await(await fetch(C.api+'/status')).json()}catch(e){stat={on:false,grund:'aus'}}zeigen()}}
+var vor=function(){if(stat&&stat.on&&!tok&&!tokP)token().catch(function(){})};I.addEventListener('focus',vor);I.addEventListener('input',vor);
+function zu(fokus){P.hidden=true;fab.setAttribute('aria-expanded','false');S.set('klara.offen',0);if(fokus!==false)fab.focus()}
+fab.addEventListener('click',auf);R.querySelector('.kl-x').addEventListener('click',zu);
+NEU.addEventListener('click',function(){if(busy||L.querySelector('.kl-frage'))return;var f=el('div','kl-frage','<p>Gespräch neu starten? Der bisherige Verlauf wird gelöscht.</p>');
+ var d=el('div'),ja=el('button','ja'),nein=el('button');ja.type=nein.type='button';ja.textContent='Neu starten';nein.textContent='Abbrechen';d.appendChild(ja);d.appendChild(nein);f.appendChild(d);
+ L.appendChild(f);L.scrollTop=L.scrollHeight;nein.focus();
+ nein.addEventListener('click',function(){f.remove();NEU.focus()});ja.addEventListener('click',function(){V=[];sichern();zeigen();I.focus()})});
+P.addEventListener('keydown',function(e){if(e.key==='Escape')zu()});
+F.addEventListener('submit',function(e){e.preventDefault();frage(I.value)});
+I.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();frage(I.value)}});I.addEventListener('input',groesse);
+R.querySelector('.kl-mail').addEventListener('click',function(){this.href=mailto();T('klara-mail',{ort:ort})});
+var handy=matchMedia('(max-width:560px)');
+function scroll(){var weg=handy.matches&&!V.length&&window.scrollY<innerHeight*0.6;fab.classList.toggle('spaeter',weg);
+ if(!weg&&handy.matches&&!gezeigt){gezeigt=true;var schon=false;schon=S.get('klara.hinweis')===1;S.set('klara.hinweis',1);
+  if(!schon){fab.classList.add('hinweis');setTimeout(function(){fab.classList.remove('hinweis')},4500)}}}
+var gezeigt=false;addEventListener('scroll',scroll,{passive:true});handy.addEventListener('change',scroll);scroll();
+if(S.get('klara.offen')===1&&V.length)auf();})();</script><footer>
   <div class="wrap">
     <span>Speicherklar ist eine Schätzung, keine Anlagen- oder Finanzberatung. Für eine Kaufentscheidung hol dir Angebote von Fachbetrieben.</span>
     <span>Unabhängig: kein Geld von Herstellern oder Installateuren, keine Werbung. Der Rechenweg ist <a href="./methodik.html">offen</a>.</span>
