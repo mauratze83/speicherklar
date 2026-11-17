@@ -4,7 +4,9 @@
    POST /start                                   → { aufgabe, bits }   Rechenaufgabe gegen Bots (Proof of Work)
    POST /session { aufgabe, nonce }              → { token }           Lösung prüfen, Gesprächs-Token für 30 Minuten
    POST /chat    { token, verlauf, seite, werte } → text/event-stream  Antwort von Claude als Stream:
-        data: {"t":"text","v":"…"} · {"t":"knopf","ziel":"rechner|pro|mail|seite","text":"…","url":"…"} · {"t":"ende"} · {"t":"fehler","grund":"…"}
+        data: {"t":"text","v":"…"} · {"t":"knopf","ziel":"rechner|pro|mail|seite","text":"…","url":"…"} · {"t":"ende","stop","fb"} · {"t":"fehler","grund":"…"}
+   POST /feedback { fb, wert: "hoch"|"runter" }  → { ok }              Daumen zu einer Antwort (fb aus "ende", gilt einmal, 24 h)
+   GET  /stats   Authorization: Bearer STATS_KEY → Summen dieses und des letzten Monats (für den Umsatz-Review, ohne Origin)
 
    Schutz: nur Origins aus ALLOWED_ORIGINS, Rechenaufgabe vor jedem Gespräch, Token 30 Min., höchstens MAX_FRAGEN Fragen
    je Gespräch und 600 Zeichen je Frage, Rate-Limit je IP (Binding RL, 6/Minute) und MAX_PRO_TAG Fragen je IP und Tag (KV).
@@ -12,10 +14,12 @@
    bis zum Monatsersten aus. Not-Aus: KV-Eintrag "cfg:aus" = "1" (Cloudflare → Workers KV → speicherklar-klara-STATS).
 
    Datenschutz: Gesprächsinhalte werden nicht gespeichert und nicht geloggt. In KV stehen nur Summen (Kosten, Anzahl Fragen,
-   Themen-Kategorien, Knöpfe) und Tageszähler je IP-Hash (laufen nach 2 Tagen ab).
+   Themen-Kategorien, Knöpfe, Daumen, Klaras Selbsteinschätzung je Thema, Wissenslücken als kurze Stichwörter in Klaras
+   eigenen Worten, gefiltert ohne Ziffern und Sonderzeichen) und Tageszähler je IP-Hash (laufen nach 2 Tagen ab).
 
    Variablen (wrangler.toml): SITE, ALLOWED_ORIGINS, MODEL, MAX_TOKENS, BUDGET_USD, PREIS_*, MAX_FRAGEN, MAX_PRO_TAG, POW_BITS
-   Geheimnis: ANTHROPIC_API_KEY (daraus wird auch der Schlüssel für die Signaturen abgeleitet) */
+   Geheimnisse: ANTHROPIC_API_KEY (daraus wird auch der Schlüssel für die Signaturen abgeleitet), STATS_KEY (nur für /stats;
+   ohne ihn antwortet /stats mit 404) */
 
 import { REGELN } from "./regeln.js";
 import { WISSEN, POLITIK, PFADE } from "./wissen.js";
@@ -24,6 +28,8 @@ const enc = new TextEncoder();
 export const THEMEN = ["eingaben", "ergebnis", "methodik", "speichergroesse", "pv-groesse", "wirtschaftlichkeit", "technik",
   "politik-eeg", "steuer-foerderung", "speicherklar-pro", "kauf-zugang", "beschwerde", "sonstiges", "fremdes-thema"];
 const ZIELE = { rechner: "Rechner starten", pro: "Angebot prüfen", mail: "Frage an Manuel mailen", seite: "Seite öffnen" };
+const BEWERTUNG = ["ja", "teilweise", "nein"];
+const MAX_LUECKEN = 150;
 const TOKEN_MIN = 30;
 const AUFGABE_MIN = 5;
 
@@ -43,8 +49,13 @@ export const TOOLS = [
       ziel: { type: "string", enum: Object.keys(ZIELE) },
       pfad: { type: "string", description: "Nur bei ziel seite: Pfad genau wie in der Liste der Seiten, z. B. methodik.html" },
       text: { type: "string", description: "Knopftext, höchstens 4 Wörter" } }, required: ["ziel"] } },
-  { name: "thema", description: "Anonyme Statistik: Kategorie der letzten Nutzerfrage. Bei jeder Antwort genau einmal, nach dem Text.",
-    input_schema: { type: "object", properties: { kategorie: { type: "string", enum: THEMEN } }, required: ["kategorie"] } },
+  { name: "thema", description: "Anonyme Statistik zur letzten Nutzerfrage. Bei jeder Antwort genau einmal, nach dem Text.",
+    input_schema: { type: "object", properties: {
+      kategorie: { type: "string", enum: THEMEN },
+      beantwortet: { type: "string", enum: BEWERTUNG, description: "Konntest du die Frage mit deinem Wissen beantworten? teilweise oder nein auch, wenn du nur auf Rechner oder Mail verweisen konntest, weil dir Wissen fehlte" },
+      unzufrieden: { type: "boolean", description: "Wirkt die Person unzufrieden, genervt oder beschwert sich?" },
+      luecke: { type: "string", description: "Nur bei teilweise oder nein: welches Wissen fehlte, als allgemeines Stichwort in 2 bis 4 Wörtern, z. B. Notstrom nachrüsten. Keine Namen, Orte, Zahlen oder Angaben zur Person" } },
+      required: ["kategorie", "beantwortet"] } },
 ];
 
 // ---------- Hilfen ----------
@@ -110,7 +121,9 @@ async function zustand(env) {
   return { on: true };
 }
 
-async function zaehlen(env, usage, thema, knoepfe) {
+const plus = (o, k, n = 1) => { o[k] = (o[k] || 0) + n; };
+
+async function zaehlen(env, usage, thema, knoepfe, eigen = {}) {
   if (!env.STATS) return;
   try {
     const key = "stat:" + monat();
@@ -120,11 +133,30 @@ async function zaehlen(env, usage, thema, knoepfe) {
     s.tokens = s.tokens || { in: 0, cw: 0, cr: 0, out: 0 };
     for (const k of ["in", "cw", "cr", "out"]) s.tokens[k] += usage[k] || 0;
     s.themen = s.themen || {};
-    if (thema) s.themen[thema] = (s.themen[thema] || 0) + 1;
+    if (thema) plus(s.themen, thema);
     s.knoepfe = s.knoepfe || {};
-    for (const k of knoepfe) s.knoepfe[k.ziel] = (s.knoepfe[k.ziel] || 0) + 1;
+    for (const k of knoepfe) plus(s.knoepfe, k.ziel);
+    // Klaras Selbsteinschätzung je Thema: { thema: { ja, teilweise, nein, unzufrieden } }
+    if (thema && eigen.beantwortet) {
+      s.selbst = s.selbst || {};
+      const t = (s.selbst[thema] = s.selbst[thema] || {});
+      plus(t, eigen.beantwortet);
+      if (eigen.unzufrieden) plus(t, "unzufrieden");
+    }
+    if (eigen.luecke) {
+      s.luecken = s.luecken || {};
+      if (s.luecken[eigen.luecke] || Object.keys(s.luecken).length < MAX_LUECKEN) plus(s.luecken, eigen.luecke);
+    }
     await env.STATS.put(key, JSON.stringify(s), { expirationTtl: 400 * 86400 });
   } catch (e) { console.log("Statistik nicht gespeichert"); }
+}
+
+// Wissenslücke: nur ein kurzes allgemeines Stichwort, alles mit Ziffern, Mail, Adresse oder Sonderzeichen fällt weg
+export function luecke(v) {
+  const s = String(v ?? "").replace(/\s+/g, " ").trim();
+  if (s.length < 3 || s.length > 40 || s.split(" ").length > 5) return null;
+  if (!/^[A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß \-]*$/.test(s)) return null;
+  return s.toLowerCase();
 }
 
 function sauber(v, max) {
@@ -212,7 +244,7 @@ async function grenzen(req, env) {
 
 async function chat(req, env, ctx, body) {
   const t = await unsign(env, body.token);
-  if (!t || !t.exp || Date.now() > t.exp) return json(req, env, { error: "token" }, 401);
+  if (!t || !t.sid || !t.exp || Date.now() > t.exp) return json(req, env, { error: "token" }, 401);
   const z = await zustand(env);
   if (!z.on) return json(req, env, { error: "pause", grund: z.grund }, 503);
   const msgs = pruefeVerlauf(env, body.verlauf);
@@ -243,6 +275,7 @@ async function chat(req, env, ctx, body) {
     const usage = { in: 0, cw: 0, cr: 0, out: 0 };
     const tools = {};
     let thema = null, stop = null;
+    const eigen = {};
     const knoepfe = [];
     try {
       const r = await fetch("https://api.anthropic.com/v1/messages", {
@@ -290,25 +323,70 @@ async function chat(req, env, ctx, body) {
         let a;
         try { a = JSON.parse(tl.json || "{}"); } catch { continue; }
         if (tl.name === "verweis" && !knoepfe.length) { const k = knopf(env, a); if (k) knoepfe.push(k); }
-        if (tl.name === "thema" && THEMEN.includes(a.kategorie)) thema = a.kategorie;
+        if (tl.name === "thema" && !thema && THEMEN.includes(a.kategorie)) {
+          thema = a.kategorie;
+          if (BEWERTUNG.includes(a.beantwortet)) eigen.beantwortet = a.beantwortet;
+          eigen.unzufrieden = a.unzufrieden === true;
+          if (eigen.beantwortet && eigen.beantwortet !== "ja") eigen.luecke = luecke(a.luecke);
+        }
       }
       for (const k of knoepfe) await send({ t: "knopf", ...k });
       if (stop === "max_tokens") console.log("Antwort bei max_tokens abgeschnitten");
-      await send({ t: "ende", stop });
+      // Beleg für den Daumen: signiert, nur mit Thema, kein Inhalt
+      const fb = await signed(env, { k: "fb", th: thema || "sonstiges", id: b64u(crypto.getRandomValues(new Uint8Array(9))), exp: Date.now() + 86400000 });
+      await send({ t: "ende", stop, fb });
     } catch (e) {
       console.log("Antwort abgebrochen");
       try { await send({ t: "fehler", grund: "api" }); } catch {}
     } finally {
       try { await w.close(); } catch {}
-      await zaehlen(env, usage, thema, knoepfe);
+      await zaehlen(env, usage, thema, knoepfe, eigen);
     }
   })());
   return new Response(readable, { headers: { "Content-Type": "text/event-stream; charset=utf-8", "Cache-Control": "no-store", ...cors(req, env) } });
 }
 
+async function feedback(req, env, body) {
+  const f = await unsign(env, body.fb);
+  if (!f || f.k !== "fb" || !f.id || !f.exp || Date.now() > f.exp || !THEMEN.includes(f.th)) return json(req, env, { error: "fb" }, 400);
+  if (!["hoch", "runter"].includes(body.wert)) return json(req, env, { error: "fb" }, 400);
+  if (!env.STATS) return json(req, env, { ok: true });
+  const einmal = "fb:" + f.id;
+  if (await env.STATS.get(einmal)) return json(req, env, { ok: true, schon: true });
+  await env.STATS.put(einmal, "1", { expirationTtl: 2 * 86400 });
+  try {
+    const key = "stat:" + monat();
+    const s = (await env.STATS.get(key, "json")) || { usd: 0 };
+    s.daumen = s.daumen || {};
+    const t = (s.daumen[f.th] = s.daumen[f.th] || {});
+    plus(t, body.wert);
+    await env.STATS.put(key, JSON.stringify(s), { expirationTtl: 400 * 86400 });
+  } catch (e) { console.log("Daumen nicht gespeichert"); }
+  return json(req, env, { ok: true });
+}
+
+async function stats(req, env) {
+  const auth = req.headers.get("Authorization") || "";
+  const h = { "Content-Type": "application/json", "Cache-Control": "no-store" };
+  if (!env.STATS_KEY || !env.STATS) return new Response('{"error":"unbekannt"}', { status: 404, headers: h });
+  const a = new Uint8Array(await sha256("stats|" + auth)), b = new Uint8Array(await sha256("stats|Bearer " + env.STATS_KEY));
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a[i] ^ b[i];
+  if (diff) return new Response('{"error":"auth"}', { status: 401, headers: h });
+  const jetzt = monat(), d = new Date(jetzt + "-15T00:00:00Z");
+  d.setUTCMonth(d.getUTCMonth() - 1);
+  const vor = d.toISOString().slice(0, 7);
+  const body = { stand: new Date().toISOString(), budget_usd: zahl(env.BUDGET_USD, 10), zustand: await zustand(env),
+    monate: { [jetzt]: (await env.STATS.get("stat:" + jetzt, "json")) || {}, [vor]: (await env.STATS.get("stat:" + vor, "json")) || {} } };
+  return new Response(JSON.stringify(body, null, 1), { headers: h });
+}
+
 export default {
   async fetch(req, env, ctx) {
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors(req, env) });
+    if (req.method === "GET" && new URL(req.url).pathname === "/stats") {
+      try { return await stats(req, env); } catch (e) { return new Response('{"error":"server"}', { status: 500 }); }
+    }
     const allowed = (env.ALLOWED_ORIGINS || env.SITE).split(",").map((s) => s.trim());
     if (!allowed.includes(req.headers.get("Origin") || "")) return json(req, env, { error: "origin" }, 403);
     const path = new URL(req.url).pathname;
@@ -324,6 +402,7 @@ export default {
       if (path === "/start") return start(req, env);
       if (path === "/session") return session(req, env, body);
       if (path === "/chat") return chat(req, env, ctx, body);
+      if (path === "/feedback") return feedback(req, env, body);
       return json(req, env, { error: "unbekannt" }, 404);
     } catch (e) {
       console.log("Fehler", e && e.message);

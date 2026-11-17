@@ -574,6 +574,9 @@ body:has(#rbar.show) .kl-fab{bottom:calc(max(10px,env(safe-area-inset-bottom,0px
 .kl-err{color:var(--muted);font-style:italic}
 .kl-wait::after{content:"…";display:inline-block;animation:kl-p 1s steps(3) infinite;width:1.2em;overflow:hidden;vertical-align:bottom}
 @keyframes kl-p{from{width:0}to{width:1.2em}}
+.kl-fb{align-self:flex-start;display:flex;align-items:center;gap:2px;margin:-4px 0 0 4px;font-size:12.5px;color:var(--muted)}
+.kl-fb button{width:32px;height:32px;display:grid;place-items:center;border:0;border-radius:999px;background:none;color:var(--muted);cursor:pointer} .kl-fb button:hover{background:var(--bg);color:var(--ink)}
+.kl-fb span{margin-right:4px}
 .kl-btn{align-self:flex-start;display:inline-block;padding:9px 14px;border-radius:999px;background:var(--sun);color:var(--btn-ink);font-weight:700;text-decoration:none;font-size:14.5px}
 .kl-form{display:flex;gap:8px;align-items:flex-end;padding:10px 12px 6px;border-top:1px solid var(--line)}
 .kl-form textarea{flex:1;resize:none;max-height:120px;min-height:42px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);font:inherit;font-size:16px;line-height:1.35}
@@ -603,9 +606,15 @@ function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=c
 function knopfEl(k){var a=el('a','kl-btn');a.textContent=k.text;
  if(k.ziel==='mail'){a.href=mailto();a.addEventListener('click',function(){a.href=mailto();T('klara-mail',{ort:ort})})}
  else{a.href=k.url;a.addEventListener('click',function(){T('klara-knopf',{ziel:k.ziel,ort:ort});if(new URL(k.url).pathname===pfad)zu(false)})}return a}
+var HOCH='<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 7l2.6-5c1.2 0 2 .9 1.8 2.1L9 6.5h3.6c.9 0 1.6.9 1.4 1.8l-1 4.6c-.2.7-.8 1.1-1.4 1.1H5zM1.5 7H5v7H1.5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+var RUNTER=HOCH.replace('aria-hidden="true"','aria-hidden="true" style="transform:rotate(180deg)"');
+function daumenEl(m){var d=el('div','kl-fb');if(m.daumen){d.textContent='Danke fürs Feedback.';return d}
+ d.appendChild(el('span',null,'Hilfreich?'));[['hoch',HOCH,'Ja, hilfreich'],['runter',RUNTER,'Nein, nicht hilfreich']].forEach(function(w){var b=el('button',null,w[1]);b.type='button';b.setAttribute('aria-label',w[2]);b.title=w[2];
+  b.addEventListener('click',function(){var fb=m.fb;m.daumen=w[0];delete m.fb;sichern();d.replaceWith(daumenEl(m));
+   fetch(C.api+'/feedback',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fb:fb,wert:w[0]})}).catch(function(){})});d.appendChild(b)});return d}
 function zeigen(){L.innerHTML='';var g=el('div','kl-m kl-k',fmt('Hi, ich bin Klara, die KI-Hilfe von Speicherklar. Ich beantworte deine Fragen zum Rechner, zu Speicherklar Pro und rund um PV-Anlage und Speicher. Ich bin eine KI und kann mich irren.')+'<p><small>Deine Fragen gehen zum Beantworten an Anthropic (Claude). Speicherklar speichert sie nicht. <a href="'+DS+'">Datenschutz</a></small></p>');L.appendChild(g);
 
- V.forEach(function(m){var d=el('div','kl-m '+(m.rolle==='ich'?'kl-i':'kl-k')+(m.fehler?' kl-err':''),m.rolle==='ich'?'<p>'+esc(m.text)+'</p>':fmt(m.text||m.fehler||''));L.appendChild(d);if(m.knopf)L.appendChild(knopfEl(m.knopf))});
+ V.forEach(function(m){var d=el('div','kl-m '+(m.rolle==='ich'?'kl-i':'kl-k')+(m.fehler?' kl-err':''),m.rolle==='ich'?'<p>'+esc(m.text)+'</p>':fmt(m.text||m.fehler||''));L.appendChild(d);if(m.knopf)L.appendChild(knopfEl(m.knopf));if(m.fb||m.daumen)L.appendChild(daumenEl(m))});
  if(stat&&!stat.on)L.appendChild(el('div','kl-m kl-k',fmt(stat.grund==='budget'?'Ich mache gerade Pause und bin am Monatsersten wieder da. Bis dahin: Schreib Manuel an '+MAIL+'.':'Ich bin gerade nicht da. Schreib Manuel an '+MAIL+'.')));
  var n=V.filter(function(m){return m.rolle==='ich'&&!m.nicht}).length;if(n>=MAX)L.appendChild(el('div','kl-m kl-k kl-err',fmt('Für dieses Gespräch sind die Fragen aufgebraucht. Mit dem Pfeil oben („Neu starten“) geht es weiter.')));
  NEU.hidden=!V.length;var aus=(stat&&!stat.on)||n>=MAX;I.disabled=aus;B.disabled=aus||busy;L.scrollTop=L.scrollHeight;R.querySelector('.kl-mail').href=mailto()}
@@ -637,7 +646,7 @@ async function frage(text){text=(text||'').trim();if(!text||busy)return;if(text.
   var rd=r.body.getReader(),dec=new TextDecoder(),buf='',ok=false;box.classList.remove('kl-wait');
   for(;;){var x=await rd.read();if(x.done)break;buf+=dec.decode(x.value,{stream:true});var i;while((i=buf.indexOf('\n\n'))>=0){var line=buf.slice(0,i);buf=buf.slice(i+2);if(line.indexOf('data: ')!==0)continue;
    var d;try{d=JSON.parse(line.slice(6))}catch(e){continue}
-   if(d.t==='text'){a.text+=d.v;box.innerHTML=fmt(a.text);L.scrollTop=L.scrollHeight}else if(d.t==='knopf'){a.knopf={ziel:d.ziel,text:d.text,url:d.url}}else if(d.t==='ende'){ok=true}else if(d.t==='fehler'){fehlschlag(FEHLER[d.grund]||FEHLER.api);return}}}
+   if(d.t==='text'){a.text+=d.v;box.innerHTML=fmt(a.text);L.scrollTop=L.scrollHeight}else if(d.t==='knopf'){a.knopf={ziel:d.ziel,text:d.text,url:d.url}}else if(d.t==='ende'){ok=true;if(d.fb)a.fb=d.fb}else if(d.t==='fehler'){fehlschlag(FEHLER[d.grund]||FEHLER.api);return}}}
   if(!ok&&!a.text){fehlschlag(FEHLER.api);return}V.push(a);sichern()}
  catch(e){fehlschlag(FEHLER.api)}finally{busy=false;zeigen();if(!I.disabled)I.focus()}}
 function groesse(){I.style.height='auto';I.style.height=Math.min(I.scrollHeight,120)+'px'}
