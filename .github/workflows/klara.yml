@@ -1,5 +1,5 @@
 # Veröffentlicht den Cloudflare Worker für Klara, die KI-Hilfe (worker-klara/).
-# Braucht die GitHub-Secrets CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID und ANTHROPIC_API_KEY.
+# Braucht die GitHub-Secrets CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID und ANTHROPIC_API_KEY; optional KLARA_STATS_KEY (für /stats).
 # Fehlt eins davon, wird der Lauf übersprungen. Der Bezahl-Worker (worker/) bleibt davon unberührt.
 name: Klara
 on:
@@ -46,3 +46,13 @@ jobs:
             ANTHROPIC_API_KEY
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      - name: Schlüssel für /stats setzen (nur wenn das Secret KLARA_STATS_KEY existiert)
+        if: env.HAS_TOKEN == 'true'
+        working-directory: worker-klara
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          KLARA_STATS_KEY: ${{ secrets.KLARA_STATS_KEY }}
+        run: |
+          if [ -z "$KLARA_STATS_KEY" ]; then echo "KLARA_STATS_KEY fehlt – /stats bleibt aus."; exit 0; fi
+          printf '%s' "$KLARA_STATS_KEY" | npx -y wrangler@4 secret put STATS_KEY

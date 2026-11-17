@@ -2,7 +2,7 @@
 // Aufruf: node test/klara.test.mjs
 import assert from "node:assert/strict";
 import { webcrypto } from "node:crypto";
-import W, { system, kontext, knopf, pruefeVerlauf, nullBits, kosten, unsign, THEMEN } from "../worker-klara/index.js";
+import W, { system, kontext, knopf, pruefeVerlauf, nullBits, kosten, unsign, THEMEN, luecke } from "../worker-klara/index.js";
 import { POLITIK, PFADE, WISSEN } from "../worker-klara/wissen.js";
 import { REGELN } from "../worker-klara/regeln.js";
 
@@ -32,7 +32,7 @@ const ANTWORT = [
   { type: "content_block_delta", index: 1, delta: { type: "input_json_delta", partial_json: 'ner","text":"Jetzt rechnen"}' } },
   { type: "content_block_stop", index: 1 },
   { type: "content_block_start", index: 2, content_block: { type: "tool_use", id: "t2", name: "thema", input: {} } },
-  { type: "content_block_delta", index: 2, delta: { type: "input_json_delta", partial_json: '{"kategorie":"eingaben"}' } },
+  { type: "content_block_delta", index: 2, delta: { type: "input_json_delta", partial_json: '{"kategorie":"eingaben","beantwortet":"teilweise","unzufrieden":true,"luecke":"Zählerschrank prüfen"}' } },
   { type: "content_block_stop", index: 2 },
   { type: "message_delta", delta: { stop_reason: "tool_use" }, usage: { output_tokens: 400 } },
   { type: "message_stop" },
@@ -114,6 +114,35 @@ const st = JSON.parse(e1.STATS.m.get("stat:" + heute.slice(0, 7)));
 assert.equal(st.fragen, 1); assert.equal(st.themen.eingaben, 1); assert.equal(st.knoepfe.rechner, 1);
 assert.equal(+st.usd.toFixed(6), 0.00055);
 assert.ok(THEMEN.includes("beschwerde"));
+assert.deepEqual(st.selbst, { eingaben: { teilweise: 1, unzufrieden: 1 } });
+assert.deepEqual(st.luecken, { "zählerschrank prüfen": 1 });
+assert.ok(gesendet.tools.find((t) => t.name === "thema").input_schema.properties.beantwortet);
+
+// 7b. Wissenslücke: nur kurze Stichwörter ohne Ziffern, Mail oder Adresse
+assert.equal(luecke("Notstrom nachrüsten"), "notstrom nachrüsten");
+for (const x of ["PLZ 47807", "max@example.de", "https://x.de", "ab", "a".repeat(41), "eins zwei drei vier fünf sechs", "Speicher, groß", null]) assert.equal(luecke(x), null, String(x));
+
+// 7c. Daumen: Beleg aus "ende", gilt einmal, kein Chat-Token
+const fb = ev[ev.length - 1].fb;
+assert.ok(fb);
+const daumen = (b) => W.fetch(req("/feedback", b), e1, ctx());
+assert.equal((await daumen({ fb, wert: "egal" })).status, 400);
+assert.equal((await daumen({ fb: "x.y", wert: "hoch" })).status, 400);
+assert.equal((await daumen({ fb: tk, wert: "hoch" })).status, 400);
+assert.deepEqual(await (await daumen({ fb, wert: "runter" })).json(), { ok: true });
+assert.deepEqual(await (await daumen({ fb, wert: "hoch" })).json(), { ok: true, schon: true });
+assert.deepEqual(JSON.parse(e1.STATS.m.get("stat:" + heute.slice(0, 7))).daumen, { eingaben: { runter: 1 } });
+assert.equal((await W.fetch(req("/chat", { token: fb, verlauf: [{ rolle: "ich", text: "a" }] }), e1, ctx())).status, 401);
+
+// 7d. /stats nur mit Schlüssel, ohne Origin
+const stReq = (auth) => new Request("https://klara.test/stats", { headers: auth ? { Authorization: auth } : {} });
+assert.equal((await W.fetch(stReq("Bearer geheim"), e1, ctx())).status, 404);
+const e1s = { ...e1, STATS_KEY: "geheim" };
+assert.equal((await W.fetch(stReq(), e1s, ctx())).status, 401);
+assert.equal((await W.fetch(stReq("Bearer falsch"), e1s, ctx())).status, 401);
+const sj = await (await W.fetch(stReq("Bearer geheim"), e1s, ctx())).json();
+assert.equal(sj.monate[heute.slice(0, 7)].fragen, 1);
+assert.equal(Object.keys(sj.monate).length, 2);
 
 // 8. Schutz
 assert.equal((await W.fetch(req("/status", undefined, { origin: "https://boese.example" }), e1, ctx())).status, 403);
