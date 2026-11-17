@@ -713,12 +713,15 @@ function daumenEl(m){var d=el('div','kl-fb');if(m.daumen){d.textContent='Danke f
   b.addEventListener('click',function(){var fb=m.fb;m.daumen=w[0];delete m.fb;sichern();d.replaceWith(daumenEl(m));
    fetch(C.api+'/feedback',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fb:fb,wert:w[0]})}).catch(function(){})});d.appendChild(b)});return d}
 function zeigen(){L.innerHTML='';var g=el('div','kl-m kl-k',fmt('Hi, ich bin Klara, die KI-Assistentin von Speicherklar. Ich beantworte deine Fragen zum Rechner, zu Speicherklar Pro und rund um PV-Anlage und Speicher. Ich bin eine KI und kann mich irren.')+'<p><small>Deine Fragen gehen zum Beantworten an Anthropic (Claude). Speicherklar speichert sie nicht. <a href="'+DS+'">Datenschutz</a></small></p>');L.appendChild(g);
+ if(abgelaufen)L.appendChild(el('div','kl-m kl-k kl-err',fmt('Dein letztes Gespräch war über 30 Minuten still, deshalb habe ich es gelöscht.')));
 
  V.forEach(function(m){var d=el('div','kl-m '+(m.rolle==='ich'?'kl-i':'kl-k')+(m.fehler?' kl-err':''),m.rolle==='ich'?'<p>'+esc(m.text)+'</p>':fmt(m.text||m.fehler||''));L.appendChild(d);if(m.knopf)L.appendChild(knopfEl(m.knopf));if(m.fb||m.daumen)L.appendChild(daumenEl(m))});
  if(stat&&!stat.on)L.appendChild(el('div','kl-m kl-k',fmt(stat.grund==='budget'?'Ich mache gerade Pause und bin am Monatsersten wieder da. Bis dahin: Schreib Manuel an '+MAIL+'.':'Ich bin gerade nicht da. Schreib Manuel an '+MAIL+'.')));
  var n=V.filter(function(m){return m.rolle==='ich'&&!m.nicht}).length;if(n>=MAX)L.appendChild(el('div','kl-m kl-k kl-err',fmt('Für dieses Gespräch sind die Fragen aufgebraucht. Mit dem Pfeil oben („Neu starten“) geht es weiter.')));
  NEU.hidden=!V.length;var aus=(stat&&!stat.on)||n>=MAX;I.disabled=aus;B.disabled=aus||busy;L.scrollTop=L.scrollHeight;R.querySelector('.kl-mail').href=mailto()}
-function sichern(){S.set('klara.verlauf',V)}
+function sichern(){S.set('klara.verlauf',V);S.set('klara.zeit',Date.now())}
+// Nach 30 Minuten ohne Aktivität ist das Gespräch weg (wie das Token); Hinweis einmal im Fenster
+var STILL=30*60000,abgelaufen=false;function ablauf(){var z=S.get('klara.zeit')||0;if(V.length&&Date.now()-z>STILL){V=[];abgelaufen=true;S.set('klara.verlauf',V);return true}return false}ablauf();
 function werte(){if(ort!=='start')return null;var g=function(i){var e=document.getElementById(i);return e?e.textContent.trim():''};
  var p=function(i){var e=document.querySelector('#'+i+' [aria-pressed="true"]');return e?e.textContent.trim():''};
  var plz=(document.getElementById('plz')||{}).value||'';
@@ -735,7 +738,7 @@ var tokP=null;function token(neu){if(neu)tok=null;if(tok&&tok.exp>Date.now()+600
   tok={t:t,exp:exp};S.set('klara.token',tok);return t})().finally(function(){tokP=null});return tokP}
 var FEHLER={langsam:'Kurz durchatmen: Gerade kommen zu viele Fragen auf einmal. Versuch es gleich noch mal.',lang:'Die Frage ist zu lang. Magst du sie kürzer fassen?',genug:'Für dieses Gespräch sind die Fragen aufgebraucht. Mit dem Pfeil oben („Neu starten“) geht es weiter.',
  voll:'Ich komme gerade nicht durch. Versuch es gleich noch mal, oder schreib Manuel an '+MAIL+'.',api:'Da ist etwas schiefgegangen. Versuch es noch mal, oder schreib Manuel an '+MAIL+'.'};
-async function frage(text){text=(text||'').trim();if(!text||busy)return;if(text.length>600){text=text.slice(0,600)}busy=true;I.value='';groesse();
+async function frage(text){text=(text||'').trim();if(!text||busy)return;if(ablauf())zeigen();if(text.length>600){text=text.slice(0,600)}busy=true;I.value='';groesse();
  var q={rolle:'ich',text:text},a={rolle:'klara',text:''};V.push(q);sichern();zeigen();T('klara-frage',{ort:ort});
  var box=el('div','kl-m kl-k kl-wait');L.appendChild(box);L.scrollTop=L.scrollHeight;
  function fehlschlag(f){q.nicht=true;a.nicht=true;a.fehler=f;a.text='';V.push(a);sichern()}
@@ -750,7 +753,7 @@ async function frage(text){text=(text||'').trim();if(!text||busy)return;if(text.
   if(!ok&&!a.text){fehlschlag(FEHLER.api);return}V.push(a);sichern()}
  catch(e){fehlschlag(FEHLER.api)}finally{busy=false;zeigen();if(!I.disabled)I.focus()}}
 function groesse(){I.style.height='auto';I.style.height=Math.min(I.scrollHeight,120)+'px'}
-async function auf(){P.hidden=false;fab.setAttribute('aria-expanded','true');S.set('klara.offen',1);zeigen();if(matchMedia('(min-width:561px)').matches)I.focus();T('klara-open',{ort:ort});
+async function auf(){ablauf();P.hidden=false;fab.setAttribute('aria-expanded','true');S.set('klara.offen',1);zeigen();if(matchMedia('(min-width:561px)').matches)I.focus();T('klara-open',{ort:ort});
  if(!stat){try{stat=await(await fetch(C.api+'/status')).json()}catch(e){stat={on:false,grund:'aus'}}zeigen()}}
 var vor=function(){if(stat&&stat.on&&!tok&&!tokP)token().catch(function(){})};I.addEventListener('focus',vor);I.addEventListener('input',vor);
 function zu(fokus){P.hidden=true;fab.setAttribute('aria-expanded','false');S.set('klara.offen',0);if(fokus!==false)fab.focus()}
@@ -758,7 +761,7 @@ fab.addEventListener('click',auf);R.querySelector('.kl-x').addEventListener('cli
 NEU.addEventListener('click',function(){if(busy||L.querySelector('.kl-frage'))return;var f=el('div','kl-frage','<p>Gespräch neu starten? Der bisherige Verlauf wird gelöscht.</p>');
  var d=el('div'),ja=el('button','ja'),nein=el('button');ja.type=nein.type='button';ja.textContent='Neu starten';nein.textContent='Abbrechen';d.appendChild(ja);d.appendChild(nein);f.appendChild(d);
  L.appendChild(f);L.scrollTop=L.scrollHeight;nein.focus();
- nein.addEventListener('click',function(){f.remove();NEU.focus()});ja.addEventListener('click',function(){V=[];sichern();zeigen();I.focus()})});
+ nein.addEventListener('click',function(){f.remove();NEU.focus()});ja.addEventListener('click',function(){V=[];abgelaufen=false;sichern();zeigen();I.focus()})});
 P.addEventListener('keydown',function(e){if(e.key==='Escape')zu()});
 F.addEventListener('submit',function(e){e.preventDefault();frage(I.value)});
 I.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();frage(I.value)}});I.addEventListener('input',groesse);
