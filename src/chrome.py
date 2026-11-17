@@ -128,7 +128,7 @@ def video_overlay(prefix):
 # api: Adresse des Workers. Leer = kein Widget, kein Abschnitt in der Datenschutzerklärung.
 # aktiv: False = nur sichtbar in Browsern, in denen einmal ?klara=1 aufgerufen wurde (zum Testen, ?klara=0 nimmt es weg).
 #        True = für alle sichtbar. Erst nach Test und Freigabe durch Manuel umstellen.
-KLARA = {"api": "https://speicherklar-klara.speicherklar.workers.dev", "aktiv": False}
+KLARA = {"api": "https://speicherklar-klara.speicherklar.workers.dev", "aktiv": True}
 
 def klara_live():
     return bool(KLARA["api"])
@@ -194,7 +194,7 @@ def klara_widget(prefix="./"):
     neu = ('<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M3.2 9a5.8 5.8 0 1 0 1.9-4.3" fill="none" stroke="currentColor" '
            'stroke-width="2" stroke-linecap="round"/><path d="M4.6 1.8v3.4H8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>')
     js = KLARA_JS.replace("%API%", KLARA["api"]).replace("%AKTIV%", "true" if KLARA["aktiv"] else "false")
-    return f"""<div class="kl" id="klara" hidden>
+    return f"""<div class="kl" id="kl-root" hidden>
   <button type="button" class="kl-fab" aria-expanded="false" aria-controls="kl-panel">{klara_avatar(40)} <span class="kl-fab-t">Frag Klara</span></button>
   <section class="kl-panel" id="kl-panel" role="dialog" aria-label="Klara, die KI-Hilfe von Speicherklar" hidden>
     <div class="kl-head">{klara_avatar(36)} <div><b>Klara</b> <span>KI-Hilfe von Speicherklar. Antworten können Fehler enthalten.</span></div> <button type="button" class="kl-neu" aria-label="Gespräch neu starten" title="Gespräch neu starten" hidden>{neu}</button> <button type="button" class="kl-x" aria-label="Chat schließen">{close}</button></div>
@@ -212,7 +212,7 @@ KLARA_JS = r"""<script>(function(){var C={api:"%API%",aktiv:%AKTIV%};
 try{var u=new URL(location.href),q=u.searchParams.get('klara');if(q==='1')localStorage.setItem('klara.test','1');else if(q==='0')localStorage.removeItem('klara.test');
 if(q!==null){u.searchParams.delete('klara');history.replaceState(null,'',u.pathname+u.search+u.hash);}}catch(e){}
 var test=false;try{test=localStorage.getItem('klara.test')==='1'}catch(e){}
-var R=document.getElementById('klara');if(!R||!C.api||!(C.aktiv||test)||!window.fetch||!window.crypto||!crypto.subtle)return;R.hidden=false;
+var R=document.getElementById('kl-root');if(!R||!C.api||!(C.aktiv||test)||!window.fetch||!window.crypto||!crypto.subtle)return;R.hidden=false;
 var T=function(n,d){try{window.umami&&umami.track(n,d)}catch(e){}};
 var S={get:function(k){try{return JSON.parse(sessionStorage.getItem(k))}catch(e){return null}},set:function(k,v){try{sessionStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 var fab=R.querySelector('.kl-fab'),P=R.querySelector('.kl-panel'),L=R.querySelector('.kl-log'),F=R.querySelector('.kl-form'),I=F.querySelector('textarea'),B=F.querySelector('.kl-send'),NEU=R.querySelector('.kl-neu');
