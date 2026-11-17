@@ -21,6 +21,7 @@ for (const f of faelle) {
   const probleme = [];
   for (const m of f.muss || []) if (!new RegExp(m, "i").test(text)) probleme.push("fehlt: " + m);
   for (const m of f.darf_nicht || []) if (new RegExp(m, "im").test(text)) probleme.push("enthält: " + m);
+  if (/\d[\d.]*\s?€/.test(text)) for (const m of f.muss_wenn_zahl || []) if (!new RegExp(m, "i").test(text)) probleme.push("Zahl ohne Annahme: " + m);
   if (f.knopf && knopf !== f.knopf) probleme.push(`Knopf ${knopf} statt ${f.knopf}`);
   if (/—/.test(text)) probleme.push("Geviertstrich");
   if (text.split(/\s+/).length > 160) probleme.push("zu lang");
