@@ -57,12 +57,12 @@ Auf Lieferung und Installation von Solarmodulen, wesentlichen Komponenten und Sp
 Einnahmen aus PV-Anlagen auf, an oder in Gebäuden sind einkommensteuerfrei, wenn die Anlage laut Marktstammdatenregister höchstens 30 kW (peak) je Wohn- oder Gewerbeeinheit hat, insgesamt höchstens 100 kW (peak) je Person oder Gesellschaft. Die einheitliche 30-kW-Grenze gilt für Anlagen, die nach dem 31.12.2024 angeschafft, in Betrieb genommen oder erweitert wurden (Jahressteuergesetz 2024); davor galten für Mehrfamilienhäuser 15 kW (peak) je Einheit. Für Einzelfälle (Vermietung, mehrere Anlagen, Gewerbe) ist ein Steuerberater oder Lohnsteuerhilfeverein die richtige Stelle.
 
 ## Stromsteuer
-- Stand: 2026-11-13
-- Status: geltendes Recht; Senkung für Haushalte nicht beschlossen
-- Quelle: § 3 Stromsteuergesetz; Haushaltsberatungen laut t-online (13.11.2026) und Deutschlandfunk (12.11.2026), zusammengefasst im Artikel https://speicherklar.de/ratgeber/stromsteuer-stromspeicher.html
+- Stand: 2026-11-18
+- Status: geltendes Recht 2,05 ct/kWh; Senkung für alle aufs EU-Minimum ab 2027 im Koalitionsausschuss beschlossen, Bundestag (Haushalt 2027 am 27.11.2026) und Änderung des Stromsteuergesetzes noch offen
+- Quelle: § 3 Stromsteuergesetz; Koalitionsausschuss laut t-online und ZDFheute (18.11.2026), zusammengefasst im Artikel https://speicherklar.de/ratgeber/stromsteuer-stromspeicher.html
 - Prüfen bis: 2026-11-28
 
-Die Stromsteuer beträgt 2,05 ct je kWh, dazu kommt Umsatzsteuer. Eine Senkung für alle Haushalte aufs EU-Minimum ist im Haushalt 2027 nach der Bereinigungssitzung nicht eingeplant (Stand 13.11.2026). Endgültig ist das erst nach den Haushaltsberatungen im Bundestag Ende November 2026. Für die Planung eines Speichers ändert sich laut Speicherklar-Artikel fast nichts.
+Die Stromsteuer beträgt heute 2,05 ct je kWh, dazu kommt Umsatzsteuer. In der Nacht zum 18.11.2026 hat sich der Koalitionsausschuss von Union und SPD darauf geeinigt, sie für alle Verbraucher aufs EU-Minimum von 0,1 ct je kWh zu senken. Finanziert ist das bisher nur für 2027, eine dauerhafte Senkung ist beabsichtigt. Gesetz ist das noch nicht: Der Bundestag soll den Haushalt 2027 am 27.11.2026 beschließen, das Stromsteuergesetz muss geändert werden. Gibt der Versorger die Senkung voll weiter, wird Strom rund 2,32 ct je kWh billiger. Für die Planung eines Speichers ändert sich laut Speicherklar-Artikel wenig: Die beste Größe bleibt gleich, der Speicher bezahlt sich etwas später.
 
 ## KfW-Kredit
 - Stand: 2026-11-17
