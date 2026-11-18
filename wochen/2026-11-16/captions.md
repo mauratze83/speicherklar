@@ -85,3 +85,38 @@ Alle Preise je kWh und die Höchstpreise je Speichergröße stehen hier: https:/
 ### Hinweis
 
 Der Bio-Link führt bis 30.11. auf die Vorab-Seite von Speicherklar Pro. Wer über Reel B kommt, findet den Rechner von dort über „Rechner“ im Menü.
+
+## Karussell: post10-stromsteuer-sinkt (9 Slides, Titel: Bernstein)
+
+Ersetzt post6 „Stromsteuer bleibt“ vom 13.11.2026 (Manuel löscht den alten Post). Vorschlag: so bald wie möglich, z. B. Donnerstag, 19.11.2026, 18:30 Uhr.
+Hinweis: In der App im Zuschnitt-Schritt auf das Rahmen-Symbol tippen und „Original“ bzw. 4:5 wählen, sonst schneidet Instagram auf ein Quadrat zu.
+
+### Caption
+
+Stromsteuer sinkt doch. Dein Stromspeicher bleibt trotzdem bei 6 kWh, und bezahlt sich in 7,7 statt 7,6 Jahren.
+
+Am 13.11. hab ich hier geschrieben: Die Stromsteuer bleibt. Das ist überholt. In der Nacht zum 18.11. hat sich die Koalition geeinigt, sie 2027 für alle auf 0,1 ct je kWh zu senken. Bezahlt ist das bisher nur für 2027. Gesetz ist es noch nicht, der Bundestag stimmt am 27.11. über den Haushalt ab.
+
+Für dich heißt das: Strom wird 2,32 ct billiger, wenn dein Versorger die Senkung voll weitergibt.
+
+Und der Speicher? Der verliert ein bisschen. Jede kWh aus dem Speicher ersetzt jetzt billigeren Netzstrom. Gilt die Senkung nur 2027, merkst du's kaum. Bleibt sie, bezahlt sich der Batteriespeicher erst nach 8,5 Jahren. An der passenden Speichergröße ändert das nichts. Wer gerade eine PV-Anlage plant, muss nicht umplanen.
+
+Willst du's für deinen Strompreis sehen? Link in der Bio.
+
+Beispiel: Ruhrgebiet, 9 kWp Süd 35°, 4.500 kWh im Jahr, Speicher 500 €/kWh, Strom 33 ct (mit Senkung 30,68 ct), Einspeisung 7,70 ct, 15 Jahre. Stand 18.11.2026.
+
+#stromspeicher #photovoltaik #pvanlage #solaranlage #stromsteuer
+
+### Alt-Text Cover
+
+Grafik im Speicherklar-Stil auf bernsteinfarbenem Grund: Überschrift „Stromsteuer sinkt doch. Dein Speicher bleibt bei 6 kWh.“, darunter „Am 13.11. stand hier noch was anderes. Ich hab neu gerechnet.“
+
+### Facebook-Kommentar
+
+Die ganze Rechnung mit allen Speichergrößen, auch mit E-Auto, findest du hier: https://speicherklar.de/ratgeber/stromsteuer-stromspeicher.html?von=facebook
+
+### Prüfung
+
+- Alle Zahlen live mit src/sim.js (Stand main 2b16be9) gerechnet, Strompreis 33 ct = Standardwert im Rechner. Beste Größe 6 kWh mit und ohne Senkung; bezahlt nach 7,6 / 7,7 (Senkung nur 2027) / 8,5 J. (dauerhaft); Bilanz +2.899 / +2.860 / +2.308 €; Ersparnis durch Senkung 104 / 67 / 28 €/Jahr. „Nur 2027“ = ein Jahr 30,68 ct, danach 14 Jahre 33 ct (sim.js rechnet ohne Preissteigerung).
+- Politik: Beschluss Koalitionsausschuss 18.11.2026 laut t-online und ZDFheute; Bundestag (Haushalt) am 27.11.2026; Stromsteuergesetz muss noch geändert werden. Als „noch kein Gesetz“ gekennzeichnet.
+- caption_de.py: READY (1.121 Zeichen, 5 Hashtags, eine Bitte, Suchbegriffe 3/3). detect_de.py: 80,6 PASS (Voice 69, alle Prüfungen über 55).

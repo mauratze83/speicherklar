@@ -54,14 +54,17 @@ p{{font-size:44px;line-height:1.35;max-width:900px}}
 .sum li{{font-size:44px;line-height:1.25;display:grid;grid-template-columns:56px 1fr;gap:18px;align-items:baseline}}
 .sum li b{{font-family:"Archivo";font-weight:800;font-size:44px;color:var(--sun-ink)}}
 .promise{{font-size:46px;line-height:1.3;color:var(--muted);max-width:820px}}
+.slide.amber{{background:#E39A0B;color:#15212B}}
+.amber .top,.amber .foot,.amber .brand,.amber .swipe,.amber .promise{{color:#15212B}}
+.amber h1 em{{color:#15212B}}
 .cta{{display:inline-block;background:var(--sun);color:var(--ink);font-family:"Archivo";font-weight:800;font-stretch:105%;font-size:48px;padding:22px 36px;border-radius:16px}}
 """
 
 LOGO = """<svg width="{s}" height="{s}" viewBox="0 0 26 26"><rect x="5" y="4" width="16" height="20" rx="2.5" fill="none" stroke="{c}" stroke-width="2"/><rect x="10" y="1.5" width="6" height="3" rx="1" fill="{c}"/><rect x="8" y="14" width="10" height="7" rx="1" fill="#E39A0B"/></svg>"""
 
-def frame(body, n, total, topic, dark=False, swipe=True):
+def frame(body, n, total, topic, dark=False, swipe=True, amber=False):
     c = "#E6ECF1" if dark else "#15212B"
-    return f"""<div class="slide{' dark' if dark else ''}">
+    return f"""<div class="slide{' dark' if dark else ''}{' amber' if amber else ''}">
 <div class="top"><div class="brand">{LOGO.format(s=40,c=c)}Speicherklar</div><div>{topic}</div></div>
 <div class="main">{body}</div>
 <div class="foot"><div>@speicherklar</div><div>{'<span class="swipe">weiter →</span>&nbsp;&nbsp;' if swipe and n < total else ''}{n}/{total}</div></div>
@@ -356,6 +359,39 @@ posts["post9-drei-orte"] = [
   frame(f'<h2>Die Größe ändert dein Verbrauch</h2><p class="muted" style="font-size:32px">Beste Größe im Ruhrgebiet, sonst gleiches Haus</p>' + summary([f"3.000 kWh im Jahr: {R['4']['c3']} kWh", f"4.500 kWh im Jahr: {BEST} kWh", f"6.000 kWh im Jahr: {R['4']['c6']} kWh"]) + '<p>Der Speicher deckt deinen Abend. Wie viel du abends brauchst, hängt nicht am Wohnort.</p>', 8, T, tp),
   frame('<h2>Kurz gesagt</h2>' + summary([f"Gleiches Haus, drei Orte: überall {BEST} kWh.", "Süden: mehr Sonne, vor allem im Winter.", f"Der Ort macht {fmt(DIFF)} € Unterschied.", "Die Größe hängt am Verbrauch."]), 9, T, tp),
   frame(f'<h1>Rechne dein Haus <em>an deinem Ort.</em></h1><p>Im kostenlosen Rechner auf speicherklar.de wählst du deine Region. Ohne Anmeldung. Link in der Bio.</p><div><span class="cta">speicherklar.de</span></div><p class="src">Beispiel: 9 kWp Süd, 35°, 4.500 kWh/Jahr, Speicher 500 €/kWh, Strom {pr} ct, Einspeisung 7,70 ct, 15 Jahre, ohne Zinsen und Alterung. Regionen im Rechner: München/Oberbayern, Ruhrgebiet/Westfalen, Schleswig-Holstein/Niedersachsen-Nord. Sonnendaten PVGIS (EU-Kommission), eigene Simulation.</p>', 10, T, tp, dark=True),
+]
+
+# ---------- Post 10: Stromsteuer sinkt doch (9 Slides), Stand 18.11.2026, ersetzt post6, Titel: Bernstein ----------
+_js10 = r"""
+const S=require(process.argv[1]);const P=%s;const cut=(2.05-0.1)*1.19;
+const b={region:"4",roofs:[{kwp:9,tilt:35,aspect:0}],cons:4500,ev:0,evTime:"eve",bat:6,bprice:500,life:15,feed:7.7,feedLimit:0};
+const a=S.evaluate({...b,price:P}),c=S.evaluate({...b,price:P-cut});
+const best=a.best.cap, x=a.sweep[best-1], y=c.sweep[best-1];
+// Senkung nur 2027: ein Jahr mit gesenktem Preis, danach 14 Jahre mit heutigem Preis (sim.js rechnet ohne Preissteigerung)
+const net27=y.save+(b.life-1)*x.save-x.cost, pay27=1+(x.cost-y.save)/x.save;
+console.log(JSON.stringify({cut:cut,pc:P-cut,best:best,bestCut:c.best.cap,
+ bill0:4500*cut/100,billPV:a.base.grid*cut/100,billBat:x.r.grid*cut/100,
+ pay:x.payback,pay27:pay27,payCut:y.payback,net:x.net,net27:net27,netCut:y.net}));
+"""
+H = json.loads(subprocess.run(["node", "-e", _js10 % _price, str(SITE / "src/sim.js")], capture_output=True, text=True, check=True).stdout)
+assert H["best"] == H["bestCut"]
+T = 9; tp = "Stromsteuer"
+posts["post10-stromsteuer-sinkt"] = [
+  frame(f'<h1>Stromsteuer sinkt doch. <em>Dein Speicher bleibt bei {H["best"]} kWh.</em></h1><p class="promise">Am 13.11. stand hier noch was anderes. Ich hab neu gerechnet.</p>', 1, T, tp, amber=True),
+  frame(f'<h2>So groß bleibt der beste Speicher</h2>{wheels(H["best"])}<p>kWh. Mit und ohne Senkung. Die Steuer ändert, wann sich der Speicher bezahlt. Nicht, wie groß er sein sollte.</p>', 2, T, tp),
+  frame('<h2>Was jetzt beschlossen ist</h2>' + summary(["Koalition einig: Stromsteuer für alle runter auf 0,1&nbsp;ct je kWh.", "Bezahlt ist das bisher nur für 2027.", "Dauerhaft ist geplant, aber nicht gesichert."]) + '<p class="muted" style="font-size:34px">Stand 18.11.2026. Noch kein Gesetz: Der Bundestag stimmt am 27.11. über den Haushalt ab.</p>', 3, T, tp),
+  frame(f'<h2>Strom wird {d2(H["cut"])} ct billiger</h2><div class="pair"><div class="card"><div class="k">heute</div><div class="v" style="white-space:nowrap">{pr} ct</div><div class="d">je kWh, Beispielpreis</div></div><div class="card"><div class="k">mit Senkung</div><div class="v" style="white-space:nowrap;font-size:80px">{d2(H["pc"])} ct</div><div class="d">je kWh</div></div></div><p>1,95 ct weniger Steuer, dazu fällt die Umsatzsteuer darauf weg. Wenn dein Versorger das voll weitergibt.</p>', 4, T, tp),
+  frame(f'<h2>Mit PV merkst du’s weniger</h2><p class="muted" style="font-size:32px">Ersparnis durch die Senkung, Euro im Jahr</p>'
+        + ebars([("ohne PV-Anlage", H["bill0"], "#B9C3CB", False), ("9 kWp, ohne Speicher", H["billPV"], "#B9C3CB", False), (f"9 kWp, {H['best']} kWh Speicher", H["billBat"], "#E39A0B", True)], H["bill0"])
+        + '<p>Wer kaum noch Netzstrom kauft, zahlt auch kaum noch Stromsteuer.</p>', 5, T, tp),
+  frame(f'<h2>Der Speicher braucht etwas länger</h2><p class="muted" style="font-size:32px">Bis {H["best"]} kWh Speicher bezahlt sind, Jahre</p>'
+        + pbars([("ohne Senkung", H["pay"], "#B9C3CB", False), ("Senkung nur 2027", H["pay27"], "#E39A0B", True), ("Senkung dauerhaft", H["payCut"], "#B9C3CB", False)], H["payCut"], lambda v: f"{d1(v)} J.")
+        + '<p>Billigerer Netzstrom heißt: Jede kWh aus dem Speicher spart ein bisschen weniger.</p>', 6, T, tp),
+  frame(f'<h2>Lohnt sich trotzdem</h2><p class="muted" style="font-size:32px">Bilanz mit {H["best"]} kWh nach 15 Jahren</p>'
+        + pbars([("ohne Senkung", H["net"], "#B9C3CB", False), ("Senkung nur 2027", H["net27"], "#E39A0B", True), ("Senkung dauerhaft", H["netCut"], "#B9C3CB", False)], H["net"], lambda v: f"+{fmt(round(v))} €")
+        + f'<p>Gilt die Senkung nur 2027, merkst du sie beim Speicher kaum. Bleibt sie, sind es {fmt(round(H["net"]-H["netCut"]))} € weniger in 15 Jahren.</p>', 7, T, tp),
+  frame('<h2>Kurz gesagt</h2>' + summary(["Die Stromsteuer soll 2027 auf 0,1&nbsp;ct sinken.", f"Strom wird dann {d2(H['cut'])}&nbsp;ct billiger.", f"Der Speicher bezahlt sich in {d1(H['pay27'])} statt {d1(H['pay'])}&nbsp;Jahren, dauerhaft gesenkt in&nbsp;{d1(H['payCut'])}.", f"Die beste Größe bleibt {H['best']}&nbsp;kWh."]), 8, T, tp),
+  frame(f'<h1>Rechne mit <em>deinem neuen Strompreis.</em></h1><p>Im Rechner den Strompreis ändern und sehen, was sich tut. Kostenlos, ohne Anmeldung. Link in der Bio.</p><div><span class="cta">speicherklar.de</span></div><p class="src">Beispiel: Ruhrgebiet, 9 kWp Süd 35°, 4.500 kWh/Jahr, Speicher 500 €/kWh, Strom {pr} ct, mit Senkung {d2(H["pc"])} ct, Einspeisung 7,70 ct, 15 Jahre, ohne weitere Preisänderungen. „Nur 2027“: ein Jahr gesenkt, danach {pr} ct. Stromsteuer: § 3 StromStG, EU-Minimum 0,1 ct. Beschluss Koalitionsausschuss laut t-online/ZDFheute, Stand 18.11.2026.</p>', 9, T, tp, dark=True),
 ]
 
 PROFILE = f"""<div style="width:1080px;height:1080px;background:#15212B;display:flex;align-items:center;justify-content:center">
