@@ -93,7 +93,7 @@ Hinweis: In der App im Zuschnitt-Schritt auf das Rahmen-Symbol tippen und „Ori
 
 ### Caption
 
-Stromsteuer sinkt doch. Dein Stromspeicher bleibt trotzdem bei 6 kWh, und bezahlt sich in 7,7 statt 7,6 Jahren.
+Stromsteuer sinkt doch. Die beste Größe für deinen Stromspeicher bleibt trotzdem 6 kWh. Hab's neu gerechnet.
 
 Am 13.11. hab ich hier geschrieben: Die Stromsteuer bleibt. Das ist überholt. In der Nacht zum 18.11. hat sich die Koalition geeinigt, sie 2027 für alle auf 0,1 ct je kWh zu senken. Bezahlt ist das bisher nur für 2027. Gesetz ist es noch nicht, der Bundestag stimmt am 27.11. über den Haushalt ab.
 
