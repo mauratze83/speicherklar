@@ -119,4 +119,4 @@ Die ganze Rechnung mit allen Speichergrößen, auch mit E-Auto, findest du hier:
 
 - Alle Zahlen live mit src/sim.js (Stand main 2b16be9) gerechnet, Strompreis 33 ct = Standardwert im Rechner. Beste Größe 6 kWh mit und ohne Senkung; bezahlt nach 7,6 / 7,7 (Senkung nur 2027) / 8,5 J. (dauerhaft); Bilanz +2.899 / +2.860 / +2.308 €; Ersparnis durch Senkung 104 / 67 / 28 €/Jahr. „Nur 2027“ = ein Jahr 30,68 ct, danach 14 Jahre 33 ct (sim.js rechnet ohne Preissteigerung).
 - Politik: Beschluss Koalitionsausschuss 18.11.2026 laut t-online und ZDFheute; Bundestag (Haushalt) am 27.11.2026; Stromsteuergesetz muss noch geändert werden. Als „noch kein Gesetz“ gekennzeichnet.
-- caption_de.py: READY (1.121 Zeichen, 5 Hashtags, eine Bitte, Suchbegriffe 3/3). detect_de.py: 80,6 PASS (Voice 69, alle Prüfungen über 55).
+- caption_de.py: READY (1.121 Zeichen, 5 Hashtags, eine Bitte, Suchbegriffe 3/3). detect_de.py: 83,4 PASS (alle Prüfungen über 55).
