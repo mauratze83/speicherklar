@@ -24,7 +24,7 @@ Beispiel: 9 kWp Süd, 35°, 4.500 kWh/Jahr, Speicher 500 €/kWh, Strom 33 ct, E
 
 ### Facebook-Kommentar (als ersten Kommentar unter den Facebook-Beitrag)
 
-Rechne dein Haus mit deiner Region selbst durch, kostenlos und ohne Anmeldung: https://speicherklar.de/?von=facebook
+Alle zehn Regionen mit Tabelle und deine PLZ zum Nachschauen: https://speicherklar.de/ratgeber/stromspeicher-region.html?von=facebook
 
 ### Alt-Text Cover
 
