@@ -7,7 +7,7 @@ Details zu Aufbau, Lizenzen, KV und Freischlüsseln stehen im `README.md`. Diese
 ## Stand (Nov. 2026)
 
 - Rechner und Pro sind live und funktionieren.
-- Der Kauf-Button ist bis `publicFrom` (`2026-12-01` in `src/pro-config.js`) inaktiv („Kauf ab 1.12.2026“). Kaufen geht vorher nur mit `?vorab=1` (wird im Browser gemerkt, `?vorab=0` nimmt es weg) – nur zum internen Testen, **nirgends verlinken**.
+- Speicherklar Pro ist seit 22.11.2026 für alle kaufbar (`publicFrom` = `2026-11-22` in `src/pro-config.js`, vorgezogen vom 01.12.2026). Die Vorab-Logik (`?vorab=1`/`?vorab=0` in `pro-ui.js`) bleibt im Code, wirkt aber nur vor `publicFrom`; **nirgends verlinken**. Der Worker prüft kein Datum.
 - Preise: 49 € Einführungspreis bis 31.01.2027, danach 89 €, einmalig, 90 Tage Laufzeit ab erster Freischaltung, max. 3 Geräte.
 - Eigene Besuche nicht zählen (seit 14.11.2026): `speicherklar.de/?ich=1` setzt `umami.disabled` im localStorage, `?ich=0` entfernt es; der Parameter verschwindet danach aus der Adresse. Code: `OPTOUT_JS` in `src/chrome.py`, Hinweis in der Datenschutzerklärung (`UMAMI_TEXT` in `build_articles.py`). **Nirgends verlinken.**
 - Verbrauchsmodell (seit 14.11.2026): Die Wärmepumpe (`hp`) steht in `load.steady` und bekommt in `runBattery`/`daySeries` keine Lastspitzen innerhalb der Stunde (`stepLoad` in `src/sim.js`); Haushalt und E-Auto behalten sie. Der kostenlose Rechner hat dafür das Feld „Wärmepumpe pro Jahr“ (`#hp`, wird an Pro übergeben). Ohne Wärmepumpe sind alle Ergebnisse unverändert. Geprüft an Manuels eigener Anlage, Ergebnis im Projekt unter `claude/sim-pruefung-eigene-anlage.md` und auf der Methodik-Seite (`#eigene-anlage`). Verteilung der Wärmepumpe auf Monate/Stunden (`HP_M`, `HP_H`) gemessen an den WPuQ-Häusern (ISFH, 2019–2020).
