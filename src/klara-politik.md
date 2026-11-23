@@ -17,31 +17,31 @@ Manuel gibt frei. Danach build.py laufen lassen und pushen. Abgelaufene Einträg
 -->
 
 ## Einspeisevergütung heute (EEG 2023)
-- Stand: 2026-11-17
+- Stand: 2026-11-23
 - Status: geltendes Recht
 - Quelle: Bundesnetzagentur, https://www.bundesnetzagentur.de/DE/Fachthemen/ElektrizitaetundGas/ErneuerbareEnergien/EEG_Foerderung/start.html
 - Prüfen bis: 2026-12-31
 
-Für neue PV-Anlagen auf Gebäuden mit Inbetriebnahme vom 01.08.2026 bis 31.01.2027 gelten bei Teileinspeisung (Überschuss) 7,70 ct/kWh für den Anteil bis 10 kWp und 6,66 ct/kWh für den Anteil über 10 bis 40 kWp, bei Volleinspeisung bis 10 kWp 12,22 ct/kWh. Der Satz gilt 20 Jahre plus den Rest des Jahres der Inbetriebnahme. Maßgeblich ist der Tag der Inbetriebnahme. Die Sätze sinken für neue Anlagen halbjährlich zum 1. Februar und 1. August um 1 %. Der Rechner nimmt 7,70 ct als Startwert.
+Für neue PV-Anlagen auf Gebäuden mit Inbetriebnahme vom 01.08.2026 bis 31.12.2026 gelten bei Teileinspeisung (Überschuss) 7,70 ct/kWh für den Anteil bis 10 kWp und 6,66 ct/kWh für den Anteil über 10 bis 40 kWp, bei Volleinspeisung bis 10 kWp 12,22 ct/kWh. Der Satz gilt 20 Jahre plus den Rest des Jahres der Inbetriebnahme; maßgeblich ist der Tag der Inbetriebnahme. Die Bundesnetzagentur veröffentlicht die Sätze nur bis 31.12.2026, weil das EEG 2023 bis dahin anwendbar ist; eine Nachfolgeregelung ist laut Bundesnetzagentur in der parlamentarischen Beratung (siehe EEG-Reform 2027). Was für Anlagen ab 01.01.2027 gilt, steht deshalb noch nicht fest. Der Rechner nimmt 7,70 ct als Startwert.
 
 ## EEG-Reform 2027 (Entwurf)
-- Stand: 2026-11-17
-- Status: in Verhandlung, nicht beschlossen
-- Quelle: Bundeswirtschaftsministerium, Pressemitteilung 29.07.2026, https://www.bundeswirtschaftsministerium.de/Redaktion/DE/Pressemitteilungen/2026/07/20260729-eeg-novelle-und-netzanschlusspaket.html; Bundestag erste Lesung 24.09.2026 (pv magazine, 02.10.2026); Verhandlungsstand laut Reuters und ZfK, 14.–15.11.2026
-- Prüfen bis: 2026-11-24
+- Stand: 2026-11-23
+- Status: in Verhandlung, nicht beschlossen (Bundestag 2./3. Lesung und Bundesrat stehen aus)
+- Quelle: Bundeswirtschaftsministerium, Pressemitteilung 29.07.2026, https://www.bundeswirtschaftsministerium.de/Redaktion/DE/Pressemitteilungen/2026/07/20260729-eeg-novelle-und-netzanschlusspaket.html; Bundestag erste Lesung 24.09.2026 (pv magazine, 02.10.2026); Verhandlungsstand laut dpa/Handelsblatt 14.11.2026 (https://www.handelsblatt.com/politik/deutschland/energiepolitik-solarfoerderung-fuer-kleine-anlagen-soll-bleiben/100269915.html) und ZfK 16.11. und 19.11.2026 (https://www.zfk.de/politik/deutschland/eeg-netzpaket-knackpunkte-gaspaket-energieeffizienzgesetz, https://www.zfk.de/politik/deutschland/energiegesetze-ticker-deutschland-reiche)
+- Prüfen bis: 2026-11-30
 
-Das Bundeskabinett hat am 29.07.2026 einen Entwurf beschlossen: Neue Anlagen unter 25 kW sollten ab 2027 nach einer Übergangszahlung keine feste Einspeisevergütung mehr bekommen und höchstens 50 % ihrer Leistung einspeisen dürfen. Der Bundestag hat den Entwurf am 24.09.2026 zum ersten Mal beraten. Mitte November 2026 berichten Reuters und ZfK, dass Union und SPD die feste Vergütung für neue Anlagen bis 25 kW doch behalten und die 50-%-Grenze erst über 25 kW anwenden wollen; die Union knüpft die Einigung an das Netzpaket. Beschlossen ist das nicht, Bundestag und Bundesrat müssen noch abstimmen. Anlagen, die bis 31.12.2026 in Betrieb gehen, betrifft der Entwurf nicht. Der Schalter „EEG-Reform 2027“ im Rechner zeigt den Kabinettsentwurf (keine Vergütung, höchstens 50 % Einspeisung).
+Das Bundeskabinett hat am 29.07.2026 einen Entwurf beschlossen: Neue Anlagen unter 25 kW sollten ab 2027 nach einer Übergangszahlung keine feste Einspeisevergütung mehr bekommen und höchstens 50 % ihrer Leistung einspeisen dürfen. Der Bundestag hat den Entwurf am 24.09.2026 zum ersten Mal beraten. Mitte November 2026 berichten dpa und ZfK von einer fachlichen Einigung der Energiepolitiker von Union und SPD: Die feste Vergütung für neue Anlagen bis 25 kW soll bleiben, die 50-%-Grenze erst über 25 kW gelten. Wie hoch die Vergütung ab 2027 wäre, nennt keiner der Berichte, ein Gesetzestext dazu liegt nicht vor, und die Union stellt die Einigung unter den Vorbehalt einer Einigung zum Netzpaket. Beschlossen ist nichts: Ein Termin für die 2./3. Lesung im Bundestag steht nicht fest, angestrebt ist laut ZfK die Sitzungswoche im Dezember und der Bundesrat frühestens am 18.12.2026. Anlagen, die bis 31.12.2026 in Betrieb gehen, betrifft der Entwurf nicht. Der Schalter „EEG-Reform 2027“ im Rechner zeigt den Kabinettsentwurf (keine Vergütung, höchstens 50 % Einspeisung).
 
 ## Solarspitzengesetz
-- Stand: 2026-11-17
+- Stand: 2026-11-23
 - Status: geltendes Recht (seit 25.02.2025)
 - Quelle: Verbraucherzentrale Hamburg, „Solarspitzen und Fördergelder: Neue Regeln für Photovoltaikanlagen“, https://www.vzhh.de/themen/bauen-immobilien-energie/erneuerbare-energien/solarspitzen-foerdergelder-neue-regeln-fuer-photovoltaikanlagen
 - Prüfen bis: 2027-02-28
 
-Für PV-Anlagen über 2 kWp, die ab dem 25.02.2025 in Betrieb gehen, gibt es keine Einspeisevergütung in Zeiten negativer Börsenstrompreise; die Förderdauer verlängert sich dafür. Solange kein intelligentes Messsystem mit Steuerbox eingebaut ist, darf die Anlage höchstens 60 % ihrer Leistung ins Netz einspeisen (Leistung, nicht Menge). Ein Speicher kann Strom aus diesen Zeiten auffangen. Der Rechner bildet im Modus „EEG heute“ weder die 60-%-Grenze noch die Stunden mit negativen Preisen ab.
+Für PV-Anlagen über 2 kWp, die ab dem 25.02.2025 in Betrieb gehen, gibt es keine Einspeisevergütung in Zeiten negativer Börsenstrompreise; diese Zeiten werden an die 20 Jahre Förderdauer angehängt. Solange kein intelligentes Messsystem mit Steuerbox eingebaut ist, darf die Anlage höchstens 60 % ihrer Leistung ins Netz einspeisen (Leistung, nicht Menge). Ein Speicher kann Strom aus diesen Zeiten auffangen. Der Rechner bildet im Modus „EEG heute“ weder die 60-%-Grenze noch die Stunden mit negativen Preisen ab.
 
 ## Umsatzsteuer: Nullsteuersatz
-- Stand: 2026-11-17
+- Stand: 2026-11-23
 - Status: geltendes Recht (seit 01.01.2023)
 - Quelle: § 12 Abs. 3 Umsatzsteuergesetz, https://www.gesetze-im-internet.de/ustg_1980/__12.html
 - Prüfen bis: 2027-06-30
@@ -49,7 +49,7 @@ Für PV-Anlagen über 2 kWp, die ab dem 25.02.2025 in Betrieb gehen, gibt es kei
 Auf Lieferung und Installation von Solarmodulen, wesentlichen Komponenten und Speichern an den Betreiber einer PV-Anlage auf oder in der Nähe von Wohngebäuden fallen 0 % Umsatzsteuer an. Die Voraussetzung gilt als erfüllt, wenn die Anlage laut Marktstammdatenregister höchstens 30 kW (peak) hat. Auf der Rechnung steht dann 0 % Umsatzsteuer, Netto ist gleich Brutto. Ob es im Einzelfall passt, klärt der Installateur oder ein Steuerberater.
 
 ## Einkommensteuer: Steuerbefreiung kleiner Anlagen
-- Stand: 2026-11-17
+- Stand: 2026-11-23
 - Status: geltendes Recht
 - Quelle: § 3 Nr. 72 Einkommensteuergesetz, https://www.gesetze-im-internet.de/estg/__3.html
 - Prüfen bis: 2027-06-30
@@ -57,12 +57,12 @@ Auf Lieferung und Installation von Solarmodulen, wesentlichen Komponenten und Sp
 Einnahmen aus PV-Anlagen auf, an oder in Gebäuden sind einkommensteuerfrei, wenn die Anlage laut Marktstammdatenregister höchstens 30 kW (peak) je Wohn- oder Gewerbeeinheit hat, insgesamt höchstens 100 kW (peak) je Person oder Gesellschaft. Die einheitliche 30-kW-Grenze gilt für Anlagen, die nach dem 31.12.2024 angeschafft, in Betrieb genommen oder erweitert wurden (Jahressteuergesetz 2024); davor galten für Mehrfamilienhäuser 15 kW (peak) je Einheit. Für Einzelfälle (Vermietung, mehrere Anlagen, Gewerbe) ist ein Steuerberater oder Lohnsteuerhilfeverein die richtige Stelle.
 
 ## Stromsteuer
-- Stand: 2026-11-18
-- Status: geltendes Recht 2,05 ct/kWh; Senkung für alle aufs EU-Minimum ab 2027 im Koalitionsausschuss beschlossen, Bundestag (Haushalt 2027 am 27.11.2026) und Änderung des Stromsteuergesetzes noch offen
-- Quelle: § 3 Stromsteuergesetz; Koalitionsausschuss laut t-online und ZDFheute (18.11.2026), zusammengefasst im Artikel https://speicherklar.de/ratgeber/stromsteuer-stromspeicher.html
-- Prüfen bis: 2026-11-28
+- Stand: 2026-11-23
+- Status: geltendes Recht 2,05 ct/kWh; Senkung für alle aufs EU-Minimum für 2027 im Koalitionsausschuss vereinbart, nicht beschlossen (Bundestag: Haushalt 2027 am 27.11.2026, Änderung des Stromsteuergesetzes ohne Termin)
+- Quelle: § 3 Stromsteuergesetz; Koalitionsausschuss laut t-online und ZDFheute (18.11.2026) und dpa/inFranken (20.11.2026, https://www.infranken.de/ratgeber/karriere-geld/bundesregierung-senkt-stromsteuer-2027-entlastung-haushalt-finanzierung-art-6410685), zusammengefasst im Artikel https://speicherklar.de/ratgeber/stromsteuer-stromspeicher.html
+- Prüfen bis: 2026-11-30
 
-Die Stromsteuer beträgt heute 2,05 ct je kWh, dazu kommt Umsatzsteuer. In der Nacht zum 18.11.2026 hat sich der Koalitionsausschuss von Union und SPD darauf geeinigt, sie für alle Verbraucher aufs EU-Minimum von 0,1 ct je kWh zu senken. Finanziert ist das bisher nur für 2027, eine dauerhafte Senkung ist beabsichtigt. Gesetz ist das noch nicht: Der Bundestag soll den Haushalt 2027 am 27.11.2026 beschließen, das Stromsteuergesetz muss geändert werden. Gibt der Versorger die Senkung voll weiter, wird Strom rund 2,32 ct je kWh billiger. Für die Planung eines Speichers ändert sich laut Speicherklar-Artikel wenig: Die beste Größe bleibt gleich, der Speicher bezahlt sich etwas später.
+Die Stromsteuer beträgt heute 2,05 ct je kWh, dazu kommt Umsatzsteuer. In der Nacht zum 18.11.2026 hat sich der Koalitionsausschuss von Union und SPD darauf geeinigt, sie für alle Verbraucher aufs EU-Minimum von 0,1 ct je kWh zu senken. Finanziert ist das bisher nur für 2027, eine dauerhafte Senkung ist beabsichtigt. Gesetz ist das noch nicht: Die Senkung muss noch in den Haushalt 2027 eingearbeitet werden, den der Bundestag am 27.11.2026 beschließen soll, und das Stromsteuergesetz muss geändert werden; wann, steht noch nicht fest. Gibt der Versorger die Senkung voll weiter, wird Strom rund 2,32 ct je kWh billiger. Für die Planung eines Speichers ändert sich laut Speicherklar-Artikel wenig: Die beste Größe bleibt gleich, der Speicher bezahlt sich etwas später.
 
 ## KfW-Kredit
 - Stand: 2026-11-17
