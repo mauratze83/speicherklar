@@ -15,8 +15,10 @@ Erledigt:
 
 - 2026-11-23 post9-drei-orte: „Ein Haus. Drei Orte.“ Standard-Haus umgezogen nach Oberbayern / Ruhrgebiet / Schleswig-Holstein, überall 6 kWh, Plus 3.380 / 2.899 / 2.668 € (wochen/2026-11-23)
 - 2026-11-23 post11-norden: „Speicher im Norden? Lohnt sich. Aber klein.“ Haus Schleswig-Holstein, beste Größe 3 kWh (+1.262 €), ab 8 kWh Minus, Titel Bernstein, geplant 27.11.2026 (wochen/2026-11-23)
+- 2026-11-23 reel4-passt-7-kwh: Reel A „7 kWh im Angebot? Passt. Das sag ich dir auch.“ Angebots-Check Familie Dortmund (10 kWp, 5.500 kWh, 7 kWh = beste Größe, +3.146 €), Titel Dunkel, geplant 25.11.2026 (wochen/2026-11-23)
+- 2026-11-23 reel5-pv-groesse-9-statt-15: Reel B „9 kWp im Angebot? Dein Dach kann 15.“ zum Artikel pv-anlage-groesse (14,5 statt 9 kWp, +3.506 €; EEG-Entwurf 4,5–5,5 kWp), Titel Hell, geplant 29.11.2026 (wochen/2026-11-23)
 
-Nächste freie Post-Nummer: post12. Nächste freie Reel-Nummer: reel4.
+Nächste freie Post-Nummer: post12. Nächste freie Reel-Nummer: reel6.
 
 Offen (oben zuerst; jede Woche zwei, eins davon passend zum neuen Ratgeber-Artikel):
 - EEG-Update: Koalition will feste Vergütung bis 25 kW behalten (Reuters 14.11.2026, noch nicht beschlossen); erst nach Bundestagsbeschluss, korrigiert post3

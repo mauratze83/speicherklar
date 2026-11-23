@@ -1,0 +1,44 @@
+{
+ "name": "reel5-pv-groesse-9-statt-15",
+ "audio": "reels/vo/reel5-pv-groesse-9-statt-15.mp3",
+ "tempo": 1.05,
+ "titel": "hell",
+ "slides": [
+  {
+   "dark": true,
+   "text": "[[9 kWp|Neun Kilowatt Peak]] im Angebot?",
+   "html": "<div class=\"hook\"><div class=\"tag\">PV-Anlage planen</div><h1>9&nbsp;kWp im Angebot?</h1></div>"
+  },
+  {
+   "dark": true,
+   "text": "Dein Dach kann [[15|fünfzehn]].",
+   "html": "<div class=\"hook\"><div class=\"tag\">PV-Anlage planen</div><h1>9&nbsp;kWp im Angebot?<br><em>Dein Dach kann 15.</em></h1></div>"
+  },
+  {
+   "text": "Hab's durchgerechnet: Süddach, [[4.500 kWh|viertausendfünfhundert Kilowattstunden]] Verbrauch, heutige Einspeisevergütung.",
+   "html": "<div class=\"tag\">Hab's durchgerechnet</div><h2>Süddach mit Platz für 15&nbsp;kWp</h2><div class=\"card\"><div class=\"k\">Verbrauch im Jahr</div><div class=\"v\">4.500 kWh</div><div class=\"k\" style=\"margin-top:22px\">Einspeisung heute</div><div class=\"v\">7,70 ct</div><div class=\"d\">bis 10 kWp, darüber 6,66 ct</div></div>"
+  },
+  {
+   "text": "Mit [[14,5|vierzehneinhalb]] statt [[9|neun]] [[kWp|Kilowatt Peak]] bleiben rund [[3.500 €|dreitausendfünfhundert Euro]] mehr übrig.",
+   "html": "<div class=\"tag\">Nach allen Kosten</div>{{wheels:3506}}<h2>Euro mehr mit <em>14,5 statt 9&nbsp;kWp.</em></h2><p class=\"muted\">PV über 20 Jahre, Speicher über 15 Jahre.</p>"
+  },
+  {
+   "text": "Denn Gerüst und Anmeldung zahlst du nur einmal, jedes weitere [[kWp|Kilowatt Peak]] kostet rund [[1.040 €|tausendvierzig Euro]].",
+   "html": "<div class=\"tag\">Warum?</div><h2>Gerüst und Anmeldung zahlst du <em>nur einmal.</em></h2><p>Jedes weitere kWp kostet rund 1.040 € statt 1.390 €.</p>"
+  },
+  {
+   "text": "Und der Speicher? Wächst kaum mit, von [[6|sechs]] auf [[7|sieben]] Kilowattstunden.",
+   "html": "<div class=\"tag\">Und der Speicher?</div><h2>Wächst kaum mit.</h2><div class=\"pair\"><div class=\"card\"><div class=\"k\">9 kWp</div><div class=\"v\">6 kWh</div></div><div class=\"card best\"><div class=\"k\">14,5 kWp</div><div class=\"v\">7 kWh</div></div></div>"
+  },
+  {
+   "text": "Kommt der EEG-Entwurf, wären eher [[4,5 bis 5,5 kWp|viereinhalb bis fünfeinhalb Kilowatt Peak]] richtig. Noch nicht beschlossen.",
+   "html": "<div class=\"tag\">Stand 23.11.2026</div><h2>Mit dem EEG-Entwurf <em>umgekehrt: 4,5 bis 5,5&nbsp;kWp.</em></h2><p>Keine Vergütung, höchstens 50 % einspeisen. Noch nicht beschlossen.</p>"
+  },
+  {
+   "dark": true,
+   "text": "Beide Fälle mit allen Zahlen stehen auf speicherklar.de. Link in der Bio.",
+   "html": "<div class=\"tag\">Ratgeber auf speicherklar.de</div><h1 style=\"font-size:104px\">Wie groß soll meine <em>PV-Anlage sein?</em></h1><div><span class=\"cta\">Link in der Bio</span></div><p class=\"src\">Beispiel: PLZ-Gebiet 47 (Duisburg, Krefeld), Süddach 35°, Angebot 9 kWp und 10 kWh für 19.000 € (davon Speicher 6.500 €), Platz für 15 kWp, 4.500 kWh, Strom 33 ct, Einspeisung 7,70 ct bis 10 kWp, 6,66 ct darüber. PV über 20 Jahre, bester Speicher über 15 Jahre, ohne Zinsen. Gerechnet mit Speicherklar Pro, Modellstand 14.11.2026.</p>"
+  }
+ ],
+ "cover": 2
+}

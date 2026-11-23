@@ -13,6 +13,7 @@ Spec (JSON):
   rechts wird gesprochen (nur der rechte Teil geht an ElevenLabs, siehe spoken()).
 - Untertitel werden immer eingebrannt (Wort-Zeitpunkte per faster-whisper), außer "untertitel": false.
 - Die Schnitte setzt das Skript selbst: Wort-Zeitpunkte per faster-whisper, Schnitt kurz vor dem ersten Wort der nächsten Slide.
+- "titel": "hell" | "bernstein" | "dunkel" (optional): Grundfarbe des Titelbilds, sonst wie die Cover-Slide.
 - "cover": Nummer der Slide fürs Titelbild (Standard 1; bei geteiltem Hook die Slide mit dem ganzen Hook).
   Das Titelbild wird eigens gerendert: Inhalt mittig im 3:4-Ausschnitt des Profilrasters (y 240–1680),
   Hook innerhalb des 1:1-Ausschnitts (y 420–1500), keine Untertitel.
@@ -57,6 +58,10 @@ body{width:1080px;height:1920px}
  background:rgba(21,33,43,.9);color:#fff;font-family:"Archivo";font-weight:800;font-stretch:105%;font-size:56px;white-space:nowrap;line-height:1.12;text-align:center}
 .sub b{color:#F2B33D;font-weight:800}
 .brandrow{display:flex;gap:16px;align-items:center;font-family:"Archivo";font-stretch:118%;font-weight:800;font-size:40px}
+"""
+
+TITEL_CSS = """
+.reel.amber{background:#E39A0B;color:#15212B} .reel.amber .tag{color:#15212B} .reel.amber h1 em{color:#15212B}
 """
 
 def wheels(n):
@@ -175,7 +180,13 @@ def main(spec_path):
             pg.evaluate("document.fonts.ready.then(()=>document.fonts.size)"); pg.wait_for_timeout(150)
             pg.screenshot(path=str(out / f"{name}-{i}.png"))
         c = int(spec.get("cover", 1))
-        pg.set_content(f"<html><head><style>{CSS}</style></head><body>{slide(slides[c-1]['html'], slides[c-1].get('dark', False), cover=True)}</body></html>")
+        # "titel": "hell" | "bernstein" | "dunkel" – Grundfarbe des Titelbilds (Farbwechsel im Profilraster, Faktenblatt)
+        titel = spec.get("titel")
+        cdark = slides[c-1].get('dark', False) if titel is None else titel == "dunkel"
+        chtml = slide(slides[c-1]['html'], cdark, cover=True)
+        if titel == "bernstein":
+            chtml = chtml.replace('class="reel', 'class="reel amber', 1)
+        pg.set_content(f"<html><head><style>{CSS}{TITEL_CSS}</style></head><body>{chtml}</body></html>")
         pg.evaluate("document.fonts.ready.then(()=>document.fonts.size)"); pg.wait_for_timeout(150)
         pg.screenshot(path=str(out / f"{name}-titelbild.png"))
         b.close()

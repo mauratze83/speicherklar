@@ -1,0 +1,48 @@
+{
+ "name": "reel4-passt-7-kwh",
+ "audio": "reels/vo/reel4-passt-7-kwh.mp3",
+ "tempo": 1.05,
+ "titel": "dunkel",
+ "slides": [
+  {
+   "dark": true,
+   "text": "PV-Angebot mit [[7 kWh|sieben Kilowattstunden]] Speicher?",
+   "html": "<div class=\"hook\"><div class=\"tag\">Dein PV-Angebot mit Speicher</div><h1>7&nbsp;kWh im Angebot?</h1></div>"
+  },
+  {
+   "dark": true,
+   "text": "Passt. Das sag ich dir auch.",
+   "html": "<div class=\"hook\"><div class=\"tag\">Dein PV-Angebot mit Speicher</div><h1>7&nbsp;kWh im Angebot?<br><em>Passt. Das sag ich dir auch.</em></h1></div>"
+  },
+  {
+   "text": "Familie in Dortmund, [[5.500 kWh|fünftausendfünfhundert Kilowattstunden]] im Jahr.",
+   "html": "<div class=\"tag\">Hab's durchgerechnet</div><h2>Familie in Dortmund</h2><div class=\"card\"><div class=\"k\">Verbrauch im Jahr</div><div class=\"v\">5.500 kWh</div><div class=\"k\" style=\"margin-top:22px\">Dach</div><div class=\"v\">Süd, 35°</div></div>"
+  },
+  {
+   "text": "Im Angebot: [[10 kWp|zehn Kilowatt Peak]], [[7 kWh|sieben Kilowattstunden]], [[17.000 €|siebzehntausend Euro]].",
+   "html": "<div class=\"tag\">Das steht im Angebot</div><h2>Drei Zahlen <em>reichen.</em></h2><div class=\"card\"><div class=\"k\">1 · PV-Anlage</div><div class=\"v\">10 kWp</div><div class=\"k\" style=\"margin-top:22px\">2 · Speicher</div><div class=\"v\">7 kWh</div><div class=\"k\" style=\"margin-top:22px\">3 · Preis gesamt</div><div class=\"v\">17.000 €</div><div class=\"d\">davon Speicher 4.000 €</div></div>"
+  },
+  {
+   "text": "Mit genau [[7|sieben]] bleiben nach [[15|fünfzehn]] Jahren über [[3.000 €|dreitausend Euro]].",
+   "html": "<div class=\"tag\">Nach 15 Jahren</div>{{wheels:3146}}<h2>Euro Plus mit 7&nbsp;kWh. <em>Mehr geht mit keiner Größe.</em></h2><p class=\"muted\">Bezahlt nach 8,4 Jahren.</p>"
+  },
+  {
+   "text": "Größer oder kleiner bringt weniger: Mit [[10 kWh|zehn]] wär's rund [[300 €|dreihundert Euro]] weniger.",
+   "html": "<div class=\"tag\">Und andere Größen?</div><h2>Größer oder kleiner bringt <em>weniger.</em></h2><div class=\"pair\"><div class=\"card\"><div class=\"k\">5 kWh</div><div class=\"v\">−542 €</div><div class=\"d\">weniger als 7 kWh</div></div><div class=\"card\"><div class=\"k\">10 kWh</div><div class=\"v\">−301 €</div><div class=\"d\">weniger als 7 kWh</div></div></div>"
+  },
+  {
+   "text": "Das prüft Speicherklar Pro: erst kostenlos als Ampel, grün, gelb oder rot.",
+   "html": "<div class=\"tag\">Speicherklar Pro · dieses Angebot</div><h2>Erste Einschätzung. <em>Kostenlos.</em></h2><div class=\"amp\"><div><i class=\"g\"></i><span>Speichergröße<small>Größe passt</small></span></div><div><i class=\"g\"></i><span>PV-Anlage<small>passt, mehr könnte sich lohnen</small></span></div><div><i class=\"g\"></i><span>Speicherpreis je kWh<small>üblich</small></span></div><div><i class=\"g\"></i><span>PV-Preis je kWp<small>üblich</small></span></div></div>"
+  },
+  {
+   "text": "Im Bericht: welche PV-Anlage und welcher Speicher am besten zusammenpassen.",
+   "html": "<div class=\"tag\">Der Bericht</div><h2 style=\"font-size:76px\">Welche PV-Anlage und welcher Speicher <em>am besten zusammenpassen.</em></h2><p class=\"promise\">Bevor du unterschreibst.</p>"
+  },
+  {
+   "dark": true,
+   "text": "Ab sofort für alle: [[49 €|neunundvierzig Euro]] bis [[31. Januar|einunddreißigsten Januar]], danach [[89 €|neunundachtzig]]. Link in der Bio.",
+   "html": "<div class=\"tag\">Ab sofort für alle</div><h1 style=\"font-size:116px\">Speicherklar Pro</h1><div class=\"price\">49 €</div><p>bis 31.01.2027, danach 89 €. Einmalig, kein Abo.</p><div><span class=\"cta\">Link in der Bio</span></div><p class=\"src\">Beispiel: PLZ-Gebiet 44 (Dortmund, Bochum), 10 kWp Süd, 35°, 5.500 kWh, Strom 33 ct, Einspeisung 7,70 ct, 15 Jahre. Angebot 7 kWh für 4.000 € (gesamt 17.000 €), andere Größen mit 30 % Fixanteil. Gerechnet mit Speicherklar Pro, Modellstand 14.11.2026.</p>"
+  }
+ ],
+ "cover": 2
+}

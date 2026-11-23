@@ -24,4 +24,5 @@ Dieser Branch wird von GitHub Pages nicht veröffentlicht. Er enthält den Bildg
 - Untertitel-Zeile mittig bei y 1530 (unter dem Slide-Inhalt, über der Instagram-Leiste), Zahlen in Bernstein. Zusätzlich `out/<name>.srt`.
 - Schnitte sitzen jetzt kurz vor dem ersten Wort der nächsten Slide (aus den Wort-Zeitpunkten).
 - Titelbild wird eigens gerendert: Inhalt mittig im 3:4-Ausschnitt des Rasters, Hook im 1:1-Ausschnitt.
+- Titelbild-Farbe (seit 23.11.2026): `"titel": "hell" | "bernstein" | "dunkel"` in der Spec setzt die Grundfarbe nur fürs Titelbild (Farbwechsel im Profilraster, siehe Faktenblatt). Ohne das Feld wie die Cover-Slide.
 - Video mit 6 Mbit/s konstant, Ton AAC 48 kHz: Instagram komprimiert sehr kleine Dateien sonst sichtbar nach.
