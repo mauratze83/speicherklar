@@ -19,7 +19,7 @@
 
   function store(k, v) { try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
   function load(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
-  function track(n) { try { if (window.umami) window.umami.track(n); } catch (e) {} }
+  function track(n, d) { try { if (window.umami) { if (d) window.umami.track(n, d); else window.umami.track(n); } } catch (e) {} }
   function num(id) { var v = $(id).value.replace(",", "."); return v === "" ? 0 : +v; }
 
   // ---------- Schaltergruppen ----------
@@ -165,12 +165,37 @@
     s += t.pvRate ? amp(RATE[t.pvRate][0], "Preis der PV-Anlage je kWp", RATE[t.pvRate][1]) : amp("na", "Preis der PV-Anlage je kWp", "nicht prüfbar", o.total > 0 ? "Dafür fehlt der Preis des Speichers allein." : "Dafür fehlt der Gesamtpreis.");
     return s;
   }
+  // Farben der vier Punkte fürs Zählen (nur Farben, keine Werte aus dem Angebot)
+  var COLOR = { ok: "gruen", warn: "gelb", bad: "rot", na: "offen" };
+  function ampelData(t) {
+    var c = [VERDICT[t.verdict][0], PVSIZE[t.pvSize][0], t.storeRate ? RATE[t.storeRate][0] : "na", t.pvRate ? RATE[t.pvRate][0] : "na"];
+    var all = c.indexOf("bad") >= 0 ? "rot" : c.indexOf("warn") >= 0 ? "gelb" : "gruen";
+    return { ampel: all, groesse: COLOR[c[0]], pv: COLOR[c[1]], speicherpreis: COLOR[c[2]], pvpreis: COLOR[c[3]] };
+  }
+  // Was die Ampel nicht sagt: Richtung kostenlos, Größe und Betrag nur im Bericht
+  function gap(t, r, o) {
+    var d = ampelData(t), life = o.life || 15;
+    if (t.verdict === "passt" && t.pvSize === "passt" && d.speicherpreis !== "gelb" && d.speicherpreis !== "rot" && d.pvpreis !== "gelb" && d.pvpreis !== "rot")
+      return '<div class="gap gap-ok"><h3>Dein Angebot passt.</h3><p>Nach der Ampel gibt es nichts, wo du genauer hinschauen müsstest. Den Bericht brauchst du dafür nicht. Er lohnt sich, wenn du die Zahlen schwarz auf weiß willst, mehrere Angebote vergleichst oder Fragen für das Gespräch mit dem Installateur suchst.</p></div>';
+    var blk = function (n) { return '<span class="blk" aria-hidden="true">' + new Array(n + 1).join("0") + '</span><span class="sr-only">im Bericht</span>'; };
+    var row = function (k, v, off) { return "<li><span class=\"gk\">" + k + "</span> <span class=\"gv\">" + v + (off ? ' <small>statt ' + off + "</small>" : "") + "</span></li>"; };
+    var s = '<div class="gap" id="t-gap"><h3>Was die Ampel nicht sagt</h3><ul>';
+    s += row("Passende Speichergröße", t.verdict === "nolohn" ? blk(2) : blk(1) + " kWh", kwh(r.cap));
+    s += row("Beste PV-Größe für dein Dach", blk(2) + " kWp", kwp(r.kwp));
+    s += row("Unterschied in " + life + " Jahren", blk(3) + " €");
+    s += '</ul><p class="gap-foot">Steht im Bericht, mit Rechenweg. <a href="#buy" id="t-gap-buy">Bericht ansehen</a></p></div>';
+    return s;
+  }
   function showTeaser() {
     var r = state.result, t = PRO.teaser(r);
     $("t-empty").hidden = true; $("t-res").hidden = false;
     $("t-verdict").innerHTML = VERDICT[t.verdict][2] + " " + PVSIZE[t.pvSize][2];
     var a = $("t-amps"); a.innerHTML = amps(t, state.input);
     a.classList.remove("enter"); void a.offsetWidth; a.classList.add("enter");
+    $("t-gap-wrap").innerHTML = gap(t, r, state.input);
+    var gb = $("t-gap-buy");
+    if (gb) gb.addEventListener("click", function (e) { e.preventDefault(); track("pro-luecke-klick", state.ampel); $("buy").scrollIntoView({ behavior: SCROLL, block: "start" }); });
+    state.ampel = ampelData(t);
   }
 
   function runCheck(scroll) {
@@ -182,7 +207,7 @@
     setTimeout(function () {
       state.input = o; state.result = PRO.check(o);
       btn.disabled = false; btn.textContent = "Angebot prüfen";
-      showTeaser(); track("pro-geprueft");
+      showTeaser(); track("pro-geprueft", state.ampel);
       if (state.unlocked) { renderReport(); if (scroll) { $("report-wrap").scrollIntoView({ behavior: SCROLL }); $("report-wrap").focus({ preventScroll: true }); } }
       else if (scroll) $("teaser").scrollIntoView({ behavior: SCROLL, block: "start" });
     }, 30);
@@ -223,7 +248,7 @@
       btn.href = "#"; btn.textContent = "Bericht freischalten · " + price + " €"; btn.removeAttribute("target");
       btn.addEventListener("click", function (e) {
         e.preventDefault(); if (btn.getAttribute("aria-busy") === "true") return;
-        track("pro-kauf-klick"); btn.setAttribute("aria-busy", "true"); btn.textContent = "Bezahlseite wird geöffnet…";
+        track("pro-kauf-klick", state.ampel || { ampel: "ohne" }); btn.setAttribute("aria-busy", "true"); btn.textContent = "Bezahlseite wird geöffnet…";
         api("/checkout").then(function (j) {
           if (j.url) { location.href = j.url; return; }
           throw new Error();

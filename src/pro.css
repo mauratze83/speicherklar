@@ -155,3 +155,17 @@ a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
 .amps-ghost{grid-template-columns:repeat(2,minmax(0,1fr))}
 .amps-ghost .amp{padding:10px 12px}
 @media (max-width:420px){.amps-ghost{grid-template-columns:1fr}}
+
+/* Was die Ampel nicht sagt (seit 23.11.2026) */
+#t-gap-wrap.locked{border:0;padding:0;overflow:visible;margin-top:14px}
+.gap{border:1px dashed var(--line);border-radius:8px;padding:14px 16px}
+.gap h3{margin:0 0 8px;font-size:16px}
+.gap ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.gap li{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.gap .gk{font-size:14px;color:var(--muted)}
+.gap .gv{font-family:var(--f-display);font-weight:800;font-size:18px}
+.gap .gv small{font-family:inherit;font-weight:400;font-size:13px;color:var(--muted)}
+.gap .blk{display:inline-block;color:transparent;background:var(--track);border-radius:4px;filter:blur(1.5px);user-select:none;letter-spacing:.05em}
+.gap-foot{margin:10px 0 0;font-size:13.5px;color:var(--muted)}
+.gap-ok{border-style:solid;border-color:var(--pos)}
+.gap-ok p{margin:0;font-size:14px;color:var(--muted)}
