@@ -1650,7 +1650,7 @@ var PRO = (function () {
     var d = ampelData(t), life = o.life || 15;
     if (t.verdict === "passt" && t.pvSize === "passt" && d.speicherpreis !== "gelb" && d.speicherpreis !== "rot" && d.pvpreis !== "gelb" && d.pvpreis !== "rot")
       return '<div class="gap gap-ok"><h3>Dein Angebot passt.</h3><p>Nach der Ampel gibt es nichts, wo du genauer hinschauen müsstest. Den Bericht brauchst du dafür nicht. Er lohnt sich, wenn du die Zahlen schwarz auf weiß willst, mehrere Angebote vergleichst oder Fragen für das Gespräch mit dem Installateur suchst.</p></div>';
-    var blk = function (n) { return '<span class="blk" aria-hidden="true">' + new Array(n + 1).join("0") + '</span><span class="sr-only">im Bericht</span>'; };
+    var blk = function (n) { return '<span class="blk" aria-hidden="true">' + new Array(n + 1).join("0") + '</span> <span class="sr-only">im Bericht</span>'; };
     var row = function (k, v, off) { return "<li><span class=\"gk\">" + k + "</span> <span class=\"gv\">" + v + (off ? ' <small>statt ' + off + "</small>" : "") + "</span></li>"; };
     var s = '<div class="gap" id="t-gap"><h3>Was die Ampel nicht sagt</h3><ul>';
     s += row("Passende Speichergröße", t.verdict === "nolohn" ? blk(2) : blk(1) + " kWh", kwh(r.cap));
