@@ -673,4 +673,73 @@ ARTICLES = [
  ("Wo lohnt sich ein Stromspeicher am meisten?", "Im Beispiel in Oberbayern und im Allgäu (PLZ 8) mit +3.380 € nach 15 Jahren, knapp vor Stuttgart, Baden und Bodensee (PLZ 7) mit +3.283 €. Dort scheint auch im Winter mehr Sonne, und die füllt den Speicher."),
 ],
 },
+{
+"slug": "pv-anlage-groesse",
+"kennzahl": {"v": "14,5 kWp", "t": "statt 9 kWp: Empfehlung im Beispiel mit der heutigen Einspeisevergütung"},
+"related": ["pv-angebot-pruefen", "stromspeicher-groesse-berechnen", "stromspeicher-lohnt-sich-2027"],
+"bars": {"title": "Überschuss je PV-Größe mit heutiger Einspeisevergütung", "caption": "Speicherklar Pro, PLZ-Gebiet 47, Süddach 35°, 4.500 kWh, Dach bis 15 kWp. PV über 20 Jahre plus bester Speicher über 15 Jahre, abzüglich aller Kosten.",
+         "rows": [["6,5 kWp", 8867], ["9 kWp", 11242, "Angebot"], ["10,5 kWp", 12406], ["12,5 kWp", 13634], ["14,5 kWp", 14748, "Empfehlung"], ["15 kWp", 15013]], "best": "14,5 kWp", "mark": "9 kWp"},
+"title": "Wie groß soll meine PV-Anlage sein?",
+"h1": "Wie groß soll meine PV-Anlage sein?",
+"desc": "Mit heutiger Einspeisevergütung lohnt sich meist ein volles Dach: im Beispiel 14,5 statt 9 kWp. Nach dem EEG-Entwurf wären es 4,5 bis 5,5 kWp.",
+"date": "2026-11-23",
+"lead": "Mit der heutigen Einspeisevergütung meist so groß, wie dein Dach es hergibt. In meinem Beispiel empfiehlt Speicherklar Pro 14,5 statt der angebotenen 9 kWp. Käme die EEG-Reform so, wie das Kabinett sie im Juli beschlossen hat, wäre es umgekehrt: dann eher 4,5 bis 5,5 kWp.",
+"body": """
+<p>Das Beispiel ist mein Musterangebot: 9 kWp auf einem Süddach mit 35° Neigung, 4.500 kWh Verbrauch im Jahr, Speicher mit 10 kWh nutzbar, Gesamtpreis 19.000 €, davon 6.500 € für den Speicher. Die PV-Anlage allein kostet also 12.500 €, rund 1.390 € je kWp. Aufs Dach passen höchstens 15 kWp. Gerechnet hab ich mit Speicherklar Pro und den Sonnendaten für das PLZ-Gebiet 47 (Duisburg, Niederrhein): 1.031 kWh je kWp im Jahr. Strompreis 33 ct, Einspeisevergütung 7,70 ct bis 10 kWp und 6,66 ct für den Teil darüber.</p>
+
+<h2>Wie die Rechnung funktioniert</h2>
+<p>Jede kWp mehr bringt Strom, den du entweder selbst nutzt (33 ct gespart) oder einspeist (7,70 ct bzw. 6,66 ct). Dagegen stehen die Kosten. Gerüst, Zählerschrank, Anmeldung und Planung zahlst du einmal, egal wie groß die Anlage wird. In der Rechnung sind das 25 % des PV-Preises. Jedes weitere kWp kostet deshalb nicht 1.390 €, sondern rund 1.040 €.</p>
+<p>Die PV-Anlage rechne ich über 20 Jahre, so lange läuft die Einspeisevergütung. Den Speicher über 15 Jahre. Für jede PV-Größe sucht die Rechnung die passende Speichergröße mit, weil beides zusammenhängt. Das Ergebnis ist der Überschuss: was nach allen Kosten übrig bleibt, ohne Zinsen und ohne steigende Strompreise.</p>
+
+<h2>Beispielrechnung: 9 kWp im Angebot, Platz für 15</h2>
+<!--BARS-->
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>PV-Anlage</th><th>EEG heute<br>Überschuss, Speicher</th><th>EEG-Entwurf<br>Überschuss, Speicher</th></tr></thead>
+<tbody>
+<tr><td>4,5 kWp</td><td class="num">+6.369 €<br>6 kWh</td><td class="num">+3.456 €<br>6 kWh</td></tr>
+<tr><td>5,5 kWp</td><td class="num">+7.740 €<br>6 kWh</td><td class="num">+3.529 €<br>7 kWh</td></tr>
+<tr><td>7,5 kWp</td><td class="num">+9.873 €<br>6 kWh</td><td class="num">+2.899 €<br>7 kWh</td></tr>
+<tr><td>9 kWp (Angebot)</td><td class="num">+11.242 €<br>6 kWh</td><td class="num">+2.078 €<br>7 kWh</td></tr>
+<tr><td>10,5 kWp</td><td class="num">+12.406 €<br>6 kWh</td><td class="num">+1.124 €<br>8 kWh</td></tr>
+<tr><td>12,5 kWp</td><td class="num">+13.634 €<br>7 kWh</td><td class="num">−338 €<br>8 kWh</td></tr>
+<tr class="hl"><td>14,5 kWp</td><td class="num">+14.748 €<br>7 kWh</td><td class="num">−1.930 €<br>8 kWh</td></tr>
+<tr><td>15 kWp</td><td class="num">+15.013 €<br>7 kWh</td><td class="num">−2.340 €<br>8 kWh</td></tr>
+</tbody></table></div>
+<p><b>Mit heutiger Vergütung</b> steigt der Überschuss bis zum vollen Dach. 14,5 kWp bringen 3.506 € mehr als die angebotenen 9 kWp. Speicherklar Pro empfiehlt die kleinste Größe, die höchstens 500 € unter der besten liegt, deshalb 14,5 und nicht 15 kWp. Der Speicher wächst dabei kaum mit: von 6 auf 7 kWh.</p>
+<p><b>Mit dem EEG-Entwurf</b> (keine Vergütung, höchstens 50 % der Leistung einspeisen) ist es umgekehrt. Am meisten bleibt bei 5,5 kWp übrig, die Empfehlung liegt bei 4,5 kWp. Ab 12,5 kWp bleibt zusammen mit dem Speicher nichts mehr übrig. Ohne Vergütung zählt nur der Strom, den du selbst nutzt, und den deckt eine kleine Anlage mit Speicher schon weitgehend.</p>
+<p>In beiden Fällen ist der 10-kWh-Speicher aus dem Angebot größer als nötig. Mehr dazu unter <a href="pv-angebot-pruefen.html">PV-Angebot prüfen</a>.</p>
+
+<h2>Was gerade beim EEG gilt</h2>
+<p>Stand 23.11.2026. Heute gilt das EEG 2023: Für neue Anlagen mit Inbetriebnahme bis 31.01.2027 gibt es bei Überschusseinspeisung 7,70 ct je kWh bis 10 kWp und 6,66 ct für den Teil darüber, 20 Jahre lang (<a href="https://www.bundesnetzagentur.de/DE/Fachthemen/ElektrizitaetundGas/ErneuerbareEnergien/EEG_Foerderung/start.html" rel="noopener">Bundesnetzagentur</a>).</p>
+<p>Das Bundeskabinett hat am 29.07.2026 einen Entwurf beschlossen, nach dem neue kleine Anlagen ab 2027 keine feste Vergütung mehr bekommen und höchstens 50 % ihrer Leistung einspeisen dürfen (<a href="https://www.bundeswirtschaftsministerium.de/Redaktion/DE/Pressemitteilungen/2026/07/20260729-eeg-novelle-und-netzanschlusspaket.html" rel="noopener">Bundeswirtschaftsministerium, 29.07.2026</a>; <a href="https://dserver.bundestag.de/btd/21/078/2107867.pdf" rel="noopener">Bundestag, Drucksache 21/7867</a>). Mitte November haben Medien berichtet, dass Union und SPD die Vergütung für neue Anlagen unter 25 kWp doch behalten und die 50-%-Grenze erst darüber anwenden wollen (<a href="https://www.cleanthinking.de/eeg-2027-wirkleistungsbegrenzung-einigung/" rel="noopener">Cleanthinking, 14.11.2026</a>). Wie hoch die Vergütung dann wäre, ist nicht bekannt. Ein Gesetzestext dazu lag nicht vor, die Union will das EEG nur zusammen mit dem Netzpaket verabschieden.</p>
+<p><b>Noch nicht beschlossen:</b> Bundestag und Bundesrat haben nicht abgestimmt. Anlagen, die bis 31.12.2026 in Betrieb gehen, betrifft der Entwurf nicht. Für deine Planung heißt das: Der Tag der Inbetriebnahme entscheidet mit über die richtige Größe. Frag deinen Installateur, wann die Anlage ans Netz gehen kann.</p>
+
+<h2>Und der Speicher? Wächst kaum mit</h2>
+<p>Das siehst du auch im kostenlosen Rechner. Gleiches Haus, Region Ruhrgebiet (PLZ 4), Speicher 500 € je kWh, Einspeisung 7,70 ct, nur die Größe der PV-Anlage ändert sich:</p>
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>PV-Anlage</th><th>Erzeugung<br>im Jahr</th><th>Autarkie ohne<br>mit Speicher</th><th>Beste Größe<br>Plus nach 15 J.</th></tr></thead>
+<tbody>
+<tr><td>6 kWp</td><td class="num">6.024 kWh</td><td class="num">32 %<br>67 %</td><td class="num">6 kWh<br>+2.550 €</td></tr>
+<tr class="hl"><td>9 kWp</td><td class="num">9.035 kWh</td><td class="num">36 %<br>74 %</td><td class="num">6 kWh<br>+2.899 €</td></tr>
+<tr><td>12 kWp</td><td class="num">12.047 kWh</td><td class="num">38 %<br>77 %</td><td class="num">6 kWh<br>+3.050 €</td></tr>
+<tr><td>15 kWp</td><td class="num">15.059 kWh</td><td class="num">40 %<br>80 %</td><td class="num">6 kWh<br>+3.126 €</td></tr>
+</tbody></table></div>
+<p>Die Anlage wird zweieinhalbmal so groß, der beste Speicher bleibt bei 6 kWh. Was der Speicher abends liefern kann, hängt an deinem Verbrauch, nicht an der Dachfläche. Die Regel „1 kWh Speicher je kWp“ führt deshalb bei großen Anlagen zu großen Speichern, die sich nicht rechnen. Siehe <a href="stromspeicher-groesse-berechnen.html">Stromspeicher-Größe berechnen</a>.</p>
+<p>Der kostenlose Rechner bewertet nur den Speicher, nicht die Kosten der PV-Anlage. Welche PV-Größe und welcher Speicher zusammen am meisten bringen, rechnet der <a href="../pro/" data-umami-event="artikel-zu-pro" data-umami-event-artikel="pv-anlage-groesse">Angebots-Check</a> von Speicherklar Pro aus deinem Angebot. Vorab bekommst du kostenlos eine erste Einschätzung als Ampel: grün, gelb oder rot, für Speichergröße, Größe der PV-Anlage, Speicherpreis je kWh und PV-Preis je kWp. Trag dafür ein, wie viel kWp höchstens aufs Dach passen. Der Bericht zeigt dann die beste Kombination, mit heutiger Vergütung und mit dem EEG-Entwurf.</p>
+
+<h2>Wann eine große Anlage eher nicht passt</h2>
+<ul>
+<li><b>Der EEG-Entwurf kommt so wie im Juli geplant:</b> Ohne Vergütung landet das volle Dach im Beispiel bei −2.340 €, die 9 kWp aus dem Angebot bei +2.078 €.</li>
+<li><b>Kleiner Verbrauch und keine Vergütung:</b> Bei 3.000 kWh im Jahr bleiben nach dem EEG-Entwurf mit 4,5 kWp nur +264 €, mit 9 kWp sind es −2.579 €. Mit heutiger Vergütung lohnt sich das volle Dach auch hier: 15 kWp bringen +11.055 €, 9 kWp +7.978 €.</li>
+<li><b>Teure Zusatzmodule:</b> Die Rechnung nimmt an, dass jedes weitere kWp rund 1.040 € kostet. Wird es deutlich teurer, etwa wegen einer zweiten Dachfläche mit eigenem Gerüst, kippt die Rechnung früher.</li>
+<li><b>Schatten oder Norddach:</b> Flächen, die wenig Sonne abbekommen, bringen weniger, als die Tabelle zeigt.</li>
+</ul>
+<p>Was das Modell nicht abbildet: Verschattung, Alterung von Modulen und Speicher, Notstrom, dynamische Stromtarife, Zinsen und steigende Strompreise. Auch die 60-%-Grenze des Solarspitzengesetzes für Anlagen ohne Smart Meter und die Stunden mit negativen Börsenpreisen, in denen es keine Vergütung gibt, rechnet es im Fall „EEG heute“ nicht ein. Beides trifft große Anlagen stärker als kleine. Eine Wärmepumpe trägst du getrennt ein; mit Wärmepumpe rechnet der Rechner die Autarkie rund 4 Punkte zu hoch, den Zugewinn durch den Speicher trifft er.</p>
+""",
+"faq": [
+ ("Wie viel kWp brauche ich bei 4.500 kWh Verbrauch?", "Mit heutiger Einspeisevergütung lohnt sich im Beispiel mehr, als du verbrauchst: Speicherklar Pro empfiehlt 14,5 kWp, wenn 15 aufs Dach passen. Nach dem EEG-Entwurf ohne Vergütung wären es 4,5 bis 5,5 kWp. Der Entwurf ist noch nicht beschlossen (Stand 23.11.2026)."),
+ ("Brauche ich bei einer größeren PV-Anlage auch einen größeren Speicher?", "Kaum. Im kostenlosen Rechner bleibt die beste Größe bei 4.500 kWh Verbrauch von 6 bis 15 kWp bei 6 kWh. Der Speicher richtet sich nach deinem Verbrauch am Abend, nicht nach der Dachfläche."),
+ ("Lohnt sich ein volles Dach auch ohne Einspeisevergütung?", "Im Beispiel nicht. Ohne Vergütung und mit höchstens 50 % Einspeisung kosten 15 kWp mehr, als sie in 20 Jahren sparen. Am meisten bleibt bei 5,5 kWp übrig."),
+],
+},
 ]
