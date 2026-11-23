@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Speicherklar für Energieberater – Methodik und Grenzen des Modells</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>@font-face{font-family:"Archivo";src:url(/fonts/archivo-var.woff2) format("woff2");font-weight:100 900;font-stretch:62% 125%;font-display:swap}
+@font-face{font-family:"Source Sans 3";src:url(/fonts/source-sans-3-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Source Sans 3";src:url(/fonts/source-sans-3-latin-600-normal.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Source Sans 3";src:url(/fonts/source-sans-3-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"JetBrains Mono";src:url(/fonts/jetbrains-mono-latin-500-normal.woff2) format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"JetBrains Mono";src:url(/fonts/jetbrains-mono-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+
+section {
+  background: #EDF0F2;
+  color: #15212B;
+  font-family: 'Source Sans 3', sans-serif;
+  padding: 128px 128px 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+section.dark { background: #15212B; color: #FFFFFF; }
+
+.kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8A5A00;
+  margin: 0;
+}
+section.dark .kicker { color: #F2B33D; }
+
+h1 { font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 112px; line-height: 1.04; letter-spacing: -0.02em; margin: 0; }
+h2 { font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 72px; line-height: 1.08; letter-spacing: -0.01em; margin: 0; }
+h3 { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 40px; line-height: 1.15; margin: 0; }
+p { font-size: 32px; line-height: 1.4; margin: 0; }
+
+.lead { font-size: 40px; line-height: 1.35; color: #56666F; }
+section.dark .lead { color: #CBD3DA; }
+.note { font-size: 24px; line-height: 1.4; color: #56666F; }
+section.dark .note { color: #CBD3DA; }
+.hi { color: #8A5A00; }
+section.dark .hi { color: #F2B33D; }
+.spacer { flex: 1; }
+
+.foot {
+  position: absolute; left: 128px; bottom: 64px; width: 1664px;
+  display: flex; justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace; font-size: 24px; color: #56666F;
+}
+section.dark .foot { color: #CBD3DA; }
+.foot p { font-size: 24px; font-family: 'JetBrains Mono', monospace; }
+
+.row { display: flex; gap: 32px; align-items: stretch; }
+.card {
+  flex: 1; background: #FFFFFF; border: 2px solid #CBD3DA; border-radius: 16px;
+  padding: 40px; display: flex; flex-direction: column; gap: 16px;
+  animation: rise 0.5s ease-out both;
+}
+.row .card:nth-child(2) { animation-delay: 0.12s; }
+.row .card:nth-child(3) { animation-delay: 0.24s; }
+.row .card:nth-child(4) { animation-delay: 0.36s; }
+.card p { color: #56666F; }
+.card .big { font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 88px; line-height: 1; color: #15212B; }
+.card .tag { font-family: 'JetBrains Mono', monospace; font-size: 24px; color: #8A5A00; letter-spacing: 0.06em; text-transform: uppercase; }
+.card.accent { background: #15212B; border-color: #15212B; }
+.card.accent h3 { color: #FFFFFF; }
+.card.accent p { color: #CBD3DA; }
+.card.accent .tag { color: #F2B33D; }
+.card.accent .big { color: #F2B33D; }
+
+@keyframes rise { from { opacity: 0; transform: translateY(24px); } }
+
+/* Zaehlerrollen */
+.rolls { display: flex; gap: 10px; align-items: center; }
+.rolls .d {
+  font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 112px; line-height: 1;
+  background: #FFFFFF; color: #15212B; border: 2px solid #CBD3DA; border-radius: 12px;
+  width: 96px; padding: 18px 0; text-align: center;
+}
+.rolls .unit { font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 72px; color: #15212B; margin-left: 12px; }
+
+/* Balken */
+.bars { display: flex; flex-direction: column; gap: 28px; flex: 1; }
+.bar { display: flex; align-items: center; gap: 24px; }
+.bar .lab { width: 220px; font-family: 'JetBrains Mono', monospace; font-size: 24px; color: #56666F; }
+.bar .fill { height: 64px; border-radius: 8px; background: #E39A0B; animation: grow 0.8s ease-out both; transform-origin: left center; }
+.bar .fill.grey { background: #56666F; }
+.bar .val { font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 40px; }
+@keyframes grow { from { transform: scaleX(0); } }
+
+/* Ampel */
+.light { display: flex; align-items: center; gap: 20px; }
+.light p.status { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 32px; color: #15212B; }
+
+/* Belege */
+.grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+.proof { background: #FFFFFF; border: 2px solid #CBD3DA; border-radius: 16px; padding: 32px 36px; display: flex; gap: 20px; align-items: center; animation: rise 0.5s ease-out both; }
+.proof h3 { font-size: 36px; }
+.grid .proof:nth-child(n+4) { animation-delay: 0.2s; }
+
+.steps .card h3 { font-size: 40px; }
+.num { font-family: 'JetBrains Mono', monospace; font-size: 24px; color: #8A5A00; margin: 0; }
+
+.quote { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 40px; line-height: 1.25; color: #8A5A00; }
+section.dark .quote { color: #F2B33D; }
+.url { font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 88px; color: #F2B33D; line-height: 1; }
+
+/* Tabellen */
+table.tbl { border-collapse: collapse; width: 100%; background: #FFFFFF; border: 2px solid #CBD3DA; border-radius: 16px; }
+table.tbl th { font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 500; color: #56666F; text-align: left; padding: 14px 28px; border-bottom: 2px solid #CBD3DA; }
+table.tbl td { font-size: 30px; padding: 11px 28px; border-bottom: 1px solid #CBD3DA; text-align: left; }
+table.tbl td.n { font-family: 'JetBrains Mono', monospace; font-size: 28px; text-align: right; }
+table.tbl th.n { text-align: right; }
+table.tbl tr.em td { background: #FBF3E2; font-weight: 600; }
+
+/* Ablauf */
+.flow { display: flex; align-items: stretch; gap: 16px; }
+.flow .card { padding: 32px 22px; gap: 12px; }
+.flow .card h3 { font-size: 32px; }
+.flow .card .sm { font-size: 24px; line-height: 1.35; color: #56666F; }
+.flow .arr { display: flex; align-items: center; }
+.flow .card:nth-child(3) { animation-delay: 0.1s; }
+.flow .card:nth-child(5) { animation-delay: 0.2s; }
+.flow .card:nth-child(7) { animation-delay: 0.3s; }
+.flow .card:nth-child(9) { animation-delay: 0.4s; }
+
+/* Listen */
+.list { display: flex; flex-direction: column; gap: 0; background: #FFFFFF; border: 2px solid #CBD3DA; border-radius: 16px; }
+.item { display: flex; gap: 32px; padding: 26px 36px; border-bottom: 1px solid #CBD3DA; align-items: baseline; }
+.item h3 { font-size: 32px; width: 420px; flex: none; }
+.item .txt { font-size: 28px; line-height: 1.35; color: #56666F; }
+.cols { display: flex; gap: 48px; }
+.cols > div { flex: 1; display: flex; flex-direction: column; gap: 20px; }
+
+/* Korrekturen */
+.card .rolls .d { color: #15212B; }
+.bar .val { white-space: nowrap; }
+
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#0E161D;overflow:hidden}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:0 0}
+#stage section{position:absolute;inset:0;width:1920px;height:1080px;display:none!important}
+#stage section.on{display:flex!important}
+#stage aside{display:none}
+x-shape{display:block;flex:none}
+x-shape[kind=ellipse]{border-radius:50%}
+x-shape[kind=rounded]{border-radius:16px}
+x-shape[kind=arrow-right]{clip-path:polygon(0 32%,58% 32%,58% 0,100% 50%,58% 100%,58% 68%,0 68%)}
+#nav{position:fixed;right:16px;top:14px;opacity:0;transition:opacity .25s;display:flex;gap:8px;align-items:center;font:500 14px "JetBrains Mono",monospace;color:#CBD3DA;z-index:2}
+#nav button{all:unset;cursor:pointer;width:40px;height:40px;border-radius:8px;background:rgba(255,255,255,.08);color:#fff;text-align:center;line-height:40px;font-size:18px}
+body.ui #nav,#nav:focus-within{opacity:1}
+#nav button:hover{background:rgba(255,255,255,.18)}
+#nav button:focus-visible{outline:2px solid #F2B33D}
+@media print{
+  @page{size:1920px 1080px;margin:0}
+  html,body{overflow:visible;height:auto;background:none}
+  #nav{display:none}
+  #stage{position:static;transform:none!important;width:1920px;height:auto}
+  #stage section{position:relative;display:flex!important;break-after:page}
+  #stage *{animation:none!important}
+}
+</style>
+</head>
+<body>
+<div id="stage">
+<section id="cover" class="dark">
+<p class="kicker">Speicherklar · Für Energieberater</p>
+<div class="spacer"></div>
+<h1>Eine offene Gegenrechnung zum PV- und Speicherangebot.</h1>
+<p class="lead" style="width:1400px">Rechenweg, Datengrundlagen, Prüfung an Messdaten und die Grenzen des Modells.</p>
+<div class="spacer"></div>
+<div class="foot"><p>speicherklar.de/methodik</p><p>01 / 14</p></div>
+<aside>Diese Fassung richtet sich an Fachleute. Sie zeigt nicht nur, was Speicherklar rechnet, sondern wie, womit es geprüft wurde und wo das Modell bekannt danebenliegt.</aside>
+</section>
+<section id="einordnung">
+<p class="kicker">Einordnung</p>
+<h2>Was Speicherklar ist und was nicht</h2>
+<div class="row">
+<div class="card"><p class="tag">Speicherklar ist</p>
+<ul style="font-size:32px;line-height:1.45;margin:0;padding-left:36px;color:#15212B">
+<li>ein unabhängiger Rechner für PV-Anlage und Stromspeicher</li>
+<li>die zweite Rechnung zum Angebot, vor der Unterschrift</li>
+<li>offen: Rechenweg und Code liegen auf GitHub</li>
+</ul></div>
+<div class="card"><p class="tag">Speicherklar ist nicht</p>
+<ul style="font-size:32px;line-height:1.45;margin:0;padding-left:36px;color:#15212B">
+<li>eine Beratung vor Ort</li>
+<li>eine Verschattungsanalyse oder Elektroplanung</li>
+<li>ein Vermittler: keine Provision, keine Leads, keine Partner-Installateure</li>
+</ul></div>
+</div>
+<p class="quote">Passt ein Angebot, sagt der Bericht das auch.</p>
+<div class="foot"><p>SPEICHERKLAR</p><p>02 / 14</p></div>
+<aside>Speicherklar ergänzt Ihre Arbeit, es ersetzt sie nicht. Was vor Ort zu klären ist, etwa Verschattung oder Notstrom, bildet das Modell bewusst nicht ab. Dazu später mehr.</aside>
+</section>
+<section id="rechenweg">
+<p class="kicker">Der Rechenweg</p>
+<h2>Eine Jahressimulation in 5-Minuten-Schritten</h2>
+<div class="flow">
+<div class="card"><p class="num">01</p><h3>Eingaben</h3><p class="sm">kWp je Dachseite mit Neigung, Jahresverbrauch; optional Wärmepumpe, E-Auto, Preise, Laufzeit</p></div>
+<div class="arr"><x-shape kind="arrow-right" style="background:#E39A0B;width:36px;height:32px"></x-shape></div>
+<div class="card"><p class="num">02</p><h3>PV-Ertrag</h3><p class="sm">Sonnenstand je Stunde; echtes Wetterjahr, skaliert auf Monatssumme und Diffusanteil der Region</p></div>
+<div class="arr"><x-shape kind="arrow-right" style="background:#E39A0B;width:36px;height:32px"></x-shape></div>
+<div class="card"><p class="num">03</p><h3>Verbrauch</h3><p class="sm">Haushalt mit kurzen Lastspitzen; Wärmepumpe gleichmäßig, nach gemessener Monats- und Stundenverteilung</p></div>
+<div class="arr"><x-shape kind="arrow-right" style="background:#E39A0B;width:36px;height:32px"></x-shape></div>
+<div class="card"><p class="num">04</p><h3>Speicher</h3><p class="sm">Laden und Entladen je Zeitschritt; 88 % Wirkungsgrad je Zyklus, volle Kapazität nutzbar</p></div>
+<div class="arr"><x-shape kind="arrow-right" style="background:#E39A0B;width:36px;height:32px"></x-shape></div>
+<div class="card accent"><p class="num" style="color:#F2B33D">05</p><h3>Bilanz</h3><p class="sm" style="color:#CBD3DA">Plus über die Laufzeit je Speichergröße; die Größe mit dem höchsten Plus ist die beste</p></div>
+</div>
+<p class="note">Speicherklar Pro rechnet zusätzlich mit Sonnendaten je zweistelligem PLZ-Gebiet und setzt beim Speicherpreis 30 % Fixkosten an, damit verschiedene Größen fair verglichen werden.</p>
+<div class="foot"><p>SPEICHERKLAR · Code: src/sim.js, src/pro.js auf GitHub</p><p>03 / 14</p></div>
+<aside>Der kostenlose Rechner läuft vollständig im Browser. Jede Zahl auf der Website kommt aus diesem Simulationskern. Speicherklar Pro nutzt denselben Kern mit genaueren Sonnendaten.</aside>
+</section>
+<section id="daten">
+<p class="kicker">Datengrundlagen</p>
+<h2>Woher die Zahlen kommen</h2>
+<table class="tbl">
+<tr><th>Quelle</th><th>Wofür</th><th>Umfang</th></tr>
+<tr><td>PVGIS-SARAH3</td><td>Sonnendaten der 10 Regionen (erste PLZ-Ziffer)</td><td>Monatssummen 2014–2023</td></tr>
+<tr><td>PVGIS-SARAH3, Jahr 2020</td><td>Stündlicher Wetterverlauf</td><td>8.760 Stunden, je Region skaliert</td></tr>
+<tr><td>PVGIS je PLZ-Gebiet</td><td>Sonnendaten in Speicherklar Pro</td><td>zweistelliges PLZ-Gebiet</td></tr>
+<tr><td>WPuQ, ISFH Hameln</td><td>Verteilung der Wärmepumpe, Prüfung des Modells</td><td>30 Häuser, Minutenwerte 2019; Stundenwerte 2020</td></tr>
+<tr><td>Eigene Anlage, Krefeld</td><td>Prüfung des Speichermodells</td><td>5-Minuten-Werte, Okt. 2021 bis Okt. 2026</td></tr>
+</table>
+<p class="note">WPuQ: Zenodo-Datensatz 5642902, Lizenz CC BY 4.0, frei zugänglich.</p>
+<div class="foot"><p>SPEICHERKLAR</p><p>04 / 14</p></div>
+<aside>Alle Datensätze sind öffentlich, bis auf die Messwerte meiner eigenen Anlage. Wer die Prüfung nachvollziehen will, findet die WPuQ-Rohdaten frei bei Zenodo.</aside>
+</section>
+<section id="annahmen">
+<p class="kicker">Annahmen</p>
+<h2>Das Standard-Beispiel</h2>
+<table class="tbl">
+<tr><th>Parameter</th><th>Standardwert im Rechner</th></tr>
+<tr><td>PV-Anlage</td><td>9 kWp Süd, 35°, Region 4 (Ruhrgebiet)</td></tr>
+<tr><td>Verbrauch</td><td>4.500 kWh im Jahr, ohne Wärmepumpe, ohne E-Auto</td></tr>
+<tr><td>Speicher</td><td>500 €/kWh; 88 % Wirkungsgrad je Zyklus, volle Kapazität nutzbar</td></tr>
+<tr><td>Strompreis</td><td>33 ct/kWh, über die Laufzeit konstant</td></tr>
+<tr><td>Einspeisevergütung</td><td>7,70 ct/kWh</td></tr>
+<tr><td>Laufzeit</td><td>15 Jahre</td></tr>
+<tr class="em"><td>Beste Größe</td><td>6 kWh: +2.899 € nach 15 Jahren, bezahlt nach 7,6 Jahren</td></tr>
+</table>
+<p class="note">Ertrag 1.004 kWh je kWp. Quelle: sim.js, Modellstand 14.11.2026. Alle Werte lassen sich im Rechner ändern.</p>
+<div class="foot"><p>SPEICHERKLAR</p><p>05 / 14</p></div>
+<aside>Der Strompreis bleibt bewusst gleich. Wer mit steigenden Preisen rechnen will, trägt den erwarteten Durchschnittspreis über die Laufzeit ein. Wie stark das die Empfehlung verschiebt, zeigt die nächste Folie.</aside>
+</section>
+<section id="wetter">
+<p class="kicker">Robustheit</p>
+<h2>Wie robust die Empfehlung ist</h2>
+<table class="tbl">
+<tr><th>Was variiert</th><th>Spanne</th><th>Beste Größe</th><th>Plus nach 15 Jahren</th></tr>
+<tr><td>Wetterjahr</td><td>2014 bis 2023</td><td>immer 6 kWh</td><td>2.643 bis 2.995 €</td></tr>
+<tr><td>Region</td><td>alle 10 PLZ-Regionen</td><td>immer 6 kWh</td><td>2.668 bis 3.380 €</td></tr>
+<tr><td>Strompreis (Durchschnitt)</td><td>30 / 33 / 36 / 40 / 45 ct</td><td>5 / 6 / 6 / 7 / 7 kWh</td><td>–</td></tr>
+<tr><td>Speicherannahmen der HTW Berlin</td><td>90 % Kapazität, 83,9 % Wirkungsgrad</td><td>bleibt 6 kWh</td><td>rund 2.390 € statt 2.899 €</td></tr>
+</table>
+<p>Das Wetterjahr 2020 ist gewählt, weil es im Standard-Beispiel in der Mitte der Jahre 2014 bis 2023 liegt. Die beste Größe hängt vor allem am Verbrauch, kaum an Ort und Wetter.</p>
+<div class="foot"><p>SPEICHERKLAR · Standard-Beispiel, sim.js, Stand 14.11.2026</p><p>06 / 14</p></div>
+<aside>Die Strompreis-Spanne entspricht −1,4 bis +4,3 Prozent pro Jahr ab 33 ct über 15 Jahre. Für die Beratung wichtig: Über zehn Wetterjahre und alle Regionen bleibt die Empfehlung gleich. Am stärksten wirkt die Annahme zum Strompreis. Die Speicherannahmen der HTW Berlin senken das Plus, ändern aber die beste Größe nicht.</aside>
+</section>
+<section id="pruefspeicher">
+<p class="kicker">Prüfung 1 · Eigene Anlage</p>
+<h2>Speichermodell mit echten Messwerten</h2>
+<div class="row">
+<div class="card"><p class="tag">Netzbezug</p><p class="big" style="font-size:72px">+2,3 %</p><p>gerechnet 9.716 kWh, gemessen 9.493 kWh</p></div>
+<div class="card"><p class="tag">Autarkie</p><p class="big" style="font-size:72px">44,8 %</p><p>gerechnet, gemessen 46,1 %</p></div>
+<div class="card"><p class="tag">PV-Ertrag</p><p class="big" style="font-size:72px">9.764</p><p>kWh gerechnet, gemessen im Mittel 2022–2025: 9.847 kWh</p></div>
+</div>
+<p>Echte 5-Minuten-Erzeugung und -Last ins Speichermodell gegeben. Mehr Wirkungsgrad (94,2 %) und begrenzte Leistung des echten Speichers heben sich auf.</p>
+<p class="note">Anlage: Krefeld, 12,92 kWp Ost-West 45°, morgens und abends verschattet, 10 kWh Speicher, Erdwärmepumpe, Pool und E-Auto an einem Zähler. Prüfjahr 26.10.2025 bis 25.10.2026, 336 vollständige Tage.</p>
+<div class="foot"><p>SPEICHERKLAR</p><p>07 / 14</p></div>
+<aside>Der echte Speicher lädt mit höchstens etwa 2,5 kW und entlädt mit etwa 3,85 kW. Diese Prüfung trennt die Speicher-Physik von den Profilen. Ergebnis: Die Speicherrechnung selbst stimmt. Abweichungen kommen, wenn überhaupt, aus den angenommenen Erzeugungs- und Lastprofilen.</aside>
+</section>
+<section id="pruefhaeuser">
+<p class="kicker">Prüfung 2 · 30 gemessene Einfamilienhäuser</p>
+<h2>Autarkie gemessen und gerechnet</h2>
+<table class="tbl">
+<tr><th>Autarkie in %</th><th class="n">ohne</th><th class="n">4 kWh</th><th class="n">6 kWh</th><th class="n">8 kWh</th><th class="n">10 kWh</th></tr>
+<tr><td>Nur Haushalt, gemessen</td><td class="n">38,5</td><td class="n">61,0</td><td class="n">69,1</td><td class="n">73,7</td><td class="n">76,4</td></tr>
+<tr class="em"><td>Nur Haushalt, Rechner</td><td class="n">35,2</td><td class="n">61,9</td><td class="n">70,3</td><td class="n">74,8</td><td class="n">77,3</td></tr>
+<tr><td>Mit Wärmepumpe, gemessen</td><td class="n">24,8</td><td class="n">35,3</td><td class="n">39,3</td><td class="n">42,4</td><td class="n">44,7</td></tr>
+<tr class="em"><td>Mit Wärmepumpe, Rechner</td><td class="n">29,6</td><td class="n">39,1</td><td class="n">43,3</td><td class="n">46,2</td><td class="n">48,3</td></tr>
+</table>
+<p>Mit Speicher trifft der Rechner die Haushalte auf 1–2 Punkte. Mit Wärmepumpe liegt er rund 4 Punkte zu hoch, den Zugewinn durch den Speicher trifft er: 18,7 gerechnet gegen 19,9 Punkte gemessen.</p>
+<p class="note">Daten: WPuQ (ISFH Hameln), Minutenwerte 2019, Wetter 2019 Hameln. Anlage je 4.500 kWh Haushaltsstrom 9 kWp; mit Wärmepumpe 3 kWp je 1.000 kWh.</p>
+<div class="foot"><p>SPEICHERKLAR</p><p>08 / 14</p></div>
+<aside>Ohne Speicher rechnet das Modell rund 3 Punkte zu wenig Eigenverbrauch, weil das Haushaltsprofil spitzer ist als im Mittel gemessen. Dadurch wirkt der Speicher leicht zu gut. Darauf kommt die Folie zu den Abweichungen zurück.</aside>
+</section>
+<section id="pruefhtw">
+<p class="kicker">Prüfung 3 · Vergleich mit dem Unabhängigkeitsrechner der HTW Berlin</p>
+<h2>Gleiches Haus, zwei Rechner</h2>
+<table class="tbl">
+<tr><th>Autarkie in %</th><th class="n">ohne</th><th class="n">4 kWh</th><th class="n">6 kWh</th><th class="n">8 kWh</th><th class="n">10 kWh</th></tr>
+<tr><td>HTW Berlin</td><td class="n">36</td><td class="n">61</td><td class="n">69</td><td class="n">75</td><td class="n">77</td></tr>
+<tr><td>Speicherklar</td><td class="n">35</td><td class="n">64</td><td class="n">72</td><td class="n">76</td><td class="n">79</td></tr>
+<tr class="em"><td>Speicherklar mit HTW-Speicherwerten</td><td class="n">35</td><td class="n">61</td><td class="n">69</td><td class="n">74</td><td class="n">77</td></tr>
+</table>
+<p>Der Unterschied liegt fast nur an den Speicherannahmen. Mit 90 % nutzbarer Kapazität und 83,9 % Wirkungsgrad liegen beide gleichauf. Die beste Größe bleibt 6 kWh, das Plus sinkt auf rund 2.390 €.</p>
+<p class="note">Annahmen: Region 1, 9 kWp Süd, 35°, 4.500 kWh. Ertrag 1.010 kWh je kWp (HTW 1.024). HTW abgerufen 10.11.2026, Speicherklar gerechnet 14.11.2026.</p>
+<div class="foot"><p>SPEICHERKLAR</p><p>09 / 14</p></div>
+<aside>Speicherklar rechnet mit 88 Prozent je Zyklus und voller Kapazität. Zum Vergleich: An meiner eigenen Anlage habe ich 94,2 Prozent Wirkungsgrad gemessen. Wer vorsichtiger rechnen will, findet hier, was die HTW-Annahmen am Ergebnis ändern.</aside>
+</section>
+<section id="fehler">
+<p class="kicker">Gefunden und behoben</p>
+<h2>Zwei Fehler, offen beschrieben</h2>
+<div class="row" style="gap:48px;align-items:center">
+<div style="width:1000px;display:flex;flex-direction:column;gap:24px">
+<p class="tag" style="font-family:'JetBrains Mono',monospace;font-size:24px;color:#56666F;margin:0">SPEICHER-NUTZEN, EIGENE ANLAGE, 10 KWH</p>
+<div class="bars">
+<div class="bar"><p class="lab" style="width:260px">gemessen</p><div class="fill grey" style="width:290px"></div><p class="val">1.860 kWh</p></div>
+<div class="bar"><p class="lab" style="width:260px">ursprünglich</p><div class="fill" style="width:440px;opacity:0.45"></div><p class="val">2.819 kWh</p></div>
+<div class="bar"><p class="lab" style="width:260px">nur WP korrigiert</p><div class="fill" style="width:179px;opacity:0.45"></div><p class="val">1.146 kWh</p></div>
+<div class="bar"><p class="lab" style="width:260px">heute</p><div class="fill" style="width:271px"></div><p class="val">1.735 kWh</p></div>
+</div>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<div class="card"><h3>Wärmepumpe</h3><p style="font-size:28px">Bekam die Lastspitzen eines Haushalts. Läuft jetzt gleichmäßig, nach gemessener Verteilung.</p></div>
+<div class="card"><h3>Wetter</h3><p style="font-size:28px">Gewürfeltes Tageswetter streute im Sommer doppelt so stark. Jetzt ein echtes Wetterjahr.</p></div>
+</div>
+</div>
+<div class="foot"><p>SPEICHERKLAR · Änderungen live seit 14.11.2026</p><p>10 / 14</p></div>
+<aside>Der erste Kern hat den Nutzen des Speichers an meiner Anlage um rund die Hälfte überschätzt. Nur die Wärmepumpe zu korrigieren hätte ihn deutlich unterschätzt. Erst beide Korrekturen zusammen treffen die Messung. Die Fehler stehen offen auf der Methodik-Seite und im Ratgeber-Artikel.</aside>
+</section>
+<section id="grenzen">
+<p class="kicker">Grenzen des Modells</p>
+<h2>Was das Modell nicht abbildet</h2>
+<div class="list">
+<div class="item"><h3>Notstrom</h3><p class="txt">Ein Nutzen als Ersatz- oder Notstrom geht nicht in die Bilanz ein.</p></div>
+<div class="item"><h3>Verschattung</h3><p class="txt">Bäume, Gauben oder Nachbargebäude werden nicht berücksichtigt.</p></div>
+<div class="item"><h3>Alterung</h3><p class="txt">Der Speicher behält über die ganze Laufzeit seine volle Kapazität.</p></div>
+<div class="item"><h3>Dynamische Tarife</h3><p class="txt">Laden aus dem Netz zu günstigen Stunden ist nicht abgebildet.</p></div>
+<div class="item" style="border-bottom:none"><h3>Strompreis</h3><p class="txt">Bleibt über die Laufzeit gleich. Eine erwartete Steigerung geht nur über den Durchschnittspreis.</p></div>
+</div>
+<p class="quote">Diese Punkte gehören in Ihre Beratung vor Ort.</p>
+<div class="foot"><p>SPEICHERKLAR</p><p>11 / 14</p></div>
+<aside>Diese Grenzen stehen auch auf der Website und in jedem Artikel. Besonders Verschattung und ein Notstrom-Wunsch können die Empfehlung im Einzelfall deutlich verändern, und genau dort ist die Einschätzung vor Ort unersetzlich.</aside>
+</section>
+<section id="abweichungen">
+<p class="kicker">Grenzen des Modells</p>
+<h2>Wo das Modell bekannt danebenliegt</h2>
+<div class="list">
+<div class="item"><h3>Ohne Speicher</h3><p class="txt">Rund 3 Punkte zu wenig Eigenverbrauch, weil das Haushaltsprofil spitzer ist als gemessen. Der Speicher wirkt dadurch leicht zu gut.</p></div>
+<div class="item"><h3>Mit Wärmepumpe</h3><p class="txt">Autarkie rund 4 Punkte zu hoch. Den Zugewinn durch den Speicher trifft der Rechner.</p></div>
+<div class="item"><h3>Speicherannahmen</h3><p class="txt">88 % je Zyklus, volle Kapazität. Mit den Werten der HTW Berlin sinkt das Plus im Standard-Beispiel von 2.899 auf rund 2.390 €.</p></div>
+<div class="item" style="border-bottom:none"><h3>Sonnendaten</h3><p class="txt">Kostenloser Rechner: 10 Regionen nach erster PLZ-Ziffer. Speicherklar Pro: zweistelliges PLZ-Gebiet.</p></div>
+</div>
+<p class="note">Quellen: Prüfung an 30 WPuQ-Häusern und Vergleich HTW Berlin, sim.js, Modellstand 14.11.2026.</p>
+<div class="foot"><p>SPEICHERKLAR</p><p>12 / 14</p></div>
+<aside>Ich nenne die Abweichungen lieber selbst, als dass sie jemand findet. Für die Beratung heißt das: Bei Häusern mit Wärmepumpe ist die absolute Autarkie etwas zu optimistisch, die Größenempfehlung für den Speicher aber belastbar.</aside>
+</section>
+<section id="praxis">
+<p class="kicker">Für die Praxis</p>
+<h2>Was das für Ihre Beratung heißt</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+<div class="card"><h3>Größe am Verbrauch ausrichten</h3><p style="font-size:28px">1 kWh je 1.000 kWh Verbrauch liegt höchstens rund 220 € neben der besten Größe. „1 kWh je kWp“ kann rund 1.520 € kosten.</p></div>
+<div class="card"><h3>Kunden selbst rechnen lassen</h3><p style="font-size:28px">Ergebnis ohne Anmeldung. Zum Angebot gibt es eine erste Einschätzung, kostenlos, als Ampel: grün, gelb oder rot.</p></div>
+<div class="card"><h3>Bericht als Gesprächsgrundlage</h3><p style="font-size:28px">Speicherklar Pro zeigt die beste Kombination aus PV-Anlage und Speicher, die Ersparnis und Fragen an den Installateur.</p></div>
+<div class="card"><h3>Vor Ort ergänzen</h3><p style="font-size:28px">Verschattung, Notstrom-Wunsch und Tarifmodell klären. Das Modell bildet sie nicht ab.</p></div>
+</div>
+<div class="foot"><p>SPEICHERKLAR · Faustformel: sim.js, 14.11.2026</p><p>13 / 14</p></div>
+<aside>Die Faustformel gilt für 3.000 bis 6.000 kWh und 6 bis 12 kWp; das Beispiel mit 1.520 Euro rechnet mit 4.500 kWh und 12 kWp. Speicherklar Pro kostet 49 Euro bis 31.01.2027, danach 89 Euro, einmalig. Die Faustformel ist für Erstgespräche gedacht. Für die konkrete Entscheidung lohnt sich die Rechnung mit den echten Werten des Hauses.</aside>
+</section>
+<section id="cta" class="dark">
+<p class="kicker">Selbst prüfen</p>
+<div class="spacer"></div>
+<h1>Rechnen Sie ein Angebot nach.</h1>
+<p class="url">speicherklar.de</p>
+<p class="lead" style="width:1400px">Rechner kostenlos und ohne Anmeldung. Rechenweg, Code und Prüfung stehen offen auf der Methodik-Seite.</p>
+<div class="spacer"></div>
+<div class="foot"><p>Verkäufer rechnen mit Juli. Ich rechne mit November.</p><p>kontakt@speicherklar.de</p></div>
+<aside>Am besten mit einem echten Angebot aus Ihrer Beratung ausprobieren. Fragen zur Methodik gern an kontakt@speicherklar.de.</aside>
+</section>
+</div>
+<div id="nav"><span id="cnt"></span> <button id="prev" aria-label="Vorherige Folie">‹</button> <button id="next" aria-label="Nächste Folie">›</button> <button id="full" aria-label="Vollbild">⛶</button></div>
+<script>
+(function(){
+  var st=document.getElementById('stage'), s=st.querySelectorAll('section'), n=s.length, i=0;
+  var c=document.getElementById('cnt');
+  function fit(){var k=Math.min(innerWidth/1920,innerHeight/1080);
+    st.style.transform='scale('+k+') translate(-50%,-50%)';}
+  function show(j){i=Math.max(0,Math.min(n-1,j));
+    for(var a=0;a<n;a++)s[a].classList.toggle('on',a===i);
+    c.textContent=(i+1)+' / '+n; history.replaceState(null,'','#'+(i+1));}
+  addEventListener('resize',fit);
+  addEventListener('keydown',function(e){
+    if(['ArrowRight','ArrowDown','PageDown',' ','Enter'].indexOf(e.key)>=0){e.preventDefault();show(i+1);}
+    else if(['ArrowLeft','ArrowUp','PageUp','Backspace'].indexOf(e.key)>=0){e.preventDefault();show(i-1);}
+    else if(e.key==='Home')show(0); else if(e.key==='End')show(n-1);
+    else if(e.key==='f'&&document.documentElement.requestFullscreen)document.documentElement.requestFullscreen();});
+  document.getElementById('prev').onclick=function(){show(i-1)};
+  document.getElementById('next').onclick=function(){show(i+1)};
+  document.getElementById('full').onclick=function(){
+    if(document.fullscreenElement)document.exitFullscreen();
+    else if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen();};
+  var t=null; function ui(){document.body.classList.add('ui');clearTimeout(t);t=setTimeout(function(){document.body.classList.remove('ui')},2500);}
+  addEventListener('mousemove',ui); addEventListener('touchstart',ui,{passive:true});
+  var x0=null;
+  addEventListener('touchstart',function(e){x0=e.touches[0].clientX},{passive:true});
+  addEventListener('touchend',function(e){if(x0===null)return;var d=e.changedTouches[0].clientX-x0;
+    if(Math.abs(d)>40)show(i+(d<0?1:-1));x0=null},{passive:true});
+  fit(); show((parseInt(location.hash.slice(1),10)||1)-1);
+})();
+</script>
+</body>
+</html>

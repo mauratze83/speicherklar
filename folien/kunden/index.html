@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Speicherklar – Die zweite Rechnung vor jeder Unterschrift</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>@font-face{font-family:"Archivo";src:url(/fonts/archivo-var.woff2) format("woff2");font-weight:100 900;font-stretch:62% 125%;font-display:swap}
+@font-face{font-family:"Source Sans 3";src:url(/fonts/source-sans-3-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Source Sans 3";src:url(/fonts/source-sans-3-latin-600-normal.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Source Sans 3";src:url(/fonts/source-sans-3-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"JetBrains Mono";src:url(/fonts/jetbrains-mono-latin-500-normal.woff2) format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"JetBrains Mono";src:url(/fonts/jetbrains-mono-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+
+section {
+  background: #EDF0F2;
+  color: #15212B;
+  font-family: 'Source Sans 3', sans-serif;
+  padding: 128px 128px 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+section.dark { background: #15212B; color: #FFFFFF; }
+
+.kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8A5A00;
+  margin: 0;
+}
+section.dark .kicker { color: #F2B33D; }
+
+h1 { font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 112px; line-height: 1.04; letter-spacing: -0.02em; margin: 0; }
+h2 { font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 72px; line-height: 1.08; letter-spacing: -0.01em; margin: 0; }
+h3 { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 40px; line-height: 1.15; margin: 0; }
+p { font-size: 32px; line-height: 1.4; margin: 0; }
+
+.lead { font-size: 40px; line-height: 1.35; color: #56666F; }
+section.dark .lead { color: #CBD3DA; }
+.note { font-size: 24px; line-height: 1.4; color: #56666F; }
+section.dark .note { color: #CBD3DA; }
+.hi { color: #8A5A00; }
+section.dark .hi { color: #F2B33D; }
+.spacer { flex: 1; }
+
+.foot {
+  position: absolute; left: 128px; bottom: 64px; width: 1664px;
+  display: flex; justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace; font-size: 24px; color: #56666F;
+}
+section.dark .foot { color: #CBD3DA; }
+.foot p { font-size: 24px; font-family: 'JetBrains Mono', monospace; }
+
+.row { display: flex; gap: 32px; align-items: stretch; }
+.card {
+  flex: 1; background: #FFFFFF; border: 2px solid #CBD3DA; border-radius: 16px;
+  padding: 40px; display: flex; flex-direction: column; gap: 16px;
+  animation: rise 0.5s ease-out both;
+}
+.row .card:nth-child(2) { animation-delay: 0.12s; }
+.row .card:nth-child(3) { animation-delay: 0.24s; }
+.row .card:nth-child(4) { animation-delay: 0.36s; }
+.card p { color: #56666F; }
+.card .big { font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 88px; line-height: 1; color: #15212B; }
+.card .tag { font-family: 'JetBrains Mono', monospace; font-size: 24px; color: #8A5A00; letter-spacing: 0.06em; text-transform: uppercase; }
+.card.accent { background: #15212B; border-color: #15212B; }
+.card.accent h3 { color: #FFFFFF; }
+.card.accent p { color: #CBD3DA; }
+.card.accent .tag { color: #F2B33D; }
+.card.accent .big { color: #F2B33D; }
+
+@keyframes rise { from { opacity: 0; transform: translateY(24px); } }
+
+/* Zaehlerrollen */
+.rolls { display: flex; gap: 10px; align-items: center; }
+.rolls .d {
+  font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 112px; line-height: 1;
+  background: #FFFFFF; color: #15212B; border: 2px solid #CBD3DA; border-radius: 12px;
+  width: 96px; padding: 18px 0; text-align: center;
+}
+.rolls .unit { font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 72px; color: #15212B; margin-left: 12px; }
+
+/* Balken */
+.bars { display: flex; flex-direction: column; gap: 28px; flex: 1; }
+.bar { display: flex; align-items: center; gap: 24px; }
+.bar .lab { width: 220px; font-family: 'JetBrains Mono', monospace; font-size: 24px; color: #56666F; }
+.bar .fill { height: 64px; border-radius: 8px; background: #E39A0B; animation: grow 0.8s ease-out both; transform-origin: left center; }
+.bar .fill.grey { background: #56666F; }
+.bar .val { font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 40px; }
+@keyframes grow { from { transform: scaleX(0); } }
+
+/* Ampel */
+.light { display: flex; align-items: center; gap: 20px; }
+.light p.status { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 32px; color: #15212B; }
+
+/* Belege */
+.grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+.proof { background: #FFFFFF; border: 2px solid #CBD3DA; border-radius: 16px; padding: 32px 36px; display: flex; gap: 20px; align-items: center; animation: rise 0.5s ease-out both; }
+.proof h3 { font-size: 36px; }
+.grid .proof:nth-child(n+4) { animation-delay: 0.2s; }
+
+.steps .card h3 { font-size: 40px; }
+.num { font-family: 'JetBrains Mono', monospace; font-size: 24px; color: #8A5A00; margin: 0; }
+
+.quote { font-family: 'Archivo', sans-serif; font-weight: 700; font-size: 40px; line-height: 1.25; color: #8A5A00; }
+section.dark .quote { color: #F2B33D; }
+.url { font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 88px; color: #F2B33D; line-height: 1; }
+
+/* Korrekturen */
+.card .rolls .d { color: #15212B; }
+.bar .val { white-space: nowrap; }
+
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#0E161D;overflow:hidden}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:0 0}
+#stage section{position:absolute;inset:0;width:1920px;height:1080px;display:none!important}
+#stage section.on{display:flex!important}
+#stage aside{display:none}
+x-shape{display:block;flex:none}
+x-shape[kind=ellipse]{border-radius:50%}
+x-shape[kind=rounded]{border-radius:16px}
+x-shape[kind=arrow-right]{clip-path:polygon(0 32%,58% 32%,58% 0,100% 50%,58% 100%,58% 68%,0 68%)}
+#nav{position:fixed;right:16px;top:14px;opacity:0;transition:opacity .25s;display:flex;gap:8px;align-items:center;font:500 14px "JetBrains Mono",monospace;color:#CBD3DA;z-index:2}
+#nav button{all:unset;cursor:pointer;width:40px;height:40px;border-radius:8px;background:rgba(255,255,255,.08);color:#fff;text-align:center;line-height:40px;font-size:18px}
+body.ui #nav,#nav:focus-within{opacity:1}
+#nav button:hover{background:rgba(255,255,255,.18)}
+#nav button:focus-visible{outline:2px solid #F2B33D}
+@media print{
+  @page{size:1920px 1080px;margin:0}
+  html,body{overflow:visible;height:auto;background:none}
+  #nav{display:none}
+  #stage{position:static;transform:none!important;width:1920px;height:auto}
+  #stage section{position:relative;display:flex!important;break-after:page}
+  #stage *{animation:none!important}
+}
+</style>
+</head>
+<body>
+<div id="stage">
+<section id="cover" class="dark">
+<p class="kicker">Speicherklar · Stromspeicher-Rechner</p>
+<div class="spacer"></div>
+<h1>Die zweite Rechnung vor jeder Unterschrift.</h1>
+<p class="lead" style="width:1300px">Ein unabhängiger Rechner, der prüft, ob PV-Anlage und Speicher zu deinem Haus passen. Ohne Anmeldung, ohne Provision.</p>
+<div class="spacer"></div>
+<div class="foot"><p>speicherklar.de</p><p>01 / 12</p></div>
+<aside>Kurz vorstellen: Speicherklar ist ein unabhängiger Rechner für PV-Anlage und Stromspeicher. Die Mission steht im Titel: die zweite Rechnung, bevor jemand ein Angebot unterschreibt.</aside>
+</section>
+<section id="vision">
+<p class="kicker">Vision und Mission</p>
+<h2>Wofür Speicherklar steht</h2>
+<div class="row">
+<div class="card"><p class="tag">Vision</p><h3 style="font-size:48px;line-height:1.2">Jedes Dach in Deutschland bekommt das Setup, das zu seinem Haus passt, nicht zu irgendwelchen Vertriebszielen.</h3></div>
+<div class="card accent"><p class="tag">Mission</p><h3 style="font-size:48px;line-height:1.2">Die zweite Rechnung vor jeder Unterschrift.</h3><div class="spacer"></div><p>Kostenlos als Rechner und als erste Einschätzung, ausführlich mit Speicherklar Pro.</p></div>
+</div>
+<p class="quote">Und wenn dein Angebot passt, sage ich dir das auch.</p>
+<div class="foot"><p>SPEICHERKLAR</p><p>02 / 12</p></div>
+<aside>Wichtig: Es geht um das beste Setup aus PV-Anlage und Speicher, in beide Richtungen. Ein Angebot kann zu groß, zu klein oder genau richtig sein. "Vertriebsziele" meint ein System, keine Personen.</aside>
+</section>
+<section id="problem">
+<p class="kicker">Das Problem</p>
+<h2>Verkäufer rechnen mit Juli.<br>Ich rechne mit November.</h2>
+<div class="row" style="gap:80px;align-items:center">
+<div style="width:620px;display:flex;flex-direction:column;gap:24px">
+<p>Vor der Unterschrift liegt meist eine einzige Rechnung auf dem Tisch: die im Angebot.</p>
+<p>Im Sommer ist jeder Speicher voll. Ob sich die Größe lohnt, entscheidet der Winter.</p>
+</div>
+<div class="bars">
+<div class="bar"><p class="lab">Ertrag Juni</p><div class="fill grey" style="width:440px"></div><p class="val">37,7 kWh/Tag</p></div>
+<div class="bar"><p class="lab">Ertrag Dez.</p><div class="fill" style="width:91px"></div><p class="val">7,8 kWh/Tag</p></div>
+<div class="bar"><p class="lab">Speicher Juni</p><div class="fill grey" style="width:440px"></div><p class="val">98–99 % voll</p></div>
+<div class="bar"><p class="lab">Speicher Dez.</p><div class="fill" style="width:174px"></div><p class="val">39 % voll</p></div>
+</div>
+</div>
+<p class="note">Annahmen: Standard-Haus Ruhrgebiet (Region 4), 9 kWp Süd, 35°, 4.500 kWh Verbrauch, Speicher 6 kWh, Durchschnittstag. Quelle: Simulationskern sim.js, Modellstand 14.11.2026, echtes Wetterjahr 2020 stündlich.</p>
+<div class="foot"><p>SPEICHERKLAR</p><p>03 / 12</p></div>
+<aside>Der Leitsatz bedeutet: Wer mit Sommertagen rechnet, lässt jeden Speicher gut aussehen. Im Dezember liefert dieselbe Anlage nur rund ein Fünftel, und der 6-kWh-Speicher wird im Schnitt nur zu 39 Prozent voll.</aside>
+</section>
+<section id="beispiel">
+<p class="kicker">Ein Beispiel</p>
+<h2>Angeboten: 10 kWh.<br>Am wirtschaftlichsten: 6 kWh.</h2>
+<div class="row" style="align-items:center">
+<div class="card"><p class="tag">Im Angebot</p><div class="rolls"><p class="d">1</p><p class="d">0</p><p class="unit">kWh</p></div><p>Speicher für 6.500 €</p></div>
+<x-shape kind="arrow-right" style="background:#E39A0B;width:72px;height:56px"></x-shape>
+<div class="card"><p class="tag">Speicherklar rechnet</p><div class="rolls"><p class="d">6</p><p class="unit">kWh</p></div><p>wirtschaftlichste Größe</p></div>
+<x-shape kind="arrow-right" style="background:#E39A0B;width:72px;height:56px"></x-shape>
+<div class="card accent"><p class="tag">Unterschied</p><div class="rolls"><p class="d">6</p><p class="d">7</p><p class="d">0</p><p class="unit" style="color:#FFFFFF">€</p></div><p>rund mehr in 15 Jahren</p></div>
+</div>
+<p class="note">Annahmen: Ruhrgebiet, 9 kWp Süd, 35°, 4.500 kWh Verbrauch, Strompreis 33 ct, Einspeisung 7,70 ct, 15 Jahre. Quelle: Angebots-Check in Speicherklar Pro (pro.js), gerechnet 14.11.2026, bestätigt 15.11.2026 (666 €).</p>
+<div class="foot"><p>SPEICHERKLAR</p><p>04 / 12</p></div>
+<aside>Das ist das Beispiel aus dem Erklärvideo. Der kleinere Speicher bringt in 15 Jahren rund 670 Euro mehr, weil die zusätzlichen 4 kWh im Winter kaum gefüllt werden. Der Rechner empfiehlt also auch kleinere Speicher, wenn das besser passt.</aside>
+</section>
+<section id="so">
+<p class="kicker">So funktioniert es</p>
+<h2>Drei Schritte, zwei davon kostenlos</h2>
+<div class="row steps">
+<div class="card"><p class="num">01 · KOSTENLOS</p><h3>Rechner</h3><p>Ohne Anmeldung: kWp je Dachseite und Verbrauch, optional E-Auto und Wärmepumpe.</p><p>Ergebnis: beste Speichergröße und Plus nach 15 Jahren.</p></div>
+<div class="card"><p class="num">02 · KOSTENLOS</p><h3>Erste Einschätzung zum Angebot</h3><p>Angebot eintragen, Einschätzung als Ampel bekommen: grün, gelb oder rot, für vier Punkte.</p></div>
+<div class="card accent"><p class="num" style="color:#F2B33D">03 · SPEICHERKLAR PRO</p><h3>Bericht als PDF</h3><p>Welche PV-Anlage und welcher Speicher am besten zusammenpassen, die Ersparnis bei passender Größe und Fragen an den Installateur.</p></div>
+</div>
+<p class="note">Gerechnet wird in 5-Minuten-Schritten über ein ganzes Jahr, mit dem stündlichen Wetter eines echten Jahres statt mit Durchschnittstagen.</p>
+<div class="foot"><p>SPEICHERKLAR</p><p>05 / 12</p></div>
+<aside>Der Weg ist bewusst kurz: Rechnen, Angebot einordnen, bei Bedarf den ausführlichen Bericht holen. Die ersten beiden Schritte kosten nichts und brauchen keine Anmeldung.</aside>
+</section>
+<section id="ampel">
+<p class="kicker">Die erste Einschätzung am Musterangebot</p>
+<h2>Vier Punkte, jeweils grün, gelb oder rot</h2>
+<p class="lead">Musterangebot: 9 kWp, 10 kWh Speicher, 19.000 € (davon 6.500 € Speicher), PLZ 47051</p>
+<div class="row">
+<div class="card"><div class="light"><x-shape kind="ellipse" style="background:#E39A0B;width:44px;height:44px"></x-shape><p class="status">Gelb</p></div><h3>Speichergröße</h3><p>Eher zu groß</p></div>
+<div class="card"><div class="light"><x-shape kind="ellipse" style="background:#E39A0B;width:44px;height:44px"></x-shape><p class="status">Gelb</p></div><h3>Größe der PV-Anlage</h3><p>Größer lohnt sich</p></div>
+<div class="card"><div class="light"><x-shape kind="ellipse" style="background:#2E7D5B;width:44px;height:44px"></x-shape><p class="status">Grün</p></div><h3>Speicherpreis je kWh</h3><p>Üblich</p></div>
+<div class="card"><div class="light"><x-shape kind="ellipse" style="background:#2E7D5B;width:44px;height:44px"></x-shape><p class="status">Grün</p></div><h3>Preis der PV-Anlage je kWp</h3><p>Üblich</p></div>
+</div>
+<p class="quote">Das Setup kann in beide Richtungen danebenliegen: hier ist der Speicher eher zu groß, die PV-Anlage eher zu klein.</p>
+<div class="foot"><p>SPEICHERKLAR · Quelle: Angebots-Check, geprüft 14.11.2026</p><p>06 / 12</p></div>
+<aside>Die Ampel ist kostenlos und kommt vor jedem Kauf. Sie zeigt auch, wenn ein Angebot passt. Grün heißt hier: Die Preise liegen im üblichen Rahmen.</aside>
+</section>
+<section id="bericht">
+<p class="kicker">Speicherklar Pro</p>
+<h2>Die zweite Rechnung zu deinem Angebot. Bevor du unterschreibst.</h2>
+<div class="row">
+<div class="card"><h3>Passt die Größe?</h3><p>Speicher und PV-Anlage: zu groß, zu klein oder passend, und die beste Kombination.</p></div>
+<div class="card"><h3>Ersparnis</h3><p>Was die passende Größe gegenüber dem Angebot ausmacht.</p></div>
+<div class="card"><h3>Fragen an den Installateur</h3><p>Konkrete Punkte für das nächste Gespräch.</p></div>
+</div>
+<p class="note">Jetzt kaufbar: 49 € bis 31.01.2027, danach 89 €. Einmalig, kein Abo, 90 Tage beliebig viele Angebote.</p>
+<p class="quote">Ich verdiene nichts an deinem Speicher. Weder am großen noch am kleinen.</p>
+<div class="foot"><p>SPEICHERKLAR</p><p>07 / 12</p></div>
+<aside>Speicherklar Pro ist der Angebots-Check. Wichtig ist der Unterschied zum kostenlosen Teil: Die Ampel ordnet ein, der Bericht zeigt die beste Kombination aus PV-Anlage und Speicher und rechnet mit genaueren Sonnendaten je PLZ-Gebiet.</aside>
+</section>
+<section id="geprueft">
+<p class="kicker">Warum man der Rechnung trauen kann</p>
+<h2>Geprüft an echten Häusern</h2>
+<div class="row">
+<div class="card"><p class="big" style="font-size:64px">76 / 77 %</p><p>Autarkie gemessen und gerechnet, 30 Einfamilienhäuser mit 10 kWh Speicher (WPuQ/ISFH)</p></div>
+<div class="card"><p class="big" style="font-size:64px">1–2 Pkt.</p><p>So genau trifft der Rechner mit Speicher die Autarkie der Häuser</p></div>
+<div class="card"><p class="big" style="font-size:64px">1.860 / 1.735</p><p>kWh Speicher-Nutzen an der eigenen Anlage: gemessen und gerechnet (12,92 kWp Ost-West, 10 kWh, 336 Tage)</p></div>
+</div>
+<p>Bei der Prüfung habe ich zwei Fehler gefunden und behoben (Wärmepumpe, Wetter). Vorher hat der Rechner 2.819 kWh angesetzt.</p>
+<p class="note">Nicht abgebildet: Notstrom, Verschattung, Alterung, dynamische Tarife. Mit Wärmepumpe rechnet der Rechner die Autarkie rund 4 Punkte zu hoch, den Zugewinn durch den Speicher trifft er.</p>
+<div class="foot"><p>SPEICHERKLAR · Methodik: speicherklar.de/methodik</p><p>08 / 12</p></div>
+<aside>Gerade für Energieberater wichtig: Die Grenzen sind offen benannt. Details zur Prüfung stehen auf der Methodik-Seite und im Ratgeber-Artikel "Wie genau ist ein Stromspeicher-Rechner?".</aside>
+</section>
+<section id="unabhaengig">
+<p class="kicker">Unabhängig, mit Belegen</p>
+<h2>Bei vielen Rechnern bist du der Lead.<br>Bei mir bist du der Kunde.</h2>
+<div class="grid">
+<div class="proof"><x-shape kind="ellipse" style="background:#2E7D5B;width:24px;height:24px;flex:none"></x-shape><h3>Ergebnis ohne Anmeldung</h3></div>
+<div class="proof"><x-shape kind="ellipse" style="background:#2E7D5B;width:24px;height:24px;flex:none"></x-shape><h3>Keine Provision</h3></div>
+<div class="proof"><x-shape kind="ellipse" style="background:#2E7D5B;width:24px;height:24px;flex:none"></x-shape><h3>Keine Werbung</h3></div>
+<div class="proof"><x-shape kind="ellipse" style="background:#2E7D5B;width:24px;height:24px;flex:none"></x-shape><h3>Keine Partner-Installateure</h3></div>
+<div class="proof"><x-shape kind="ellipse" style="background:#2E7D5B;width:24px;height:24px;flex:none"></x-shape><h3>Rechenweg offen auf GitHub</h3></div>
+<div class="proof"><x-shape kind="ellipse" style="background:#2E7D5B;width:24px;height:24px;flex:none"></x-shape><h3>Einmalpreis, kein Abo</h3></div>
+</div>
+<p class="lead">Und der Rechner empfiehlt auch kleinere Speicher, wenn sie besser passen.</p>
+<div class="foot"><p>SPEICHERKLAR</p><p>09 / 12</p></div>
+<aside>Vertrauen ist der Kern. Diese Belege kann ein Rechner, der an Kontakten verdient, nicht übernehmen, ohne sein Geschäftsmodell aufzugeben. Bewusst nicht im Angebot: Leads, Affiliate, Abo, Datenverkauf.</aside>
+</section>
+<section id="potenzial" class="dark">
+<p class="kicker">Das Potenzial</p>
+<h2>Hunderttausende Entscheidungen im Jahr</h2>
+<div class="row">
+<div class="card accent" style="border-color:#56666F"><p class="big" style="font-size:72px">≈ 550.000</p><p>Heimspeicher 2025 in Deutschland neu installiert</p><p class="tag">P3 / ISEA RWTH Aachen, pv magazine 06/2026</p></div>
+<div class="card accent" style="border-color:#56666F"><p class="big" style="font-size:72px">≈ 2,3 Mio.</p><p>Heimspeicher bis Ende 2025 verbaut</p><p class="tag">BVES, pv magazine 05/2026</p></div>
+<div class="card accent" style="border-color:#56666F"><p class="big" style="font-size:72px">≈ 15 %</p><p>der Einfamilienhäuser haben schon einen Heimspeicher</p><p class="tag">BVES, top agrar</p></div>
+</div>
+<p>Jede davon ist eine Entscheidung im fünfstelligen Bereich. Die passende Größe bringt im Standard-Haus +2.899 € nach 15 Jahren. Die Faustformel „1 kWh je kWp“ kann rund 1.520 € kosten.</p>
+<p class="note">Annahmen: Standard-Haus Ruhrgebiet (9 kWp Süd, 4.500 kWh, Speicher 6 kWh zu 500 €/kWh, 33 ct, 7,70 ct, 15 Jahre); Faustformel bei 12 kWp. Quelle: sim.js, Stand 14.11.2026.</p>
+<div class="foot"><p>SPEICHERKLAR</p><p>10 / 12</p></div>
+<aside>Der Markt ist groß und die einzelne Entscheidung teuer. Das Musterangebot liegt bei 19.000 Euro. Wer die Größe am Verbrauch statt an der Dachfläche ausrichtet, spart im Beispiel vierstellig.</aside>
+</section>
+<section id="berater">
+<p class="kicker">Für Energieberater</p>
+<h2>Eine Gegenrechnung ohne Verkaufsabsicht</h2>
+<p class="lead">Speicherklar ersetzt keine Beratung vor Ort. Es gibt deinen Kunden eine zweite, unabhängige Rechnung zum Angebot.</p>
+<div class="row">
+<div class="card"><h3>Nachprüfbar</h3><p>Rechenweg offen auf GitHub, Prüfung an echten Häusern.</p></div>
+<div class="card"><h3>Realistisch</h3><p>Stündlich mit echtem Wetterjahr, Wärmepumpe und E-Auto.</p></div>
+<div class="card"><h3>Neutral</h3><p>Keine Provision. Passt ein Angebot, steht das auch so da.</p></div>
+<div class="card"><h3>Für Kunden</h3><p>Ergebnis ohne Anmeldung, Bericht als Grundlage fürs Gespräch.</p></div>
+</div>
+<div class="foot"><p>SPEICHERKLAR</p><p>11 / 12</p></div>
+<aside>Für Energieberater ist Speicherklar kein Wettbewerb: Es verkauft weder Anlagen noch Beratung. Kunden kommen mit einer nachvollziehbaren Zahl ins Gespräch, und die Annahmen sind offen.</aside>
+</section>
+<section id="cta" class="dark">
+<p class="kicker">Probier es aus</p>
+<div class="spacer"></div>
+<h1>Rechne dein Angebot nach, bevor du unterschreibst.</h1>
+<p class="url">speicherklar.de</p>
+<p class="lead">Rechner starten: kostenlos und ohne Anmeldung.</p>
+<div class="spacer"></div>
+<div class="foot"><p>Verkäufer rechnen mit Juli. Ich rechne mit November.</p><p>kontakt@speicherklar.de</p></div>
+<aside>Eine Bitte zum Schluss: den Rechner ausprobieren, am besten mit einem echten Angebot. Die erste Einschätzung als Ampel ist ebenfalls kostenlos.</aside>
+</section>
+</div>
+<div id="nav"><span id="cnt"></span> <button id="prev" aria-label="Vorherige Folie">‹</button> <button id="next" aria-label="Nächste Folie">›</button> <button id="full" aria-label="Vollbild">⛶</button></div>
+<script>
+(function(){
+  var st=document.getElementById('stage'), s=st.querySelectorAll('section'), n=s.length, i=0;
+  var c=document.getElementById('cnt');
+  function fit(){var k=Math.min(innerWidth/1920,innerHeight/1080);
+    st.style.transform='scale('+k+') translate(-50%,-50%)';}
+  function show(j){i=Math.max(0,Math.min(n-1,j));
+    for(var a=0;a<n;a++)s[a].classList.toggle('on',a===i);
+    c.textContent=(i+1)+' / '+n; history.replaceState(null,'','#'+(i+1));}
+  addEventListener('resize',fit);
+  addEventListener('keydown',function(e){
+    if(['ArrowRight','ArrowDown','PageDown',' ','Enter'].indexOf(e.key)>=0){e.preventDefault();show(i+1);}
+    else if(['ArrowLeft','ArrowUp','PageUp','Backspace'].indexOf(e.key)>=0){e.preventDefault();show(i-1);}
+    else if(e.key==='Home')show(0); else if(e.key==='End')show(n-1);
+    else if(e.key==='f'&&document.documentElement.requestFullscreen)document.documentElement.requestFullscreen();});
+  document.getElementById('prev').onclick=function(){show(i-1)};
+  document.getElementById('next').onclick=function(){show(i+1)};
+  document.getElementById('full').onclick=function(){
+    if(document.fullscreenElement)document.exitFullscreen();
+    else if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen();};
+  var t=null; function ui(){document.body.classList.add('ui');clearTimeout(t);t=setTimeout(function(){document.body.classList.remove('ui')},2500);}
+  addEventListener('mousemove',ui); addEventListener('touchstart',ui,{passive:true});
+  var x0=null;
+  addEventListener('touchstart',function(e){x0=e.touches[0].clientX},{passive:true});
+  addEventListener('touchend',function(e){if(x0===null)return;var d=e.changedTouches[0].clientX-x0;
+    if(Math.abs(d)>40)show(i+(d<0?1:-1));x0=null},{passive:true});
+  fit(); show((parseInt(location.hash.slice(1),10)||1)-1);
+})();
+</script>
+</body>
+</html>

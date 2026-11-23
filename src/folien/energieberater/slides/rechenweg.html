@@ -1,0 +1,18 @@
+<section id="rechenweg">
+<p class="kicker">Der Rechenweg</p>
+<h2>Eine Jahressimulation in 5-Minuten-Schritten</h2>
+<div class="flow">
+<div class="card"><p class="num">01</p><h3>Eingaben</h3><p class="sm">kWp je Dachseite mit Neigung, Jahresverbrauch; optional Wärmepumpe, E-Auto, Preise, Laufzeit</p></div>
+<div class="arr"><x-shape kind="arrow-right" style="background:#E39A0B;width:36px;height:32px"></x-shape></div>
+<div class="card"><p class="num">02</p><h3>PV-Ertrag</h3><p class="sm">Sonnenstand je Stunde; echtes Wetterjahr, skaliert auf Monatssumme und Diffusanteil der Region</p></div>
+<div class="arr"><x-shape kind="arrow-right" style="background:#E39A0B;width:36px;height:32px"></x-shape></div>
+<div class="card"><p class="num">03</p><h3>Verbrauch</h3><p class="sm">Haushalt mit kurzen Lastspitzen; Wärmepumpe gleichmäßig, nach gemessener Monats- und Stundenverteilung</p></div>
+<div class="arr"><x-shape kind="arrow-right" style="background:#E39A0B;width:36px;height:32px"></x-shape></div>
+<div class="card"><p class="num">04</p><h3>Speicher</h3><p class="sm">Laden und Entladen je Zeitschritt; 88 % Wirkungsgrad je Zyklus, volle Kapazität nutzbar</p></div>
+<div class="arr"><x-shape kind="arrow-right" style="background:#E39A0B;width:36px;height:32px"></x-shape></div>
+<div class="card accent"><p class="num" style="color:#F2B33D">05</p><h3>Bilanz</h3><p class="sm" style="color:#CBD3DA">Plus über die Laufzeit je Speichergröße; die Größe mit dem höchsten Plus ist die beste</p></div>
+</div>
+<p class="note">Speicherklar Pro rechnet zusätzlich mit Sonnendaten je zweistelligem PLZ-Gebiet und setzt beim Speicherpreis 30 % Fixkosten an, damit verschiedene Größen fair verglichen werden.</p>
+<div class="foot"><p>SPEICHERKLAR · Code: src/sim.js, src/pro.js auf GitHub</p><p>03 / 14</p></div>
+<aside>Der kostenlose Rechner läuft vollständig im Browser. Jede Zahl auf der Website kommt aus diesem Simulationskern. Speicherklar Pro nutzt denselben Kern mit genaueren Sonnendaten.</aside>
+</section>
