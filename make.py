@@ -394,6 +394,48 @@ posts["post10-stromsteuer-sinkt"] = [
   frame(f'<h1>Rechne mit <em>deinem neuen Strompreis.</em></h1><p>Im Rechner den Strompreis ändern und sehen, was sich tut. Kostenlos, ohne Anmeldung. Link in der Bio.</p><div><span class="cta">speicherklar.de</span></div><p class="src">Beispiel: Ruhrgebiet, 9 kWp Süd 35°, 4.500 kWh/Jahr, Speicher 500 €/kWh, Strom {pr} ct, mit Senkung {d2(H["pc"])} ct, Einspeisung 7,70 ct, 15 Jahre, ohne weitere Preisänderungen. „Nur 2027“: ein Jahr gesenkt, danach {pr} ct. Stromsteuer: § 3 StromStG, EU-Minimum 0,1 ct. Beschluss Koalitionsausschuss laut t-online/ZDFheute, Stand 18.11.2026.</p>', 9, T, tp, dark=True),
 ]
 
+# ---------- Post 11: Lohnt sich ein Speicher im Norden? Haus Schleswig-Holstein (Profil-Haus aus dem Faktenblatt, NICHT das umgezogene Standard-Haus aus post9), Titel: Bernstein ----------
+_js11 = r"""
+const S=require(process.argv[1]);const P=%s;
+const b={region:"2",roofs:[{kwp:4,tilt:35,aspect:-90},{kwp:4,tilt:35,aspect:90}],cons:3000,ev:0,hp:0,evTime:"eve",bat:3,bprice:500,life:15,price:P,feed:7.7,feedLimit:0};
+const e=S.evaluate(b), r4=S.evaluate({...b,region:"4"});
+const sw={};for(const x of e.sweep)sw[x.cap]={net:x.net,pb:x.payback,aut:x.r.autarky,cost:x.cost};
+console.log(JSON.stringify({kwh:e.base.gen/8,best:e.best.cap,net:e.best.net,pb:e.best.payback,aut0:e.base.autarky,sw:sw,
+ r4best:r4.best.cap,r4net:r4.best.net,r4kwh:r4.base.gen/8}));
+"""
+N = json.loads(subprocess.run(["node", "-e", _js11 % _price, str(SITE / "src/sim.js")], capture_output=True, text=True, check=True).stdout)
+assert N["best"] == 3 and N["r4best"] == N["best"], "Zahlen haben sich verschoben, Post 11 umschreiben"
+NB = N["best"]; NS = N["sw"]
+pct = lambda v: f"{round(v*100)}&nbsp;%"
+eur = lambda v: ("+" if v >= 0 else "−") + fmt(abs(round(v))) + "&nbsp;€"
+def nbars(rows, lo, hi):
+    W, rh, m = 820, 92, 170
+    x = lambda v: m + (W - 2*m) * (v - lo) / (hi - lo)
+    x0 = x(0)
+    s = f'<svg width="{W}" height="{len(rows)*rh+10}" viewBox="0 0 {W} {len(rows)*rh+10}" font-family="Source Sans 3">'
+    s += f'<line x1="{x0}" x2="{x0}" y1="0" y2="{len(rows)*rh+10}" stroke="#56666F" stroke-width="2"/>'
+    for i, (lab, v, col, bold) in enumerate(rows):
+        y = i * rh; xv = x(v); t = eur(v).replace("&nbsp;", " ")
+        s += f'<text x="{x0+14 if v < 0 else x0-14}" y="{y+30}" text-anchor="{"start" if v < 0 else "end"}" font-size="30" fill="#15212B" font-weight="{700 if bold else 400}">{lab}</text>'
+        s += f'<rect x="{min(x0, xv)}" y="{y+44}" width="{max(4, abs(xv-x0))}" height="34" rx="4" fill="{col}"/>'
+        s += (f'<text x="{xv+14}" y="{y+72}" font-family="JetBrains Mono" font-size="28" font-weight="700" fill="#15212B">{t}</text>' if v >= 0 else
+              f'<text x="{xv-14}" y="{y+72}" text-anchor="end" font-family="JetBrains Mono" font-size="28" font-weight="700" fill="#B4412F">{t}</text>')
+    return s + "</svg>"
+SIZES = (2, 3, 4, 6, 8, 10)
+T = 8; tp = "Speicher im Norden"
+posts["post11-norden"] = [
+  frame('<h1>Speicher im Norden? <em>Lohnt sich. Aber klein.</em></h1><p class="promise">Ein Haus in Schleswig-Holstein, Ost-West-Dach, 3.000 kWh. Ich hab’s durchgerechnet.</p>', 1, T, tp, amber=True),
+  frame(f'<h2>So groß ist hier der beste Speicher</h2>{wheels(NB)}<p>kWh. Mit 10 kWh stünde dasselbe Haus nach 15 Jahren bei {eur(NS["10"]["net"])}.</p>', 2, T, tp),
+  frame('<h2>Haus Schleswig-Holstein</h2>' + summary(["Ein Paar, 3.000 kWh Strom im Jahr", "8 kWp: je 4 kWp nach Osten und Westen, 35°", "Speicher 500 € je kWh inkl. Einbau"]) + f'<p>Ertrag: {fmt(round(N["kwh"]))} kWh je kWp im Jahr. Weniger als im Süden, aber genug.</p>', 3, T, tp),
+  frame(f'<h2>Größer heißt nicht besser</h2><p class="muted" style="font-size:32px">Bilanz nach 15 Jahren je Speichergröße</p>'
+        + nbars([(f"{c} kWh", NS[str(c)]["net"], "#E39A0B" if c == NB else ("#B4412F" if NS[str(c)]["net"] < 0 else "#B9C3CB"), c == NB) for c in SIZES], NS["10"]["net"], NS[str(NB)]["net"])
+        + '<p>Ab 8 kWh kostet der Speicher mehr, als er in 15 Jahren spart.</p>', 4, T, tp),
+  frame(f'<h2>Die letzten Prozent sind teuer</h2><div class="pair"><div class="card"><div class="k">{NB} kWh Speicher</div><div class="v" style="color:var(--sun-ink)">{pct(NS[str(NB)]["aut"])}</div><div class="d">Autarkie, ohne Speicher {pct(N["aut0"])}</div></div><div class="card"><div class="k">10 kWh Speicher</div><div class="v">{pct(NS["10"]["aut"])}</div><div class="d">Autarkie</div></div></div><p>Für {round((NS["10"]["aut"]-NS[str(NB)]["aut"])*100)} Punkte mehr zahlst du {fmt(round(NS["10"]["cost"]-NS[str(NB)]["cost"]))} € mehr. Die holt der Speicher nicht wieder rein.</p>', 5, T, tp),
+  frame(f'<h2>Der Norden ist nicht das Problem</h2><p class="muted" style="font-size:32px">Gleiches Haus, nur die Region getauscht</p><div class="pair"><div class="card"><div class="k">Schleswig-Holstein</div><div class="v">{NB} kWh</div><div class="d">beste Größe, {eur(N["net"])}</div></div><div class="card"><div class="k">Ruhrgebiet</div><div class="v">{N["r4best"]} kWh</div><div class="d">beste Größe, {eur(N["r4net"])}</div></div></div><p>Der Ort ändert das Plus ein wenig. Die Größe kommt vom Verbrauch: Ein Paar braucht abends einfach weniger Strom.</p>', 6, T, tp),
+  frame('<h2>Kurz gesagt</h2>' + summary(["Auch im Norden rechnet sich ein Speicher.", f"Bei 3.000 kWh reichen {NB}&nbsp;kWh: {eur(N['net'])}, bezahlt nach {d1(N['pb'])} Jahren.", "Ab 8&nbsp;kWh rutscht die Rechnung ins Minus.", "Die Größe hängt am Verbrauch, nicht am Ort."]), 7, T, tp),
+  frame(f'<h1>Rechne dein Haus <em>mit deinem Verbrauch.</em></h1><p>Region, Dach und Verbrauch eingeben, Ergebnis sofort. Kostenlos, ohne Anmeldung. Link in der Bio.</p><div><span class="cta">speicherklar.de</span></div><p class="src">Beispiel Haus Schleswig-Holstein: Region Schleswig-Holstein/Bremen/Niedersachsen-Nord, 8 kWp Ost-West (je 4 kWp, 35°), 3.000 kWh/Jahr, Speicher 500 €/kWh, Strom {pr} ct, Einspeisung 7,70 ct, 15 Jahre, ohne Zinsen und Alterung. Sonnendaten PVGIS (EU-Kommission), eigene Simulation.</p>', 8, T, tp, dark=True),
+]
+
 PROFILE = f"""<div style="width:1080px;height:1080px;background:#15212B;display:flex;align-items:center;justify-content:center">
 <svg width="620" height="620" viewBox="0 0 26 26"><rect x="5.6" y="4.4" width="14.8" height="19" rx="2.6" fill="none" stroke="#E6ECF1" stroke-width="1.7"/><rect x="10" y="1.7" width="6" height="2.6" rx="0.9" fill="#E6ECF1"/><rect x="8.2" y="13.6" width="9.6" height="7.4" rx="1" fill="#E39A0B"/><rect x="8.2" y="9.4" width="9.6" height="2.8" rx="1" fill="#E39A0B" opacity=".45"/></svg></div>"""
 
