@@ -64,7 +64,7 @@ Reihenfolge: Quelle ändern → Tests → `build_articles.py` (falls nötig) →
 - `worker/index.js` – Endpunkte `/checkout`, `/verify`, `/validate`; `worker/wrangler.toml` – Variablen
 - `worker-klara/` – Klara: `index.js` (`/status`, `/start`, `/session`, `/chat`), `regeln.js` (Systemprompt, von Hand), `wissen.js` (generiert), `wrangler.toml`
 - `src/klara-politik.md` – Politik, Steuern, Förderung für Klara; `scripts/klara_wissen.py` – erzeugt `worker-klara/wissen.js`
-- `src/folien/<name>/` – Präsentationen (Export aus den Slides-Artefakten: `deck.json`, `deck.css`, `slides/*.html`); `python3 scripts/folien.py` baut `folien/<name>/index.html`. Seit 23.11.2026: `/folien/kunden/` und `/folien/energieberater/`. **Nirgends verlinken**, `noindex`, nicht in Sitemap, `llms.txt` oder Klaras Wissen. Zahlen darin bei Änderungen an `sim.js`/`pro.js` mitprüfen.
+- `src/folien/<name>/` – Präsentationen (Export aus den Slides-Artefakten: `deck.json`, `deck.css`, `slides/*.html`); `python3 scripts/folien.py` baut `folien/<name>/index.html`. Seit 23.11.2026: `/folien/kunden/` und `/folien/energieberater/`. **Nirgends verlinken**, `noindex`, nicht in Sitemap, `llms.txt` oder Klaras Wissen. Bei grundlegenden Änderungen (Zahlen aus `sim.js`/`pro.js`, Preise, Termine, Musterangebot, Vision/Positionierung) beide Decks ohne Nachfrage mitziehen: Artefakt, `src/folien/` + `scripts/folien.py`, Folientexte im Claude-Projekt (`claude/praesentation-kunden.md`, `claude/praesentation-energieberater.md`); Regel in `claude/praesentationen.md`.
 
 ## Ratgeber-Artikel
 
