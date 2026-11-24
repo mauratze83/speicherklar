@@ -262,9 +262,36 @@ for a in ARTICLES:
         print(f"WARNUNG: Titel {len(seo)} Zeichen (max. 60), Feld seo_title setzen: {a['slug']}")
     (out / f"{a['slug']}.html").write_text(page(seo, a["desc"], url, main, head, og_image=f"img/og/{a['slug']}.png"))
 
+# Ratgeber-Übersicht: Einstieg nach Fragen. Neue Artikel hier einer Frage zuordnen (sonst WARNUNG).
+THEMEN_CSS = '<style>.themen{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:14px;margin:8px 0 36px;max-width:960px}.thema{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px}.thema h3{font-family:var(--f-display);font-stretch:105%;font-size:19px;line-height:1.25;margin:0 0 6px}.thema p{margin:0 0 10px;font-size:15px;color:var(--muted);line-height:1.5}.thema ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:15px}.thema a{color:var(--ink)}.rl-head{margin:8px 0 4px}</style>'
+THEMEN = [
+    ("Du hast ein Angebot auf dem Tisch",
+     "Bevor du unterschreibst: Passt die Größe von PV-Anlage und Speicher, und ist der Preis üblich? Hier prüfe ich das Schritt für Schritt.",
+     ["pv-angebot-pruefen", "stromspeicher-preis-pro-kwh", "pv-anlage-groesse"]),
+    ("Welche Speichergröße passt zu meinem Haus?",
+     "Die Größe hängt an deinem Verbrauch, deinem Dach und deiner Region. Hier steht, wie stark jeder dieser Punkte das Ergebnis verschiebt.",
+     ["stromspeicher-groesse-berechnen", "speichergroesse-4500-kwh", "ost-west-dach-speicher", "stromspeicher-region"]),
+    ("Lohnt sich das überhaupt?",
+     "Ob sich ein Speicher rechnet, entscheiden Strompreis, Einspeisevergütung und Politik. Hier rechne ich die Fälle durch, auch für bestehende Anlagen.",
+     ["stromspeicher-lohnt-sich-2027", "stromspeicher-nachruesten", "stromsteuer-stromspeicher"]),
+    ("Kann ich dem Rechner trauen?",
+     "Ich habe den Rechner an meiner eigenen Anlage und an gemessenen Häusern geprüft. Wie das ausging und wie er rechnet, steht offen hier.",
+     ["stromspeicher-rechner-test-echte-daten"]),
+]
+_by = {a["slug"]: a for a in ARTICLES}
+_zugeordnet = {x for _, _, sl in THEMEN for x in sl}
+for a in ARTICLES:
+    if a["slug"] not in _zugeordnet:
+        print(f"WARNUNG: Artikel {a['slug']} steht in keiner Frage der Ratgeber-Übersicht (THEMEN in build_articles.py)")
+def _thema(t, txt, slugs, extra=""):
+    li = "".join(f'<li><a href="{x}.html">{_by[x]["title"]}</a></li>' for x in slugs if x in _by)
+    return f'<section class="thema"><h3>{t}</h3><p>{txt}</p><ul>{li}{extra}</ul></section>'
+themen = "".join(_thema(t, txt, sl, '<li><a href="../methodik.html">Methodik: So rechnet Speicherklar</a></li>' if i == len(THEMEN) - 1 else "") for i, (t, txt, sl) in enumerate(THEMEN))
+itemlist = {"@context": "https://schema.org", "@type": "ItemList", "itemListElement": [
+    {"@type": "ListItem", "position": i + 1, "url": f"https://speicherklar.de/ratgeber/{a['slug']}.html", "name": a["title"]} for i, a in enumerate(NEWEST)]}
 items = "\n".join(f'<li><a href="{a["slug"]}.html">{sp(a)}<b>{a["title"]}</b> <span>{a["desc"]}</span></a></li>' for a in NEWEST)
 (out / "index.html").write_text(page("Ratgeber Stromspeicher | Speicherklar", "Artikel rund um Stromspeicher und PV-Anlagen, mit Zahlen aus der Jahressimulation statt aus dem Prospekt. Mit Angebots-Check für PV-Anlage und Speicher.", "https://speicherklar.de/ratgeber/",
-    f'<div class="doc"><div class="eyebrow">Ratgeber</div><h1>Stromspeicher, ehrlich gerechnet</h1><p class="lead">Fragen rund um PV-Anlage und Stromspeicher (auch Batteriespeicher, PV-Speicher oder Solarspeicher genannt), beantwortet mit Zahlen aus meiner Jahressimulation.</p></div><ul class="rlist">{items}</ul>{CTA.replace("{slug}", "uebersicht")}', ld_tags(crumbs(("Ratgeber", RATGEBER_URL))), og_image="img/og/ratgeber.png", og_type="website"))
+    f'<div class="doc"><div class="eyebrow">Ratgeber</div><h1>Stromspeicher, ehrlich gerechnet</h1><p class="lead">Fragen rund um PV-Anlage und Stromspeicher (auch Batteriespeicher, PV-Speicher oder Solarspeicher genannt), beantwortet mit Zahlen aus meiner Jahressimulation. Kein Artikel verlinkt auf Händler oder bekommt Provision. Such dir die Frage aus, die gerade deine ist.</p><h2>Wo fange ich an?</h2></div>{THEMEN_CSS}<div class="themen">{themen}</div><div class="doc rl-head"><h2>Alle Artikel, neueste zuerst</h2></div><ul class="rlist">{items}</ul>{CTA.replace("{slug}", "uebersicht")}', ld_tags(crumbs(("Ratgeber", RATGEBER_URL)), itemlist), og_image="img/og/ratgeber.png", og_type="website"))
 
 # Über mich
 ABOUT_URL = "https://speicherklar.de/ueber-mich.html"
