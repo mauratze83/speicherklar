@@ -1283,7 +1283,7 @@ var PRO = (function () {
   var PVLIFE = 20;      // Rechenzeitraum der PV-Anlage in Jahren (EEG-Zeitraum)
   var GRIDCAPS = [];    // Speichergrößen für die gemeinsame Optimierung
   for (var gc = 0; gc <= 15; gc++) GRIDCAPS.push(gc);
-  // EEG-Vergütung Teileinspeisung, Inbetriebnahme 01.08.2026–31.01.2027 (ct/kWh), anteilig nach Leistung
+  // EEG-Vergütung Teileinspeisung, Inbetriebnahme 01.08.2026–31.12.2026 (ct/kWh; EEG 2023 laut BNetzA nur bis 31.12.2026 anwendbar), anteilig nach Leistung
   var TARIF = [[10, 7.70], [40, 6.66], [100, 5.44]];
 
   // Mittlere Vergütung einer Anlage mit K kWp. o.feed ist der Satz bis 10 kWp; die höheren Stufen sinken im selben Verhältnis.

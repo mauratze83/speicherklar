@@ -17,7 +17,7 @@ Manuel gibt frei. Danach build.py laufen lassen und pushen. Abgelaufene Einträg
 -->
 
 ## Einspeisevergütung heute (EEG 2023)
-- Stand: 2026-11-23
+- Stand: 2026-11-24
 - Status: geltendes Recht
 - Quelle: Bundesnetzagentur, https://www.bundesnetzagentur.de/DE/Fachthemen/ElektrizitaetundGas/ErneuerbareEnergien/EEG_Foerderung/start.html
 - Prüfen bis: 2026-12-31
