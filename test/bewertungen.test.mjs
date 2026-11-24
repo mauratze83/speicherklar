@@ -72,7 +72,7 @@ assert.equal((await call(e, "/review", { key: K, ...GOOD })).s, 409); ok("zweite
 assert.equal((await call(e, "/review/status", { key: K })).j.done, true); ok("Status meldet schon bewertet");
 
 // Öffentlich nur freigegebene, ohne Kauf-ID
-assert.deepEqual((await call(e, "/reviews")).j.reviews, []); ok("offene Bewertung nicht öffentlich");
+{ const r = (await call(e, "/reviews")).j; assert.deepEqual(r.reviews, []); assert.equal(r.offen, 1); ok("offene Bewertung nicht öffentlich, nur gezählt"); }
 
 // Admin: ohne/falscher Schlüssel, ohne Secret
 assert.equal((await call(e, "/admin/reviews")).s, 401);
@@ -85,7 +85,7 @@ assert.equal((await call(env({ REVIEW_ADMIN_KEY: "" }), "/admin/reviews", {}, "a
 assert.equal((await call(e, "/admin/review", { rid: saved.rid, status: "weg" }, "admin-123")).s, 400);
 assert.equal((await call(e, "/admin/review", { rid: "000000000000", status: "frei" }, "admin-123")).s, 404); ok("ungültige Freigabe abgelehnt");
 { const r = await call(e, "/admin/review", { rid: saved.rid, status: "frei" }, "admin-123"); assert.deepEqual(r.j, { ok: true, build: true }); assert.equal(dispatches, 1); }
-{ const pub = (await call(e, "/reviews")).j.reviews; assert.equal(pub.length, 1); assert.deepEqual(Object.keys(pub[0]).sort(), ["date", "name", "rid", "stars", "text"]);
+{ assert.equal((await call(e, "/reviews")).j.offen, 0); const pub = (await call(e, "/reviews")).j.reviews; assert.equal(pub.length, 1); assert.deepEqual(Object.keys(pub[0]).sort(), ["date", "name", "rid", "stars", "text"]);
   assert.ok(!JSON.parse(e.LICENSES.m.get("rev:cs_paid"))._k); ok("freigegeben: öffentlich, nur erlaubte Felder, Neubau gestartet"); }
 { const r = await call(e, "/admin/review", { rid: saved.rid, status: "ab" }, "admin-123"); assert.equal(r.j.build, true); assert.equal(dispatches, 2);
   assert.deepEqual((await call(e, "/reviews")).j.reviews, []); ok("wieder entfernt: Neubau, nicht mehr öffentlich"); }

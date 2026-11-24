@@ -9,7 +9,7 @@
    Bewertungen (nur echte Käufer, eine je Kauf, erst nach Freigabe durch Manuel sichtbar):
    POST /review/status { key }                         → { can, done }    darf dieser Schlüssel bewerten? schon bewertet?
    POST /review        { key, stars, text, name, ok }  → { ok }           Bewertung speichern, Status "offen"
-   POST /reviews       {}                              → { reviews: [..] } freigegebene Bewertungen (ohne Kauf-ID), liest der Workflow "Bewertungen"
+   POST /reviews       {}                              → { reviews: [..], offen } freigegebene Bewertungen (ohne Kauf-ID) und Zahl der offenen; liest der Workflow "Bewertungen" und der Umsatz-Review
    POST /admin/reviews {}            + Authorization: Bearer REVIEW_ADMIN_KEY → { reviews: [..] } alle Bewertungen mit Status
    POST /admin/review  { rid, status } + Authorization                         → { ok, build }  "frei" oder "ab"; startet den Workflow "Bewertungen"
 
@@ -283,8 +283,9 @@ export default {
       }
 
       if (path === "/reviews") {
-        const list = (await allReviews(env)).filter((r) => r.status === "frei").map(publicReview);
-        return json(req, env, { reviews: list });
+        // Nur die Zahl der offenen Bewertungen, keine Inhalte (liest der Umsatz-Review)
+        const all = await allReviews(env);
+        return json(req, env, { reviews: all.filter((r) => r.status === "frei").map(publicReview), offen: all.filter((r) => r.status === "offen").length });
       }
 
       if (path === "/admin/reviews" || path === "/admin/review") {
