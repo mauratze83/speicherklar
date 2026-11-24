@@ -134,6 +134,7 @@
           <li>Wie sich die richtige Größe mit der EEG-Reform 2027 verschiebt, dazu Strompreis, E-Auto und Wärmepumpe</li>
           <li>Fragen an deinen Installateur, passend zu deinem Angebot</li>
         </ul>
+        <!--BEW-KURZ-->
         <p class="note"><a href="musterbericht.pdf" target="_blank" rel="noopener" data-umami-event="pro-musterbericht">Musterbericht ansehen (PDF, 7 Seiten)</a>: der vollständige Bericht für ein Beispielangebot mit 9 kWp und 10 kWh.</p>
         <div class="buyrow">
           <div class="price" id="b-price">49 € <small>einmalig</small></div>
@@ -174,7 +175,29 @@
         <button class="linkbtn" type="button" id="edit">Eingaben ändern</button>
       </div>
       <article class="report" id="report"></article>
+      <form class="bw-form" id="bwform" novalidate hidden>
+        <h2>Wie hilfreich war der Bericht?</h2>
+        <p class="sub">Deine Bewertung hilft anderen bei der Entscheidung. Ich veröffentliche sie auf dieser Seite, auch wenn sie kritisch ist, und ändere nichts daran. Bewerten kann nur, wer gekauft hat, einmal je Kauf.</p>
+        <div class="field"><span class="flabel" id="l-bw-stars">Sterne</span>
+          <div class="bw-pick" role="radiogroup" aria-labelledby="l-bw-stars" id="bw-stars">
+            <button type="button" role="radio" aria-checked="false" data-v="1" aria-label="1 Stern">★</button>
+            <button type="button" role="radio" aria-checked="false" data-v="2" aria-label="2 Sterne">★</button>
+            <button type="button" role="radio" aria-checked="false" data-v="3" aria-label="3 Sterne">★</button>
+            <button type="button" role="radio" aria-checked="false" data-v="4" aria-label="4 Sterne">★</button>
+            <button type="button" role="radio" aria-checked="false" data-v="5" aria-label="5 Sterne">★</button>
+          </div></div>
+        <div class="field"><label for="bw-text">Deine Bewertung</label>
+          <textarea class="in" id="bw-text" rows="4" minlength="20" maxlength="1000" placeholder="Was hat dir der Bericht gebracht? Was hat gefehlt?"></textarea>
+          <span class="hint">20 bis 1.000 Zeichen, ohne Links und Mailadressen.</span></div>
+        <div class="field"><label for="bw-name">Name, wie er unter der Bewertung stehen soll <small>(optional)</small></label>
+          <input class="in" type="text" id="bw-name" maxlength="40" autocomplete="off" placeholder="z. B. Petra aus Krefeld">
+          <span class="hint">Leer lassen, dann steht dort „Käufer von Speicherklar Pro“.</span></div>
+        <label class="bw-ok"><input type="checkbox" id="bw-ok"> <span>Ich bin einverstanden, dass meine Bewertung mit Sternen, Text, Name und Datum auf speicherklar.de veröffentlicht wird. Mehr dazu in der <a href="../datenschutz.html#bewertungen">Datenschutzerklärung</a>.</span></label>
+        <p class="wait-msg" id="bw-msg" role="status" aria-live="polite"></p>
+        <button class="btn btn-on" type="submit" id="bw-btn">Bewertung abschicken</button>
+      </form>
     </div>
   </section>
+  <!--BEWERTUNGEN-->
 </main>
 <!--FOOTER-->

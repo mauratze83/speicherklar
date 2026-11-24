@@ -1,5 +1,6 @@
 # Veröffentlicht den Cloudflare Worker für Kauf und Freischaltung von Speicherklar Pro (worker/).
-# Braucht die GitHub-Secrets CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, STRIPE_SECRET_KEY, LICENSE_SECRET, optional MAILERLITE_API_KEY.
+# Braucht die GitHub-Secrets CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, STRIPE_SECRET_KEY, LICENSE_SECRET, optional MAILERLITE_API_KEY,
+# für die Freigabe von Bewertungen optional REVIEW_ADMIN_KEY und GH_DISPATCH_TOKEN.
 # Ohne CLOUDFLARE_API_TOKEN wird der Lauf übersprungen.
 name: Worker
 on:
@@ -13,8 +14,12 @@ jobs:
     env:
       HAS_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
       HAS_ML: ${{ secrets.MAILERLITE_API_KEY != '' }}
+      HAS_ADMIN: ${{ secrets.REVIEW_ADMIN_KEY != '' }}
+      HAS_GH: ${{ secrets.GH_DISPATCH_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v4
+      - name: Tests Bewertungen
+        run: node test/bewertungen.test.mjs
       - if: env.HAS_TOKEN != 'true'
         run: echo "CLOUDFLARE_API_TOKEN fehlt – Worker wird nicht veröffentlicht."
       - name: KV-Speicher anlegen oder finden
@@ -52,3 +57,19 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: printf '%s' "$ML_KEY" | npx -y wrangler@3 secret put MAILERLITE_API_KEY
+      - name: Admin-Schlüssel für die Freigabe von Bewertungen setzen (nur wenn vorhanden)
+        if: env.HAS_TOKEN == 'true' && env.HAS_ADMIN == 'true'
+        working-directory: worker
+        env:
+          ADMIN_KEY: ${{ secrets.REVIEW_ADMIN_KEY }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: printf '%s' "$ADMIN_KEY" | npx -y wrangler@3 secret put REVIEW_ADMIN_KEY
+      - name: GitHub-Schlüssel zum Neubauen nach einer Freigabe setzen (nur wenn vorhanden)
+        if: env.HAS_TOKEN == 'true' && env.HAS_GH == 'true'
+        working-directory: worker
+        env:
+          GH_KEY: ${{ secrets.GH_DISPATCH_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: printf '%s' "$GH_KEY" | npx -y wrangler@3 secret put GH_DISPATCH_TOKEN

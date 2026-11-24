@@ -74,6 +74,40 @@ _plz2 = S / "plz2.json"
 _areas = json.loads(_plz2.read_text())["gebiete"] if _plz2.exists() else {}
 plz2_js = "var PLZ2=" + json.dumps({k: {"n": a["n"], "lat": a["lat"], "lon": a["lon"], "H": a["H"], "Kd": a["Kd"]} for k, a in _areas.items()}, ensure_ascii=False, separators=(",", ":")) + ";"
 pro_css = ((S / "fonts.css").read_text() + (S / "style.css").read_text()).replace("url(fonts/", "url(../fonts/") + (S / "pro.css").read_text()
+# Kundenbewertungen auf /pro/: nur freigegebene aus src/bewertungen.json (schreibt der Workflow "Bewertungen").
+# Sichtbar erst ab BEWERTUNGEN_AB Stück; darüber steht immer der Hinweis zur Echtheit (§ 5b Abs. 3 UWG).
+import html as _html, datetime as _dt
+BEWERTUNGEN_AB = 3
+_bew = json.loads((S / "bewertungen.json").read_text())["bewertungen"]
+_bew_on = len(_bew) >= BEWERTUNGEN_AB
+def _stars(n): return f'<span class="bw-stars" role="img" aria-label="{n} von 5 Sternen">' + "★" * n + '<span class="bw-off">' + "★" * (5 - n) + "</span></span>"
+_avg = round(sum(b["stars"] for b in _bew) / len(_bew), 1) if _bew else 0
+_avg_de = f"{_avg:.1f}".replace(".", ",")
+_date_de = lambda d: ".".join(reversed(d.split("-")))
+BEW_HTML, BEW_KURZ, BEW_LD = "", "", ""
+if _bew_on:
+    _items = "".join(
+        f'<li class="bw-item"><div class="bw-top">{_stars(b["stars"])} <span class="bw-who"><b>{_html.escape(b["name"]) or "Käufer von Speicherklar Pro"}</b> <span>· Kauf geprüft · {_date_de(b["date"])}</span></span></div>'
+        f'<p>{_html.escape(b["text"]).replace(chr(10), "<br>")}</p></li>' for b in _bew)
+    BEW_HTML = f"""<section class="bw" id="bewertungen" aria-labelledby="bw-h">
+  <div class="wrap">
+    <h2 id="bw-h">Was Käufer sagen</h2>
+    <p class="bw-sum">{_stars(round(_avg))} <b>{_avg_de} von 5</b> <span class="bw-n">aus {len(_bew)} Bewertungen</span></p>
+    <p class="bw-echt"><b>So prüfe ich die Bewertungen:</b> Bewerten kann nur, wer Speicherklar Pro gekauft hat. Das Formular erscheint erst nach dem Kauf, prüft den Lizenzschlüssel, und je Kauf geht eine Bewertung. Ich veröffentliche alle Bewertungen, auch kritische, und ändere keine Texte. Weg lasse ich nur Beleidigungen, Werbung und Texte mit persönlichen Daten. Für eine Bewertung gibt es kein Geld und keinen Rabatt.</p>
+    <ul class="bw-list">{_items}</ul>
+  </div>
+</section>"""
+    BEW_KURZ = f'<p class="note bw-kurz"><a href="#bewertungen">{_stars(round(_avg))} {_avg_de} von 5 aus {len(_bew)} Bewertungen von Käufern</a></p>'
+    _intro_on = _dt.date.today().isoformat() <= PRO_VALUES["{{PRO_INTRO}}"]
+    _offer = {"@type": "Offer", "price": PRO_VALUES["{{PRO_PRICE}}" if _intro_on else "{{PRO_REGULAR}}"], "priceCurrency": "EUR", "url": SITE + "pro/", "availability": "https://schema.org/InStock"}
+    if _intro_on: _offer["priceValidUntil"] = PRO_VALUES["{{PRO_INTRO}}"]
+    _prod = {"@context": "https://schema.org", "@type": "Product", "name": "Speicherklar Pro", "url": SITE + "pro/",
+             "description": "Angebots-Check für PV-Anlage und Speicher mit PDF-Bericht: beste Kombination aus PV-Größe und Speicher, Preis-Check, Fragen an den Installateur.",
+             "brand": {"@type": "Brand", "name": "Speicherklar"}, "image": SITE + "img/og/pro.png", "offers": _offer,
+             "aggregateRating": {"@type": "AggregateRating", "ratingValue": _avg, "reviewCount": len(_bew), "bestRating": 5, "worstRating": 1},
+             "review": [{"@type": "Review", "author": {"@type": "Person", "name": b["name"]}, "datePublished": b["date"], "reviewBody": b["text"],
+                         "reviewRating": {"@type": "Rating", "ratingValue": b["stars"], "bestRating": 5, "worstRating": 1}} for b in _bew if b["name"]][:10]}
+    BEW_LD = '<script type="application/ld+json">' + json.dumps(_prod, ensure_ascii=False).replace("</", "<\\/") + "</script>\n"
 pro_head = f"""<!doctype html>
 <html lang="de">
 <head>
@@ -82,7 +116,7 @@ pro_head = f"""<!doctype html>
 <title>Angebots-Check für PV-Anlage und Speicher – Speicherklar Pro</title>
 <meta name="description" content="Passen Speicher und PV-Anlage in deinem Angebot? Angebot eintragen, kostenlos die Einordnung sehen, Bericht mit bester Kombination aus PV-Größe und Speicher, Preis-Check und Fragen an den Installateur.">
 <link rel="canonical" href="https://speicherklar.de/pro/">
-<meta property="og:title" content="Speicherklar Pro – Angebots-Check für PV-Anlage und Speicher">
+{BEW_LD}<meta property="og:title" content="Speicherklar Pro – Angebots-Check für PV-Anlage und Speicher">
 <meta property="og:description" content="Ist der Speicher zu groß, die Anlage zu klein? Rechne dein Angebot nach, bevor du unterschreibst.">
 <meta property="og:url" content="https://speicherklar.de/pro/">
 <meta property="og:type" content="website">
@@ -95,11 +129,16 @@ pro_head = f"""<!doctype html>
 </head>
 <body>
 """
-pro_html = pro_head + (S / "pro-body.html").read_text().replace("<!--VIDEO-->", video_trigger("pro")).replace("<!--HEADER-->", header("../", "pro")).replace("<!--FOOTER-->", footer("../")) + \
+pro_html = pro_head + (S / "pro-body.html").read_text().replace("<!--VIDEO-->", video_trigger("pro")).replace("<!--BEWERTUNGEN-->", BEW_HTML).replace("<!--BEW-KURZ-->", BEW_KURZ).replace("<!--HEADER-->", header("../", "pro")).replace("<!--FOOTER-->", footer("../")) + \
     "\n<script>\n" + "\n".join([js("sim.js"), plz2_js, js("draw.js"), js("markt.js"), (S / "pro-config.js").read_text(), js("pro.js"), (S / "pro-ui.js").read_text()]) + "</script>\n</body>\n</html>\n"
 (S.parent / "pro").mkdir(exist_ok=True)
 (S.parent / "pro" / "index.html").write_text(pro_html)
-print("pro/index.html:", len(pro_html), "Zeichen,", len(_areas), "PLZ-Gebiete")
+print("pro/index.html:", len(pro_html), "Zeichen,", len(_areas), "PLZ-Gebiete,", len(_bew), "Bewertungen" + ("" if _bew_on else f" (sichtbar ab {BEWERTUNGEN_AB})"))
+
+# Freigabeseite für Bewertungen: nur für Manuel, nirgends verlinkt, noindex, ohne Umami
+_fg = (S / "freigabe.html").read_text().replace("{{API}}", _cv("api")).replace("{{FONTS}}", (S / "fonts.css").read_text().replace("url(fonts/", "url(../fonts/"))
+(S.parent / "freigabe").mkdir(exist_ok=True)
+(S.parent / "freigabe" / "index.html").write_text(_fg)
 
 # Sitemap: alle indexierbaren Seiten. lastmod = Tag, an dem sich die gebaute Seite zuletzt geändert hat
 # (Prüfsumme in src/sitemap-dates.json). Läuft hier, weil build.py immer als Letztes gebaut wird.

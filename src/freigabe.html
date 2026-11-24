@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Bewertungen freigeben – Speicherklar</title>
+<!-- Nur für Manuel: Bewertungen von Käufern freigeben oder ablehnen. Nirgends verlinkt, nicht in Sitemap, ohne Umami.
+     Gebaut von build.py aus src/freigabe.html. Der Admin-Schlüssel bleibt nur in diesem Browser (localStorage). -->
+<style>
+{{FONTS}}
+:root{--bg:#EDF0F2;--surface:#fff;--ink:#15212B;--muted:#56666F;--line:#CBD3DA;--sun:#E39A0B;--sun-ink:#8A5A00;--pos:#2E7D5B;--neg:#B4412F;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--bg:#0F161C;--surface:#17212A;--ink:#E6ECF1;--muted:#97A7B3;--line:#2A3742;--sun:#F0AE2E;--sun-ink:#F0AE2E;--pos:#5FBF93;--neg:#E07A66}}
+*{box-sizing:border-box}
+a{color:var(--sun-ink)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Source Sans 3",system-ui,-apple-system,sans-serif}
+main{max-width:760px;margin:0 auto;padding:24px 16px 60px}
+h1{font-size:24px;margin:0 0 4px}
+p.sub{color:var(--muted);margin:0 0 20px;font-size:14.5px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:0 0 12px}
+input{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);width:100%}
+button{font:inherit;font-weight:700;border:0;border-radius:8px;padding:10px 16px;min-height:44px;cursor:pointer;background:var(--ink);color:var(--surface)}
+button.frei{background:var(--pos);color:#fff} button.ab{background:none;color:var(--neg);border:1px solid var(--neg)}
+button.link{background:none;color:var(--sun-ink);padding:6px 0;min-height:0;text-decoration:underline;font-weight:600}
+button:disabled{opacity:.5;cursor:wait}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tabs{display:flex;gap:6px;margin:0 0 14px;flex-wrap:wrap}
+.tabs button{background:var(--surface);color:var(--ink);border:1px solid var(--line);font-weight:600}
+.tabs button[aria-pressed=true]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.stars{color:var(--sun);letter-spacing:1px} .stars i{color:var(--line);font-style:normal}
+.meta{color:var(--muted);font-size:14px}
+.text{white-space:pre-wrap;overflow-wrap:anywhere;margin:8px 0 12px}
+.st{font-size:13px;font-weight:700;padding:2px 8px;border-radius:99px;border:1px solid var(--line)}
+.st.frei{color:var(--pos);border-color:var(--pos)} .st.ab{color:var(--neg);border-color:var(--neg)}
+.msg{font-weight:600;font-size:14.5px;margin:10px 0}
+.msg.ok{color:var(--pos)} .msg.err{color:var(--neg)}
+.rule{font-size:14px;color:var(--muted);border-left:3px solid var(--sun);padding:8px 12px;margin:0 0 16px;background:var(--surface);border-radius:0 8px 8px 0}
+</style>
+</head>
+<body>
+<main>
+  <h1>Bewertungen freigeben</h1>
+  <p class="sub">Nur für mich. Freigegebene Bewertungen erscheinen nach etwa zwei Minuten auf <a href="../pro/#bewertungen">speicherklar.de/pro/</a>, sobald es mindestens drei sind.</p>
+  <p class="rule"><b>Regel:</b> Alles freigeben, auch Kritik. Ablehnen nur bei Beleidigungen, Werbung, Spam oder persönlichen Daten (volle Namen anderer, Adressen, Telefonnummern). Texte nie ändern.</p>
+
+  <form class="card" id="login" hidden>
+    <label for="k"><b>Admin-Schlüssel</b></label>
+    <div class="row" style="margin-top:6px"><input type="password" id="k" autocomplete="current-password" spellcheck="false"><button type="submit">Anmelden</button></div>
+    <p class="meta">Steht im GitHub-Secret REVIEW_ADMIN_KEY. Der Browser merkt ihn sich, bis du dich abmeldest.</p>
+  </form>
+
+  <div id="app" hidden>
+    <div class="tabs" id="tabs">
+      <button type="button" data-s="offen" aria-pressed="true">Offen</button>
+      <button type="button" data-s="frei" aria-pressed="false">Freigegeben</button>
+      <button type="button" data-s="ab" aria-pressed="false">Abgelehnt</button>
+    </div>
+    <p class="msg" id="msg" role="status" aria-live="polite"></p>
+    <div id="list"></div>
+    <div class="row"><button type="button" class="link" id="reload">Neu laden</button> <button type="button" class="link" id="logout">Abmelden</button></div>
+  </div>
+</main>
+<script>
+(function () {
+  var API = "{{API}}", K = "sk-admin-bewertungen", $ = function (id) { return document.getElementById(id); };
+  var all = [], tab = "offen";
+  var getKey = function () { try { return localStorage.getItem(K) || ""; } catch (e) { return ""; } };
+  var setKey = function (v) { try { if (v) localStorage.setItem(K, v); else localStorage.removeItem(K); } catch (e) {} };
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+  var de = function (d) { return d ? d.split("-").reverse().join(".") : ""; };
+  function call(path, body) {
+    return fetch(API + path, { method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + getKey() }, body: JSON.stringify(body || {}) })
+      .then(function (r) { return r.json().then(function (j) { j.status = r.status; return j; }, function () { return { status: r.status }; }); });
+  }
+  function say(t, cls) { var m = $("msg"); m.textContent = t || ""; m.className = "msg " + (cls || ""); }
+  function showLogin(t) { $("app").hidden = true; $("login").hidden = false; if (t) { $("login").querySelector(".meta").textContent = t; } $("k").focus(); }
+  function load() {
+    say("Lade…");
+    call("/admin/reviews").then(function (j) {
+      if (j.status === 401 || j.status === 404) { setKey(""); showLogin(j.status === 404 ? "Die Freigabe ist im Worker noch nicht eingerichtet (Secret REVIEW_ADMIN_KEY fehlt)." : "Der Schlüssel stimmt nicht."); return; }
+      if (!j.reviews) { say("Laden hat nicht geklappt.", "err"); return; }
+      all = j.reviews; $("login").hidden = true; $("app").hidden = false; say(""); draw();
+    }, function () { say("Keine Verbindung zum Worker.", "err"); $("app").hidden = false; $("login").hidden = true; });
+  }
+  function draw() {
+    Array.prototype.forEach.call($("tabs").querySelectorAll("button"), function (b) {
+      var s = b.getAttribute("data-s"), n = all.filter(function (r) { return r.status === s; }).length;
+      b.setAttribute("aria-pressed", String(s === tab)); b.textContent = { offen: "Offen", frei: "Freigegeben", ab: "Abgelehnt" }[s] + " (" + n + ")";
+    });
+    var rows = all.filter(function (r) { return r.status === tab; });
+    $("list").innerHTML = rows.length ? rows.map(function (r) {
+      var btns = r.status === "offen" ? '<button class="frei" data-a="frei">Freigeben</button> <button class="ab" data-a="ab">Ablehnen</button>'
+        : r.status === "frei" ? '<button class="ab" data-a="ab">Wieder entfernen</button>' : '<button class="frei" data-a="frei">Doch freigeben</button>';
+      return '<div class="card" data-rid="' + esc(r.rid) + '"><div class="row"><span class="stars" aria-label="' + r.stars + ' von 5 Sternen">' + "★".repeat(r.stars) + "<i>" + "★".repeat(5 - r.stars) + "</i></span> " +
+        '<span class="meta"><b>' + (esc(r.name) || "ohne Namen") + "</b> · eingegangen " + de(r.date) + (r.decided ? " · entschieden " + de(r.decided) : "") + "</span>" +
+        (r.status !== "offen" ? ' <span class="st ' + r.status + '">' + (r.status === "frei" ? "freigegeben" : "abgelehnt") + "</span>" : "") +
+        '</div><p class="text">' + esc(r.text) + '</p><div class="row">' + btns + "</div></div>";
+    }).join("") : '<p class="meta">Keine Bewertungen in dieser Liste.</p>';
+  }
+  $("list").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-a]"); if (!b) return;
+    var card = b.closest("[data-rid]"), rid = card.getAttribute("data-rid"), a = b.getAttribute("data-a");
+    Array.prototype.forEach.call(card.querySelectorAll("button"), function (x) { x.disabled = true; });
+    call("/admin/review", { rid: rid, status: a }).then(function (j) {
+      if (!j.ok) { say(j.error || "Das hat nicht geklappt.", "err"); load(); return; }
+      all.forEach(function (r) { if (r.rid === rid) { r.status = a; r.decided = new Date().toISOString().slice(0, 10); } });
+      draw();
+      var shown = all.filter(function (r) { return r.status === "frei"; }).length;
+      if (a === "frei" || j.build) say(j.build ? "Gespeichert. Die Seite wird neu gebaut und ist in etwa zwei Minuten aktuell." + (shown < 3 ? " Sichtbar werden die Bewertungen erst ab drei freigegebenen (jetzt " + shown + ")." : "") : "Gespeichert, aber der Neubau ließ sich nicht starten (Secret GH_DISPATCH_TOKEN prüfen). In GitHub den Workflow „Bewertungen“ von Hand starten.", j.build ? "ok" : "err");
+      else say("Abgelehnt. Die Bewertung erscheint nicht auf der Seite.", "ok");
+    }, function () { say("Keine Verbindung zum Worker.", "err"); draw(); });
+  });
+  $("tabs").addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b) return; tab = b.getAttribute("data-s"); say(""); draw(); });
+  $("login").addEventListener("submit", function (e) { e.preventDefault(); var v = $("k").value.trim(); if (!v) return; setKey(v); $("k").value = ""; load(); });
+  $("reload").addEventListener("click", load);
+  $("logout").addEventListener("click", function () { setKey(""); all = []; $("list").innerHTML = ""; showLogin(); });
+  if (getKey()) load(); else showLogin();
+})();
+</script>
+</body>
+</html>
