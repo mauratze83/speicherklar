@@ -93,7 +93,7 @@ a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
   :root,:root[data-theme]{--bg:#fff;--surface:#fff;--ink:#15212B;--muted:#4A5862;--line:#C5CDD4;--sun:#E39A0B;--sun-ink:#8A5A00;--sun-soft:#FBEFD6;--pos:#2E7D5B;--pos-ink:#276B4E;--neg:#B4412F;--track:#E3E8EC;--c-charge:#9FD3B8;--c-exp:#F6D99A;--c-imp:#AEB9C2;color-scheme:light}
   @page{size:A4;margin:16mm 14mm}
   body{font-size:11pt;background:#fff}
-  header.top,footer,.pro-hero,.pro-tool,.rtools{display:none!important}
+  header.top,footer,.pro-hero,.pro-tool,.rtools,.bw-form,.bw{display:none!important}
   .report-wrap{border:0;padding:0}
   .report-wrap .wrap{padding:0;max-width:none}
   .report{border:0;padding:0;max-width:none}
@@ -169,3 +169,33 @@ a.btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}
 .gap-foot{margin:10px 0 0;font-size:13.5px;color:var(--muted)}
 .gap-ok{border-style:solid;border-color:var(--pos)}
 .gap-ok p{margin:0;font-size:14px;color:var(--muted)}
+
+/* Kundenbewertungen: Formular nach dem Bericht (nur Käufer) und Anzeige unter dem Angebots-Check */
+.bw-form{max-width:760px;margin:28px auto 0;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px;display:grid;gap:4px}
+.bw-form h2{font-family:var(--f-display);font-stretch:105%;font-size:20px;margin:0 0 4px}
+.bw-form .sub{color:var(--muted);font-size:14.5px;margin:0 0 14px}
+.bw-form #bw-name{max-width:32ch}
+.bw-form textarea{width:100%;min-height:110px;resize:vertical;font:inherit;line-height:1.45}
+.bw-pick{display:flex;gap:4px}
+.bw-pick button{font:inherit;font-size:30px;line-height:1;background:none;border:0;padding:6px 4px;min-width:44px;min-height:44px;color:var(--line);cursor:pointer;border-radius:6px}
+.bw-pick button.on{color:var(--sun)}
+.bw-pick button:focus-visible{outline:2px solid var(--sun-ink);outline-offset:1px}
+.bw-ok{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;margin:6px 0 10px}
+.bw-ok input{width:20px;height:20px;margin-top:2px;flex:none;accent-color:var(--sun)}
+.bw-form .btn{justify-self:start}
+.bw{padding-block:44px 36px;border-top:1px solid var(--line)}
+.bw h2{font-family:var(--f-display);font-stretch:105%;font-size:24px;margin:0 0 8px}
+.bw-sum{display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;margin:0 0 10px;font-size:16px}
+.bw-sum .bw-n{color:var(--muted)}
+.bw-echt{max-width:760px;color:var(--muted);font-size:14px;margin:0 0 20px;padding:12px 14px;border-left:3px solid var(--sun);background:var(--surface);border-radius:0 8px 8px 0}
+.bw-echt b{color:var(--ink)}
+.bw-list{list-style:none;margin:0;padding:0;display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr))}
+.bw-item{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+.bw-item p{margin:8px 0 0;overflow-wrap:anywhere}
+.bw-top{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.bw-who{font-size:14px}
+.bw-who span{color:var(--muted)}
+.bw-stars{color:var(--sun);letter-spacing:1px;white-space:nowrap}
+.bw-stars .bw-off{color:var(--line)}
+.bw-kurz a{text-decoration:none;color:var(--ink)}
+.bw-kurz a:hover{text-decoration:underline}

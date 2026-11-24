@@ -6,17 +6,26 @@
    POST /validate  { key, device }     → { ok, email, until } Schlüssel prüfen: Signatur, bezahlt, nicht erstattet, nicht gesperrt, nicht abgelaufen, Gerätelimit
    POST /recover   { email }           → { ok }             Schlüssel noch einmal per Mail an diese Adresse (Antwort verrät nichts)
 
+   Bewertungen (nur echte Käufer, eine je Kauf, erst nach Freigabe durch Manuel sichtbar):
+   POST /review/status { key }                         → { can, done }    darf dieser Schlüssel bewerten? schon bewertet?
+   POST /review        { key, stars, text, name, ok }  → { ok }           Bewertung speichern, Status "offen"
+   POST /reviews       {}                              → { reviews: [..] } freigegebene Bewertungen (ohne Kauf-ID), liest der Workflow "Bewertungen"
+   POST /admin/reviews {}            + Authorization: Bearer REVIEW_ADMIN_KEY → { reviews: [..] } alle Bewertungen mit Status
+   POST /admin/review  { rid, status } + Authorization                         → { ok, build }  "frei" oder "ab"; startet den Workflow "Bewertungen"
+
    Laufzeit: ACCESS_DAYS Tage ab der ersten Freischaltung (activatedAt, gesetzt beim ersten /verify oder /validate).
    Danach antwortet /validate mit 410 { error: "expired", until }. Der PDF-Bericht des Käufers bleibt davon unberührt.
 
    KV LICENSES:  "lic:<checkout-id>" → { devices: [..], email: "m•••@gmx.de", mailed: true, blocked: false,
                                          activatedAt: "2026-12-03T10:00:00.000Z", until: "2027-06-30" (optional) }
                  "rec:<email>:<tag>" → Zähler gegen Missbrauch von /recover
+                 "rev:<checkout-id>" → { rid, stars, text, name, date: "2026-11-24", status: "offen"|"frei"|"ab", decided }
    Sperren: im Cloudflare-Dashboard unter Workers KV den Eintrag lic:<checkout-id> öffnen und "blocked": true setzen.
    Verlängern: dort "until": "JJJJ-MM-TT" setzen (letzter gültiger Tag); das ersetzt das berechnete Ende.
 
    Variablen (wrangler.toml): SITE, ALLOWED_ORIGINS, PRICE_INTRO, PRICE_REGULAR, INTRO_UNTIL, STRIPE_VERSION, MAX_DEVICES, ACCESS_DAYS, ML_GROUP_BUYERS, ML_GROUP_RESEND
-   Geheimnisse: STRIPE_SECRET_KEY, LICENSE_SECRET, MAILERLITE_API_KEY (ohne diesen wird keine Mail verschickt) */
+   Geheimnisse: STRIPE_SECRET_KEY, LICENSE_SECRET, MAILERLITE_API_KEY (ohne diesen wird keine Mail verschickt),
+                REVIEW_ADMIN_KEY (ohne: Freigabe-Endpunkte antworten 404), GH_DISPATCH_TOKEN (ohne: Freigabe klappt, Website wird aber nicht neu gebaut) */
 
 const enc = new TextEncoder();
 
@@ -26,7 +35,7 @@ function cors(req, env) {
   return {
     "Access-Control-Allow-Origin": allowed.includes(origin) ? origin : allowed[0],
     "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Max-Age": "86400",
     Vary: "Origin",
   };
@@ -127,6 +136,59 @@ function access(env, lic) {
   return new Date(Date.parse(lic.activatedAt) + (days - 1) * 86400000).toISOString().slice(0, 10);
 }
 
+// ---------- Bewertungen ----------
+const REVIEW_MIN = 20, REVIEW_MAX = 1000, NAME_MAX = 40;
+const sha = async (t) => [...new Uint8Array(await crypto.subtle.digest("SHA-256", enc.encode(String(t))))].map((b) => b.toString(16).padStart(2, "0")).join("");
+// Admin-Schlüssel vergleichen (über Hashes, damit die Laufzeit nichts verrät)
+async function isAdmin(req, env) {
+  const m = /^Bearer (.+)$/.exec(req.headers.get("Authorization") || "");
+  return !!(env.REVIEW_ADMIN_KEY && m && (await sha(m[1])) === (await sha(env.REVIEW_ADMIN_KEY)));
+}
+// Darf dieser Schlüssel bewerten? Nur gekaufte, bezahlte, nicht erstattete und nicht gesperrte Schlüssel; Freischlüssel nicht.
+async function reviewer(env, key) {
+  const id = await parseKey(env, key);
+  if (!id) return { ok: false, reason: "unknown" };
+  const p = await paidSession(env, id);
+  if (!p.ok) return { ok: false, reason: p.reason };
+  const lic = await getLic(env, id);
+  if (lic.blocked) return { ok: false, reason: "blocked" };
+  return { ok: true, id };
+}
+function cleanReview(body) {
+  const stars = Number(body.stars), text = String(body.text || "").replace(/\r/g, "").replace(/\n{3,}/g, "\n\n").trim();
+  const name = String(body.name || "").replace(/\s+/g, " ").trim();
+  if (!Number.isInteger(stars) || stars < 1 || stars > 5) return { error: "Bitte wähl 1 bis 5 Sterne." };
+  if (text.length < REVIEW_MIN) return { error: `Bitte schreib mindestens ${REVIEW_MIN} Zeichen.` };
+  if (text.length > REVIEW_MAX) return { error: `Bitte höchstens ${REVIEW_MAX} Zeichen.` };
+  if (name.length > NAME_MAX) return { error: `Der Name darf höchstens ${NAME_MAX} Zeichen haben.` };
+  // Keine Links und keine Mailadressen: gegen Spam und damit keine Kontaktdaten öffentlich werden
+  if (/https?:|www\.|@/i.test(text + " " + name)) return { error: "Bitte ohne Links und Mailadressen." };
+  if (body.ok !== true) return { error: "Bitte bestätige, dass ich die Bewertung veröffentlichen darf." };
+  return { stars, text, name };
+}
+const publicReview = (r) => ({ rid: r.rid, stars: r.stars, text: r.text, name: r.name, date: r.date });
+async function allReviews(env) {
+  if (!env.LICENSES) return [];
+  const out = [];
+  let cursor;
+  do {
+    const l = await env.LICENSES.list({ prefix: "rev:", cursor });
+    for (const k of l.keys) { const r = await env.LICENSES.get(k.name, "json"); if (r) out.push({ ...r, _k: k.name }); }
+    cursor = l.list_complete ? null : l.cursor;
+  } while (cursor);
+  return out.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+}
+// Workflow "Bewertungen" starten: holt die freigegebenen Bewertungen, baut /pro/ neu und veröffentlicht
+async function dispatchBuild(env) {
+  if (!env.GH_DISPATCH_TOKEN || !env.GH_REPO) return false;
+  const r = await fetch(`https://api.github.com/repos/${env.GH_REPO}/actions/workflows/bewertungen.yml/dispatches`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${env.GH_DISPATCH_TOKEN}`, Accept: "application/vnd.github+json", "User-Agent": "speicherklar-pro", "Content-Type": "application/json" },
+    body: JSON.stringify({ ref: "main" }),
+  });
+  return r.status === 204;
+}
+
 export default {
   async fetch(req, env) {
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors(req, env) });
@@ -199,6 +261,48 @@ export default {
         const paid = (list.data || []).filter((s) => s.payment_status === "paid");
         if (paid.length) await mailKey(env, email, await makeKey(env, paid[0].id), env.ML_GROUP_RESEND || env.ML_GROUP_BUYERS);
         return json(req, env, { ok: true });
+      }
+
+      if (path === "/review/status") {
+        const v = await reviewer(env, body.key);
+        if (!v.ok) return json(req, env, { can: false });
+        const done = !!(env.LICENSES && await env.LICENSES.get(`rev:${v.id}`));
+        return json(req, env, { can: true, done });
+      }
+
+      if (path === "/review") {
+        const v = await reviewer(env, body.key);
+        if (!v.ok) return json(req, env, { error: "Bewerten kann nur, wer Speicherklar Pro gekauft hat." }, 403);
+        const c = cleanReview(body);
+        if (c.error) return json(req, env, { error: c.error }, 400);
+        if (!env.LICENSES) return json(req, env, { error: "Speicher fehlt" }, 500);
+        if (await env.LICENSES.get(`rev:${v.id}`)) return json(req, env, { error: "Zu diesem Kauf gibt es schon eine Bewertung." }, 409);
+        const rid = [...crypto.getRandomValues(new Uint8Array(6))].map((b) => b.toString(16).padStart(2, "0")).join("");
+        await env.LICENSES.put(`rev:${v.id}`, JSON.stringify({ rid, ...c, date: today(), status: "offen" }));
+        return json(req, env, { ok: true });
+      }
+
+      if (path === "/reviews") {
+        const list = (await allReviews(env)).filter((r) => r.status === "frei").map(publicReview);
+        return json(req, env, { reviews: list });
+      }
+
+      if (path === "/admin/reviews" || path === "/admin/review") {
+        if (!env.REVIEW_ADMIN_KEY) return json(req, env, { error: "Unbekannter Pfad" }, 404);
+        if (!(await isAdmin(req, env))) return json(req, env, { error: "Falscher Schlüssel" }, 401);
+        const list = await allReviews(env);
+        if (path === "/admin/reviews") return json(req, env, { reviews: list.map((r) => ({ ...publicReview(r), status: r.status, decided: r.decided || "" })) });
+        const status = String(body.status || "");
+        if (!["frei", "ab"].includes(status)) return json(req, env, { error: "Status muss frei oder ab sein" }, 400);
+        const r = list.find((x) => x.rid === body.rid);
+        if (!r) return json(req, env, { error: "Bewertung nicht gefunden" }, 404);
+        const wasPublic = r.status === "frei";
+        const k = r._k; delete r._k;
+        r.status = status; r.decided = today();
+        await env.LICENSES.put(k, JSON.stringify(r));
+        // Neu bauen nur, wenn sich an den sichtbaren Bewertungen etwas ändert
+        const build = (status === "frei" || wasPublic) ? await dispatchBuild(env).catch(() => false) : false;
+        return json(req, env, { ok: true, build });
       }
 
       return json(req, env, { error: "Unbekannter Pfad" }, 404);

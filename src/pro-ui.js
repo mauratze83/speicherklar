@@ -567,7 +567,45 @@
 
     $("report").innerHTML = h;
     $("report-wrap").hidden = false;
+    reviewSetup();
   }
+
+  // ---------- Bewertung nach dem Bericht (nur gekaufte Schlüssel, eine je Kauf; Worker prüft, Manuel gibt frei) ----------
+  var reviewAsked = false;
+  function reviewSetup() {
+    var lic = load(KEY_LIC);
+    if (reviewAsked || !C.api || !lic || !/^SK\.cs_/.test(lic.key || "")) return;
+    reviewAsked = true;
+    api("/review/status", { key: lic.key }).then(function (j) { if (j.can && !j.done) $("bwform").hidden = false; }, function () {});
+  }
+  (function () {
+    var stars = 0, btns = document.querySelectorAll("#bw-stars button");
+    function paint(n) { Array.prototype.forEach.call(btns, function (b) { var v = +b.getAttribute("data-v"); b.classList.toggle("on", v <= n); b.setAttribute("aria-checked", String(v === stars)); }); }
+    Array.prototype.forEach.call(btns, function (b) {
+      b.addEventListener("click", function () { stars = +b.getAttribute("data-v"); paint(stars); });
+      b.addEventListener("mouseenter", function () { paint(+b.getAttribute("data-v")); });
+      b.addEventListener("mouseleave", function () { paint(stars); });
+      b.addEventListener("keydown", function (e) {
+        var d = e.key === "ArrowRight" || e.key === "ArrowUp" ? 1 : e.key === "ArrowLeft" || e.key === "ArrowDown" ? -1 : 0; if (!d) return;
+        e.preventDefault(); stars = Math.max(1, Math.min(5, (stars || 0) + d)); paint(stars); btns[stars - 1].focus();
+      });
+    });
+    $("bwform").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var msg = $("bw-msg"), btn = $("bw-btn"), text = $("bw-text").value.trim(), name = $("bw-name").value.trim(), lic = load(KEY_LIC);
+      var err = !stars ? "Bitte wähl 1 bis 5 Sterne." : text.length < 20 ? "Bitte schreib mindestens 20 Zeichen." : /https?:|www\.|@/i.test(text + " " + name) ? "Bitte ohne Links und Mailadressen." : !$("bw-ok").checked ? "Bitte bestätige, dass ich die Bewertung veröffentlichen darf." : "";
+      if (err) { msg.className = "wait-msg err"; msg.textContent = err; return; }
+      if (!lic || !lic.key) { msg.className = "wait-msg err"; msg.textContent = "Dein Lizenzschlüssel fehlt auf diesem Gerät."; return; }
+      btn.disabled = true; btn.textContent = "Wird gesendet…";
+      api("/review", { key: lic.key, stars: stars, text: text, name: name, ok: true }).then(function (j) {
+        btn.disabled = false; btn.textContent = "Bewertung abschicken";
+        if (j.ok) {
+          track("pro-bewertung", { sterne: String(stars) });
+          $("bwform").innerHTML = '<h2>Danke für deine Bewertung!</h2><p class="sub">Ich lese sie und gebe sie dann frei. Auf dieser Seite erscheinen die Bewertungen, sobald es mindestens drei sind.</p>';
+        } else { msg.className = "wait-msg err"; msg.textContent = j.error || "Das hat gerade nicht geklappt. Bitte versuch es gleich noch einmal."; }
+      }, function () { btn.disabled = false; btn.textContent = "Bewertung abschicken"; msg.className = "wait-msg err"; msg.textContent = "Keine Verbindung. Bitte versuch es gleich noch einmal."; });
+    });
+  })();
 
   $("print").addEventListener("click", function () { track("pro-pdf"); window.print(); });
   $("edit").addEventListener("click", function () { $("offer").scrollIntoView({ behavior: SCROLL }); $("f-model").focus({ preventScroll: true }); });

@@ -23,6 +23,7 @@ Kostenloser Speicher-Rechner für geplante PV-Anlagen – https://speicherklar.d
 - `src/markt.js` – Marktspannen für den Preis-Check, ein- bis zweimal im Jahr aktualisieren
 - `node test/pro.test.js` – Beispielrechnungen und Abgleich mit dem kostenlosen Rechner
 - Lokal testen: `python3 -m http.server`, dann `localhost:8000/pro/` (Einordnung ohne Freischaltung). Den vollständigen Bericht prüft `python3 scripts/musterbericht.py` (beantwortet die Lizenzprüfung nur im Testbrowser); auf speicherklar.de mit einem Freischlüssel.
+- Bewertungen: Käufer bewerten nach dem Bericht (`/review`, eine je Kauf, KV `rev:<checkout-id>`), Manuel gibt auf `speicherklar.de/freigabe/` frei (Secret `REVIEW_ADMIN_KEY`), danach baut der Workflow „Bewertungen“ `/pro/` neu (Secret `GH_DISPATCH_TOKEN` im Worker). Sichtbar ab 3 freigegebenen. Details in `CLAUDE.md`.
 - Freischaltung: ein gespeicherter Schlüssel wird bei jedem Aufruf der Pro-Seite beim Worker gegengeprüft (`/validate`); ohne Verbindung bleibt Pro bis zum gespeicherten Ablaufdatum freigeschaltet.
 - `pro/musterbericht.pdf` – Musterbericht, erzeugt mit `python3 scripts/musterbericht.py` nach `build.py`; neu erzeugen, wenn sich `pro.js`, `pro-ui.js` oder `sim.js` ändern
 - Kauf vor dem Starttermin (`publicFrom`) nur intern zum Testen: `https://speicherklar.de/pro/?vorab=1`. Der Browser merkt sich das und zeigt dann „Vorab-Zugang aktiv“; `?vorab=0` nimmt es wieder weg.
