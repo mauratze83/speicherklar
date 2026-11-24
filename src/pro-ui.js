@@ -180,9 +180,8 @@
     var blk = function (n) { return '<span class="blk" aria-hidden="true">' + new Array(n + 1).join("0") + '</span> <span class="sr-only">im Bericht</span>'; };
     var row = function (k, v, off) { return "<li><span class=\"gk\">" + k + "</span> <span class=\"gv\">" + v + (off ? ' <small>statt ' + off + "</small>" : "") + "</span></li>"; };
     var s = '<div class="gap" id="t-gap"><h3>Was die Ampel nicht sagt</h3><ul>';
-    s += row("Passende Speichergröße", t.verdict === "nolohn" ? blk(2) : blk(1) + " kWh", kwh(r.cap));
-    s += row("Beste PV-Größe für dein Dach", blk(2) + " kWp", kwp(r.kwp));
-    s += row("Unterschied in " + life + " Jahren", blk(3) + " €");
+    s += row("Unterschied zu deinem Angebot in " + life + " Jahren", blk(3) + " €");
+    s += row("Beste Kombination für dein Dach", blk(2) + " kWp + " + (t.verdict === "nolohn" ? blk(2) : blk(1) + " kWh"), kwp(r.kwp) + " + " + kwh(r.cap));
     s += '</ul><p class="gap-foot">Steht im Bericht, mit Rechenweg. <a href="#buy" id="t-gap-buy">Bericht ansehen</a></p></div>';
     return s;
   }
@@ -195,7 +194,10 @@
     $("t-gap-wrap").innerHTML = gap(t, r, state.input);
     var gb = $("t-gap-buy");
     if (gb) gb.addEventListener("click", function (e) { e.preventDefault(); track("pro-luecke-klick", state.ampel); $("buy").scrollIntoView({ behavior: SCROLL, block: "start" }); });
+    state.checks = (state.checks || 0) + 1;
     state.ampel = ampelData(t);
+    // wievielte Prüfung in diesem Seitenaufruf (zeigt, ob Leute so lange probieren, bis alles grün ist)
+    state.ampel.nr = state.checks >= 5 ? "5+" : String(state.checks);
   }
 
   function runCheck(scroll) {
