@@ -11,6 +11,61 @@ CHART_BASE = {"region": "4", "roofs": [{"kwp": 9, "tilt": 35, "aspect": 0}], "co
 
 ARTICLES = [
 {
+"slug": "stromspeicher-preisentwicklung-2027",
+"kennzahl": {"v": "435 €/kWh", "t": "so billig müsste der Speicher nach einem Jahr Warten sein, damit es sich lohnt"},
+"related": ["stromspeicher-preis-pro-kwh", "stromspeicher-lohnt-sich-2027", "stromspeicher-groesse-berechnen"],
+"bars": {"title": "Bilanz nach 15 Jahren: jetzt kaufen oder warten", "caption": "9 kWp Süd, 4.500 kWh, Strom 33 ct/kWh, Einspeisung 7,7 ct, beste Speichergröße zum jeweiligen Preis. Beim Warten ist die entgangene Ersparnis schon abgezogen.",
+         "rows": [["Jetzt, 500 €/kWh", 2899], ["1 Jahr warten, 450 €/kWh", 2806], ["1 Jahr warten, 400 €/kWh", 3122], ["2 Jahre warten, 400 €/kWh", 2729]], "best": "1 Jahr warten, 400 €/kWh", "mark": "Jetzt, 500 €/kWh"},
+"title": "Stromspeicher-Preisentwicklung: Lohnt sich Warten bis 2027?",
+"seo_title": "Stromspeicher-Preise 2027: Lohnt sich Warten?",
+"h1": "Stromspeicher-Preisentwicklung: Lohnt sich Warten bis 2027?",
+"desc": "Ein Jahr Warten kostet im Beispiel 393 € Ersparnis. Das holst du nur rein, wenn der Speicher dann unter rund 435 €/kWh statt 500 €/kWh kostet.",
+"date": "2026-11-25",
+"lead": "Meistens nicht. Jedes Jahr ohne Speicher kostet dich im Beispiel 393 € Ersparnis. Damit sich ein Jahr Warten lohnt, müsste der Speicher danach unter rund 435 €/kWh kosten statt 500 €/kWh, also gut 13 % billiger sein.",
+"body": """
+<p>Speicher werden billiger, das liest man überall. Also lieber noch warten? Wie schnell die Preise fallen, kann ich dir nicht sagen, das weiß niemand. Ich kann dir aber ausrechnen, wie stark sie fallen müssten, damit Warten sich lohnt.</p>
+<p>Mein Beispiel: 9 kWp auf einem Süddach im Ruhrgebiet, 4.500 kWh Verbrauch im Jahr, Strompreis 33 ct, Einspeisevergütung 7,70 ct, 15 Jahre Lebensdauer. Gekauft zusammen mit der PV-Anlage für 500 €/kWh inklusive Einbau. Am meisten bringt dann ein Speicher mit 6 kWh: Er spart 393 € im Jahr und steht nach 15 Jahren bei +2.899 €.</p>
+
+<h2>Was ein Jahr Warten kostet</h2>
+<p>Wartest du, läuft die PV-Anlage ein Jahr ohne Speicher. Die 393 € Ersparnis aus diesem Jahr sind weg. Dafür kaufst du später vielleicht günstiger. So sieht die Rechnung aus, jeweils mit der besten Größe zum Preis und mit der entgangenen Ersparnis abgezogen:</p>
+<div class="tablewrap"><table class="fit">
+<thead><tr><th>Preis beim Kauf</th><th>Beste Größe</th><th>Jetzt kaufen</th><th>1 Jahr warten</th><th>2 Jahre warten</th></tr></thead>
+<tbody>
+<tr class="hl"><td>500 €/kWh</td><td class="num">6 kWh</td><td class="num">+2.899 €</td><td class="num">+2.506 €</td><td class="num">+2.112 €</td></tr>
+<tr><td>450 €/kWh</td><td class="num">6 kWh</td><td class="num">–</td><td class="num">+2.806 €</td><td class="num">+2.412 €</td></tr>
+<tr><td>400 €/kWh</td><td class="num">7 kWh</td><td class="num">–</td><td class="num">+3.122 €</td><td class="num">+2.729 €</td></tr>
+<tr><td>350 €/kWh</td><td class="num">7 kWh</td><td class="num">–</td><td class="num">+3.472 €</td><td class="num">+3.079 €</td></tr>
+<tr><td>300 €/kWh</td><td class="num">8 kWh</td><td class="num">–</td><td class="num">+3.853 €</td><td class="num">+3.459 €</td></tr>
+</tbody></table></div>
+<p>Die Grenze liegt bei rund 435 €/kWh. Kostet der Speicher nach einem Jahr mehr, war Warten ein Verlust. Wartest du zwei Jahre, muss er unter rund 376 €/kWh fallen. Das wären gut 13 % weniger in einem Jahr oder knapp 25 % in zwei Jahren.</p>
+<!--BARS-->
+
+<h2>Der Preisunterschied zwischen Angeboten ist größer</h2>
+<p>Für Speicher inklusive Einbau nennt die Verbraucherzentrale eine Spanne von 300 bis 700 €/kWh. Zwischen einem teuren und einem günstigen Angebot liegen also bis zu 400 €/kWh. Ein Jahr Warten müsste dir rund 65 €/kWh bringen. Mehrere Angebote einholen bringt dir meist mehr als Abwarten.</p>
+<p>Wie du den Preis je kWh aus deinem Angebot ausrechnest und welche Größe zu welchem Preis passt, steht unter <a href="stromspeicher-preis-pro-kwh.html">Was darf ein Stromspeicher pro kWh kosten?</a></p>
+
+<h2>Und wenn die EEG-Reform kommt?</h2>
+<p>Für Anlagen ab 01.01.2027 steht noch nicht fest, welche Einspeisevergütung gilt (Stand November 2026, Bundesnetzagentur). Der Kabinettsentwurf vom 29.07.2026 sah für neue Anlagen unter 25 kW keine feste Vergütung mehr vor und höchstens 50 % Einspeiseleistung. Mitte November berichten dpa und ZfK von einer Einigung in der Koalition, nach der die feste Vergütung bleiben soll. Beschlossen ist nichts.</p>
+<p>Käme es wie im Kabinettsentwurf, wäre der Speicher mehr wert. Im Beispiel bringen dann 7 kWh am meisten, mit 598 € Ersparnis im Jahr. Warten wird teurer: Nach einem Jahr müsste der Speicher unter rund 419 €/kWh kosten, nach zwei Jahren unter rund 344 €/kWh.</p>
+<p>Was die Reform sonst für deinen Speicher ändert, steht unter <a href="stromspeicher-lohnt-sich-2027.html">Lohnt sich ein Stromspeicher 2027?</a></p>
+
+<h2>Wann Warten doch sinnvoll ist</h2>
+<ul>
+<li><b>Dein Angebot ist teuer:</b> Liegt der Speicher am oberen Ende der Spanne, verhandle oder hol ein zweites Angebot. Das ist kein Warten auf den Markt, sondern auf einen fairen Preis.</li>
+<li><b>Dein Verbrauch ändert sich bald:</b> Kommen in ein, zwei Jahren eine Wärmepumpe oder ein E-Auto dazu, passt heute vielleicht eine andere Größe. Rechne beide Fälle im Rechner durch.</li>
+<li><b>Du kaufst nur die PV-Anlage jetzt:</b> Dann wird der Speicher später ein Nachrüst-Speicher. Der kostet oft mehr als der Kauf zusammen mit der Anlage. Wie sich das rechnet, steht unter <a href="stromspeicher-nachruesten.html">Stromspeicher nachrüsten</a>.</li>
+</ul>
+
+<h2>Was das Modell nicht abbildet</h2>
+<p>Ich rechne ohne Zinsen und mit gleichbleibendem Strompreis. Steigt der Strompreis, kostet jedes Jahr Warten mehr. Die Alterung des Speichers ist nicht drin, und der Rechner weiß nicht, wie sich Technik und Garantien in den nächsten Jahren ändern. Die Preise in der Tabelle sind Annahmen zum Durchrechnen, keine Vorhersage.</p>
+""",
+"faq": [
+("Werden Stromspeicher 2027 billiger?", "Das weiß vorher niemand. Im Beispiel lohnt sich ein Jahr Warten nur, wenn der Speicher dann unter rund 435 €/kWh statt 500 €/kWh kostet, also gut 13 % billiger ist."),
+("Was kostet es, mit dem Speicher zu warten?", "Die Ersparnis, die der Speicher in der Zeit gebracht hätte. Im Beispiel mit 9 kWp und 4.500 kWh sind das 393 € pro Jahr für einen 6-kWh-Speicher."),
+("Soll ich die PV-Anlage jetzt kaufen und den Speicher später?", "Das geht, ist aber oft teurer. Ein nachgerüsteter Speicher kostet meist mehr als einer, der gleich mit der Anlage eingebaut wird. Dazu fehlt dir die Ersparnis der Jahre ohne Speicher."),
+],
+},
+{
 "slug": "stromspeicher-rechner-test-echte-daten",
 "kennzahl": {"v": "1–2 Punkte", "t": "trifft der Rechner die Autarkie echter Häuser mit Speicher"},
 "related": ["stromspeicher-groesse-berechnen", "ost-west-dach-speicher", "pv-angebot-pruefen"],
@@ -186,12 +241,13 @@ ARTICLES = [
 },
 {
 "slug": "stromspeicher-lohnt-sich-2027",
+"related": ["stromspeicher-groesse-berechnen", "stromspeicher-preis-pro-kwh", "stromsteuer-stromspeicher"],
 "kennzahl": {"v": "+2.899 €", "t": "Gewinn nach 15 Jahren mit 6 kWh, heute gerechnet"},
 "chart": {"kind": "sweep", "title": "Gewinn nach 15 Jahren je Speichergröße", "caption": "9 kWp Süd, 4.500 kWh Verbrauch, Speicher 500 €/kWh, Strom 33 ct/kWh. Der Punkt markiert die wirtschaftlichste Größe.",
   "series": [{"label": "EEG heute (7,7 ct Einspeisung)", "p": {}}, {"label": "EEG-Reform (keine Vergütung, max. 50 % Einspeisung)", "p": {"feed": 0, "feedLimit": 0.5}}]},
 "title": "Lohnt sich ein Stromspeicher 2027?",
 "h1": "Lohnt sich ein Stromspeicher 2027?",
-"desc": "Mit Zahlen statt Prospekt: Wann sich ein Stromspeicher für eine neue PV-Anlage rechnet, was die EEG-Reform ändert und welche Größe am meisten bringt.",
+"desc": "Meistens ja, wenn er nicht zu groß ist: wann sich ein Stromspeicher rechnet, was die EEG-Reform ändert und welche Größe am meisten bringt.",
 "date": "2026-11-09",
 "updated": "2026-11-16",
 "lead": "Kurze Antwort: Bei den heutigen Preisen meistens ja, wenn der Speicher nicht zu groß ist. Sollte die geplante EEG-Reform kommen, rechnet er sich sogar deutlich schneller.",
@@ -249,10 +305,12 @@ ARTICLES = [
 },
 {
 "slug": "speichergroesse-4500-kwh",
+"related": ["stromspeicher-groesse-berechnen", "pv-angebot-pruefen", "stromspeicher-lohnt-sich-2027"],
 "kennzahl": {"v": "5–7 kWh", "t": "rechnen sich bei Süddach am besten"},
 "chart": {"kind": "day", "title": "Ein Durchschnittstag mit 6 kWh Speicher", "caption": "9 kWp Süd, 4.500 kWh Verbrauch. Alles unter der schwarzen Linie versorgt das Haus, darüber geht der Überschuss in den Speicher oder ins Netz.",
   "p": {}, "cap": 6, "months": [5, 11]},
 "title": "Welche Speichergröße bei 4.500 kWh Verbrauch?",
+"seo_title": "4.500 kWh Verbrauch: Welcher Speicher passt?",
 "h1": "Welche Speichergröße bei 4.500 kWh Verbrauch?",
 "desc": "Bei 4.500 kWh Jahresverbrauch rechnet sich meist ein Speicher mit 5 bis 7 kWh. Die Zahlen für 6, 9 und 12 kWp und warum größer nicht besser ist.",
 "date": "2026-11-09",
@@ -340,6 +398,7 @@ ARTICLES = [
 },
 {
 "slug": "stromspeicher-nachruesten",
+"related": ["stromspeicher-groesse-berechnen", "stromspeicher-preis-pro-kwh", "stromspeicher-lohnt-sich-2027"],
 "kennzahl": {"v": "unter 8 ct", "t": "Einspeisevergütung: Dann lohnt sich Nachrüsten meist"},
 "chart": {"kind": "sweep", "title": "Nachrüsten: Gewinn nach 15 Jahren je Einspeisevergütung", "caption": "7 kWp Süd, 4.500 kWh Verbrauch, Speicher 700 €/kWh (Nachrüsten), Strom 33 ct/kWh.",
   "series": [{"label": "0 ct", "p": {"roofs": [{"kwp": 7, "tilt": 35, "aspect": 0}], "bprice": 700, "feed": 0}}, {"label": "7,7 ct", "p": {"roofs": [{"kwp": 7, "tilt": 35, "aspect": 0}], "bprice": 700, "feed": 7.7}}, {"label": "12 ct", "p": {"roofs": [{"kwp": 7, "tilt": 35, "aspect": 0}], "bprice": 700, "feed": 12}}, {"label": "20 ct", "p": {"roofs": [{"kwp": 7, "tilt": 35, "aspect": 0}], "bprice": 700, "feed": 20}}]},

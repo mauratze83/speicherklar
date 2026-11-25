@@ -1,55 +1,59 @@
 {
  "https://speicherklar.de/": {
-  "date": "2026-11-24",
-  "hash": "091abce3d88a"
+  "date": "2026-11-25",
+  "hash": "53984c1c7034"
  },
  "https://speicherklar.de/kontakt.html": {
   "date": "2026-11-17",
   "hash": "fbc3d8166a17"
  },
  "https://speicherklar.de/methodik.html": {
-  "date": "2026-11-17",
-  "hash": "637c54774bfb"
+  "date": "2026-11-25",
+  "hash": "1cfcafe096a5"
  },
  "https://speicherklar.de/pro/": {
-  "date": "2026-11-24",
-  "hash": "4b560b814ed4"
+  "date": "2026-11-25",
+  "hash": "be920c397a79"
  },
  "https://speicherklar.de/ratgeber/": {
-  "date": "2026-11-24",
-  "hash": "30fe425469c0"
+  "date": "2026-11-25",
+  "hash": "b1f704c744ce"
  },
  "https://speicherklar.de/ratgeber/ost-west-dach-speicher.html": {
-  "date": "2026-11-23",
-  "hash": "37665659040d"
+  "date": "2026-11-25",
+  "hash": "55f65b9039b3"
  },
  "https://speicherklar.de/ratgeber/pv-angebot-pruefen.html": {
-  "date": "2026-11-23",
-  "hash": "967bb1ae962f"
+  "date": "2026-11-25",
+  "hash": "ee9c97b2f32d"
  },
  "https://speicherklar.de/ratgeber/pv-anlage-groesse.html": {
-  "date": "2026-11-24",
-  "hash": "f11402b3e70e"
+  "date": "2026-11-25",
+  "hash": "50a2e14c7eab"
  },
  "https://speicherklar.de/ratgeber/speichergroesse-4500-kwh.html": {
-  "date": "2026-11-23",
-  "hash": "e3a2452f1a26"
+  "date": "2026-11-25",
+  "hash": "98c643dd8b7a"
  },
  "https://speicherklar.de/ratgeber/stromspeicher-groesse-berechnen.html": {
-  "date": "2026-11-19",
-  "hash": "21fdbe88ca80"
+  "date": "2026-11-25",
+  "hash": "908456c9f2bc"
  },
  "https://speicherklar.de/ratgeber/stromspeicher-lohnt-sich-2027.html": {
-  "date": "2026-11-23",
-  "hash": "1403891498c0"
+  "date": "2026-11-25",
+  "hash": "2075a449eae7"
  },
  "https://speicherklar.de/ratgeber/stromspeicher-nachruesten.html": {
-  "date": "2026-11-23",
-  "hash": "df072b8d010b"
+  "date": "2026-11-25",
+  "hash": "e58c5c31b493"
  },
  "https://speicherklar.de/ratgeber/stromspeicher-preis-pro-kwh.html": {
-  "date": "2026-11-17",
-  "hash": "f9ae6bcbc57b"
+  "date": "2026-11-25",
+  "hash": "32664e44e823"
+ },
+ "https://speicherklar.de/ratgeber/stromspeicher-preisentwicklung-2027.html": {
+  "date": "2026-11-25",
+  "hash": "1b912c530c0b"
  },
  "https://speicherklar.de/ratgeber/stromspeicher-rechner-test-echte-daten.html": {
   "date": "2026-11-17",
@@ -60,8 +64,8 @@
   "hash": "5e5ca746232b"
  },
  "https://speicherklar.de/ratgeber/stromsteuer-stromspeicher.html": {
-  "date": "2026-11-19",
-  "hash": "f2fc4a75ae26"
+  "date": "2026-11-25",
+  "hash": "cb62019092cc"
  },
  "https://speicherklar.de/so-gehts/": {
   "date": "2026-11-22",

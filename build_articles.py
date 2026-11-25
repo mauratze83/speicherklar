@@ -273,7 +273,7 @@ THEMEN = [
      ["stromspeicher-groesse-berechnen", "speichergroesse-4500-kwh", "ost-west-dach-speicher", "stromspeicher-region"]),
     ("Lohnt sich das überhaupt?",
      "Ob sich ein Speicher rechnet, entscheiden Strompreis, Einspeisevergütung und Politik. Hier rechne ich die Fälle durch, auch für bestehende Anlagen.",
-     ["stromspeicher-lohnt-sich-2027", "stromspeicher-nachruesten", "stromsteuer-stromspeicher"]),
+     ["stromspeicher-lohnt-sich-2027", "stromspeicher-preisentwicklung-2027", "stromspeicher-nachruesten", "stromsteuer-stromspeicher"]),
     ("Kann ich dem Rechner trauen?",
      "Ich habe den Rechner an meiner eigenen Anlage und an gemessenen Häusern geprüft. Wie das ausging und wie er rechnet, steht offen hier.",
      ["stromspeicher-rechner-test-echte-daten"]),
@@ -349,7 +349,7 @@ if video_live():
 # Methodik: Rechenweg, öffentlicher Code, Unabhängigkeit, Vergleich mit der HTW Berlin
 METHODIK_URL = "https://speicherklar.de/methodik.html"
 (ROOT / "methodik.html").write_text(page("Methodik: So rechnet Speicherklar | Speicherklar",
-    "Wie der Speicherklar-Rechner rechnet, warum der Code öffentlich ist, wer die Seite bezahlt und wie die Ergebnisse zum Unabhängigkeitsrechner der HTW Berlin passen.",
+    "Wie der Speicherklar-Rechner rechnet, warum der Code öffentlich ist, wer die Seite bezahlt und wie gut die Zahlen zur HTW Berlin passen.",
     METHODIK_URL, (ROOT / "src/methodik.html").read_text() + CTA.replace("../", "./").replace("{slug}", "methodik"),
     prefix="./", active=None, og_image="img/og/start.png"))
 # Die Sitemap schreibt build.py am Ende (mit Änderungsdatum je Seite), weil es zuletzt läuft.

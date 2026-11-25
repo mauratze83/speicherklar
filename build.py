@@ -41,7 +41,7 @@ head = f"""<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Stromspeicher-Rechner: Welche Größe lohnt sich? | Speicherklar</title>
+<title>Stromspeicher-Rechner: Welche Größe passt? | Speicherklar</title>
 <meta name="description" content="Kostenloser Stromspeicher-Rechner ohne Anmeldung: Jahressimulation mit Sonnendaten deiner Region. Zeigt, welche Speichergröße zu deiner PV-Anlage passt.">
 <link rel="canonical" href="https://speicherklar.de/">
 {HOME_LD}
@@ -114,7 +114,7 @@ pro_head = f"""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Angebots-Check für PV-Anlage und Speicher – Speicherklar Pro</title>
-<meta name="description" content="Passen Speicher und PV-Anlage in deinem Angebot? Angebot eintragen, kostenlos die Einordnung sehen, Bericht mit bester Kombination aus PV-Größe und Speicher, Preis-Check und Fragen an den Installateur.">
+<meta name="description" content="Angebot für PV-Anlage und Speicher prüfen: kostenlos die Einordnung sehen, im Bericht die beste Kombination, Preis-Check und Fragen an den Installateur.">
 <link rel="canonical" href="https://speicherklar.de/pro/">
 {BEW_LD}<meta property="og:title" content="Speicherklar Pro – Angebots-Check für PV-Anlage und Speicher">
 <meta property="og:description" content="Ist der Speicher zu groß, die Anlage zu klein? Rechne dein Angebot nach, bevor du unterschreibst.">
