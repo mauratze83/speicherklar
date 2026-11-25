@@ -70,6 +70,8 @@ Reihenfolge: Quelle ändern → Tests → `build_articles.py` (falls nötig) →
 - `src/klara-politik.md` – Politik, Steuern, Förderung für Klara; `scripts/klara_wissen.py` – erzeugt `worker-klara/wissen.js`
 - `src/folien/<name>/` – Präsentationen (Export aus den Slides-Artefakten: `deck.json`, `deck.css`, `slides/*.html`); `python3 scripts/folien.py` baut `folien/<name>/index.html`. Seit 23.11.2026: `/folien/kunden/` und `/folien/energieberater/`. **Nirgends verlinken**, `noindex`, nicht in Sitemap, `llms.txt` oder Klaras Wissen. Bei grundlegenden Änderungen (Zahlen aus `sim.js`/`pro.js`, Preise, Termine, Musterangebot, Vision/Positionierung) beide Decks ohne Nachfrage mitziehen: Artefakt, `src/folien/` + `scripts/folien.py`, Folientexte im Claude-Projekt (`claude/praesentation-kunden.md`, `claude/praesentation-energieberater.md`); Regel in `claude/praesentationen.md`.
 
+- `.claude/skills/` – SEO-Paket (`/seo`, `/keyword-finder`, `/page-writer`, Fremdpaket 1.0.0-de, nicht von Hand ändern). Arbeitsordner `seo-work/` steht in `.gitignore`. `/page-writer` darf nur Quellen unter `src/` ändern (Goldene Regel 1), nie die erzeugten HTML-Dateien; danach wie immer bauen.
+
 ## Ratgeber-Artikel
 
 - Neue Artikel in `src/articles.py` eintragen (neueste nach Datum), nie als HTML-Datei anlegen.
