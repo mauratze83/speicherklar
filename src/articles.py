@@ -179,20 +179,20 @@ ARTICLES = [
 "title": "Stromsteuer sinkt 2027: Was heißt das für deinen Stromspeicher?",
 "seo_title": "Stromsteuer sinkt 2027: Folgen für Speicher",
 "h1": "Stromsteuer sinkt 2027: Was heißt das für deinen Stromspeicher?",
-"desc": "Die Koalition will die Stromsteuer 2027 für alle aufs EU-Minimum senken. Strom wird 2,32 ct billiger. Die beste Speichergröße bleibt gleich.",
+"desc": "Der Bundestag hat beschlossen: Die Stromsteuer sinkt 2027 für alle aufs EU-Minimum. Strom wird 2,32 ct billiger. Die beste Speichergröße bleibt gleich.",
 "date": "2026-11-13",
-"updated": "2026-11-18",
-"lead": "Kurze Antwort: Für deine Planung ändert sich fast nichts. Die beste Speichergröße bleibt gleich. Der Speicher bezahlt sich etwas später, weil Netzstrom billiger wird: im Beispiel nach 7,7 statt 7,6 Jahren, wenn die Senkung nur 2027 gilt, nach 8,5 Jahren, wenn sie bleibt.",
+"updated": "2026-11-28",
+"lead": "Kurze Antwort: Für deine Planung ändert sich fast nichts. Die beste Speichergröße bleibt gleich. Beschlossen ist die Senkung für 2027. Damit bezahlt sich der Speicher im Beispiel nach 7,7 statt 7,6 Jahren. Bliebe sie dauerhaft, wären es 8,5 Jahre.",
 "body": """
-<p>Am 13.11. sah es so aus, als käme die Senkung für Haushalte vorerst nicht. So stand es auch hier. Das ist überholt: In der Nacht zum 18.11. haben sich Union und SPD doch geeinigt. Ich hab neu sortiert, was das für einen Stromspeicher heißt. Beispiel wie immer: 9 kWp auf einem Süddach im Ruhrgebiet, 4.500 kWh Verbrauch im Jahr.</p>
+<p>Am 13.11. sah es so aus, als käme die Senkung für Haushalte vorerst nicht. So stand es auch hier. Das ist überholt: Am 18.11. haben sich Union und SPD doch geeinigt, am 27.11. hat der Bundestag die Senkung beschlossen. Ich hab neu sortiert, was das für einen Stromspeicher heißt. Beispiel wie immer: 9 kWp auf einem Süddach im Ruhrgebiet, 4.500 kWh Verbrauch im Jahr.</p>
 
-<h2>Was beschlossen ist (Stand 18.11.2026)</h2>
+<h2>Was beschlossen ist (Stand 28.11.2026)</h2>
 <p>Die Stromsteuer beträgt laut § 3 Stromsteuergesetz 20,50 € je Megawattstunde, also 2,05 ct je kWh. Darauf kommen 19 % Umsatzsteuer. Das EU-Minimum für Haushalte liegt bei 0,1 ct je kWh (Energiesteuerrichtlinie 2003/96/EG).</p>
-<p>Der Koalitionsausschuss hat sich darauf geeinigt, die Stromsteuer für alle Verbraucher aufs EU-Minimum zu senken. Finanziert ist das bisher nur für 2027. Eine dauerhafte Senkung ist laut Ergebnispapier beabsichtigt (t-online und ZDFheute, 18.11.2026).</p>
-<p><b>Gesetz ist das noch nicht.</b> Der Bundestag soll den Haushalt 2027 am 27.11. beschließen, außerdem muss das Stromsteuergesetz geändert werden. Ich aktualisiere den Artikel, sobald das durch ist.</p>
+<p>Der Bundestag hat am 27.11.2026 mit dem Haushaltsbegleitgesetz 2027 beschlossen, die Stromsteuer für alle Verbraucher aufs EU-Minimum zu senken. Sie gilt ab 1. Januar bis 31. Dezember 2027. Eine Fortsetzung danach ist angestrebt, muss aber im Haushalt 2028 finanziert werden (<a href="https://www.bundesregierung.de/breg-de/aktuelles/stromsteuer-spritpreisdeckel-2461514">Bundesregierung</a>, <a href="https://www.bundestag.de/presse/hib/kurzmeldungen-1238868">Bundestag</a>, 27.11.2026).</p>
+<p><b>Noch offen:</b> Der Bundesrat muss sich noch mit dem Gesetz befassen, danach wird es verkündet. Ob die Senkung über 2027 hinaus bleibt, ist nicht beschlossen. Ich aktualisiere den Artikel, wenn sich daran etwas ändert.</p>
 
 <h2>Um wie viel wird Strom billiger?</h2>
-<p>Die Senkung von 2,05 auf 0,1 ct macht 1,95 ct netto. Mit der Umsatzsteuer, die darauf wegfällt, sind es 2,32 ct je kWh. Aus 33 ct im Beispiel werden also 30,68 ct, wenn dein Versorger die Senkung voll weitergibt.</p>
+<p>Die Senkung von 2,05 auf 0,1 ct macht 1,95 ct netto. Mit der Umsatzsteuer, die darauf wegfällt, sind es 2,32 ct je kWh. Aus 33 ct im Beispiel werden also 30,68 ct, wenn dein Versorger die Senkung voll weitergibt. Dazu soll er laut Bericht der Nachrichtenagentur dts grundsätzlich verpflichtet sein.</p>
 <p>Wie viel das im Jahr ausmacht, hängt davon ab, wie viel Strom du noch aus dem Netz kaufst:</p>
 <div class="tablewrap"><table class="fit">
 <thead><tr><th>Haushalt mit 4.500 kWh</th><th>Strom aus dem Netz</th><th>Ersparnis durch Senkung/Jahr</th></tr></thead>
@@ -234,9 +234,9 @@ ARTICLES = [
 <p>„Senkung nur 2027“ heißt in der Rechnung: ein Jahr mit 30,68 ct, danach 14 Jahre mit 33 ct. Weitere Preisänderungen rechne ich nicht ein.</p>
 """,
 "faq": [
- ("Wie hoch ist die Stromsteuer für Haushalte?", "Heute 2,05 ct je kWh laut § 3 Stromsteuergesetz, plus 19 % Umsatzsteuer. Das sind rund 2,44 ct je kWh auf deiner Rechnung. Das EU-Minimum liegt bei 0,1 ct."),
- ("Wird die Stromsteuer 2027 gesenkt?", "Die Koalition hat sich am 18.11.2026 darauf geeinigt, sie 2027 für alle aufs EU-Minimum zu senken. Finanziert ist bisher nur 2027. Endgültig ist das erst, wenn Bundestag und Stromsteuergesetz mitziehen; der Haushalt soll am 27.11. beschlossen werden."),
- ("Lohnt sich ein Stromspeicher trotzdem?", "Ja. Im Beispiel bezahlt sich ein 6-kWh-Speicher in 7,7 Jahren, wenn die Senkung nur 2027 gilt, und in 8,5 Jahren, wenn sie bleibt. Ohne Senkung wären es 7,6 Jahre. Die beste Größe bleibt gleich."),
+ ("Wie hoch ist die Stromsteuer für Haushalte?", "Bis Ende 2026 sind es 2,05 ct je kWh laut § 3 Stromsteuergesetz, plus 19 % Umsatzsteuer, also rund 2,44 ct je kWh auf deiner Rechnung. Für 2027 hat der Bundestag 0,1 ct beschlossen, das EU-Minimum."),
+ ("Wird die Stromsteuer 2027 gesenkt?", "Ja. Der Bundestag hat am 27.11.2026 beschlossen, sie vom 1. Januar bis 31. Dezember 2027 für alle auf 0,1 ct je kWh zu senken. Der Bundesrat muss sich noch damit befassen. Ob die Senkung danach bleibt, entscheidet sich mit dem Haushalt 2028."),
+ ("Lohnt sich ein Stromspeicher trotzdem?", "Ja. Im Beispiel bezahlt sich ein 6-kWh-Speicher mit der beschlossenen Senkung für 2027 in 7,7 Jahren, ohne Senkung wären es 7,6. Bliebe sie dauerhaft, wären es 8,5 Jahre. Die beste Größe bleibt gleich."),
 ],
 },
 {
